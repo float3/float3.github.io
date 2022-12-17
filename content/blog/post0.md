@@ -3,6 +3,17 @@ title = "Recursive Just-Intonation"
 date = 2022-11-29
 +++
 
+# WIP: THIS IS A WIP!
+
+
+
+
+
+
+
+
+
+
 
 # Recursive Just-Intonation: An unusable Tuning System
 
