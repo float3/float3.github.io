@@ -1,6 +1,6 @@
 on:
   push:
-    branches: ["master1"]
+    branches: ["master"]
   workflow_dispatch:
 
 permissions:
