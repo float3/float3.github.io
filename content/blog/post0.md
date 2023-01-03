@@ -1,6 +1,6 @@
 +++
 title = "Recursive Just-Intonation"
-date = 2022-11-29
+date = 2023-01-03
 +++
 
 # WIP: THIS IS A WIP!
@@ -21,7 +21,7 @@ date = 2022-11-29
 # Why did I decide to make a new conflicting standard [xkcd](https://xkcd.com/927/)
 
 I was frustrated with 12 TET and watched a video on Just Intonation,
-I immediately realized the impracticality of it so I decided to make my own even more practical version.
+I immediately realized the impracticality of it so I decided to make my own even less practical version.
 
 # What makes one interval nice and another unpleasant
 
@@ -31,7 +31,7 @@ x+2*x where x is some frequency is gonna sound nice, because it has a short peri
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(2*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
 
-while for example x+13/12x has a much longer  
+while for example x+13/12x has a much longer period 
 
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin((13/12)*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
