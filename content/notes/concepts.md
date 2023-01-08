@@ -3,25 +3,26 @@ title = "concepts"
 date = 2023-01-03
 +++
 
-x currying\
-x partial application\
-o monads\
-o monoids\
-o endofunctors\
-o closures\
-x complexity analysis\
-o asymptotic analysis basics\
-sorting algorithms\
-    o insertion sort\
-    o heap sort\
-    o merge sort\
-    x quick sort\
-o shortest path algorithms (dijkstra) and minimum spanning trees\
-o binary search trees\
-o red black trees\
-o amortized analysís\
-o divide and conquer\
-o dynamic programming\
-o greedy algorithms and optimal subproblem property\
-o fibonacci heaps\
-o proofs of correctness, often by induction\
+- [x] currying
+- [x] partial application
+- [x] monads
+- [ ] monoids
+- [ ] endofunctors
+- [ ] closures
+- [x] complexity analysis
+- [ ] asymptotic analysis basics\
+- [ ] sorting algorithms:
+    - [ ] insertion sort
+    - [ ] heap sort
+    - [ ] merge sort
+    - [x] quick sort
+- [ ] shortest path algorithms (dijkstra)
+- [ ] minimum spanning trees(kruskal & prims)
+- [ ] binary search trees
+- [ ] red black trees
+- [ ] amortized analysís
+- [ ] divide and conquer
+- [ ] dynamic programming
+- [ ] greedy algorithms and optimal subproblem property
+- [ ] fibonacci heaps
+- [ ] proofs of correctness, often by induction
