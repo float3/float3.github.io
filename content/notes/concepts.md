@@ -2,6 +2,7 @@
 title = "concepts"
 date = 2023-01-03
 +++
+# Concepts I've studied
 
 - [x] currying
 - [x] partial application
@@ -10,16 +11,18 @@ date = 2023-01-03
 - [ ] endofunctors
 - [ ] closures
 - [x] complexity analysis
-- [ ] asymptotic analysis basics\
+- [ ] asymptotic analysis basics
 - [ ] sorting algorithms:
-    - [ ] insertion sort
-    - [ ] heap sort
-    - [ ] merge sort
-    - [x] quick sort
+	- [ ] insertion sort
+	- [ ] heap sort
+	- [ ] merge sort
+	- [x] quick sort
 - [ ] shortest path algorithms (dijkstra)
 - [ ] minimum spanning trees(kruskal & prims)
-- [ ] binary search trees
-- [ ] red black trees
+- [ ] trees
+	- [ ] splay trees
+	- [ ] binary search trees
+	- [ ] red black trees
 - [ ] amortized analysís
 - [ ] divide and conquer
 - [ ] dynamic programming
