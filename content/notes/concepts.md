@@ -3,6 +3,7 @@ title = "concepts"
 date = 2023-01-03
 +++
 # Concepts I've studied
+## Programming
 
 - [x] currying
 - [x] partial application
@@ -29,3 +30,7 @@ date = 2023-01-03
 - [ ] greedy algorithms and optimal subproblem property
 - [ ] fibonacci heaps
 - [ ] proofs of correctness, often by induction
+
+
+## Math
+- [ ] Gödels Incompleteness Theorem
