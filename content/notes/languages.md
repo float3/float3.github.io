@@ -21,6 +21,7 @@ sadly, more often than not these are not the languages I use
 - [ ] Futhark
 - [ ] ISPC
 - [ ] Koka
+- [ ] Idris
 - [ ] any Array language
 - [ ] any Lisp dialect
 - [ ] any ML dialect
