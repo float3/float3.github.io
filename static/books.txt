@@ -1,9 +1,17 @@
-Goedel Escher Bach
 How to Win Friends & Influence People
+
+(Computer) Science:
+
+Goedel Escher Bach
 
 Algorithms Data Structures Programs
 the mythical man-month
 Flow based programming
+
+Little Schemer
+Seasoned Schemer
+
+The art of the metaobject protocol
 
 Physics:
 Six Easy Pieces
