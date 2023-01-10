@@ -5,7 +5,6 @@ updated = 2023-01-10
 +++
 
 ## Programming
-
 - [ ] divide and conquer
 - [ ] dynamic programming
 - [ ] greedy algorithms and optimal subproblem property
@@ -22,23 +21,29 @@ updated = 2023-01-10
 
 ### Analysis
 - [x] complexity analysis
-- [ ] asymptotic analysis basics
+- [ ] asymptotic analysis
 - [ ] amortized analysís
 
 ### Algorithms
 - [ ] sorting algorithms:
-	- [ ] insertion sort
+	- [x] insertion sort
 	- [ ] heap sort
-	- [ ] merge sort
+	- [x] merge sort
 	- [x] quick sort
-- [ ] shortest path algorithms (dijkstra)
+	- [x] meme sort
+	- [x] selection sort
+	- [x] bubble sort
+	- [ ] depth first sort
+- [ ] dijkstra's algorithm
+- [ ] prim's algorithm
+- [ ] kruskal's algorithm
+- [ ] bellman-ford's algorithm
+- [ ] floyd-warshall
 - [ ] trees
-	- [ ] minimum spanning trees(kruskal & prims)
+	- [ ] minimum spanning trees
 	- [ ] splay trees
 	- [ ] binary search trees
 	- [ ] red black trees
-
-
 
 ## Math
 - [ ] Gödels Incompleteness Theorem
