@@ -79,3 +79,5 @@ Only in harmonic scale frequencies relate as integer numbers
 1.0000 1.5000 1.1250 1.6875 1.2656 1.8984 1.4238 1.0679
 C      G      D      A      E      B      F      C
 ```
+
+©2022 hill

@@ -1,0 +1,2 @@
+A Plea for Lean Software - Niklaus Wirth
+The Emperor's old clothes - Tony Hoare

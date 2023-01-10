@@ -1,6 +1,9 @@
 Goedel Escher Bach
 How to Win Friends & Influence People
 
+Algorithms Data Structures Programs
+the mythical man-month
+
 Physics:
 Six Easy Pieces
 Six Not-So-Easy Pieces

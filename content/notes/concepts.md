@@ -11,6 +11,11 @@ updated = 2023-01-10
 - [ ] fibonacci heaps
 - [ ] proofs of correctness, often by induction
 
+### Types
+- [ ] dependent types
+- [x] hindley milner type inference
+- [ ] types as values
+
 ### Functional
 - [x] currying
 - [x] partial application
@@ -18,6 +23,11 @@ updated = 2023-01-10
 - [ ] monoids
 - [ ] endofunctors
 - [ ] closures
+- [ ] effect system to track side effects
+
+### Array 
+
+### Logic
 
 ### Analysis
 - [x] complexity analysis
@@ -40,6 +50,7 @@ updated = 2023-01-10
 - [ ] bellman-ford's algorithm
 - [ ] floyd-warshall
 - [ ] trees
+	- [x] heaps
 	- [ ] minimum spanning trees
 	- [ ] splay trees
 	- [ ] binary search trees
@@ -49,3 +60,7 @@ updated = 2023-01-10
 - [ ] Gödels Incompleteness Theorem
 
 ## Physics
+
+## Music
+- [x] harmonic analysis
+- [x] negative harmony
