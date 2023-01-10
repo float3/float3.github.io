@@ -3,8 +3,9 @@
 
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
-- [source](https://github.com/float3/float3.github.io)
+- [book-notes](@/books/_index.md)
 - [pgp](/public-key.txt)
+- [source](https://github.com/float3/float3.github.io)
 - [old-site](https://float3.github.io/float3.github.io.old)
 
 # Contact

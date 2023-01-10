@@ -7,8 +7,7 @@
     <header>
         <h1>{{ page.title }}</h1>
         <p id="article-dates">
-            created <time>{{ page.date }}</time>{% if page.updated %}, updated <time>{{ page.updated }}</time>{% endif
-            %}
+            created: <time>{{ page.date }}</time>{% if page.updated %}, updated: <time>{{ page.updated }}</time>{% endif %}
         </p>
     </header>
     {{ page.content | safe }}

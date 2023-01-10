@@ -1,24 +1,18 @@
 +++
 title = "Recursive Just-Intonation"
-date = 2023-01-03
+date = 2022-11-29
+updated = 2023-01-10
 +++
 
 # WIP: THIS IS A WIP!
 
-
-
-
-
-
-
-
-
-
-
 # Recursive Just-Intonation: An unusable Tuning System
 
+Visualize and listen to Frequencies in a Shader:
+<iframe width="640" height="360" frameborder="0" allowfullscreen="allowfullscreen" src="https://www.shadertoy.com/embed/7tV3WV?gui=true&t=10&paused=false&muted=false">
+</iframe> 
 
-# Why did I decide to make a new conflicting standard [xkcd](https://xkcd.com/927/)
+# Why did I decide to make a [new conflicting standard](https://xkcd.com/927/)
 
 I was frustrated with 12 TET and watched a video on Just Intonation,
 I immediately realized the impracticality of it so I decided to make my own even less practical version.
@@ -53,6 +47,7 @@ the following graph shows the difference between 2 sine waves
 
 Now while nicer intervals are nicer all of these intervals are in relation to X, our Root
 While a major third (4:5) and a perfect fifth (2:3) on their own sound good, 
+if we keep going up the steps one by one(1.0625), we don't end up at the same place that we would end up if we skipped a step(1.125)
 
 
 
