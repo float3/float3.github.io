@@ -9,6 +9,6 @@
 - [old-site](https://float3.github.io/float3.github.io.old)
 
 # Contact
-- Mail: [hill@hilll.dev](mailto:hill@hilll.dev)
+- Mail: [hill@hilll.dev](mailto:contact@hilll.dev)
 - I2P Mail [hill@mail.i2p](mailto:hill@mail.i2p)
 - IRC: hill on [irc.rizon.net](https://rizon.net/chat)
