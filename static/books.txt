@@ -8,6 +8,8 @@ Algorithms Data Structures Programs
 the mythical man-month
 Flow based programming
 
+Science of the Artificial
+
 Little Schemer
 Seasoned Schemer
 
