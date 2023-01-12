@@ -3,7 +3,7 @@
 
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
-- [book-notes](@/books/_index.md)
+- [book-notes](@/book-notes/_index.md)
 - [pgp](/public-key.txt)
 - [source](https://github.com/float3/float3.github.io)
 - [old-site](https://float3.github.io/float3.github.io.old)

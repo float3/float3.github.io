@@ -25,7 +25,7 @@ updated = 2023-01-10
 - [ ] closures
 - [ ] effect system to track side effects
 
-### Array 
+### Array
 
 ### Logic
 
@@ -58,6 +58,7 @@ updated = 2023-01-10
 
 ## Math
 - [ ] Gödels Incompleteness Theorem
+- [x] Betrand's Paradox
 
 ## Physics
 
