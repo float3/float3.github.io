@@ -265,6 +265,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 # Valentin
 - [x] 週處除三害 (2023) (2023-11-20)
 - [x] 燃冬 (2023) (2023-11-28)
+- [x] 警察故事 (Police Story) (1985) (2023-12-23)
 
 # Yurin
 - [x] Oppenheimer (2023) (2023-11-02)
@@ -286,6 +287,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Oppenheimer (2023) (2023-08-03)
 - [x] Borat (2006) (2023-08-05)
 - [x] Drive (2011) (2023-08-06)
+- [x] Big Trouble in Little China (1986) (2023-08-10)
 - [x] Harry Potter and the Philosopher's Stone (2001) (2023-10-17)
 - [x] Fantastic Beasts: The Crimes of Grindelwald (2018) (2023-10-17)
 - [x] Fantastic Beasts: The Secrets of Dumbledore (2022) (2023-10-17)
@@ -312,3 +314,4 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Interstellar (2014)
 - [ ] La La Land (2016)
 - [ ] The Whistleblower (2019)
+- [ ] Jackie Chan -  My Stunts
