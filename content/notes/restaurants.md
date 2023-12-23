@@ -3,7 +3,9 @@ title = "food"
 updated = 1970-01-01
 +++
 
-restaurants I like
+restaurants I like \
+in descending order of quality per country \
+all restaurants are vegan friendly 
 
 # Singapore
 ### Yu Fu Yuan Vegitarian Delight 聚福缘素食
@@ -14,6 +16,13 @@ restaurants I like
 very good food, open: 5:30-18:00
 
 # Taipei
+### 御喜自助餐
+25°01'05.3"N 121°32'25.0"E \
+No. 1號, Section 4, Roosevelt Rd, Da’an District, Taipei City, Taiwan 106
+
+
+nice vegan buffet on NTU campus, eat surrounded by local and international students
+
 ### Miao Yuan vegetarian restaurant 妙緣素食館
 25°02'47.2"N 121°30'50.8"E \
 100, Taiwan, Taipei City, Zhongzheng District, 忠孝西路一段72-25號
@@ -26,7 +35,7 @@ humble buddhist buffet, good food
 100, Taiwan, Taipei City, Zhongzheng District, 忠孝西路一段72之32號
 
 
-rude staff, good food, next to previous restaurant
+rude staff (N=1), very good food, next to previous restaurant
 
 ### Nameless Vegetarian Breakfast Restaurant 無名素食早餐店
 25°02'48.0"N 121°30'50.8"E \
@@ -34,13 +43,6 @@ rude staff, good food, next to previous restaurant
 
 
 breakfast, next to previous restaurant
-
-### 御喜自助餐
-25°01'05.3"N 121°32'25.0"E \
-No. 1號, Section 4, Roosevelt Rd, Da’an District, Taipei City, Taiwan 106
-
-
-nice vegan buffet on NTU campus, eat surrounded by local and international students
 
 # Hong Kong 
 ### Fook Luk Sau Vegetarian Restaurant 福祿壽健康素食
@@ -50,6 +52,19 @@ nice vegan buffet on NTU campus, eat surrounded by local and international stude
 
 hole in the wall restaurant, very good food
 
+### Small JD Mall Vegetarian Stand
+22°18'18.0"N 114°10'16.1"E \
+Jd Mall, 235 Nathan Rd, Jordan, Hong Kong
+
+
+small takeaway stand, on the right ground floor, when you enter JD Mall from Pilken Street
+
+### 廣潤美食
+22°19'10.6"N 114°10'17.0"E
+64 Argyle St, Mong Kok, Hong Kong
+
+good vegan options
+
 ### Oriental Vegetarian
 22°16'41.0"N 114°10'33.3"E \
 Hong Kong, Wan Chai, Hennessy Rd, 237至239號3樓
@@ -58,15 +73,15 @@ Hong Kong, Wan Chai, Hennessy Rd, 237至239號3樓
 good imitation shark fin soup
 
 ### Veggie Kingdom 緻素坊
-22°17'57.7"N 114°10'06.7"E
+22°17'57.7"N 114°10'06.7"E \
 7樓, V.i.p. Commercial Centre, 120號 Canton Rd, Tsim Sha Tsui, Hong Kong
 
 
 good food, too expensive
 
 ### LockCha (Admiralty) 樂茶軒 (金鐘)
-22°16'41.0"N 114°09'45.6"E
+22°16'41.0"N 114°09'45.6"E \
 地下層, 香港公園, The K.s.lo Gallery, Admiralty, Hong Kong
 
 
-good vegetarian dim sum, much too expensive
+good vegan dim sum, much too expensive, not worth
