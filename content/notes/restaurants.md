@@ -84,4 +84,5 @@ good food, too expensive
 地下層, 香港公園, The K.s.lo Gallery, Admiralty, Hong Kong
 
 
-good vegan dim sum, much too expensive, not worth
+good vegan dim sum, much too expensive, not worth \
+I didn't wanna include the last 2; I wouldn't go there again, because there are better options with lower prices but I decided to Document them anyways.

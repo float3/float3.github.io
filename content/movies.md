@@ -127,6 +127,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Reservoir Dogs (1992)
 - [ ] 超級學校霸王 (Future Cops) (1993)
 - [ ] Léon: The Professional (1994)
+- [ ] The Usual Suspects (1995)
 - [ ] Fear and Loathing in Las Vegas (1998)
 - [ ] Eyes Wide Shut (1999)
 - [ ] Gigantic (1999)
@@ -250,6 +251,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 傷物語II 熱血篇 (Kizumonogatari II: Nekketsu-hen, "Hot-Blooded") (2016) (2023-08-19)
 - [x] 傷物語III 冷血篇 (Kizumonogatari III: Reiketsu-hen, "Cold-Blooded") (2017) (2023-08-19)
 - [x] Oppenheimer (2023) (2023-08-21)
+- [x] Inception (2010) (2023-12-30)
+- [x] Druk (2020) (2023-12-31)
 - [ ] Dune (2021)
 - [ ] Dune 2 (2023)
 - [ ] Når Befrielsen kommer (2023)
@@ -261,6 +264,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Brüno (2009) (2023-06-08) 
 - [x] Borat (2006) (2023-06-10)
 - [x] Ferris Bueller's Day Off (1986) (2023-06-23)
+- [x] Ali G Indahouse (2002) (2023-12-27)
+- [x] The Dictator (2012) (2023-12-28)
 
 # Valentin
 - [x] 週處除三害 (2023) (2023-11-20)
