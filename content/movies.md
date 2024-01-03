@@ -302,6 +302,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [X] Austin Powers: International Man of Mystery (1997) (2023-12-08)
 - [x] 名探偵コナン 黒鉄の魚影 (2023) (2023-12-15)
 - [x] Jake and Amir: Fired (2011) (2023-12-21)
+- [x] Die Hard (1988) (2024-01-02)
+- [x] Die Harder (1990) (2024-01-03)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
 - [ ] The Whistle Blower (1986)

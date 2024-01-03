@@ -14,6 +14,10 @@ Books I'm currently reading
 - [ ] The Data Detective: 10 Easy Rules
 - [ ] The Righteous Mind
 - [ ] Tibet in Agony
+- [ ] Zen at War
+- [ ] The Poppy Wars
+- [] The Black Company
+- [] Revelation Space
 
 ### (Computer) Science:
 - [ ] Goedel Escher Bach
