@@ -304,6 +304,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Jake and Amir: Fired (2011) (2023-12-21)
 - [x] Die Hard (1988) (2024-01-02)
 - [x] Die Harder (1990) (2024-01-03)
+- [x] Die Hard With A Vengeance (1995) (2024-01-04)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
 - [ ] The Whistle Blower (1986)
