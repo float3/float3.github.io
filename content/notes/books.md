@@ -18,6 +18,7 @@ Books I'm currently reading
 - [ ] The Poppy Wars
 - [] The Black Company
 - [] Revelation Space
+- [] Japanese Homes and Their Surroundings
 
 ### (Computer) Science:
 - [ ] Goedel Escher Bach
