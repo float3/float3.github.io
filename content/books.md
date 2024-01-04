@@ -6,7 +6,7 @@ updated = 1970-01-01
 Books I'm currently reading
 
 ### Misc:
-- [x] How to Win Friends & Influence People
+- [-] How to Win Friends & Influence People
 - [ ] [Riichi 1](https://github.com/dainachiba/RiichiBooks)
 - [ ] A new kind of Science
 - [ ] The Educated Mind
@@ -16,12 +16,12 @@ Books I'm currently reading
 - [ ] Tibet in Agony
 - [ ] Zen at War
 - [ ] The Poppy Wars
-- [] The Black Company
-- [] Revelation Space
-- [] Japanese Homes and Their Surroundings
+- [ ] The Black Company
+- [ ] Revelation Space
+- [ ] Japanese Homes and Their Surroundings
 
 ### (Computer) Science:
-- [ ] Goedel Escher Bach
+- [-] Goedel Escher Bach
 - [ ] Algorithms Data Structures Programs
 - [ ] the mythical man-month
 - [ ] Flow based programming
@@ -36,8 +36,8 @@ Books I'm currently reading
 - [ ] coders at work
 
 ### Physics:
-- [x] Six Easy Pieces
-- [x] Six Not-So-Easy Pieces
+- [-] Six Easy Pieces
+- [-] Six Not-So-Easy Pieces
 - [ ] defining wind
 - [ ] Surely You're Joking, Mr. Feynman!
 
@@ -52,9 +52,9 @@ Books I'm currently reading
 ### Fiction:
 - [x] Harry Potter and the Methods of Rationality
 - [x] Three Worlds Collide
-- [x] There is no Antimemetics Department
+- [-] There is no Antimemetics Department
 - [ ] Flatland
 - [ ] Blood Meridian
 - [ ] The Book of Five Rings
-- [x] The Lathe of Heaven
+- [-] The Lathe of Heaven
 - [ ] East of Eden
