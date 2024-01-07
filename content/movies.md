@@ -13,8 +13,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Pema:](#pema)
 - [Jonas:](#jonas)
 - [Valentin](#valentin)
-- [Yurin](#yurin)
 - [J1](#j1)
+- [Scruffy](#scruffy)
+- [Ding](#ding)
 - [Misc:](#misc)
 
 # Red Mage:
@@ -93,6 +94,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] らき☆すた OVA（オリジナルなビジュアルとアニメーション）(Lucky Star OVA) (2008) (2023-12-02)
 - [x] 誰も知らない (Nobody Knows) (2004) (2023-12-10)
 - [x] Beau Is Afraid (2023) (2023-12-16)
+- [ ] BREAK (2023-12-24)
+- [ ] BREAK (2023-12-31)
+- [x] Little Shop of Horrors (1960) (2024-01-07)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
 - [ ] Halls of Montezuma (1951)
@@ -114,7 +118,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Shining (1980)
 - [ ] Angel's Egg (1985)
 - [ ] My Lucky Stars (1985)
-- [ ] Little Shop of Horrors (1986)
 - [ ] Manhunter (1986)
 - [ ] Platoon (1986)
 - [ ] Full Metal Jacket (1987)
@@ -272,14 +275,16 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 燃冬 (2023) (2023-11-28)
 - [x] 警察故事 (Police Story) (1985) (2023-12-23)
 
-# Yurin
-- [x] Oppenheimer (2023) (2023-11-02)
-- [ ] 誰も知らない (Nobody Knows) (2004)
-- [ ] The Imitation Game (2014)
-- [ ] Interstellar (2014)
-
 # J1
 - [x] Call (콜) (The Call) (2020) (2023-11-10)
+
+# Scruffy
+- [x] Live Free or Die Hard (2007) (2022-01-11)
+
+# Ding
+- [x] Evil Dead Rise (2023) (2024-01-05)
+- [ ] Blair Witch Project (1999)
+- [ ] 咒 (Incantation) (2022)
 
 # Misc:
 - [x] The Little Mermaid (2023) (2023-05-30)
@@ -297,6 +302,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Fantastic Beasts: The Crimes of Grindelwald (2018) (2023-10-17)
 - [x] Fantastic Beasts: The Secrets of Dumbledore (2022) (2023-10-17)
 - [x] 天空の城ラピュタ (Castle in the Sky) (1986) (2023-10-19)
+- [x] Oppenheimer (2023) (2023-11-02)
 - [x] The Godfather (1972) (2023-11-14)
 - [x] The Godfather Part II (1974 ) (2023-11-16)
 - [X] Austin Powers: International Man of Mystery (1997) (2023-12-08)
@@ -305,6 +311,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Die Hard (1988) (2024-01-02)
 - [x] Die Harder (1990) (2024-01-03)
 - [x] Die Hard With A Vengeance (1995) (2024-01-04)
+- [x] Live Free or Die Hard (2007) (2024-01-05)
+- [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
 - [ ] The Whistle Blower (1986)
@@ -322,4 +330,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Interstellar (2014)
 - [ ] La La Land (2016)
 - [ ] The Whistleblower (2019)
+- [ ] 誰も知らない (Nobody Knows) (2004)
+- [ ] The Imitation Game (2014)
+- [ ] Interstellar (2014)
 - [ ] Jackie Chan -  My Stunts
