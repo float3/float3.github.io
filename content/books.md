@@ -58,3 +58,6 @@ Books I'm currently reading
 - [ ] The Book of Five Rings
 - [-] The Lathe of Heaven
 - [ ] East of Eden
+- [ ] American Psycho
+- [ ] Rules of Attraction
+- [ ] Less than Zero
