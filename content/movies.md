@@ -17,6 +17,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Scruffy](#scruffy)
 - [Ding](#ding)
 - [Misc:](#misc)
+- [Dropped Movies](#dropped-movies)
 
 # Red Mage:
 - [X] American Psycho (2000) (2022-09-11)
@@ -97,6 +98,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2023-12-24)
 - [ ] BREAK (2023-12-31)
 - [x] Little Shop of Horrors (1960) (2024-01-07)
+- [x] 鉄男 (Tetsuo: The Iron Man) (2001) (2024-01-13)
+- [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
 - [ ] Halls of Montezuma (1951)
@@ -115,9 +118,11 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Last Picture Show (1971)
 - [ ] Solaris (1972)
 - [ ] Pink Flamingos (1972)
+- [ ] The Candidate (1972)
 - [ ] The Last Detail (1973)
 - [ ] Mean Streets (1973)
 - [ ] Barry Lyndon (1975)
+- [ ] Deep Red (1975)
 - [ ] The Outlaw Josey Wales (1976)
 - [ ] Eraserhead (1977)
 - [ ] The Deer Hunter (1978)
@@ -126,6 +131,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Thief (1981)
 - [ ] The King of Comedy (1982)
 - [ ] Scarface (1983)
+- [ ] Brainstorm (1983)
 - [ ] Angel's Egg (1985)
 - [ ] My Lucky Stars (1985)
 - [ ] Manhunter (1986)
@@ -137,6 +143,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Santa Sangre (1989)
 - [ ] Tetsuo: The Iron Man (1989)
 - [ ] Home Alone (1990)
+- [ ] JFK (1991)
 - [ ] Reservoir Dogs (1992)
 - [ ] Falling Down (1993)
 - [ ] 超級學校霸王 (Future Cops) (1993)
@@ -151,6 +158,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Gigantic (1999)
 - [ ] Requiem for a Dream (2000)
 - [ ] Donnie Darko (2001)
+- [ ] Cat Soup (2001)
 - [ ] The Believer (2001)
 - [ ] Kung Pow: Enter the Fist (2002)
 - [ ] The Brown Bunny (2003)
@@ -198,11 +206,13 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Lux Æterna (2019)
 - [ ] Parasite (2019)
 - [ ] Tenet (2020)
+- [ ] Druk (Another Round) (2020)
 - [ ] Cube (2021)
 - [ ] The Black Phone (2021)
 - [ ] The Whale (2022)
 - [ ] The Gray Man (2022)
 - [ ] Something in the Dirt (2022)
+- [ ] The Killer (2023)
 - [ ] Killers of the Flower Moon (2023)
 - [ ] Kill Bill: Volume 3 (TBA)
 
@@ -362,4 +372,10 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] 誰も知らない (Nobody Knows) (2004)
 - [ ] The Imitation Game (2014)
 - [ ] Interstellar (2014)
+- [ ] Day for Night (1973)
 - [ ] Jackie Chan -  My Stunts
+
+
+# Dropped Movies
+- [x] Little Shop of Horrors (1986) (2024-01-07)
+- [ ] 
