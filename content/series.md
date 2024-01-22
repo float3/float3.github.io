@@ -12,3 +12,4 @@ updated = 1970-01-01
 - [x] Devs
 - [ ] Dark (German)
 - [ ] Mr. Robot
+- [ ] Lonely and Horny

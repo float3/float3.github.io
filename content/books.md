@@ -18,7 +18,13 @@ Books I'm currently reading
 - [ ] The Poppy Wars
 - [ ] The Black Company
 - [ ] Revelation Space
-- [ ] Japanese Homes and Their Surroundings
+- [ ] Japanese Homes and Their Surroundings 
+- [ ] The God Delusion (Richard Dawkins)
+- [ ] The Folly of Fools: The Logic of Deceit and Self-Deception in Human Life (Robert Trivers)
+- [ ] Moonwalking with Einstein
+- [ ] Outliers
+- [ ] Real Analysis
+- [ ] Little World
 
 ### (Computer) Science:
 - [-] Goedel Escher Bach
