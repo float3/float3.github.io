@@ -355,6 +355,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Die Hard With A Vengeance (1995) (2024-01-04)
 - [x] Live Free or Die Hard (2007) (2024-01-05)
 - [x] Cuck (2019) (2024-01-16)
+- [x] Borat 2 Subsequent Moviefilm (2020) (2024-01-24)
 - [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
