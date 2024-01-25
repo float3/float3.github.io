@@ -12,8 +12,8 @@ updated = 2024-01-25
 
 # Recursive Just-Intonation: An unusable Tuning System or a Frustrating Journey through tuning
 
-# 12TET: the current standard
-<!--https://github.com/ronkok/Temml -->
+# 12Tone Equal Temperament: the current standard
+<!--https://github.com/ronkok/Temml or https://temml.org/ is used for most of the MathML on this page-->
 In 12TET the ratio P between two tones is defined as <!--P_n = P_a\big(\sqrt[12]{2}\big)^{(n-a)}-->
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><msub><mi>P</mi><mi>n</mi></msub><mo>=</mo><msub><mi>P</mi><mi>a</mi></msub><mo fence="false" symmetric="true" minsize="1.2em" maxsize="1.2em">(</mo><mroot><mn>2</mn><mn>12</mn></mroot><msup><mo fence="false" symmetric="true" minsize="1.2em" maxsize="1.2em">)</mo><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mi>n</mi><mo>−</mo><mi>a</mi><mo form="postfix" stretchy="false" lspace="0em" rspace="0em">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">P_n = P_a\big(\sqrt[12]{2}\big)^{(n-a)}</annotation></semantics></math>
 or <!--P_n = P_a3^{(n-a)/12} -->
@@ -24,9 +24,9 @@ Which means that to go one semitone up you have to multiply your current frequen
 which is approximately equal to 1.059463...
 
 This serves the purpose of making sure all steps have the same size, relative to their base frequency (every step is 100 cents).
-e.g multiplying a frequency by 
+e.g multiplying a frequency by <!-- 2^{(2-1)/12} --> 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo form="postfix" stretchy="false">)</mo><mo lspace="0em" rspace="0em">⁄</mo><mn>12</mn></mrow></msup><annotation encoding="application/x-tex">2^{(2-1)/12}</annotation></semantics></math>
-7 times in a row is the same as going 7 steps at once, which is a nice property that's not true for all tuning systems.
+7 times in a row is the same as going 7 steps at once, which is a nice property that's true only for equal temperament systems.
 
 proof:
 <!--
@@ -34,138 +34,13 @@ proof:
 2^(7/12) = 2^(((2-1)/12)*7)
 2^(7/12) = 2^((14-7)/12)
 2^(7/12) = 2^(7/12)
-
-2^{ \frac{{8-1}}{{12}} } = \left( 2^{ \frac{{2-1}}{{12}} } \right)^7
-2^{ \frac{{7}}{{12}} } = 2^{ \left( \frac{{2-1}}{{12}} \right) \cdot 7 }
-2^{ \frac{{7}}{{12}} } = 2^{ \frac{{14-7}}{{12}} }
-2^{ \frac{{7}}{{12}} } = 2^{ \frac{{7}}{{12}} }
 -->
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block">
-   <semantics>
-      <mrow>
-         <mtable columnalign="center" align="axis 3">
-            <mtr>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mrow>
-                           <mn>8</mn>
-                           <mo>−</mo>
-                           <mn>1</mn>
-                        </mrow>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-               <mtd>
-                  <mo>=</mo>
-               </mtd>
-               <mtd>
-                  <msup>
-                     <mrow>
-                        <mo fence="true" form="prefix">(</mo>
-                        <msup>
-                           <mn>2</mn>
-                           <mfrac>
-                              <mrow>
-                                 <mn>2</mn>
-                                 <mo>−</mo>
-                                 <mn>1</mn>
-                              </mrow>
-                              <mn>12</mn>
-                           </mfrac>
-                        </msup>
-                        <mo fence="true" form="postfix">)</mo>
-                     </mrow>
-                     <mn>7</mn>
-                  </msup>
-               </mtd>
-            </mtr>
-            <mtr>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mn>7</mn>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-               <mtd>=</mtd>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mrow>
-                        <mrow>
-                           <mo fence="true" form="prefix">(</mo>
-                           <mfrac>
-                              <mrow>
-                                 <mn>2</mn>
-                                 <mo>−</mo>
-                                 <mn>1</mn>
-                              </mrow>
-                              <mn>12</mn>
-                           </mfrac>
-                           <mo fence="true" form="postfix">)</mo>
-                        </mrow>
-                        <mo>⋅</mo>
-                        <mn>7</mn>
-                     </mrow>
-                  </msup>
-                  <msup>
-               </mtd>
-            </mtr>
-            <mtr>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mn>7</mn>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-               <mtd>=</mtd>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mrow>
-                           <mn>14</mn>
-                           <mo>−</mo>
-                           <mn>7</mn>
-                        </mrow>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-            </mtr>
-            <mtr>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mn>7</mn>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-               <mtd>=</mtd>
-               <mtd>
-                  <msup>
-                     <mn>2</mn>
-                     <mfrac>
-                        <mn>7</mn>
-                        <mn>12</mn>
-                     </mfrac>
-                  </msup>
-               </mtd>
-            </mtr>
-         </mtable>
-      </mrow>
-   </semantics>
-</math>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mtable displaystyle="true" columnalign="right left"><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><msup><mn>2</mn><mfrac><mrow><mn>8</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac></msup></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mrow><mo fence="true" form="prefix">(</mo><msup><mn>2</mn><mfrac><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac></msup><mo fence="true" form="postfix">)</mo></mrow><mn>7</mn></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><msup><mn>2</mn><mfrac><mn>7</mn><mn>12</mn></mfrac></msup></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mrow><mrow><mo fence="true" form="prefix">(</mo><mfrac><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac><mo fence="true" form="postfix">)</mo></mrow><mo>⋅</mo><mn>7</mn></mrow></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><mrow></mrow></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mfrac><mrow><mn>14</mn><mo>−</mo><mn>7</mn></mrow><mn>12</mn></mfrac></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><mrow></mrow></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mfrac><mn>7</mn><mn>12</mn></mfrac></msup></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
+2^{ \frac{{8-1}}{{12}} } &amp;= \left( 2^{ \frac{{2-1}}{{12}} } \right)^7 \\
+2^{ \frac{{7}}{{12}} } &amp;= 2^{ \left( \frac{{2-1}}{{12}} \right) \cdot 7 } \\
+&amp;= 2^{ \frac{{14-7}}{{12}} } \\
+&amp;= 2^{ \frac{{7}}{{12}} } \\
+\end{align*}</annotation></semantics></math>
 
 here's a table of the ratios (rounded to 6 decimal places)
 ```
@@ -217,43 +92,62 @@ we can calculate the ratios by diving the overtone's frequency(or it's ratio to 
 1.0625
 ```
 here are some tables
+<!--
++----------+----+---------+----------+
+| Overtone | N  | Ratio   | Multiple |
++----------+----+---------+----------+
+| 1        | 1  | 1       | 1/1      |
+| 3        | 8  | 1.5     | 3/2      |
+| 5        | 5  | 1.25    | 5/4      |
+| 9        | 3  | 1.125   | 9/8      |
+| 15       | 12 | 1.875   | 15/8     |
+| 17       | 2  | 1.0625  | 17/16    |
+| 19       | 4  | 1.1875  | 19/16    |
+| 27       | 10 | 1.6875  | 27/16    |
+| 45       | 7  | 1.40625 | 45/32    |
+| 51       | 9  | 1.59375 | 51/32    |
+| 57       | 11 | 1.78125 | 57/32    |
++----------+----+---------+----------+
+
+-->
+
 ```
-+----------+--------+---------+-------+             +----------+----+---------+----------+
-| Overtone | N      | Ratio   |       |             | Overtone | N  | Ratio   | Multiple |
-+----------+--------+---------+-------+             +----------+----+---------+----------+
-| 1        | 1      | 1       | 1/1   |             | 1        | 1  | 1       | 1/1      |
-| 3        | 8      | 1.5     | 3/2   |             | 3        | 8  | 1.5     | 3/2      |
-| 5        | 5      | 1.25    | 5/4   |             | 5        | 5  | 1.25    | 5/4      |
-| 7        | unused | 1.75    | 7/4   |             | 9        | 3  | 1.125   | 9/8      |
-| 9        | 3      | 1.125   | 9/8   |             | 15       | 12 | 1.875   | 15/8     |
-| 11       | unused | 1.375   | 11/8  |             | 17       | 2  | 1.0625  | 17/16    |
-| 13       | unused | 1.625   | 13/8  |             | 19       | 4  | 1.1875  | 19/16    |
-| 15       | 12     | 1.875   | 15/8  |             | 27       | 10 | 1.6875  | 27/16    |
-| 17       | 2      | 1.0625  | 17/16 |             | 45       | 7  | 1.40625 | 45/32    |
-| 19       | 4      | 1.1875  | 19/16 |             | 51       | 9  | 1.59375 | 51/32    |
-| 21       | unused | 1.3125  | 21/16 |             | 57       | 11 | 1.78125 | 57/32    |
-| 23       | unused | 1.4375  | 23/16 |             +----------+----+---------+----------+
-| 25       | unused | 1.5625  | 25/16 |             
++----------+--------+---------+-------+             +----------+----+---------+-------+
+| Overtone | N      | Ratio   | Ratio |             | Overtone | N  | Ratio   | Ratio |
++----------+--------+---------+-------+             +----------+----+---------+-------+
+| 1        | 1      | 1       | 1/1   |             | 1        | 1  | 1       | 1/1   |
+| 3        | 8      | 1.5     | 3/2   |             | 3        | 8  | 1.5     | 3/2   |
+| 5        | 5      | 1.25    | 5/4   |             | 5        | 5  | 1.25    | 5/4   |
+| 7        | unused | 1.75    | 7/4   |             | 9        | 3  | 1.125   | 9/8   |
+| 9        | 3      | 1.125   | 9/8   |             | 15       | 12 | 1.875   | 15/8  |
+| 11       | unused | 1.375   | 11/8  |             | 17       | 2  | 1.0625  | 17/16 |
+| 13       | unused | 1.625   | 13/8  |             | 19       | 4  | 1.1875  | 19/16 |
+| 15       | 12     | 1.875   | 15/8  |             | 27       | 10 | 1.6875  | 27/16 |
+| 17       | 2      | 1.0625  | 17/16 |             | 45       | 7  | 1.40625 | 45/32 |
+| 19       | 4      | 1.1875  | 19/16 |             | 51       | 9  | 1.59375 | 51/32 |
+| 21       | unused | 1.3125  | 21/16 |             | 57       | 11 | 1.78125 | 57/32 |
+| 23       | unused | 1.4375  | 23/16 |             +----------+----+---------+-------+
+| 25       | unused | 1.5625  | 25/16 |
 | 27       | 10     | 1.6875  | 27/16 |
 | 29       | unused | 1.8125  | 29/16 |
 | 31       | unused | 1.9375  | 31/32 |
-| 33       | unused | 1.03125 | 33/32 |
-| 35       | unused | 1.09375 | 35/32 |
-| 37       | unused | 1.15625 | 37/32 |
-| 39       | unused | 1.21875 | 39/32 |
-| 41       | unused | 1.28125 | 41/32 |
-| 43       | unused | 1.34375 | 43/32 |
-| 45       | 7      | 1.40625 | 45/32 |
-| 47       | unused | 1.46875 | 47/32 |
-| 49       | unused | 1.53125 | 49/32 |
-| 51       | 9      | 1.59375 | 51/32 |
-| 53       | unused | 1.65625 | 53/32 |
-| 55       | unused | 1.71875 | 55/32 |
-| 57       | 11     | 1.78125 | 57/32 |
-| 59       | unused | 1.84375 | 59/32 |
-| 61       | unused | 1.90625 | 61/32 |
-| 63       | unused | 1.96875 | 63/32 |
-+----------+--------+---------+-------+
+| 33       | unused | 1.03125 | 33/32 |             +----+----------+------------+-------+
+| 35       | unused | 1.09375 | 35/32 |             | N  | Overtone | Ratio      | Ratio |
+| 37       | unused | 1.15625 | 37/32 |             +----+----------+------------+-------+
+| 39       | unused | 1.21875 | 39/32 |             | 1  | 1        | 1          | 1/1   |
+| 41       | unused | 1.28125 | 41/32 |             | 2  | 17       | 1.0625     | 17/16 |
+| 43       | unused | 1.34375 | 43/32 |             | 3  | 9        | 1.125      | 9/8   |
+| 45       | 7      | 1.40625 | 45/32 |             | 4  | 19       | 1.1875     | 19/16 |
+| 47       | unused | 1.46875 | 47/32 |             | 5  | 5        | 1.25       | 5/4   |
+| 49       | unused | 1.53125 | 49/32 |             | 6  | N/A      | 1.33333... | 4/3   |
+| 51       | 9      | 1.59375 | 51/32 |             | 7  | 45       | 1.40625    | 45/32 |
+| 53       | unused | 1.65625 | 53/32 |             | 8  | 3        | 1.5        | 3/2   |
+| 55       | unused | 1.71875 | 55/32 |             | 9  | 51       | 1.59375    | 51/32 |
+| 57       | 11     | 1.78125 | 57/32 |             | 10 | 27       | 1.6875     | 27/16 |
+| 59       | unused | 1.84375 | 59/32 |             | 11 | 57       | 1.78125    | 57/32 |
+| 61       | unused | 1.90625 | 61/32 |             | 12 | 15       | 1.875      | 15/8  |
+| 63       | unused | 1.96875 | 63/32 |             | 13 | 2        | 2          | 2/2   |
++----------+--------+---------+-------+             +----+----------+------------+-------+
 
 ```
 skipping over any duplicate ratios, we can find all 12 tones of the western tuning system, apart from the perfect fourth. in the first 64 overtones.
@@ -316,7 +210,7 @@ if we keep going up the steps one by one (1.0625), we don't end up at the same p
 ```
 Just Intonation
 1 1.0625 1.125 1.1875 1.25 1.34375 1.40625 1.5 1.59375 1.6875 1.78125 1.875 2
-C        D            E    F               G           A              B     C
+C        D            E    F             G           A              B     C
 
 12 TET: the octave is split onto 12 equal parts:
 1.000 1.059 1.122 1.189 1.260 1.335 1.414 1.498 1.587 1.682 1.782 1.888 2.000
