@@ -212,9 +212,6 @@ we can calculate the ratios by diving the overtone's frequency(or it's ratio to 
 ┬─[hill@nixos:~]─[20時11分26秒]─[I]
 ╰─>λ math 15 / 8
 1.875
-┬─[hill@nixos:~]─[20時11分44秒]─[I]
-╰─>λ math 17 / 8
-2.125
 ┬─[hill@nixos:~]─[20時11分55秒]─[I]
 ╰─>λ math 17 / 16
 1.0625
