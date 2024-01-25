@@ -261,9 +261,8 @@ here are some tables
 ```
 skipping over any duplicate ratios, we can find all 12 tones of the western tuning system, apart from the perfect fourth. in the first 64 overtones.
 the reason we can't find the perfect fourth is that it's ratio of 4/3 has a rational demoninator so it can never be part of the overtone series directly.
-i.e. <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><mi>R</mi><mo>⊇</mo><mrow><mo fence="true" form="prefix">{</mo><mfrac><mn>4</mn><mn>3</mn></mfrac><mo>×</mo><msup><mn>2</mn><mi>n</mi></msup><mo lspace="0.22em" rspace="0.22em" stretchy="false">|</mo><mi>n</mi><mo>∈</mo><mi>ℕ</mi><mo fence="true" form="postfix">}</mo></mrow></mrow><annotation encoding="application/x-tex">R \supseteq \left\{ \frac{3}{4} \times 2^n \mid n \in \mathbb{N} \right\}
-</annotation></semantics></math>
-
+i.e. <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><mrow><mo fence="true" form="prefix">{</mo><mfrac><mn>4</mn><mn>3</mn></mfrac><mo>×</mo><msup><mn>2</mn><mi>n</mi></msup><mo fence="false" stretchy="true" symmetric="true" minsize="2.4em" maxsize="2.4em">|</mo><mi>n</mi><mo>∈</mo><mi>ℕ</mi><mo fence="true" form="postfix">}</mo></mrow><mo>∉</mo><mi>ℕ</mi></mrow><annotation encoding="application/x-tex">\left\{ \frac{4}{3} \times 2^n \bigg| n \in \mathbb{N} \right\} \not \in \mathbb{N}
+</annotation></semantics></math> but it is present nonetheless as the ratio between individual overtones, for example between the 3rd and the 4th overtone (4/3).
 
 The nice thing about Just intonation is that we have exact ratios,
 
