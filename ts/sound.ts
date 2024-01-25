@@ -11,99 +11,94 @@ document.addEventListener("keydown", function (event) {
 
   let n: number;
 
-  switch (event.key.toUpperCase()) {
-    case "Y":
+  switch (event.code) {
+    case "KeyY":
       n = 0;
       break;
-    case "S":
+    case "KeyS":
       n = 1;
       break;
-    case "X":
+    case "KeyX":
       n = 2;
       break;
-    case "D":
+    case "KeyD":
       n = 3;
       break;
-    case "C":
+    case "KeyC":
       n = 4;
       break;
-    case "V":
+    case "KeyV":
       n = 5;
       break;
-    case "G":
+    case "KeyG":
       n = 6;
       break;
-    case "B":
+    case "KeyB":
       n = 7;
       break;
-    case "H":
+    case "KeyH":
       n = 8;
       break;
-    case "N":
+    case "KeyN":
       n = 9;
       break;
-    case "J":
+    case "KeyJ":
       n = 10;
       break;
-    case "M":
+    case "KeyM":
       n = 11;
       break;
-    case ",":
-    case "<":
+    case "KeyQ":
       n = 12;
       break;
-    case "Q":
-      n = 12;
-      break;
-    case "2":
+    case "Digit2":
       n = 13;
       break;
-    case "W":
+    case "KeyW":
       n = 14;
       break;
-    case "3":
+    case "Digit3":
       n = 15;
       break;
-    case "E":
+    case "KeyE":
       n = 16;
       break;
-    case "R":
+    case "KeyR":
       n = 17;
       break;
-    case "5":
+    case "Digit5":
       n = 18;
       break;
-    case "T":
+    case "KeyT":
       n = 19;
       break;
-    case "6":
+    case "Digit6":
       n = 20;
       break;
-    case "Z":
+    case "KeyZ":
       n = 21;
       break;
-    case "7":
+    case "Digit7":
       n = 22;
       break;
-    case "U":
+    case "KeyU":
       n = 23;
       break;
-    case "I":
+    case "KeyI":
       n = 24;
       break;
-    case "9":
+    case "Digit9":
       n = 25;
       break;
-    case "O":
+    case "KeyO":
       n = 26;
       break;
-    case "0":
+    case "Digit0":
       n = 27;
       break;
-    case "P":
+    case "KeyP":
       n = 28;
       break;
-
     default:
       n = -1;
       break;
