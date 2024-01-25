@@ -4,17 +4,13 @@ date = 2022-11-29
 updated = 2023-06-15
 +++
 
-# This post should be read in firefox. Chrome does not support MathML as of yet
-
 # THIS IS A WIP
 
 ░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█
 ░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█
 ░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░
 
-# Recursive Just-Intonation: An unusable Tuning System or: a Frustrating Journey through tuning
-
-Disclaimer: the only music related qualification that I posses is "Junior Assistant Conductor"
+# Recursive Just-Intonation: An unusable Tuning System or a Frustrating Journey through tuning
 
 # 12TET: the current standard
 <!--https://github.com/ronkok/Temml -->
