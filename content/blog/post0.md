@@ -264,7 +264,7 @@ here are some tables
 
 ```
 skipping over any duplicate ratios, we can find all 12 tones of the western tuning system, apart from the perfect fourth. in the first 64 overtones.
-the reason we can't find the perfect fourth is that it's ratio of 4/3 is a rational number so it can never be part of the overtone series directly.
+the reason we can't find the perfect fourth is that it's ratio of 4/3 has a rational demoninator so it can never be part of the overtone series directly.
 i.e. <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><mi>R</mi><mo>⊇</mo><mrow><mo fence="true" form="prefix">{</mo><mfrac><mn>3</mn><mn>4</mn></mfrac><mo>×</mo><msup><mn>2</mn><mi>n</mi></msup><mo lspace="0.22em" rspace="0.22em" stretchy="false">|</mo><mi>n</mi><mo>∈</mo><mi>ℕ</mi><mo fence="true" form="postfix">}</mo></mrow></mrow><annotation encoding="application/x-tex">R \supseteq \left\{ \frac{3}{4} \times 2^n \mid n \in \mathbb{N} \right\}
 </annotation></semantics></math>
 
