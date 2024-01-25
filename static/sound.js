@@ -2,9 +2,10 @@
 document.addEventListener("keydown", function (event) {
     const tuningSelect = document.getElementById("tuningSelect");
     const instrumentSelect = document.getElementById("instrumentSelect");
+    const volumeSlider = document.getElementById('volumeSlider');
     let n;
     switch (event.code) {
-        case "KeyY":
+        case "KeyZ":
             n = 0;
             break;
         case "KeyS":
@@ -67,7 +68,7 @@ document.addEventListener("keydown", function (event) {
         case "Digit6":
             n = 20;
             break;
-        case "KeyZ":
+        case "KeyY":
             n = 21;
             break;
         case "Digit7":
@@ -108,30 +109,34 @@ document.addEventListener("keydown", function (event) {
             break;
     }
     const base_freq = 220;
+    let volume = parseFloat(volumeSlider.value);
     switch (instrumentSelect.value) {
         case "tone.js":
-            playFrequencyTone(ratio * base_freq);
+            playFrequencyTone(ratio * base_freq, volume);
             break;
         default:
         case "audioContext":
-            playFrequency(ratio * base_freq);
+            playFrequency(ratio * base_freq, volume);
             break;
     }
 });
 const audioContext = new (window.AudioContext || window.webkitAudAudioContextioContext)();
-function playFrequencyTone(frequency) {
+function playFrequencyTone(frequency, volume) {
     console.log(frequency);
     const synth = new Tone.Synth().toDestination();
     synth.triggerAttackRelease(frequency, "8n");
 }
-function playFrequency(frequency) {
+function playFrequency(frequency, volume) {
     console.log(frequency);
     const oscillator = audioContext.createOscillator();
-    oscillator.type = "square"; // You can change the waveform type if needed
+    let gainNode = audioContext.createGain();
+    gainNode.gain.value = volume;
+    gainNode.connect(audioContext.destination);
+    oscillator.type = "square"; // TODO: add waveform selector
     oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-    oscillator.connect(audioContext.destination);
+    oscillator.connect(gainNode);
     oscillator.start();
-    oscillator.stop(audioContext.currentTime + 0.3); // Stop after 0.5 seconds
+    oscillator.stop(audioContext.currentTime + 0.3);
 }
 function twelve_tet_get_interval(n) {
     return Math.pow(2, n / 12);

@@ -9,6 +9,10 @@ document.addEventListener("keydown", function (event) {
     "instrumentSelect"
   ) as HTMLSelectElement;
 
+
+  const volumeSlider = document.getElementById('volumeSlider') as HTMLInputElement;
+
+
   let n: number;
 
   switch (event.code) {
@@ -120,31 +124,39 @@ document.addEventListener("keydown", function (event) {
 
   const base_freq: number = 220;
 
+  let volume : number = parseFloat(volumeSlider.value);
+
+
   switch (instrumentSelect.value) {
     case "tone.js":
-      playFrequencyTone(ratio * base_freq);
+      playFrequencyTone(ratio * base_freq, volume);
       break;
     default:
     case "audioContext":
-      playFrequency(ratio * base_freq);
+      playFrequency(ratio * base_freq, volume);
       break;
   }
 });
 
 const audioContext = new (window.AudioContext || window.webkitAudAudioContextioContext)();
 
-function playFrequencyTone(frequency: number) {
+
+
+function playFrequencyTone(frequency: number, volume : number) {
   console.log(frequency);
   const synth = new Tone.Synth().toDestination();
   synth.triggerAttackRelease(frequency, "8n");
 }
 
-function playFrequency(frequency: number) {
+function playFrequency(frequency: number, volume : number) {
   console.log(frequency);
   const oscillator = audioContext.createOscillator();
-  oscillator.type = "square"; // add waveform selector
+  let gainNode = audioContext.createGain();
+  gainNode.gain.value = volume;
+  gainNode.connect(audioContext.destination);
+  oscillator.type = "square"; // TODO: add waveform selector
   oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
-  oscillator.connect(audioContext.destination);
+  oscillator.connect(gainNode);
   oscillator.start();
   oscillator.stop(audioContext.currentTime + 0.3);
 }

@@ -22,3 +22,6 @@ use your keyboard
   <option value="tone.js">tone.js</option>
   <option value="audioContext">Audio Context</option>
 </select>
+
+
+Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
