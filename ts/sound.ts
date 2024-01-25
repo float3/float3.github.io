@@ -142,11 +142,11 @@ function playFrequencyTone(frequency: number) {
 function playFrequency(frequency: number) {
   console.log(frequency);
   const oscillator = audioContext.createOscillator();
-  oscillator.type = "square"; // You can change the waveform type if needed
+  oscillator.type = "square"; // add waveform selector
   oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
   oscillator.connect(audioContext.destination);
   oscillator.start();
-  oscillator.stop(audioContext.currentTime + 0.3); // Stop after 0.5 seconds
+  oscillator.stop(audioContext.currentTime + 0.3);
 }
 
 function twelve_tet_get_interval(n: number): number {

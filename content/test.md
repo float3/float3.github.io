@@ -9,6 +9,8 @@ updated = 1970-01-01
 </body>
 </html>
 
+use your keyboard
+
 <label for="tuningSelect">Select Tuning System:</label>
 <select id="tuningSelect" name="tuningSelect">
   <option value="twelve_tone">12TET</option>
