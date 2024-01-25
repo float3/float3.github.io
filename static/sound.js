@@ -90,7 +90,10 @@ function twelve_tet_get_interval(n) {
     return Math.pow(2, n / 12);
 }
 function just_intonation_get_interval(n) {
-    return just_intonation[n];
+    let n2 = n % 13;
+    let ratio = just_intonation[n2];
+    let twelves = Math.floor(n / 12);
+    return ratio + twelves;
 }
 const just_intonation = {
     0: 1,

@@ -9,7 +9,6 @@ document.addEventListener("keydown", function (event) {
     "instrumentSelect"
   ) as HTMLSelectElement;
 
-
   let n: number;
 
   switch (event.key.toUpperCase()) {
@@ -74,7 +73,6 @@ document.addEventListener("keydown", function (event) {
 
   const base_freq: number = 220;
 
-
   switch (instrumentSelect.value) {
     case "tone.js":
       playFrequencyTone(ratio * base_freq);
@@ -86,7 +84,7 @@ document.addEventListener("keydown", function (event) {
   }
 });
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext || window.webkitAudAudioContextioContext)();
 
 function playFrequencyTone(frequency: number) {
   console.log(frequency);
@@ -109,7 +107,10 @@ function twelve_tet_get_interval(n: number): number {
 }
 
 function just_intonation_get_interval(n: number): number {
-  return just_intonation[n];
+  let n2: number = n % 13;
+  let ratio: number = just_intonation[n2];
+  let twelves: number = Math.floor(n / 12);
+  return ratio + twelves;
 }
 
 type FractionTable = Record<number, number>;
