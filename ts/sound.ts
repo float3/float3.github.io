@@ -12,7 +12,7 @@ document.addEventListener("keydown", function (event) {
   let n: number;
 
   switch (event.code) {
-    case "KeyY":
+    case "KeyZ":
       n = 0;
       break;
     case "KeyS":
@@ -75,7 +75,7 @@ document.addEventListener("keydown", function (event) {
     case "Digit6":
       n = 20;
       break;
-    case "KeyZ":
+    case "KeyY":
       n = 21;
       break;
     case "Digit7":
