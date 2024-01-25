@@ -44,6 +44,57 @@ document.addEventListener("keydown", function (event) {
         case "<":
             n = 12;
             break;
+        case "Q":
+            n = 12;
+            break;
+        case "2":
+            n = 13;
+            break;
+        case "W":
+            n = 14;
+            break;
+        case "3":
+            n = 15;
+            break;
+        case "E":
+            n = 16;
+            break;
+        case "R":
+            n = 17;
+            break;
+        case "5":
+            n = 18;
+            break;
+        case "T":
+            n = 19;
+            break;
+        case "6":
+            n = 20;
+            break;
+        case "Z":
+            n = 21;
+            break;
+        case "7":
+            n = 22;
+            break;
+        case "U":
+            n = 23;
+            break;
+        case "I":
+            n = 24;
+            break;
+        case "9":
+            n = 25;
+            break;
+        case "O":
+            n = 26;
+            break;
+        case "0":
+            n = 27;
+            break;
+        case "P":
+            n = 28;
+            break;
         default:
             n = -1;
             break;
@@ -71,7 +122,7 @@ document.addEventListener("keydown", function (event) {
             break;
     }
 });
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const audioContext = new (window.AudioContext || window.webkitAudAudioContextioContext)();
 function playFrequencyTone(frequency) {
     console.log(frequency);
     const synth = new Tone.Synth().toDestination();
@@ -90,7 +141,7 @@ function twelve_tet_get_interval(n) {
     return Math.pow(2, n / 12);
 }
 function just_intonation_get_interval(n) {
-    let n2 = n % 13;
+    let n2 = n % 12;
     let ratio = just_intonation[n2];
     let twelves = Math.floor(n / 12);
     return ratio + twelves;
@@ -108,5 +159,4 @@ const just_intonation = {
     9: 27 / 16,
     10: 57 / 32,
     11: 15 / 8,
-    12: 2,
 };

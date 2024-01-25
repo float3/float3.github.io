@@ -52,6 +52,58 @@ document.addEventListener("keydown", function (event) {
     case "<":
       n = 12;
       break;
+    case "Q":
+      n = 12;
+      break;
+    case "2":
+      n = 13;
+      break;
+    case "W":
+      n = 14;
+      break;
+    case "3":
+      n = 15;
+      break;
+    case "E":
+      n = 16;
+      break;
+    case "R":
+      n = 17;
+      break;
+    case "5":
+      n = 18;
+      break;
+    case "T":
+      n = 19;
+      break;
+    case "6":
+      n = 20;
+      break;
+    case "Z":
+      n = 21;
+      break;
+    case "7":
+      n = 22;
+      break;
+    case "U":
+      n = 23;
+      break;
+    case "I":
+      n = 24;
+      break;
+    case "9":
+      n = 25;
+      break;
+    case "O":
+      n = 26;
+      break;
+    case "0":
+      n = 27;
+      break;
+    case "P":
+      n = 28;
+      break;
+
     default:
       n = -1;
       break;
@@ -107,7 +159,7 @@ function twelve_tet_get_interval(n: number): number {
 }
 
 function just_intonation_get_interval(n: number): number {
-  let n2: number = n % 13;
+  let n2: number = n % 12;
   let ratio: number = just_intonation[n2];
   let twelves: number = Math.floor(n / 12);
   return ratio + twelves;
@@ -128,5 +180,4 @@ const just_intonation: FractionTable = {
   9: 27 / 16,
   10: 57 / 32,
   11: 15 / 8,
-  12: 2,
 };
