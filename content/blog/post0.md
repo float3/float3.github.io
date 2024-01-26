@@ -12,7 +12,7 @@ updated = 2024-01-25
 
 # Recursive Just-Intonation: An unusable Tuning System or a Frustrating Journey through tuning
 
-[Play around with different tuning systems and your computer keyboard](/test)
+[Play around with different tuning systems and your computer keyboard](/playground)
 
 # 12Tone Equal Temperament: the current standard
 <!--https://github.com/ronkok/Temml or https://temml.org/ is used for most of the MathML on this page-->

@@ -117,6 +117,9 @@ document.addEventListener("keydown", function (event) {
     case "twelve_tone":
       ratio = twelve_tet_get_interval(n);
       break;
+    case "twentyfour_tone":
+      ratio = equal_temperament_get_interval(n,24);
+      break;
     case "just_intonation":
       ratio = just_intonation_get_interval(n);
       break;
@@ -161,8 +164,12 @@ function playFrequency(frequency: number, volume : number) {
   oscillator.stop(audioContext.currentTime + 0.3);
 }
 
+function equal_temperament_get_interval(n: number, base: number) : number {
+  return Math.pow(2, n / base);
+}
+
 function twelve_tet_get_interval(n: number): number {
-  return Math.pow(2, n / 12);
+  return equal_temperament_get_interval(n, 12);
 }
 
 function just_intonation_get_interval(n: number): number {

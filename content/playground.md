@@ -1,5 +1,5 @@
 +++
-title = "test"
+title = "playground"
 updated = 1970-01-01
 +++
 <html lang="en">
@@ -14,6 +14,7 @@ use your keyboard
 <label for="tuningSelect">Select Tuning System:</label>
 <select id="tuningSelect" name="tuningSelect">
   <option value="twelve_tone">12TET</option>
+  <option value="twentyfour_tone">24TET</option>
   <option value="just_intonation">Just Intonation</option>
 </select>
 
