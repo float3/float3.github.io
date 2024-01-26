@@ -8,8 +8,9 @@ fn main() {
     let first = first.as_str();
 
     let current_dir = std::env::current_dir().expect("Failed to get current directory");
-    let file_path = current_dir.join("..").join("content").join("movies.md");
+    let file_path = current_dir.join("..").join("..").join("content").join("movies.md");
 
+    
     let file = File::open(file_path).unwrap();
     let mut buf_reader = BufReader::new(file.try_clone().unwrap());
     let mut contents = String::new();
