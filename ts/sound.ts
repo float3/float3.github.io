@@ -127,7 +127,7 @@ document.addEventListener("keydown", function (event) {
 
   const base_freq: number = 220;
 
-  let volume : number = parseFloat(volumeSlider.value);
+  let volume : number = Math.pow(parseFloat(volumeSlider.value),2);
 
 
   switch (instrumentSelect.value) {
