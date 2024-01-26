@@ -11,11 +11,19 @@ updated = 1970-01-01
 
 use your keyboard
 
+<!-- TODO number picker for equal temperament-->
+
 <label for="tuningSelect">Select Tuning System:</label>
 <select id="tuningSelect" name="tuningSelect">
   <option value="twelve_tone">12TET</option>
   <option value="twentyfour_tone">24TET</option>
   <option value="just_intonation">Just Intonation</option>
+  <option value="pythagorean_tuning">Pythagorean Tuning</option>
+  <option value="eleven_limit">Eleven Limit</option>
+  <option value="fortythree_tone">Fortythree tone tuning</option>
+  <!--option value="meantone_temperament">Meantone Temperament</option>
+  <option value="well_temperament">Well Temperament</option>
+  <option value="equal_temperament">Equal Temperament</option-->
 </select>
 
 <label for="instrumentSelect">Select Sound Library:</label>
