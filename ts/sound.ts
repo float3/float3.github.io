@@ -1,17 +1,13 @@
 import * as Tone from "tone";
 
+
+
 document.addEventListener("keydown", function (event) {
-  const tuningSelect = document.getElementById(
-    "tuningSelect"
-  ) as HTMLSelectElement;
-
-  const instrumentSelect = document.getElementById(
-    "instrumentSelect"
-  ) as HTMLSelectElement;
-
-  const volumeSlider = document.getElementById(
-    "volumeSlider"
-  ) as HTMLInputElement;
+  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
+  const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
+  const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
+  const baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
+  const logContainer = document.getElementById("logContainer") as HTMLElement;
 
   let n: number;
 
@@ -52,6 +48,7 @@ document.addEventListener("keydown", function (event) {
     case "KeyM":
       n = 11;
       break;
+    case "Comma":
     case "KeyQ":
       n = 12;
       break;
@@ -103,6 +100,10 @@ document.addEventListener("keydown", function (event) {
     case "KeyP":
       n = 28;
       break;
+    case "Tab":
+      logContainer.innerHTML = "";
+      n = -1;
+      break;
     default:
       n = -1;
       break;
@@ -134,20 +135,20 @@ document.addEventListener("keydown", function (event) {
       break;
   }
 
-  const base_freq: number = 220; // TODO: make this configurable
+  let root: number = parseFloat(baseFreq.value);
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
-  let freq: number = ratio * base_freq;
-  console.log(freq); // TODO: print this to screen or visualize it
+  let freq: number = ratio * root;
+  logToDiv(freq);
 
-  switch (instrumentSelect.value) {
+  switch (soundMethod.value) {
+    default:
+    case "native":
+      playFrequency(freq, volume);
+      break;
     case "tone.js":
       playFrequencyTone(freq, volume);
-      break;
-    default:
-    case "audioContext":
-      playFrequency(freq, volume);
       break;
   }
 });
@@ -169,6 +170,11 @@ function playFrequency(frequency: number, volume: number) {
   oscillator.connect(gainNode);
   oscillator.start();
   oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function logToDiv(message: any) {
+  let logContainer: HTMLElement = document.getElementById("logContainer") as HTMLElement;
+  logContainer.innerHTML = "<p>" + message + "Hz</p>" + logContainer.innerHTML;
 }
 
 function equal_temperament_get_interval(n: number, base: number): number {
@@ -295,3 +301,6 @@ const fortythree_tone: FractionTable = {
   41: 64 / 33,
   42: 160 / 81,
 };
+
+
+// TODO: https://en.wikipedia.org/wiki/File:Equal_Temper_w_limits.svg

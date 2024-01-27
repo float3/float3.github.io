@@ -26,11 +26,15 @@ use your keyboard
   <option value="equal_temperament">Equal Temperament</option-->
 </select>
 
-<label for="instrumentSelect">Select Sound Library:</label>
-<select id="instrumentSelect" name="instrumentSelect">
+<label for="soundMethod">Select Sound Method:</label>
+<select id="soundMethod" name="soundMethod">
+  <option value="native">Native</option>
   <option value="tone.js">tone.js</option>
-  <option value="audioContext">Audio Context</option>
 </select>
 
 
 Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
+
+Base Freq: <input id="baseFreq" value="220">
+
+<div id="logContainer"></div>
