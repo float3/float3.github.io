@@ -1,7 +1,5 @@
 import * as Tone from "tone";
 
-
-
 document.addEventListener("keydown", function (event) {
   const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
   const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
@@ -225,35 +223,35 @@ const pythagorean_tuning: FractionTable = {
 };
 
 const eleven_limit: FractionTable = {
-  1: 1 / 1,
-  2: 12 / 11,
-  3: 11 / 10,
-  4: 10 / 9,
-  5: 9 / 8,
-  6: 8 / 7,
-  7: 7 / 6,
-  8: 6 / 5,
-  9: 11 / 9,
-  10: 5 / 4,
-  11: 14 / 11,
-  12: 9 / 7,
-  13: 4 / 3,
-  14: 11 / 8,
-  15: 7 / 5,
-  16: 10 / 7,
-  17: 16 / 11,
-  18: 3 / 2,
-  19: 14 / 9,
-  20: 11 / 7,
-  21: 8 / 5,
-  22: 18 / 11,
-  23: 5 / 3,
-  24: 12 / 7,
-  25: 7 / 4,
-  26: 16 / 9,
-  27: 9 / 5,
-  28: 20 / 11,
-  29: 11 / 6
+  0: 1 / 1,
+  1: 12 / 11,
+  2: 11 / 10,
+  3: 10 / 9,
+  4: 9 / 8,
+  5: 8 / 7,
+  6: 7 / 6,
+  7: 6 / 5,
+  8: 11 / 9,
+  9: 5 / 4,
+  10: 14 / 11,
+  11: 9 / 7,
+  12: 4 / 3,
+  13: 11 / 8,
+  14: 7 / 5,
+  15: 10 / 7,
+  16: 16 / 11,
+  17: 3 / 2,
+  18: 14 / 9,
+  19: 11 / 7,
+  20: 8 / 5,
+  21: 18 / 11,
+  22: 5 / 3,
+  23: 12 / 7,
+  24: 7 / 4,
+  25: 16 / 9,
+  26: 9 / 5,
+  27: 20 / 11,
+  28: 11 / 6
 }
 
 const fortythree_tone: FractionTable = {
