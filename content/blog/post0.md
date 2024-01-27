@@ -1,7 +1,7 @@
 +++
 title = "Recursive Just-Intonation"
 date = 2022-11-29
-updated = 2024-01-25
+updated = 2024-01-27
 +++
 
 # THIS IS A WIP

@@ -2,8 +2,14 @@
 title = "hello brave world!"
 +++
 
+# Content
+
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
+- [demos](@/demos/_index.md)
+
+# Misc
+
 - [rss feed](/atom.xml)
 - [pgp](/public-key.txt)
 - [source](https://github.com/float3/float3.github.io)

@@ -1,10 +1,12 @@
 +++
 title = "playground"
-updated = 1970-01-01
+date = 2024-01-27
+updated = 2024-01-27
 +++
+
 <html lang="en">
 <body>
-  <script src="/sound.js"></script>
+  <script src="/playground.js"></script>
   <script src="https://unpkg.com/tone"></script>
 </body>
 </html>
