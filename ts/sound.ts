@@ -120,16 +120,16 @@ document.addEventListener("keydown", function (event) {
       ratio = equal_temperament_get_interval(n, 24);
       break;
     case "just_intonation":
-      ratio = table_get_interval(n, just_intonation, 12);
+      ratio = table_get_interval(n, just_intonation);
       break;
     case "pythagorean_tuning":
-      ratio = table_get_interval(n, pythagorean_tuning, 12);
+      ratio = table_get_interval(n, pythagorean_tuning);
       break;
     case "eleven_limit":
-      ratio = table_get_interval(n, eleven_limit, 30);
+      ratio = table_get_interval(n, eleven_limit);
       break;
     case "fortythree_tone":
-      ratio = table_get_interval(n, fortythree_tone, 43);
+      ratio = table_get_interval(n, fortythree_tone);
       break;
   }
 
@@ -182,8 +182,8 @@ function equal_temperament_get_interval(n: number, base: number): number {
 function table_get_interval(
   n: number,
   table: FractionTable,
-  tablesize: number
 ): number {
+  let tablesize = Object.keys(table).length;
   let n2: number = n % tablesize;
   let ratio: number = table[n2];
   let octaves: number = Math.floor(n / tablesize);
