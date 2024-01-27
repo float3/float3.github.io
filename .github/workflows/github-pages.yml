@@ -29,10 +29,12 @@ jobs:
         run: npm install
       - name: Install TypeScript
         run: npm install -g typescript
+      - name: cd
+        run: cd ./ts
       - name: tsc
         run: tsc || true
       - name: sed
-        run: sed -i '2,3d' ./static/sound.js
+        run: sed -i '2,3d' ../playground.js
       - name: Get Zola
         run: |
           mkdir /tmp/zola
