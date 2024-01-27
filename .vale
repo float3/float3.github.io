@@ -1,5 +1,0 @@
-MinAlertLevel = suggestion
-Packages = Microsoft, Readability
-[*]
-BasedOnStyles = Vale
-Vale.Terms = NO
