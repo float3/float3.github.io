@@ -15,3 +15,4 @@ updated = 1970-01-01
 - [ ] Squid Game
 - [ ] Dark (German)
 - [ ] Mr. Robot
+- [ ] The Wire
