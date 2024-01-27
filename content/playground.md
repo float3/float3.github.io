@@ -11,12 +11,9 @@ updated = 1970-01-01
 
 use your keyboard
 
-<!-- TODO number picker for equal temperament-->
-
 <label for="tuningSelect">Select Tuning System:</label>
-<select id="tuningSelect" name="tuningSelect">
-  <option value="twelve_tone">12TET</option>
-  <option value="twentyfour_tone">24TET</option>
+<select id="tuningSelect" name="tuningSelect" onchange="toggleInputVisibility()">
+  <option value="equal_temperament">Equal Temperament</option>
   <option value="just_intonation">Just Intonation</option>
   <option value="pythagorean_tuning">Pythagorean Tuning</option>
   <option value="eleven_limit">Eleven Limit</option>
@@ -36,5 +33,10 @@ use your keyboard
 Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
 
 Base Freq: <input id="baseFreq" value="220">
+
+<div id="equalTemperamentBaseContainer" style="display: block;">
+    <label for="equalTemperamentBase">Equal Temperament Base:</label>
+    <input id="equalTemperamentBase" value="12">
+</div>
 
 <div id="logContainer"></div>

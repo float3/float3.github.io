@@ -4,6 +4,7 @@ document.addEventListener("keydown", function (event) {
   const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
   const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
   const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
+  const equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
   const baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   const logContainer = document.getElementById("logContainer") as HTMLElement;
 
@@ -113,11 +114,8 @@ document.addEventListener("keydown", function (event) {
 
   switch (tuningSelect.value) {
     default:
-    case "twelve_tone":
-      ratio = equal_temperament_get_interval(n, 12);
-      break;
-    case "twentyfour_tone":
-      ratio = equal_temperament_get_interval(n, 24);
+    case "equal_temperament":
+      ratio = equal_temperament_get_interval(n, parseFloat(equalTemperamentBase.value));
       break;
     case "just_intonation":
       ratio = table_get_interval(n, just_intonation);
@@ -168,6 +166,17 @@ function playFrequency(frequency: number, volume: number) {
   oscillator.connect(gainNode);
   oscillator.start();
   oscillator.stop(audioContext.currentTime + 0.3);
+}
+
+function toggleInputVisibility(): void {
+  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
+  const equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
+
+  if (tuningSelect.value === "equal_temperament") {
+    equalTemperamentBaseContainer.style.display = "block";
+  } else {
+    equalTemperamentBaseContainer.style.display = "none";
+  }
 }
 
 function logToDiv(message: any) {
