@@ -33,7 +33,6 @@ jobs:
         run: |
           cd ./ts
           tsc || true
-          cat ../static/playground.js
           sed -i '2,3d' ../static/playground.js
       - name: Get Zola
         run: |
