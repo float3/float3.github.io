@@ -10,6 +10,8 @@ updated = 1970-01-01
 - [x] Game of Thrones
 - [x] Better Call Saul
 - [x] Devs
+- [x] Sweet Home
+- [ ] Pachinko
+- [ ] Squid Game
 - [ ] Dark (German)
 - [ ] Mr. Robot
-- [ ] Lonely and Horny
