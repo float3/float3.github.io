@@ -208,8 +208,8 @@ function table_get_interval(
   return ratio + octaves;
 }
 
-export type FractionTable = Record<number, number>;
-export const just_intonation: FractionTable = {
+type FractionTable = Record<number, number>;
+const just_intonation: FractionTable = {
   0: 1 / 1,
   1: 17 / 16,
   2: 9 / 8,
@@ -223,7 +223,7 @@ export const just_intonation: FractionTable = {
   10: 57 / 32,
   11: 15 / 8,
 };
-export const pythagorean_tuning: FractionTable = {
+const pythagorean_tuning: FractionTable = {
   0: 1 / 1,
   1: 256 / 243,
   2: 9 / 8,
@@ -237,7 +237,7 @@ export const pythagorean_tuning: FractionTable = {
   10: 243 / 128,
   11: 15 / 8,
 };
-export const eleven_limit: FractionTable = {
+const eleven_limit: FractionTable = {
   0: 1 / 1,
   1: 12 / 11,
   2: 11 / 10,
@@ -268,7 +268,7 @@ export const eleven_limit: FractionTable = {
   27: 20 / 11,
   28: 11 / 6
 };
-export const fortythree_tone: FractionTable = {
+ const fortythree_tone: FractionTable = {
   0: 1 / 1,
   1: 81 / 80,
   2: 33 / 32,
