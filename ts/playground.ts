@@ -45,7 +45,7 @@ function getRatio(tuningSelect: HTMLSelectElement, n: number) {
 }
 
 function getN(event: KeyboardEvent, logContainer: HTMLElement) {
-  let n: number = -1;
+  let n: number = -1; // , . / ; ' [ ] - = 
   switch (event.code) {
     case "KeyZ":
       n = 0;
@@ -56,10 +56,10 @@ function getN(event: KeyboardEvent, logContainer: HTMLElement) {
     case "KeyX":
       n = 2;
       break;
-    case "KeyD":
+    case "KeyC":
       n = 3;
       break;
-    case "KeyC":
+    case "KeyF":
       n = 4;
       break;
     case "KeyV":
@@ -71,69 +71,93 @@ function getN(event: KeyboardEvent, logContainer: HTMLElement) {
     case "KeyB":
       n = 7;
       break;
-    case "KeyH":
+    case "KeyN":
       n = 8;
       break;
-    case "KeyN":
+    case "KeyJ":
       n = 9;
       break;
-    case "KeyJ":
+    case "KeyM":
       n = 10;
       break;
-    case "KeyM":
+    case "KeyK":
       n = 11;
       break;
     case "Comma":
-    case "KeyQ":
       n = 12;
       break;
-    case "Digit2":
+    case "KeyL":
       n = 13;
       break;
-    case "KeyW":
+    case "Period":
       n = 14;
       break;
-    case "Digit3":
+    case "Slash":
       n = 15;
       break;
-    case "KeyE":
+    case "Quote":
+    case "Digit1":
       n = 16;
       break;
-    case "KeyR":
+    case "KeyQ":
       n = 17;
       break;
-    case "Digit5":
+    case "Digit2":
       n = 18;
       break;
-    case "KeyT":
+    case "KeyW":
       n = 19;
       break;
-    case "Digit6":
+    case "KeyE":
       n = 20;
       break;
-    case "KeyY":
+    case "Digit4":
       n = 21;
       break;
-    case "Digit7":
+    case "KeyR":
       n = 22;
       break;
-    case "KeyU":
+    case "Digit5":
       n = 23;
       break;
-    case "KeyI":
+    case "KeyT":
       n = 24;
       break;
-    case "Digit9":
+    case "Digit6":
       n = 25;
       break;
-    case "KeyO":
+    case "KeyY":
       n = 26;
       break;
-    case "Digit0":
+    case "KeyU":
       n = 27;
       break;
-    case "KeyP":
+    case "Digit8":
       n = 28;
+      break;
+    case "KeyI":
+      n = 29;
+      break;
+    case "Digit9":
+      n = 30;
+      break;
+    case "KeyO":
+      n = 31;
+      break;
+    case "KeyP":
+      n = 32;
+      break;
+    case "Minus":
+      n = 33;
+      break;
+    case "BracketLeft":
+      n = 34;
+      break;
+    case "Equal":
+      n = 35;
+      break;
+    case "BracketRight":
+      n = 36;
       break;
     case "Tab":
       logContainer.innerHTML = "";
@@ -205,6 +229,11 @@ function table_get_interval(
   let n2: number = n % tablesize;
   let ratio: number = table[n2];
   let octaves: number = Math.floor(n / tablesize);
+  console.log(tablesize);
+  console.log(n);
+  console.log(n2);
+  console.log(ratio);
+  console.log(octaves);
   return ratio + octaves;
 }
 
@@ -268,7 +297,7 @@ const eleven_limit: FractionTable = {
   27: 20 / 11,
   28: 11 / 6
 };
- const fortythree_tone: FractionTable = {
+const fortythree_tone: FractionTable = {
   0: 1 / 1,
   1: 81 / 80,
   2: 33 / 32,
