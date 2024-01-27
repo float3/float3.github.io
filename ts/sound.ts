@@ -301,4 +301,6 @@ const fortythree_tone: FractionTable = {
 };
 
 
+// TODO: port chord detection https://github.com/float3/3s-Unity-Stuff/blob/master/Assets/Polyrhythm/Script/PolyrhythmController.cs#L119
+
 // TODO: https://en.wikipedia.org/wiki/File:Equal_Temper_w_limits.svg
