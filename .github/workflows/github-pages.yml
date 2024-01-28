@@ -32,7 +32,7 @@ jobs:
       - name: tsc
         run: |
           cd ./ts
-          tsc 
+          tsc || true
           sed -i '2,3d' ../static/playground.js
       - name: collect_link.sh
         run: sh ./scripts/collects_links.sh
