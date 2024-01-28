@@ -29,24 +29,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("keydown", function (event) {
-  let b: boolean = false;
-
   if (event.code == "Tab") {
     logContainer.innerHTML = "";
-    b = true;
+    return;
   }
 
-  playingNotes.forEach(note => {
-    if (note[0] == event.code) {
-      b = true;
-    }
-  })
+  const isNotePlaying = playingNotes.some(note => note[0] === event.code);
 
-  let n: number = keyboard[event.code] || -1000;
+  let n: number = keyboard[event.code];
 
-  if (n == -1000) { b = true; }
-  if (b) { return; }
-
+  if (isNotePlaying || isNaN(n)) { return; }
 
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
