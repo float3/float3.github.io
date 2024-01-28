@@ -1,5 +1,7 @@
 import * as Tone from "tone";
 
+type FractionTable = Record<number, number>;
+type ToneList = Array<[string, OscillatorNode]>;
 
 var logContainer: HTMLElement;
 var tuningSelect: HTMLSelectElement;
@@ -9,6 +11,9 @@ var equalTemperamentBase: HTMLInputElement;
 var equalTemperamentBaseContainer: HTMLDivElement;
 
 var synth: Tone.Synth<Tone.SynthOptions>;
+var audioContext: AudioContext;
+
+var playingNotes: ToneList;
 
 document.addEventListener("DOMContentLoaded", () => {
   logContainer = document.getElementById("logContainer") as HTMLElement;
@@ -19,15 +24,29 @@ document.addEventListener("DOMContentLoaded", () => {
   equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
 
   synth = new Tone.Synth().toDestination();
+
+  playingNotes = [];
 });
 
 document.addEventListener("keydown", function (event) {
+  let b: boolean = false;
+
   if (event.code == "Tab") {
     logContainer.innerHTML = "";
-    return;
+    b = true;
   }
 
-  let n: number = keyboard[event.code]
+  playingNotes.forEach(note => {
+    if (note[0] == event.code) {
+      b = true;
+    }
+  })
+
+  let n: number = keyboard[event.code] || -1000;
+
+  if (n == -1000) { b = true; }
+  if (b) { return; }
+
 
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
@@ -36,38 +55,41 @@ document.addEventListener("keydown", function (event) {
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
-  playFrequency(freq, volume);
+  playFrequency(freq, volume, event.code);
+});
+
+document.addEventListener("keyup", function (event) {
+  var newNotes: ToneList = [];
+  playingNotes.forEach(note => {
+    if (note[0] == event.code) {
+      note[1].stop();
+    }
+    else {
+      newNotes.push(note);
+    }
+    playingNotes = newNotes;
+  })
 });
 
 function getRatio(n: number): number {
   let ratio: number;
   switch (tuningSelect.value) {
-    default:
     case "equal_temperament":
       ratio = equal_temperament_get_interval(n, parseFloat(equalTemperamentBase.value));
       break;
-    case "just_intonation":
-      ratio = table_get_interval(n, just_intonation);
-      break;
-    case "pythagorean_tuning":
-      ratio = table_get_interval(n, pythagorean_tuning);
-      break;
-    case "eleven_limit":
-      ratio = table_get_interval(n, eleven_limit);
-      break;
-    case "fortythree_tone":
-      ratio = table_get_interval(n, fortythree_tone);
+    default:
+      ratio = table_get_interval(n, table_table[tuningSelect.value]);
       break;
   }
   return ratio;
 }
 
-function playFrequency(frequency: number, volume: number): void {
+function playFrequency(frequency: number, volume: number, code: string): void {
   const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
   switch (soundMethod.value) {
     default:
     case "native":
-      playFrequencyNative(frequency, volume);
+      playFrequencyNative(frequency, volume, code);
       break;
     case "tone.js":
       playFrequencyToneJS(frequency, volume);
@@ -80,8 +102,8 @@ function playFrequencyToneJS(frequency: number, volume: number): void {
   synth.triggerAttackRelease(frequency, "8n");
 }
 
-function playFrequencyNative(frequency: number, volume: number): void {
-  const audioContext = new window.AudioContext();
+function playFrequencyNative(frequency: number, volume: number, code: string): void {
+  audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   let gainNode = audioContext.createGain();
   gainNode.gain.value = volume;
@@ -90,7 +112,7 @@ function playFrequencyNative(frequency: number, volume: number): void {
   oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
   oscillator.connect(gainNode);
   oscillator.start();
-  oscillator.stop(audioContext.currentTime + 0.3);
+  playingNotes.push([code, oscillator]);
 }
 
 function toggleInputVisibility(): void {
@@ -120,7 +142,6 @@ function table_get_interval(
   return ratio + octaves;
 }
 
-type FractionTable = Record<number, number>;
 const just_intonation: FractionTable = {
   0: 1 / 1,
   1: 17 / 16,
@@ -225,6 +246,13 @@ const fortythree_tone: FractionTable = {
   41: 64 / 33,
   42: 160 / 81,
 };
+
+const table_table: Record<string, FractionTable> = {
+  "just_intonation": just_intonation,
+  "pythagorean_tuning": pythagorean_tuning,
+  "eleven_limit": eleven_limit,
+  "fortythree_tone": fortythree_tone,
+}
 
 const keyboard: Record<string, number> = {
   "IntlBackslash": -2,
