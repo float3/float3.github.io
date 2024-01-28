@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     headings.forEach(heading => {
         const headingText: string = heading.innerText.trim();
-        if (heading.id !== "index" && heading.id !== "dropped-movies") {
+        if (heading.innerHTML != "movies" && heading.id !== "index" && heading.id !== "dropped-movies") {
             const button = document.createElement("button");
             button.textContent = "I'm feelin lucky";
             button.addEventListener("click", () => {
