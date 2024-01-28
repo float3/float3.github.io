@@ -5,6 +5,8 @@ updated = 1970-01-01
 
 you can also find all these links [here](/blogs.txt)
 
+blogs I like
+
 # Friends
 - <https://pema.dev/>
 - <https://las.rs/>

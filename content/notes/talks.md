@@ -5,6 +5,8 @@ updated = 1970-01-01
 
 you can also find all these links [here](/talks.txt)
 
+talks I like
+
 - [Winning the War on Error Solving the Halting Problem and Curing Cancer - Matt Might](https://www.youtube.com/watch?v=MdmQUlD7P40)
 - [Stop Treading Water: Learning to Learn - Edward Kmett](https://www.youtube.com/watch?v=j0XmixCsWjs)
 - [Free is a Lie - Aaron Balkan](https://www.youtube.com/watch?v=ldhHkVjLe7A)
@@ -18,6 +20,7 @@ you can also find all these links [here](/talks.txt)
 - [Zig: A programming language designed for robustness, optimality, and clarity –  Andrew Kelley](https://www.youtube.com/watch?v=Z4oYSByyRak)
 - [Mathematica Keynote - Stephen Wolfram](https://www.youtube.com/watch?v=FzbWAiu50MU)
 - [The Future of Programming - Bret Victor](https://www.youtube.com/watch?v=8pTEmbeENF4)
+- [For A Free Digital Society - Richard M. Stallman](https://www.youtube.com/watch?v=7ZSPf7YnGfE)
 
 # Functional Paradigm
 
