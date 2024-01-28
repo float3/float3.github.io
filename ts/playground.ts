@@ -34,11 +34,9 @@ document.addEventListener("keydown", function (event) {
     return;
   }
 
-  const isNotePlaying = playingNotes.some(note => note[0] === event.code);
-
   let n: number = keyboard[event.code];
 
-  if (isNotePlaying || isNaN(n)) { return; }
+  if (playingNotes.some(note => note[0] === event.code) || isNaN(n)) { return; }
 
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
