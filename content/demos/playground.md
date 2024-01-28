@@ -4,12 +4,8 @@ date = 2024-01-27
 updated = 2024-01-27
 +++
 
-<html lang="en">
-<body>
-  <script src="/playground.js"></script>
-  <script src="https://unpkg.com/tone"></script>
-</body>
-</html>
+<script src="/playground.js"></script>
+<script src="https://unpkg.com/tone"></script>
 
 use your keyboard
 

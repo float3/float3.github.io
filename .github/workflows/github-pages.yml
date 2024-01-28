@@ -32,7 +32,7 @@ jobs:
       - name: tsc
         run: |
           cd ./ts
-          tsc || true
+          tsc 
           sed -i '2,3d' ../static/playground.js
       - name: Get Zola
         run: |

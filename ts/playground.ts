@@ -1,26 +1,32 @@
 import * as Tone from "tone";
 
 document.addEventListener("keydown", function (event) {
-  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
-  const baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   const logContainer = document.getElementById("logContainer") as HTMLElement;
+  if (event.code == "Tab") {
+    logContainer.innerHTML = "";
+    return;
+  }
 
-  let n: number = getN(event, logContainer);
+  let n: number = keyboard[event.code] || -1;
 
   if (n == -1) return;
 
+  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
   let ratio: number = getRatio(tuningSelect, n);
 
+  const baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   let root: number = parseFloat(baseFreq.value);
-  let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
-  let freq: number = ratio * root;
 
+  let freq: number = ratio * root;
   logToDiv(freq, logContainer);
+
+  const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
+  let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
+
   playFrequency(freq, volume);
 });
 
-function getRatio(tuningSelect: HTMLSelectElement, n: number) {
+function getRatio(tuningSelect: HTMLSelectElement, n: number): number {
   const equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
   let ratio: number;
   switch (tuningSelect.value) {
@@ -44,133 +50,7 @@ function getRatio(tuningSelect: HTMLSelectElement, n: number) {
   return ratio;
 }
 
-function getN(event: KeyboardEvent, logContainer: HTMLElement) {
-  let n: number = -1; // , . / ; ' [ ] - = 
-  switch (event.code) {
-    case "KeyZ":
-      n = 0;
-      break;
-    case "KeyS":
-      n = 1;
-      break;
-    case "KeyX":
-      n = 2;
-      break;
-    case "KeyC":
-      n = 3;
-      break;
-    case "KeyF":
-      n = 4;
-      break;
-    case "KeyV":
-      n = 5;
-      break;
-    case "KeyG":
-      n = 6;
-      break;
-    case "KeyB":
-      n = 7;
-      break;
-    case "KeyN":
-      n = 8;
-      break;
-    case "KeyJ":
-      n = 9;
-      break;
-    case "KeyM":
-      n = 10;
-      break;
-    case "KeyK":
-      n = 11;
-      break;
-    case "Comma":
-      n = 12;
-      break;
-    case "KeyL":
-      n = 13;
-      break;
-    case "Period":
-      n = 14;
-      break;
-    case "Slash":
-      n = 15;
-      break;
-    case "Quote":
-    case "Digit1":
-      n = 16;
-      break;
-    case "KeyQ":
-      n = 17;
-      break;
-    case "Digit2":
-      n = 18;
-      break;
-    case "KeyW":
-      n = 19;
-      break;
-    case "KeyE":
-      n = 20;
-      break;
-    case "Digit4":
-      n = 21;
-      break;
-    case "KeyR":
-      n = 22;
-      break;
-    case "Digit5":
-      n = 23;
-      break;
-    case "KeyT":
-      n = 24;
-      break;
-    case "Digit6":
-      n = 25;
-      break;
-    case "KeyY":
-      n = 26;
-      break;
-    case "KeyU":
-      n = 27;
-      break;
-    case "Digit8":
-      n = 28;
-      break;
-    case "KeyI":
-      n = 29;
-      break;
-    case "Digit9":
-      n = 30;
-      break;
-    case "KeyO":
-      n = 31;
-      break;
-    case "KeyP":
-      n = 32;
-      break;
-    case "Minus":
-      n = 33;
-      break;
-    case "BracketLeft":
-      n = 34;
-      break;
-    case "Equal":
-      n = 35;
-      break;
-    case "BracketRight":
-      n = 36;
-      break;
-    case "Tab":
-      logContainer.innerHTML = "";
-      n = -1;
-      break;
-    default:
-      n = -1;
-      break;
-  }
-  return n;
-}
-
-function playFrequency(frequency: number, volume: number) {
+function playFrequency(frequency: number, volume: number): void {
   const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
   switch (soundMethod.value) {
     default:
@@ -213,7 +93,7 @@ function toggleInputVisibility(): void {
   }
 }
 
-function logToDiv(message: any, logContainer: HTMLElement) {
+function logToDiv(message: any, logContainer: HTMLElement): void {
   logContainer.innerHTML = "<p>" + message + "Hz</p>" + logContainer.innerHTML;
 }
 
@@ -295,7 +175,7 @@ const eleven_limit: FractionTable = {
   25: 16 / 9,
   26: 9 / 5,
   27: 20 / 11,
-  28: 11 / 6
+  28: 11 / 6,
 };
 const fortythree_tone: FractionTable = {
   0: 1 / 1,
@@ -342,3 +222,46 @@ const fortythree_tone: FractionTable = {
   41: 64 / 33,
   42: 160 / 81,
 };
+
+const keyboard: Record<string, number> = {
+  "IntlBackslash": 0,
+  "KeyA": 1,
+  "KeyZ": 2,
+  "KeyS": 3,
+  "KeyX": 4,
+  "KeyC": 5,
+  "KeyF": 6,
+  "KeyV": 7,
+  "KeyG": 8,
+  "KeyB": 9,
+  "KeyN": 10,
+  "KeyJ": 11,
+  "KeyM": 12,
+  "KeyK": 13,
+  "Comma": 14,
+  "KeyL": 15,
+  "Period": 16,
+  "Slash": 17,
+  "Quote": 18,
+  "Digit1": 18,
+  "KeyQ": 19,
+  "Digit2": 20,
+  "KeyW": 21,
+  "KeyE": 22,
+  "Digit4": 23,
+  "KeyR": 24,
+  "Digit5": 25,
+  "KeyT": 26,
+  "Digit6": 27,
+  "KeyY": 28,
+  "KeyU": 29,
+  "Digit8": 30,
+  "KeyI": 31,
+  "Digit9": 32,
+  "KeyO": 33,
+  "KeyP": 34,
+  "Minus": 35,
+  "BracketLeft": 36,
+  "Equal": 37,
+  "BracketRight": 38,
+}
