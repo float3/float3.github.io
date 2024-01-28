@@ -310,7 +310,7 @@ const keyboard: Record<string, number> = { //TODO: adjust this to match real DAW
   "Slash": 15,
   "Quote": 16,
   "Digit1": 16,
-  "BackSlash" : 17,
+  "BackSlash": 17,
   "KeyQ": 17, // 36
   "Digit2": 18,
   "KeyW": 19,
