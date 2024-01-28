@@ -62,14 +62,8 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
 
   if (isNoteOff) {
     var newNotes: ToneList = [];
-    playingNotes.forEach(note => {
-      if (note[0] == n) {
-        note[1].stop();
-      } else {
-        newNotes.push(note);
-      }
-      playingNotes = newNotes;
-    })
+    playingNotes.forEach(note => { check(note, n, newNotes); })
+    playingNotes = newNotes;
   }
 }
 
@@ -89,15 +83,17 @@ document.addEventListener("keydown", function (event) {
 
 document.addEventListener("keyup", function (event) {
   var newNotes: ToneList = [];
-  playingNotes.forEach(note => {
-    if (note[0] == keyboard[event.code]) {
-      note[1].stop();
-    } else {
-      newNotes.push(note);
-    }
-    playingNotes = newNotes;
-  })
+  playingNotes.forEach(note => { check(note, keyboard[event.code], newNotes); })
+  playingNotes = newNotes;
 });
+
+function check(note: [number, OscillatorNode], n: number, newNotes: ToneList) {
+  if (note[0] == n) {
+    note[1].stop();
+  } else {
+    newNotes.push(note);
+  }
+}
 
 function noteOn(n: number) {
   let ratio: number = getRatio(n);
