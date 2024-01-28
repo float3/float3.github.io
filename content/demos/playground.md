@@ -7,7 +7,7 @@ updated = 2024-01-27
 <script src="/playground.js"></script>
 <script src="https://unpkg.com/tone"></script>
 
-use your keyboard
+use your computer keyboard or a midi device
 
 <label for="tuningSelect">Select Tuning System:</label>
 <select id="tuningSelect" name="tuningSelect" onchange="toggleInputVisibility()">

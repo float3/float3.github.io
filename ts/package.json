@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@types/webmidi": "^2.0.10",
     "tone": "^14.7.77"
   }
 }

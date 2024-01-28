@@ -1,7 +1,7 @@
 import * as Tone from "tone";
 
 type FractionTable = Record<number, number>;
-type ToneList = Array<[string, OscillatorNode]>;
+type ToneList = Array<[number, OscillatorNode]>;
 
 var logContainer: HTMLElement;
 var tuningSelect: HTMLSelectElement;
@@ -16,6 +16,13 @@ var audioContext: AudioContext;
 var playingNotes: ToneList;
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess()
+      .then(onMIDISuccess, onMIDIFailure);
+  } else {
+    alert('Web MIDI is working.');
+  }
+
   logContainer = document.getElementById("logContainer") as HTMLElement;
   volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
@@ -28,6 +35,45 @@ document.addEventListener("DOMContentLoaded", () => {
   playingNotes = [];
 });
 
+function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
+  const input = midiAccess.inputs.values().next().value;
+
+  if (input) {
+    input.onmidimessage = onMIDIMessage;
+  } else {
+    alert('No MIDI input devices found.');
+  }
+}
+
+function onMIDIFailure(error: DOMException) {
+  console.error('MIDI Access failed:', error);
+}
+
+function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
+  const [status, note, velocity] = event.data;
+  const isNoteOn = (status & 0xf0) === 0x90;
+  const isNoteOff = (status & 0xf0) === 0x80;
+
+  let n: number = note - 24;
+  if (isNoteOn) {
+    noteOn(n);
+    console.log("test");
+  }
+
+  if (isNoteOff) {
+    var newNotes: ToneList = [];
+    playingNotes.forEach(note => {
+      if (note[0] == n) {
+        note[1].stop();
+      } else {
+        newNotes.push(note);
+      }
+      playingNotes = newNotes;
+    })
+  }
+}
+
+
 document.addEventListener("keydown", function (event) {
   if (event.code == "Tab") {
     logContainer.innerHTML = "";
@@ -36,8 +82,24 @@ document.addEventListener("keydown", function (event) {
 
   let n: number = keyboard[event.code];
 
-  if (playingNotes.some(note => note[0] === event.code) || isNaN(n)) { return; }
+  if (playingNotes.some(note => note[0] === n) || isNaN(n)) { return; }
 
+  noteOn(n);
+});
+
+document.addEventListener("keyup", function (event) {
+  var newNotes: ToneList = [];
+  playingNotes.forEach(note => {
+    if (note[0] == keyboard[event.code]) {
+      note[1].stop();
+    } else {
+      newNotes.push(note);
+    }
+    playingNotes = newNotes;
+  })
+});
+
+function noteOn(n: number) {
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio * root;
@@ -45,21 +107,8 @@ document.addEventListener("keydown", function (event) {
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
-  playFrequency(freq, volume, event.code);
-});
-
-document.addEventListener("keyup", function (event) {
-  var newNotes: ToneList = [];
-  playingNotes.forEach(note => {
-    if (note[0] == event.code) {
-      note[1].stop();
-    }
-    else {
-      newNotes.push(note);
-    }
-    playingNotes = newNotes;
-  })
-});
+  playFrequency(freq, volume, n);
+}
 
 function getRatio(n: number): number {
   let ratio: number;
@@ -74,12 +123,12 @@ function getRatio(n: number): number {
   return ratio;
 }
 
-function playFrequency(frequency: number, volume: number, code: string): void {
+function playFrequency(frequency: number, volume: number, n: number): void {
   const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
   switch (soundMethod.value) {
     default:
     case "native":
-      playFrequencyNative(frequency, volume, code);
+      playFrequencyNative(frequency, volume, n);
       break;
     case "tone.js":
       playFrequencyToneJS(frequency, volume);
@@ -92,7 +141,7 @@ function playFrequencyToneJS(frequency: number, volume: number): void {
   synth.triggerAttackRelease(frequency, "8n");
 }
 
-function playFrequencyNative(frequency: number, volume: number, code: string): void {
+function playFrequencyNative(frequency: number, volume: number, n: number): void {
   audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   let gainNode = audioContext.createGain();
@@ -102,7 +151,7 @@ function playFrequencyNative(frequency: number, volume: number, code: string): v
   oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
   oscillator.connect(gainNode);
   oscillator.start();
-  playingNotes.push([code, oscillator]);
+  playingNotes.push([n, oscillator]);
 }
 
 function toggleInputVisibility(): void {
@@ -247,7 +296,7 @@ const table_table: Record<string, FractionTable> = {
 const keyboard: Record<string, number> = {
   "IntlBackslash": -2,
   "KeyA": -1,
-  "KeyZ": 0,
+  "KeyZ": 0,  // 24
   "KeyS": 1,
   "KeyX": 2,
   "KeyC": 3,
@@ -265,7 +314,7 @@ const keyboard: Record<string, number> = {
   "Slash": 15,
   "Quote": 16,
   "Digit1": 16,
-  "KeyQ": 17,
+  "KeyQ": 17, // 36
   "Digit2": 18,
   "KeyW": 19,
   "KeyE": 20,
