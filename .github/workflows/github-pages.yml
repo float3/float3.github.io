@@ -35,7 +35,7 @@ jobs:
           tsc || true
           sed -i '2,3d' ../static/playground.js
       - name: collect_link.sh
-        run: sh ./scripts/collects_links.sh
+        run: sh ./scripts/collect_links.sh
       - name: Get Zola
         run: |
           mkdir /tmp/zola
