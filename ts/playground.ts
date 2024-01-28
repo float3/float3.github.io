@@ -1,7 +1,27 @@
 import * as Tone from "tone";
 
+
+var logContainer: HTMLElement;
+var tuningSelect: HTMLSelectElement;
+var baseFreq: HTMLInputElement;
+var volumeSlider: HTMLInputElement;
+var equalTemperamentBase: HTMLInputElement;
+var equalTemperamentBaseContainer: HTMLDivElement;
+
+var synth: Tone.Synth<Tone.SynthOptions>;
+
+document.addEventListener("DOMContentLoaded", () => {
+  logContainer = document.getElementById("logContainer") as HTMLElement;
+  volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
+  baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
+  tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
+  equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
+  equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
+
+  synth = new Tone.Synth().toDestination();
+});
+
 document.addEventListener("keydown", function (event) {
-  const logContainer = document.getElementById("logContainer") as HTMLElement;
   if (event.code == "Tab") {
     logContainer.innerHTML = "";
     return;
@@ -11,23 +31,17 @@ document.addEventListener("keydown", function (event) {
 
   if (n == -1) return;
 
-  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  let ratio: number = getRatio(tuningSelect, n);
-
-  const baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
+  let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
-
   let freq: number = ratio * root;
-  logToDiv(freq, logContainer);
+  logToDiv(freq);
 
-  const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
   playFrequency(freq, volume);
 });
 
-function getRatio(tuningSelect: HTMLSelectElement, n: number): number {
-  const equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
+function getRatio(n: number): number {
   let ratio: number;
   switch (tuningSelect.value) {
     default:
@@ -64,13 +78,12 @@ function playFrequency(frequency: number, volume: number): void {
 }
 
 function playFrequencyToneJS(frequency: number, volume: number): void {
-  const synth = new Tone.Synth().toDestination();
-  synth.volume.value *= volume; // TODO: test volume
+  //synth.volume.value = // TODO: make volume configurable
   synth.triggerAttackRelease(frequency, "8n");
 }
 
 function playFrequencyNative(frequency: number, volume: number): void {
-  const audioContext = new window.AudioContext(); // TODO: check if audio issue is fixed
+  const audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   let gainNode = audioContext.createGain();
   gainNode.gain.value = volume;
@@ -83,9 +96,6 @@ function playFrequencyNative(frequency: number, volume: number): void {
 }
 
 function toggleInputVisibility(): void {
-  const tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  const equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
-
   if (tuningSelect.value === "equal_temperament") {
     equalTemperamentBaseContainer.style.display = "block";
   } else {
@@ -93,7 +103,7 @@ function toggleInputVisibility(): void {
   }
 }
 
-function logToDiv(message: any, logContainer: HTMLElement): void {
+function logToDiv(message: any): void {
   logContainer.innerHTML = "<p>" + message + "Hz</p>" + logContainer.innerHTML;
 }
 
@@ -109,11 +119,6 @@ function table_get_interval(
   let n2: number = n % tablesize;
   let ratio: number = table[n2];
   let octaves: number = Math.floor(n / tablesize);
-  console.log(tablesize);
-  console.log(n);
-  console.log(n2);
-  console.log(ratio);
-  console.log(octaves);
   return ratio + octaves;
 }
 
