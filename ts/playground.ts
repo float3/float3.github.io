@@ -289,7 +289,7 @@ const table_table: Record<string, FractionTable> = {
   "fortythree_tone": fortythree_tone,
 }
 
-const keyboard: Record<string, number> = {
+const keyboard: Record<string, number> = { //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
   "IntlBackslash": -2,
   "KeyA": -1,
   "KeyZ": 0,  // 24
