@@ -337,8 +337,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 
 # Ding
 - [x] Evil Dead Rise (2023) (2024-01-05)
-- [ ] Blair Witch Project (1999)
-- [ ] 咒 (Incantation) (2022)
+- [x] 咒 (Incantation) (2022) (2024-01-14)
+- [x] Blair Witch Project (1999) (2024-01-28)
 
 # Misc:
 - [x] Andrew Schulz: Infamous (2022) (UNKNOWN)
