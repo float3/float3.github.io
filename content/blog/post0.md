@@ -187,7 +187,7 @@ the following graph shows the difference between the just intonated major chord 
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(1.25*(x+t))+sin(1.5*(x+t))&v1=true&f2(x,t)=sin(x+t)+sin(1.26*(x+t))+sin(1.4983*(x+t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
 </iframe>
 
-in this example you might say the example is barely noticable and you would be right, however if we take other chords it becomes a lot more apparent.
+<!--in this example you might say the example is barely noticable and you would be right, however if we take other chords it becomes a lot more apparent.-->
 
 # Why Just Intonation is bad
 
