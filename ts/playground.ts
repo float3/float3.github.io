@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   synth = new Tone.Synth().toDestination();
 
   playingNotes = [];
+  tuningSelectOnChange();
 });
 
 function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
@@ -121,13 +122,13 @@ function getRatio(n: number): number {
   let ratio: number;
   switch (tuningSelect.value) {
     case "equal_temperament":
-      ratio = equal_temperament_get_interval(n, parseFloat(equalTemperamentBase.value));
+      ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
       break;
     case "step_method":
-      ratio = step_algorithm(n, parseFloat(stepSize.value));
+      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value));
       break;
     default:
-      ratio = table_get_interval(n, table_table[tuningSelect.value]);
+      ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
       break;
   }
   return ratio;
@@ -168,11 +169,16 @@ function playFrequencyNative(
   playingNotes.push([n, oscillator]);
 }
 
-function toggleInputVisibility(): void {
-  if (tuningSelect.value === "equal_temperament") {
+function tuningSelectOnChange(): void {
+  if (tuningSelect.value == "equal_temperament") {
     equalTemperamentBaseContainer.style.display = "block";
   } else {
     equalTemperamentBaseContainer.style.display = "none";
+  }
+  if(tuningSelect.value == "step_method"){
+    stepSizeContainer.style.display = "block";
+  } else {
+    stepSizeContainer.style.display = "none";
   }
 }
 
@@ -180,12 +186,11 @@ function logToDiv(message: any): void {
   logContainer.innerHTML = "<p>" + message + "Hz</p>" + logContainer.innerHTML;
 }
 
-function equal_temperament_get_interval(n: number, base: number): number {
+function getRatioFromEqualTemperament(n: number, base: number): number {
   return Math.pow(2, n / base);
 }
 
-
-function table_get_interval(n: number, table: FractionTable): number {
+function getRatioFromTable(n: number, table: FractionTable): number {
   let tablesize = Object.keys(table).length;
   let n2: number = n % tablesize;
   let ratio: number = table[n2];
@@ -193,8 +198,8 @@ function table_get_interval(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-function step_algorithm(n: number, stepsize: number, ) {
-  let ratio = table_get_interval(stepsize, just_intonation);
+function getRatioFromStepAlgorithm(n: number, stepsize: number, ) {
+  let ratio = getRatioFromTable(stepsize, just_intonation);
   let n2 = n % 12;
   let current_ratio = 1;
   let current_idx = 0;

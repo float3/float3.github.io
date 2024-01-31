@@ -10,7 +10,7 @@ updated = 2024-01-27
 use your computer keyboard or a midi device
 
 <label for="tuningSelect">Select Tuning System:</label>
-<select id="tuningSelect" name="tuningSelect" onchange="toggleInputVisibility()">
+<select id="tuningSelect" name="tuningSelect" onchange="tuningSelectOnChange()">
   <option value="equal_temperament">Equal Temperament</option>
   <option value="just_intonation">Just Intonation</option>
   <option value="pythagorean_tuning">Pythagorean Tuning</option>
@@ -36,7 +36,7 @@ Base Freq: <input id="baseFreq" value="220">
 <!--div id="stepSizeContainer" style="display: block;">
     <label for="stepSize">Step Size(1-11): :</label>
     <input id="stepSize" value="7">
-</div>
+</div-->
 
 <div id="equalTemperamentBaseContainer" style="display: block;">
     <label for="equalTemperamentBase">Equal Temperament Base:</label>
