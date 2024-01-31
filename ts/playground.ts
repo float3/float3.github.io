@@ -177,7 +177,23 @@ function table_get_interval(
   return ratio + octaves;
 }
 
-// TODO implement Harmonic Scale
+function step_algorithm(stepsize: number, idx: number) {
+  let ratio = table_get_interval(stepsize, just_intonation);
+  let current_ratio = 1;
+  let current_idx = 0;
+  while (true) {
+    if (current_idx == idx) {
+      return current_ratio;
+    }
+    current_ratio *= ratio;
+    current_idx += stepsize;
+    current_idx %= 12;
+    if (current_ratio > 2) {
+      current_ratio /= 2;
+    }
+  }
+}
+
 // TODO implement 24 Tone Just Intonation?
 
 const just_intonation: FractionTable = {
