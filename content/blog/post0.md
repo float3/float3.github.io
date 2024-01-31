@@ -194,9 +194,10 @@ in this example you might say the example is barely noticable and you would be r
 
 1\*1.0625\*1.0625 != 1\*1.125
 
-Now while nicer intervals are nicer all of these intervals are in relation to X, our Root
+Now while just intonated intervals are nicer all of these intervals are in relation to X, our Root
 While a major third (4:5) and a perfect fifth (2:3) on their own sound good, 
 if we keep going up the steps one by one (1.0625), we don't end up at the same place that we would end up if we skipped a step (1.125)
+(i.e. just intonation does't have the property mentioned earlier)
 
 
 

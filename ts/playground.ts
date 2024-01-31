@@ -177,6 +177,9 @@ function table_get_interval(
   return ratio + octaves;
 }
 
+// TODO implement Harmonic Scale
+// TODO implement 24 Tone Just Intonation?
+
 const just_intonation: FractionTable = {
   0: 1 / 1,
   1: 17 / 16,
