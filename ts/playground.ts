@@ -17,18 +17,21 @@ var playingNotes: ToneList;
 
 document.addEventListener("DOMContentLoaded", () => {
   if (navigator.requestMIDIAccess) {
-    navigator.requestMIDIAccess()
-      .then(onMIDISuccess, onMIDIFailure);
+    navigator.requestMIDIAccess().then(onMIDISuccess, onMIDIFailure);
   } else {
-    alert('Web MIDI is working.');
+    alert("Web MIDI is working.");
   }
 
   logContainer = document.getElementById("logContainer") as HTMLElement;
   volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
-  equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
+  equalTemperamentBase = document.getElementById(
+    "equalTemperamentBase"
+  ) as HTMLInputElement;
+  equalTemperamentBaseContainer = document.getElementById(
+    "equalTemperamentBaseContainer"
+  ) as HTMLDivElement;
 
   synth = new Tone.Synth().toDestination();
 
@@ -41,12 +44,12 @@ function onMIDISuccess(midiAccess: WebMidi.MIDIAccess) {
   if (input) {
     input.onmidimessage = onMIDIMessage;
   } else {
-    alert('No MIDI input devices found.');
+    alert("No MIDI input devices found.");
   }
 }
 
 function onMIDIFailure(error: DOMException) {
-  console.error('MIDI Access failed:', error);
+  console.error("MIDI Access failed:", error);
 }
 
 function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
@@ -62,11 +65,12 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
 
   if (isNoteOff) {
     var newNotes: ToneList = [];
-    playingNotes.forEach(note => { check(note, n, newNotes); })
+    playingNotes.forEach((note) => {
+      check(note, n, newNotes);
+    });
     playingNotes = newNotes;
   }
 }
-
 
 document.addEventListener("keydown", function (event) {
   if (event.code == "Tab") {
@@ -76,14 +80,18 @@ document.addEventListener("keydown", function (event) {
 
   let n: number = keyboard[event.code];
 
-  if (playingNotes.some(note => note[0] === n) || isNaN(n)) { return; }
+  if (playingNotes.some((note) => note[0] === n) || isNaN(n)) {
+    return;
+  }
 
   noteOn(n);
 });
 
 document.addEventListener("keyup", function (event) {
   var newNotes: ToneList = [];
-  playingNotes.forEach(note => { check(note, keyboard[event.code], newNotes); })
+  playingNotes.forEach((note) => {
+    check(note, keyboard[event.code], newNotes);
+  });
   playingNotes = newNotes;
 });
 
@@ -110,7 +118,10 @@ function getRatio(n: number): number {
   let ratio: number;
   switch (tuningSelect.value) {
     case "equal_temperament":
-      ratio = equal_temperament_get_interval(n, parseFloat(equalTemperamentBase.value));
+      ratio = equal_temperament_get_interval(
+        n,
+        parseFloat(equalTemperamentBase.value)
+      );
       break;
     default:
       ratio = table_get_interval(n, table_table[tuningSelect.value]);
@@ -120,7 +131,9 @@ function getRatio(n: number): number {
 }
 
 function playFrequency(frequency: number, volume: number, n: number): void {
-  const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
+  const soundMethod = document.getElementById(
+    "soundMethod"
+  ) as HTMLSelectElement;
   switch (soundMethod.value) {
     default:
     case "native":
@@ -137,7 +150,11 @@ function playFrequencyToneJS(frequency: number, volume: number): void {
   synth.triggerAttackRelease(frequency, "8n");
 }
 
-function playFrequencyNative(frequency: number, volume: number, n: number): void {
+function playFrequencyNative(
+  frequency: number,
+  volume: number,
+  n: number
+): void {
   audioContext = new window.AudioContext();
   const oscillator = audioContext.createOscillator();
   let gainNode = audioContext.createGain();
@@ -166,10 +183,7 @@ function equal_temperament_get_interval(n: number, base: number): number {
   return Math.pow(2, n / base);
 }
 
-function table_get_interval(
-  n: number,
-  table: FractionTable,
-): number {
+function table_get_interval(n: number, table: FractionTable): number {
   let tablesize = Object.keys(table).length;
   let n2: number = n % tablesize;
   let ratio: number = table[n2];
@@ -306,12 +320,13 @@ const table_table: Record<string, FractionTable> = {
   "pythagorean_tuning": pythagorean_tuning,
   "eleven_limit": eleven_limit,
   "fortythree_tone": fortythree_tone,
-}
+};
 
-const keyboard: Record<string, number> = { //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
+const keyboard: Record<string, number> = {
+  //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
   "IntlBackslash": -2,
   "KeyA": -1,
-  "KeyZ": 0,  // 24
+  "KeyZ": 0, // 24
   "KeyS": 1,
   "KeyX": 2,
   "KeyC": 3,
@@ -350,4 +365,4 @@ const keyboard: Record<string, number> = { //TODO: adjust this to match real DAW
   "BracketLeft": 34,
   "Equal": 35,
   "BracketRight": 36,
-}
+};
