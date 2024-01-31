@@ -7,8 +7,13 @@ var logContainer: HTMLElement;
 var tuningSelect: HTMLSelectElement;
 var baseFreq: HTMLInputElement;
 var volumeSlider: HTMLInputElement;
+var stepSize: HTMLInputElement;
+var stepSizeContainer: HTMLDivElement;
 var equalTemperamentBase: HTMLInputElement;
 var equalTemperamentBaseContainer: HTMLDivElement;
+
+
+
 
 var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
@@ -26,12 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  equalTemperamentBase = document.getElementById(
-    "equalTemperamentBase"
-  ) as HTMLInputElement;
-  equalTemperamentBaseContainer = document.getElementById(
-    "equalTemperamentBaseContainer"
-  ) as HTMLDivElement;
+  stepSize = document.getElementById("stepSize") as HTMLInputElement;
+  stepSizeContainer = document.getElementById("stepSizeContainer") as HTMLDivElement;
+  equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
+  equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
 
   synth = new Tone.Synth().toDestination();
 
@@ -83,7 +86,7 @@ document.addEventListener("keydown", function (event) {
   if (playingNotes.some((note) => note[0] === n) || isNaN(n)) {
     return;
   }
-
+  console.log(n);
   noteOn(n);
 });
 
@@ -107,7 +110,7 @@ function noteOn(n: number) {
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio * root;
-  logToDiv(freq);
+  logToDiv(ratio);
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
@@ -118,10 +121,10 @@ function getRatio(n: number): number {
   let ratio: number;
   switch (tuningSelect.value) {
     case "equal_temperament":
-      ratio = equal_temperament_get_interval(
-        n,
-        parseFloat(equalTemperamentBase.value)
-      );
+      ratio = equal_temperament_get_interval(n, parseFloat(equalTemperamentBase.value));
+      break;
+    case "step_method":
+      ratio = step_algorithm(n, parseFloat(stepSize.value));
       break;
     default:
       ratio = table_get_interval(n, table_table[tuningSelect.value]);
@@ -131,9 +134,7 @@ function getRatio(n: number): number {
 }
 
 function playFrequency(frequency: number, volume: number, n: number): void {
-  const soundMethod = document.getElementById(
-    "soundMethod"
-  ) as HTMLSelectElement;
+  const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement;
   switch (soundMethod.value) {
     default:
     case "native":
@@ -183,6 +184,7 @@ function equal_temperament_get_interval(n: number, base: number): number {
   return Math.pow(2, n / base);
 }
 
+
 function table_get_interval(n: number, table: FractionTable): number {
   let tablesize = Object.keys(table).length;
   let n2: number = n % tablesize;
@@ -191,14 +193,12 @@ function table_get_interval(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-function step_algorithm(stepsize: number, idx: number) {
+function step_algorithm(n: number, stepsize: number, ) {
   let ratio = table_get_interval(stepsize, just_intonation);
+  let n2 = n % 12;
   let current_ratio = 1;
   let current_idx = 0;
-  while (true) {
-    if (current_idx == idx) {
-      return current_ratio;
-    }
+  while (current_idx !== n2) {
     current_ratio *= ratio;
     current_idx += stepsize;
     current_idx %= 12;
@@ -206,6 +206,8 @@ function step_algorithm(stepsize: number, idx: number) {
       current_ratio /= 2;
     }
   }
+  let octaves = Math.floor(n / 12);
+  return current_ratio + octaves;
 }
 
 // TODO implement 24 Tone Just Intonation?

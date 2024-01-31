@@ -16,7 +16,8 @@ use your computer keyboard or a midi device
   <option value="pythagorean_tuning">Pythagorean Tuning</option>
   <option value="eleven_limit">Eleven Limit</option>
   <option value="fortythree_tone">Fortythree tone tuning</option>
-  <!--option value="meantone_temperament">Meantone Temperament</option>
+  <!--option value="step_method">Just Intonated Step Method</option>
+  <option value="meantone_temperament">Meantone Temperament</option>
   <option value="well_temperament">Well Temperament</option>
   <option value="equal_temperament">Equal Temperament</option-->
 </select>
@@ -31,6 +32,11 @@ use your computer keyboard or a midi device
 Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
 
 Base Freq: <input id="baseFreq" value="220">
+
+<!--div id="stepSizeContainer" style="display: block;">
+    <label for="stepSize">Step Size(1-11): :</label>
+    <input id="stepSize" value="7">
+</div>
 
 <div id="equalTemperamentBaseContainer" style="display: block;">
     <label for="equalTemperamentBase">Equal Temperament Base:</label>
