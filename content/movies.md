@@ -158,6 +158,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Se7en (1995)
 - [ ] 12 Monkeys
 - [ ] Buffalo '66 (1998)
+- [ ] The Negotiator (1998)
 - [ ] Fear and Loathing in Las Vegas (1998)
 - [ ] King of Comedy (1999)
 - [ ] Eyes Wide Shut (1999)
@@ -200,6 +201,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Raid 2 (2014)
 - [ ] Nightcrawler (2014)
 - [ ] John Wick (2014)
+- [ ] The Revenant (2015)
 - [ ] The Lobster (2015)
 - [ ] 攻殻機動隊 新劇場版 (Ghost in the Shell: The New Movie) (2015)
 - [ ] The VVitch (2015)
@@ -373,6 +375,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
 - [ ] Day for Night (1973)
+- [ ] The Breakfast Club (1985)
 - [ ] The Whistle Blower (1986)
 - [ ] Chungking Express (1994)
 - [ ] Saving Private Ryan (1998)
