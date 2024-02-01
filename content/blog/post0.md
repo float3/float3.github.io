@@ -191,8 +191,11 @@ the following graph shows the difference between the just intonated major chord 
 
 # Why Just Intonation is bad
 
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><msup><mn>1.0625</mn><mn>2</mn></msup><mo>≠</mo><mn>1.125</mn></mrow><annotation encoding="application/x-tex">1.0625²\ne1.125</annotation></semantics></math>
 
-1\*1.0625\*1.0625 != 1\*1.125
+but 
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><mo form="prefix" stretchy="false">(</mo><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo form="postfix" stretchy="false">)</mo><mi>/</mi><mn>12</mn></mrow></msup><msup><mo form="postfix" stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mi>/</mi><mn>12</mn><mo form="postfix" stretchy="false" lspace="0em" rspace="0em">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">(2^{(2-1)/12})² = 2^{(3-1/12)}</annotation></semantics></math>
 
 Now while just intonated intervals are nicer all of these intervals are in relation to X, our Root
 While a major third (4:5) and a perfect fifth (2:3) on their own sound good, 
