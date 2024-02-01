@@ -111,7 +111,7 @@ function noteOn(n: number) {
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio * root;
-  logToDiv(ratio);
+  logToDiv(ratio + "Hz");
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
@@ -183,7 +183,7 @@ function tuningSelectOnChange(): void {
 }
 
 function logToDiv(message: any): void {
-  logContainer.innerHTML = "<p>" + message + "Hz</p>" + logContainer.innerHTML;
+  logContainer.innerHTML = "<p>" + message + "</p>" + logContainer.innerHTML;
 }
 
 function getRatioFromEqualTemperament(n: number, base: number): number {
