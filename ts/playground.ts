@@ -12,9 +12,6 @@ var stepSizeContainer: HTMLDivElement;
 var equalTemperamentBase: HTMLInputElement;
 var equalTemperamentBaseContainer: HTMLDivElement;
 
-
-
-
 var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
 
@@ -328,6 +325,8 @@ const table_table: Record<string, FractionTable> = {
   "eleven_limit": eleven_limit,
   "fortythree_tone": fortythree_tone,
 };
+
+// TODO: implement Midi player
 
 const keyboard: Record<string, number> = {
   //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
