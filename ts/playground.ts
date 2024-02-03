@@ -7,13 +7,10 @@ var logContainer: HTMLElement;
 var tuningSelect: HTMLSelectElement;
 var baseFreq: HTMLInputElement;
 var volumeSlider: HTMLInputElement;
-var stepSize: HTMLInputElement;
+var stepSize: HTMLSelectElement;
 var stepSizeContainer: HTMLDivElement;
 var equalTemperamentBase: HTMLInputElement;
 var equalTemperamentBaseContainer: HTMLDivElement;
-
-
-
 
 var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
@@ -31,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  stepSize = document.getElementById("stepSize") as HTMLInputElement;
+  stepSize = document.getElementById("stepSize") as HTMLSelectElement;
   stepSizeContainer = document.getElementById("stepSizeContainer") as HTMLDivElement;
   equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
   equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
@@ -64,7 +61,6 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
   let n: number = note - 24;
   if (isNoteOn) {
     noteOn(n);
-    console.log("test");
   }
 
   if (isNoteOff) {
@@ -111,7 +107,7 @@ function noteOn(n: number) {
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio * root;
-  logToDiv(ratio + "Hz");
+  logToDiv(freq + "Hz");
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
@@ -175,7 +171,7 @@ function tuningSelectOnChange(): void {
   } else {
     equalTemperamentBaseContainer.style.display = "none";
   }
-  if(tuningSelect.value == "step_method"){
+  if (tuningSelect.value == "step_method") {
     stepSizeContainer.style.display = "block";
   } else {
     stepSizeContainer.style.display = "none";
@@ -198,7 +194,9 @@ function getRatioFromTable(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-function getRatioFromStepAlgorithm(n: number, stepsize: number, ) {
+// calculate co primes for base size and let user choose one of them??
+
+function getRatioFromStepAlgorithm(n: number, stepsize: number) {
   let ratio = getRatioFromTable(stepsize, just_intonation);
   let n2 = n % 12;
   let current_ratio = 1;
