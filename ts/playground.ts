@@ -121,7 +121,7 @@ function getRatio(n: number): number {
       ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
       break;
     case "step_method":
-      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value));
+      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
       break;
     default:
       ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
@@ -194,26 +194,47 @@ function getRatioFromTable(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-// calculate co primes for base size and let user choose one of them??
+// TODO: calculate co primes for base size and let user choose one of them??
 
-function getRatioFromStepAlgorithm(n: number, stepsize: number) {
+function getRatioFromStepAlgorithm(n: number, stepsize: number, max: number) {
   let ratio = getRatioFromTable(stepsize, just_intonation);
-  let n2 = n % 12;
+  let n2 = n % max;
   let current_ratio = 1;
   let current_idx = 0;
   while (current_idx !== n2) {
     current_ratio *= ratio;
     current_idx += stepsize;
-    current_idx %= 12;
+    current_idx %= max;
     if (current_ratio > 2) {
       current_ratio /= 2;
     }
   }
-  let octaves = Math.floor(n / 12);
+  let octaves = Math.floor(n / max);
   return current_ratio + octaves;
 }
 
+function findCoprimes(num: number): number[] {
+  const coprimes: number[] = [];
+
+  for (let i = 2; i < num; i++) {
+    if (gcd(num, i) === 1) {
+      coprimes.push(i);
+    }
+  }
+
+  return coprimes;
+}
+
+function gcd(a: number, b: number): number {
+  if (b === 0) {
+    return a;
+  } else {
+    return gcd(b, a % b);
+  }
+}
+
 // TODO implement 24 Tone Just Intonation?
+// https://oeis.org/play.html
 
 const just_intonation: FractionTable = {
   0: 1 / 1,
@@ -229,6 +250,7 @@ const just_intonation: FractionTable = {
   10: 57 / 32,
   11: 15 / 8,
 };
+
 const pythagorean_tuning: FractionTable = {
   0: 1 / 1,
   1: 256 / 243,
@@ -243,6 +265,7 @@ const pythagorean_tuning: FractionTable = {
   10: 243 / 128,
   11: 15 / 8,
 };
+
 const eleven_limit: FractionTable = {
   0: 1 / 1,
   1: 12 / 11,
@@ -274,6 +297,7 @@ const eleven_limit: FractionTable = {
   27: 20 / 11,
   28: 11 / 6,
 };
+
 const fortythree_tone: FractionTable = {
   0: 1 / 1,
   1: 81 / 80,
