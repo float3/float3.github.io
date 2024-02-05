@@ -14,7 +14,7 @@ var equalTemperamentBaseContainer: HTMLDivElement;
 
 var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
-var pianoSampler: Tone.sample;
+//var pianoSampler: Tone.Sampler;
 
 var playingNotes: ToneList;
 
@@ -35,13 +35,13 @@ document.addEventListener("DOMContentLoaded", () => {
   equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
 
   synth = new Tone.Synth().toDestination();
-  pianoSampler = new Tone.Sampler({
+  /*pianoSampler = new Tone.Sampler({
     urls: {
       C4: "path/to/your/piano/C4/sample.mp3",
     },
     baseUrl: "https://example.com/samples/",
     onload: () => console.log("Sample loaded"),
-  }).toDestination();
+  }).toDestination();*/
 
   playingNotes = [];
 
@@ -454,6 +454,8 @@ const table_table: Record<string, FractionTable> = {
   "eleven_limit": eleven_limit,
   "fortythree_tone": fortythree_tone,
 };
+
+// TODO: implement Midi player
 
 const keyboard: Record<string, number> = {
   //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
