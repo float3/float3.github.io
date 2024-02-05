@@ -455,6 +455,8 @@ const table_table: Record<string, FractionTable> = {
   "fortythree_tone": fortythree_tone,
 };
 
+// TODO: implement Midi player
+
 const keyboard: Record<string, number> = {
   //TODO: adjust this to match real DAW keymaps and maybe detect keymap and switch between different layouts
   "IntlBackslash": -2,
