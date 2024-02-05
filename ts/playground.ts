@@ -7,7 +7,7 @@ var logContainer: HTMLElement;
 var tuningSelect: HTMLSelectElement;
 var baseFreq: HTMLInputElement;
 var volumeSlider: HTMLInputElement;
-var stepSize: HTMLInputElement;
+var stepSize: HTMLSelectElement;
 var stepSizeContainer: HTMLDivElement;
 var equalTemperamentBase: HTMLInputElement;
 var equalTemperamentBaseContainer: HTMLDivElement;
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
   volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement;
   baseFreq = document.getElementById("baseFreq") as HTMLInputElement;
   tuningSelect = document.getElementById("tuningSelect") as HTMLSelectElement;
-  stepSize = document.getElementById("stepSize") as HTMLInputElement;
+  stepSize = document.getElementById("stepSize") as HTMLSelectElement;
   stepSizeContainer = document.getElementById("stepSizeContainer") as HTMLDivElement;
   equalTemperamentBase = document.getElementById("equalTemperamentBase") as HTMLInputElement;
   equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
@@ -61,7 +61,6 @@ function onMIDIMessage(event: WebMidi.MIDIMessageEvent) {
   let n: number = note - 24;
   if (isNoteOn) {
     noteOn(n);
-    console.log("test");
   }
 
   if (isNoteOff) {
@@ -108,7 +107,7 @@ function noteOn(n: number) {
   let ratio: number = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio * root;
-  logToDiv(ratio + "Hz");
+  logToDiv(freq + "Hz");
 
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
 
@@ -122,7 +121,7 @@ function getRatio(n: number): number {
       ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
       break;
     case "step_method":
-      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value));
+      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
       break;
     default:
       ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
@@ -172,7 +171,7 @@ function tuningSelectOnChange(): void {
   } else {
     equalTemperamentBaseContainer.style.display = "none";
   }
-  if(tuningSelect.value == "step_method"){
+  if (tuningSelect.value == "step_method") {
     stepSizeContainer.style.display = "block";
   } else {
     stepSizeContainer.style.display = "none";
@@ -195,24 +194,46 @@ function getRatioFromTable(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-function getRatioFromStepAlgorithm(n: number, stepsize: number, ) {
+// TODO: calculate co primes for base size and let user choose one of them??
+
+function getRatioFromStepAlgorithm(n: number, stepsize: number, max: number) {
   let ratio = getRatioFromTable(stepsize, just_intonation);
-  let n2 = n % 12;
+  let n2 = n % max;
   let current_ratio = 1;
   let current_idx = 0;
   while (current_idx !== n2) {
     current_ratio *= ratio;
     current_idx += stepsize;
-    current_idx %= 12;
+    current_idx %= max;
     if (current_ratio > 2) {
       current_ratio /= 2;
     }
   }
-  let octaves = Math.floor(n / 12);
+  let octaves = Math.floor(n / max);
   return current_ratio + octaves;
 }
 
-// TODO implement 24 Tone Just Intonation?
+function findCoprimes(num: number): number[] {
+  const coprimes: number[] = [];
+
+  for (let i = 2; i < num; i++) {
+    if (gcd(num, i) === 1) {
+      coprimes.push(i);
+    }
+  }
+
+  return coprimes;
+}
+
+function gcd(a: number, b: number): number {
+  if (b === 0) {
+    return a;
+  } else {
+    return gcd(b, a % b);
+  }
+}
+
+// TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
 
 const just_intonation: FractionTable = {
   0: 1 / 1,
@@ -228,6 +249,34 @@ const just_intonation: FractionTable = {
   10: 57 / 32,
   11: 15 / 8,
 };
+
+const just_intonation_24: FractionTable = {
+  0: 1 / 1,
+  1: 33 / 32,
+  2: 17 / 16,
+  3: 35 / 32,
+  4: 9 / 8,
+  5: 37 / 32,
+  6: 19 / 16,
+  7: 39 / 32,
+  8: 5 / 4,
+  9: 41 / 32,
+  10: 2 / 3,
+  11: 11 / 8,
+  12: 45 / 32,
+  13: 93 / 64,
+  14: 3 / 2,
+  15: 99 / 64,
+  16: 51 / 32,
+  17: 105 / 64,
+  18: 27 / 16,
+  19: 111 / 64,
+  20: 57 / 32,
+  21: 117 / 64,
+  22: 15 / 8,
+  23: 31 / 16,
+};
+
 const pythagorean_tuning: FractionTable = {
   0: 1 / 1,
   1: 256 / 243,
@@ -242,6 +291,22 @@ const pythagorean_tuning: FractionTable = {
   10: 243 / 128,
   11: 15 / 8,
 };
+
+const five_limit: FractionTable = {
+  0: 1 / 1,
+  1: 16 / 15,
+  2: 9 / 8,
+  3: 6 / 5,
+  4: 5 / 4,
+  5: 4 / 3,
+  6: 64 / 45,
+  7: 3 / 2,
+  8: 8 / 5,
+  9: 5 / 3,
+  10: 16 / 9,
+  11: 15 / 8,
+}
+
 const eleven_limit: FractionTable = {
   0: 1 / 1,
   1: 12 / 11,
@@ -273,6 +338,7 @@ const eleven_limit: FractionTable = {
   27: 20 / 11,
   28: 11 / 6,
 };
+
 const fortythree_tone: FractionTable = {
   0: 1 / 1,
   1: 81 / 80,
@@ -318,6 +384,54 @@ const fortythree_tone: FractionTable = {
   41: 64 / 33,
   42: 160 / 81,
 };
+
+const indian_scale: FractionTable = {
+  0: 1 / 1, //sa
+  1: 9 / 8, //re
+  2: 5 / 4, //ga
+  3: 4 / 3, //ma
+  4: 3 / 2, //pa
+  5: 5 / 3, //dha
+  //5: 27 / 16, //dha 
+  6: 15 / 8, //ni
+}
+
+const indian_scale_full: FractionTable = {
+  0: 1 / 1,
+  1: 256 / 243,
+  2: 16 / 15,
+  3: 10 / 9,
+  4: 9 / 8,
+  5: 32 / 27,
+  6: 6 / 5,
+  7: 5 / 4,
+  8: 81 / 64,
+  9: 4 / 3,
+  10: 27 / 20,
+  11: 45 / 32,
+  12: 729 / 512,
+  13: 3 / 2,
+  14: 128 / 81,
+  15: 8 / 5,
+  16: 5 / 3,
+  17: 27 / 16,
+  18: 16 / 9,
+  19: 9 / 5,
+  20: 15 / 8,
+  21: 243 / 128,
+}
+
+const step_method_1: FractionTable = {
+}
+
+const step_method_5: FractionTable = {
+}
+
+const step_method_7: FractionTable = {
+}
+
+const step_method_11: FractionTable = {
+}
 
 const table_table: Record<string, FractionTable> = {
   "just_intonation": just_intonation,

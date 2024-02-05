@@ -75,43 +75,25 @@ we can calculate the ratios by diving the overtone's frequency(or it's ratio to 
 
 ```
 ┬─[hill@nixos:~]─[20時10分43秒]─[I]
-╰─>λ math 7 /4
+╰─> λ math 7 / 4
 1.75
 ┬─[hill@nixos:~]─[20時10分54秒]─[I]
-╰─>λ math 9 / 8
+╰─> λ math 9 / 8
 1.125
 ┬─[hill@nixos:~]─[20時11分02秒]─[I]
-╰─>λ math 11 / 8
+╰─> λ math 11 / 8
 1.375
 ┬─[hill@nixos:~]─[20時11分12秒]─[I]
-╰─>λ math 13 / 8
+╰─> λ math 13 / 8
 1.625
 ┬─[hill@nixos:~]─[20時11分26秒]─[I]
-╰─>λ math 15 / 8
+╰─> λ math 15 / 8
 1.875
 ┬─[hill@nixos:~]─[20時11分55秒]─[I]
-╰─>λ math 17 / 16
+╰─> λ math 17 / 16
 1.0625
 ```
 here are some tables
-<!--
-+----------+----+---------+----------+
-| Overtone | N  | Ratio   | Multiple |
-+----------+----+---------+----------+
-| 1        | 1  | 1       | 1/1      |
-| 3        | 8  | 1.5     | 3/2      |
-| 5        | 5  | 1.25    | 5/4      |
-| 9        | 3  | 1.125   | 9/8      |
-| 15       | 12 | 1.875   | 15/8     |
-| 17       | 2  | 1.0625  | 17/16    |
-| 19       | 4  | 1.1875  | 19/16    |
-| 27       | 10 | 1.6875  | 27/16    |
-| 45       | 7  | 1.40625 | 45/32    |
-| 51       | 9  | 1.59375 | 51/32    |
-| 57       | 11 | 1.78125 | 57/32    |
-+----------+----+---------+----------+
-
--->
 
 ```
 +----------+--------+---------+-------+             +----------+----+---------+-------+
@@ -212,21 +194,3 @@ if we keep going up the steps one by one (1.0625), we don't end up at the same p
 ### Visualize and listen to Polyrhythms in a Shader:
 
 <iframe width="640" height="360" frameborder="0" allowfullscreen="allowfullscreen" src="https://www.shadertoy.com/embed/7tV3WV?gui=true&t=10&paused=false&muted=false"></iframe> 
-
-
-<!--
-```
-Just Intonation
-1 1.0625 1.125 1.1875 1.25 1.34375 1.40625 1.5 1.59375 1.6875 1.78125 1.875 2
-C        D            E    F             G           A              B     C
-
-12 TET: the octave is split onto 12 equal parts:
-1.000 1.059 1.122 1.189 1.260 1.335 1.414 1.498 1.587 1.682 1.782 1.888 2.000
-C           D           E     F           G           A           B     C
-
-Harmonic scale. next = prev * 1.5 and optionally /2
-Only in harmonic scale frequencies relate as integer numbers
-1.0000 1.5000 1.1250 1.6875 1.2656 1.8984 1.4238 1.0679
-C      G      D      A      E      B      F      C
-```
--->

@@ -5,7 +5,7 @@ updated = 2024-01-27
 +++
 
 <script src="/playground.js"></script>
-<script src="https://unpkg.com/tone"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 use your computer keyboard or a midi device
 
@@ -16,8 +16,8 @@ use your computer keyboard or a midi device
   <option value="pythagorean_tuning">Pythagorean Tuning</option>
   <option value="eleven_limit">Eleven Limit</option>
   <option value="fortythree_tone">Fortythree tone tuning</option>
-  <!--option value="step_method">Just Intonated Step Method</option>
-  <option value="meantone_temperament">Meantone Temperament</option>
+  <option value="step_method">Just Intonated Step Method</option>
+  <!--option value="meantone_temperament">Meantone Temperament</option>
   <option value="well_temperament">Well Temperament</option>
   <option value="equal_temperament">Equal Temperament</option-->
 </select>
@@ -33,10 +33,15 @@ Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value=
 
 Base Freq: <input id="baseFreq" value="220">
 
-<!--div id="stepSizeContainer" style="display: block;">
-    <label for="stepSize">Step Size(1-11): :</label>
-    <input id="stepSize" value="7">
-</div-->
+<div id="stepSizeContainer" style="display: block;">
+    <label for="stepSize">Step Size (co-primes with 12):</label>
+    <select id="stepSize">
+        <option value="1">1</option>
+        <option value="5">5</option>
+        <option value="7" selected>7</option>
+        <option value="11">11</option>
+    </select>
+</div>
 
 <div id="equalTemperamentBaseContainer" style="display: block;">
     <label for="equalTemperamentBase">Equal Temperament Base:</label>
