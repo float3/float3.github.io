@@ -14,6 +14,7 @@ var equalTemperamentBaseContainer: HTMLDivElement;
 
 var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
+var pianoSampler: Tone.sample;
 
 var playingNotes: ToneList;
 
@@ -34,8 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
   equalTemperamentBaseContainer = document.getElementById("equalTemperamentBaseContainer") as HTMLDivElement;
 
   synth = new Tone.Synth().toDestination();
+  pianoSampler = new Tone.Sampler({
+    urls: {
+      C4: "path/to/your/piano/C4/sample.mp3",
+    },
+    baseUrl: "https://example.com/samples/",
+    onload: () => console.log("Sample loaded"),
+  }).toDestination();
 
   playingNotes = [];
+
   tuningSelectOnChange();
 });
 
@@ -148,6 +157,8 @@ function playFrequencyToneJS(frequency: number, volume: number): void {
   synth.triggerAttackRelease(frequency, "8n");
 }
 
+// TODO: use piano sample instead of synth
+
 function playFrequencyNative(
   frequency: number,
   volume: number,
@@ -194,8 +205,6 @@ function getRatioFromTable(n: number, table: FractionTable): number {
   return ratio + octaves;
 }
 
-// TODO: calculate co primes for base size and let user choose one of them??
-
 function getRatioFromStepAlgorithm(n: number, stepsize: number, max: number) {
   let ratio = getRatioFromTable(stepsize, just_intonation);
   let n2 = n % max;
@@ -234,6 +243,12 @@ function gcd(a: number, b: number): number {
 }
 
 // TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
+// TODO: different equal temeperaments?
+// TODO: arabic scales
+// TODO: visualise keyboard
+// TODO: japanese/chinese scales
+// TODO: MIDI file playing
+// TODO: calculate co primes for base size and let user choose one of them??
 
 const just_intonation: FractionTable = {
   0: 1 / 1,
