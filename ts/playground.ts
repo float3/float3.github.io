@@ -249,6 +249,8 @@ function gcd(a: number, b: number): number {
 // TODO: japanese/chinese scales
 // TODO: MIDI file playing
 // TODO: calculate co primes for base size and let user choose one of them??
+// TODO: tell user about VPMK
+// TODO: add a record button to record and output midi
 
 const just_intonation: FractionTable = {
   0: 1 / 1,
