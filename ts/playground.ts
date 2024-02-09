@@ -251,6 +251,8 @@ function gcd(a: number, b: number): number {
 // TODO: calculate co primes for base size and let user choose one of them??
 // TODO: tell user about VPMK
 // TODO: add a record button to record and output midi
+// TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6th
+
 
 const just_intonation: FractionTable = {
   0: 1 / 1,
@@ -278,7 +280,7 @@ const just_intonation_24: FractionTable = {
   7: 39 / 32,
   8: 5 / 4,
   9: 41 / 32,
-  10: 2 / 3,
+  10: 4 / 3,
   11: 11 / 8,
   12: 45 / 32,
   13: 93 / 64,
