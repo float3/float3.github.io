@@ -1,0 +1,19 @@
+{
+  "name": "tuning_systems-wasm",
+  "collaborators": [
+    "hill <hill@hilll.dev>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "tuning_systems_wasm_bg.wasm",
+    "tuning_systems_wasm.js",
+    "tuning_systems_wasm_bg.js",
+    "tuning_systems_wasm.d.ts"
+  ],
+  "module": "tuning_systems_wasm.js",
+  "types": "tuning_systems_wasm.d.ts",
+  "sideEffects": [
+    "./tuning_systems_wasm.js",
+    "./snippets/*"
+  ]
+}

@@ -1,4 +1,6 @@
 import * as Tone from "tone";
+import * as tuning_systems from './tuning_systems_wasm';
+import * as tuning_systems_bg from './tuning_systems_wasm_bg.wasm';
 
 type FractionTable = Record<number, number>;
 type ToneList = Array<[number, OscillatorNode]>;
