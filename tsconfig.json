@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "../static",
-    "rootDir": "./",
+    "outDir": "./static",
+    "rootDir": "./ts",
     "strict": true
   }
 }
