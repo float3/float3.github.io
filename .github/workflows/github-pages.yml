@@ -42,9 +42,9 @@ jobs:
           echo wasm-pack build
           echo cd ../..
           echo mv ./programs/tuning_systems-wasm/pkg/* ./ts/
-          cd ./ts
+          echo cd ./ts
           tsc || true
-          cd ..
+          echo cd ..
           sed -i '2,3d' /static/playground.js
 
       - name: collect_link.sh
