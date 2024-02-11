@@ -40,7 +40,7 @@ jobs:
           tsc || true
           ls -la
           echo cd ..
-          sed -i '2,3d' /static/playground.js
+          sed -i '2,3d' ./static/playground.js
           sh ./scripts/collect_links.sh
           mkdir /tmp/zola
           wget -q -O - "https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp
