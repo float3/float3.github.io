@@ -14,5 +14,7 @@ updated = 1970-01-01
 - [ ] Pachinko
 - [ ] Squid Game
 - [ ] Dark (German)
+- [ ] Reacher
 - [ ] Mr. Robot
 - [ ] The Wire
+- [ ] The Succession

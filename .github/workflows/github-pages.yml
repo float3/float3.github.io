@@ -43,6 +43,7 @@ jobs:
           cd ../..
           mv ./programs/tuning_systems-wasm/pkg/* ./ts/
           cd ./ts
+          ls
           tsc || true
           cd ..
           sed -i '2,3d' /static/playground.js

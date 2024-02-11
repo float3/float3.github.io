@@ -1,11 +1,7 @@
 function getRandomMovie(id: string): void {
-    const heading = document.getElementById(id) as HTMLElement;
-    const headingContent: string = (heading.nextElementSibling?.nextElementSibling as HTMLElement).innerText;
+    let moviesToWatch = collectMovies(id);
 
-    let moviesToWatch = headingContent.split("\n").filter(x => !x.includes("BREAK")).filter(x => !/\(\d{4}-\d{2}-\d{2}\)$/.test(x));
-
-    const url: string = "https://tools-unite.com/tools/random-picker-wheel?inputs=" +
-        moviesToWatch.map(movie => `${encodeURIComponent(movie)}:1,`).join("");
+    const url: string = "https://tools-unite.com/tools/random-picker-wheel?inputs=" + moviesToWatch.map(movie => `${encodeURIComponent(movie)}:1,`).join("");
 
     window.open(url, '_blank');
 }
@@ -25,3 +21,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 });
+
+function collectMovies(id: string) {
+    const heading = document.getElementById(id) as HTMLElement;
+    const headingContent: string = (heading.nextElementSibling?.nextElementSibling as HTMLElement).innerText;
+
+    let moviesToWatch = headingContent.split("\n").filter(x => !x.includes("BREAK")).filter(x => !/\(\d{4}-\d{2}-\d{2}\)$/.test(x));
+
+    return moviesToWatch;
+}
