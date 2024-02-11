@@ -27,36 +27,24 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install
-
-      - name: Install TypeScript
-        run: npm install -g typescript
-
       - name: install wasm-pack
-        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-
-      - name: build
         run: |
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
           echo cd ./programs/tuning_systems-wasm
           echo wasm-pack build
           echo cd ../..
           echo mv ./programs/tuning_systems-wasm/pkg/* ./ts/
           echo cd ./ts
+          npm install
+          npm install -g typescript
           tsc || true
+          ls -la
           echo cd ..
           sed -i '2,3d' /static/playground.js
-
-      - name: collect_link.sh
-        run: sh ./scripts/collect_links.sh
-
-      - name: Get Zola
-        run: |
+          sh ./scripts/collect_links.sh
           mkdir /tmp/zola
           wget -q -O - "https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp
-
-      - name: Build
-        run: /tmp/zola build
+          /tmp/zola build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
