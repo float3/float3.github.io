@@ -3,7 +3,7 @@ title = "blogs"
 updated = 1970-01-01
 +++
 
-you can also find all these links [here](/blogs.txt)
+you can also find all these links [here](/plaintext/blogs.txt)
 
 blogs I like
 

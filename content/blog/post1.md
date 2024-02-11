@@ -8,16 +8,16 @@ updated = 2023-05-23
 On the 20th of August 2022 I visited the British Museum with some friends and decided to take some videos:
 <div style="display: flex;">
 <video controls height="500">
-<source src="/statue_with_child.mp4">
+<source src="/media/statue_with_child.mp4">
 </video>
 <video controls height="500">
-<source src="/kneeling_statue.mp4">
+<source src="/media/kneeling_statue.mp4">
 </video>
 <video controls height="500">
-<source src="/helmet_guy.mp4">
+<source src="/media/helmet_guy.mp4">
 </video>
 <video controls height="500">
-<source src="/laughing_buddha.mp4">
+<source src="/media/laughing_buddha.mp4">
 </video>
 </div>
 
@@ -37,6 +37,6 @@ I imported the frames into [meshroom](https://github.com/alicevision/meshroom) a
 # and finally
 I imported all the 3D Models and textures into [Blender](https://www.blender.org), cleaned up the meshes, set up my scene hit the render button and voilà we've successfully stolen from the British Museum:
 
-<img src="/render.png" width=100%/>
+<img src="/media/render.png" width=100%/>
 
 you can find all the assets [here](https://github.com/float3/BritishMuseum3DScans)

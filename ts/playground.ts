@@ -1,6 +1,5 @@
 import * as Tone from "tone";
-import * as tuning_systems from './tuning_systems_wasm';
-import * as tuning_systems_bg from './tuning_systems_wasm_bg.wasm';
+import * as tuning_systems from '../programs/tuning_systems-wasm/pkg/tuning_systems_wasm.js'
 
 type FractionTable = Record<number, number>;
 type ToneList = Array<[number, OscillatorNode]>;
@@ -94,7 +93,6 @@ document.addEventListener("keydown", function (event) {
   if (playingNotes.some((note) => note[0] === n) || isNaN(n)) {
     return;
   }
-  console.log(n);
   noteOn(n);
 });
 
@@ -127,17 +125,10 @@ function noteOn(n: number) {
 
 function getRatio(n: number): number {
   let ratio: number;
-  switch (tuningSelect.value) {
-    case "equal_temperament":
-      ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
-      break;
-    case "step_method":
-      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
-      break;
-    default:
-      ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
-      break;
-  }
+  console.log("getraito");
+  ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
+
+  console.log(ratio);
   return ratio;
 }
 

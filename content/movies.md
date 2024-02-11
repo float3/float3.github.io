@@ -3,7 +3,7 @@ title = "movies"
 updated = 1970-01-01
 +++
 
-<script src="/movies.js"></script>
+<script src="js/movies.js"></script>
 
 Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_films_condemned_by_the_Legion_of_Decency)
 

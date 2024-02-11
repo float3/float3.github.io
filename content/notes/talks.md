@@ -3,7 +3,7 @@ title = "talks"
 updated = 1970-01-01
 +++
 
-you can also find all these links [here](/talks.txt)
+you can also find all these links [here](/plaintext/talks.txt)
 
 talks I like
 

@@ -33,11 +33,9 @@ jobs:
           cd ./programs/tuning_systems-wasm
           wasm-pack build
           cd ../..
-          mv ./programs/tuning_systems-wasm/pkg/* ./ts/
           npm install
           npm install -g typescript
-          tsc || true
-          sed -i '2,3d' ./static/playground.js
+          tsc
           sh ./scripts/collect_links.sh
           mkdir /tmp/zola
           wget -q -O - "https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp
