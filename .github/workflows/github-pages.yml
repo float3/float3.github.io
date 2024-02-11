@@ -38,12 +38,11 @@ jobs:
 
       - name: build
         run: |
-          cd ./programs/tuning_systems-wasm
-          wasm-pack build
-          cd ../..
-          mv ./programs/tuning_systems-wasm/pkg/* ./ts/
+          echo cd ./programs/tuning_systems-wasm
+          echo wasm-pack build
+          echo cd ../..
+          echo mv ./programs/tuning_systems-wasm/pkg/* ./ts/
           cd ./ts
-          ls
           tsc || true
           cd ..
           sed -i '2,3d' /static/playground.js
