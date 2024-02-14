@@ -6,7 +6,7 @@ updated = 2024-01-27
 <noscript> hey this page needs javascript</noscript>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js" integrity="sha512-jduERlz7En1IUZR54bqzpNI64AbffZWR//KJgF71SJ8D8/liKFZ+s1RxmUmB+bhCnIfzebdZsULwOrbVB5f3nQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="/js/playground.js"></script>
+<script type="module" src="/js/playground.js"></script>
 use your computer keyboard or a midi device
 
 <label for="tuningSelect">Select Tuning System:</label>

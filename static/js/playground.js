@@ -1,6 +1,6 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const Tone = require("tone");
+//import * as Tone from "tone";
+//import * as tuning_systems from '../programs/tuning_systems-wasm/pkg/tuning_systems_wasm.js'
 var logContainer;
 var tuningSelect;
 var baseFreq;
