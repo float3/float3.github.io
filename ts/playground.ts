@@ -1,5 +1,5 @@
 import * as Tone from "tone";
-import * as tuning_systems from '../programs/tuning_systems-wasm/pkg/tuning_systems_wasm.js'
+//import * as tuning_systems from '../programs/tuning_systems-wasm/pkg/tuning_systems_wasm.js'
 
 type FractionTable = Record<number, number>;
 type ToneList = Array<[number, OscillatorNode]>;
@@ -125,10 +125,19 @@ function noteOn(n: number) {
 
 function getRatio(n: number): number {
   let ratio: number;
-  console.log("getraito");
-  ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
 
-  console.log(ratio);
+  //ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
+  switch (tuningSelect.value) {
+    case "equal_temperament":
+      ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
+      break;
+    case "step_method":
+      ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
+      break;
+    default:
+      ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
+      break;
+  }
   return ratio;
 }
 
@@ -446,10 +455,14 @@ const step_method_11: FractionTable = {
 }
 
 const table_table: Record<string, FractionTable> = {
-  "just_intonation": just_intonation,
-  "pythagorean_tuning": pythagorean_tuning,
-  "eleven_limit": eleven_limit,
-  "fortythree_tone": fortythree_tone,
+  "JustIntonation": just_intonation,
+  "JustIntonation24": just_intonation_24,
+  "PythagoreanTuning": pythagorean_tuning,
+  "ElevenLimit": eleven_limit,
+  "FiveLimit": five_limit,
+  "FortythreeTone": fortythree_tone,
+  "Indian": indian_scale,
+  "IndianFull": indian_scale_full
 };
 
 // TODO: implement Midi player

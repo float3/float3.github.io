@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Tone = require("tone");
-const tuning_systems = require("../programs/tuning_systems-wasm/pkg/tuning_systems_wasm.js");
 var logContainer;
 var tuningSelect;
 var baseFreq;
@@ -104,9 +103,18 @@ function noteOn(n) {
 }
 function getRatio(n) {
     let ratio;
-    console.log("getraito");
-    ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
-    console.log(ratio);
+    //ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
+    switch (tuningSelect.value) {
+        case "equal_temperament":
+            ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
+            break;
+        case "step_method":
+            ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
+            break;
+        default:
+            ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
+            break;
+    }
     return ratio;
 }
 function playFrequency(frequency, volume, n) {
@@ -391,10 +399,14 @@ const step_method_5 = {};
 const step_method_7 = {};
 const step_method_11 = {};
 const table_table = {
-    "just_intonation": just_intonation,
-    "pythagorean_tuning": pythagorean_tuning,
-    "eleven_limit": eleven_limit,
-    "fortythree_tone": fortythree_tone,
+    "JustIntonation": just_intonation,
+    "JustIntonation24": just_intonation_24,
+    "PythagoreanTuning": pythagorean_tuning,
+    "ElevenLimit": eleven_limit,
+    "FiveLimit": five_limit,
+    "FortythreeTone": fortythree_tone,
+    "Indian": indian_scale,
+    "IndianFull": indian_scale_full
 };
 // TODO: implement Midi player
 const keyboard = {
