@@ -128,10 +128,10 @@ function getRatio(n: number): number {
 
   //ratio = tuning_systems.get_ratio(tuningSelect.value, n, parseInt(equalTemperamentBase.value));
   switch (tuningSelect.value) {
-    case "equal_temperament":
+    case "EqualTemperament":
       ratio = getRatioFromEqualTemperament(n, parseFloat(equalTemperamentBase.value));
       break;
-    case "step_method":
+    case "StepMethod":
       ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
       break;
     default:
@@ -179,12 +179,13 @@ function playFrequencyNative(
 }
 
 function tuningSelectOnChange(): void {
-  if (tuningSelect.value == "equal_temperament") {
+  console.log("test");
+  if (tuningSelect.value == "EqualTemperament") {
     equalTemperamentBaseContainer.style.display = "block";
   } else {
     equalTemperamentBaseContainer.style.display = "none";
   }
-  if (tuningSelect.value == "step_method") {
+  if (tuningSelect.value == "StepMethod") {
     stepSizeContainer.style.display = "block";
   } else {
     stepSizeContainer.style.display = "none";
