@@ -6,4 +6,4 @@ cd ../..
 npm install
 tsc || true
 sh ./scripts/collect_links.sh
-zola build
+zola serve
