@@ -1,14 +1,15 @@
 
 +++
-title = "Flashing the Firmware of a SteamVR Dongle"
+title = "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
 date = 2024-02-14
 updated = 2023-02-14
 +++
 
-This blog is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara;
-Instructions on how to flash the bootloader provided by [Ben Jackson](https://ben.com)
+This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara
+and Instructions on how to flash the bootloader provided by [Ben Jackson](https://ben.com)
 
-# Repurposing Steam Controller Dongles for SteamVR
+
+# Flashing the Firmware and Bootloader of a Steam Controller Dongle
 
 ## Requirements
 
@@ -20,7 +21,7 @@ Instructions on how to flash the bootloader provided by [Ben Jackson](https://be
 ## Warning
 
 It's important to approach this process with caution:
-- Assume that this change is permanent.
+- Assume that this change is permanent, at least if you decide to flash the bootloader as well.
 - This procedure will flash ALL connected dongles. Be sure to remove any dongles that you do not wish to flash.
 
 ## Flashing the Firmware
@@ -31,41 +32,50 @@ It's important to approach this process with caution:
 4. Run the commands below. (you will have to adjust these paths for non-standard installation paths for steam and steamvr)
 
 ### Windows
-```bat
-cd `C:\Program Files (x86)\Steam\steamapps\common\SteamVR\tools\lighthouse`
-bin\win32\lighthouse_watchman_update.exe -D firmware\vr_controller\archive\htc_vrc_dongle_1461100729_2016_04_19.bin
-```
+<pre style="background-color: #000000; padding: 10px;"><code>
+<span style="color: cyan;">cd</span> <span style="color: blue;">`C:\Program Files (x86)\Steam\steamapps\common\SteamVR\tools\lighthouse`</span>
+<span style="color: cyan;">bin\win32\lighthouse_watchman_update.exe</span> <span style="color: green;">-D</span> <span style="color: red;">firmware\vr_controller\archive\htc_vrc_dongle_1461100729_2016_04_19.bin</span>
+</code></pre>
+
 
 ### Linux
-Looks like flashing it on Linux doesn't work `Can't convert dongle on non-Windows platform:  Can't tell if conflicting Steam is running.`
+Looks like flashing it on Linux doesn't work for now, the executable just prints `Can't convert dongle on non-Windows platform:  Can't tell if conflicting Steam is running.`
 
-## Issues
+TODO: try Wine
 
-This procedure changes the runtime firmware but not the bootloader. If you enter the bootloader mode (e.g., through a firmware update), the device will revert to a Steam controller dongle state, necessitating a repeat of the process.
+### Issues
+
+This procedure changes the runtime firmware but not the bootloader. 
+If you enter the bootloader mode (e.g., through a firmware update), 
+the device will revert to a Steam controller dongle state, 
+necessitating a repeat of the process.
 
 For a permanent change, we need to flash the bootloader as well. 
 
 ## Flashing the Bootloader
 
-1. follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
+1. Follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
 2. Follow the [Flashing the Firmware Guide](#flashing-the-firmware) but use the commands below in the last step (again you may have to adjust the paths if you isntalled the HDK in a differnt directory)
 3. Or download the [watchman_dongle_combined.bin](/watchman_dongle_combined.bin) here
    
 ### Windows
-```bat
-cd `C:\Program Files (x86)\Steam\steamapps\common\`
-SteamVR\tools\lighthouse\bin\win32\lighthouse_watchman_update.exe -D SteamVR\ Tracking\ HDK/firmware/dongle/watchman_dongle_combined.bin
-```
+
+<pre style="background-color: black; padding: 10px;"><code>
+<span style="color: cyan;">cd</span> <span style="color: blue;">`C:\Program Files (x86)\Steam\steamapps\common\`</span>
+<span style="color: cyan;">SteamVR\tools\lighthouse\bin\win32\lighthouse_watchman_update.exe</span> <span style="color: green;">-D</span> <span style="color: red;">SteamVR\ Tracking\ HDK/firmware/dongle/watchman_dongle_combined.bin</span>
+</code></pre>
+
 ## Notes
 
-- While it's possible to flash multiple dongles simultaneously, it's safer to do them one at a time.
-- The modification should be considered permanent. Although it's theoretically possible to revert the firmware, successful cases are rare.
+- While it's possible to flash multiple dongles simultaneously, it might be safer to do them one at a time.
 
 ## What to Expect
 
 Upon running the command
 
-```
+### Firmware Flash
+
+<pre style="background-color: black; color: white; padding: 10px;"><code>
 Attempting to update Watchman Dongles to version 1461100729...
 
 Converting steam controller dongle to watchman dongle. Switching to bootloader
@@ -91,5 +101,8 @@ wvvvP0X........VVVVVVVV
 Successfully converted firmware.
 
 Found all expected bootloaders
-```
+</code></pre>
 
+### Bootloader Flash
+
+TODO
