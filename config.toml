@@ -1,18 +1,40 @@
-# The URL the site will be built for
+author = "hill"
 base_url = "https://hilll.dev"
-generate_feed = true
-
-# Whether to automatically compile all Sass files in the sass directory
-compile_sass = true
-
-# Whether to build a search index to be used later on by a JavaScript library
 build_search_index = true
+compile_sass = true
+feed_filename = "rss.xml"
+generate_feed = true
+hard_link_static = true
+minify_html = true
+
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 highlight_code = true
+highlight_thme = "solarized-dark"
+render_emoji = false
+external_links_target_blank = false
+external_links_no_follow = false
+external_links_no_referrer = true
+smart_punctuation = false
+
+
+[link_checker]
+internal_level = "error"
+external_level = "error"
+
+
+[slugify]
+paths = "on"
+taxonomies = "on"
+anchors = "on"
+paths_keep_dates = false
+
+
+[search]
+include_title = true
+include_description = true
+include_path = true
+include_content = true
+index_format = "elasticlunr_javascript"
 
 [extra]
-# Put all your custom variables here
-
