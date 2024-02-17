@@ -35,7 +35,7 @@ use your computer keyboard or a midi device
 
 Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.5">
 
-Base Freq: <input id="baseFreq" value="220">
+Base Freq (A2): <input id="baseFreq" value="220">
 
 <div id="stepSizeContainer" style="display: block;">
     <label for="stepSize">Step Size (co-primes with 12):</label>
