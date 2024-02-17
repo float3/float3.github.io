@@ -96,9 +96,10 @@ function check(note, n, newNotes) {
 function noteOn(n) {
     let ratio = getRatio(n);
     let root = parseFloat(baseFreq.value);
-    let freq = ratio * root;
-    logToDiv(freq + "Hz");
+    let freq = ratio[0] * root;
+    logToDiv(freq + "Hz : " + ratio[1]);
     let volume = Math.pow(parseFloat(volumeSlider.value), 2);
+    console.log(freq);
     playFrequency(freq, volume, n);
 }
 function getRatio(n) {
@@ -112,7 +113,7 @@ function getRatio(n) {
             ratio = getRatioFromStepAlgorithm(n, parseFloat(stepSize.value), 12);
             break;
         default:
-            ratio = getRatioFromTable(n, table_table[tuningSelect.value]);
+            ratio = getToneFromTable(n, table_table[tuningSelect.value]);
             break;
     }
     return ratio;
@@ -165,22 +166,51 @@ function logToDiv(message) {
     logContainer.innerHTML = "<p>" + message + "</p>" + logContainer.innerHTML;
 }
 function getRatioFromEqualTemperament(n, base) {
-    return Math.pow(2, n / base);
+    let ratio = Math.pow(2, n / base);
+    let octaves = Math.floor(n / base);
+    let name;
+    if (base === 12) {
+        name = tone_names[n % base] + octaves + 2;
+    }
+    else {
+        name = "not implemented";
+    }
+    return [ratio, name];
 }
-function getRatioFromTable(n, table) {
+function getToneFromTable(n, table) {
     let tablesize = Object.keys(table).length;
     let n2 = n % tablesize;
-    let ratio = table[n2];
     let octaves = Math.floor(n / tablesize);
-    return ratio + octaves;
+    let name;
+    let ratio;
+    if (table[0] instanceof Array) {
+        let ttable = table;
+        ratio = ttable[n2][0];
+        name = ttable[n2][1];
+    }
+    else {
+        let ftable = table;
+        ratio = ftable[n2];
+        if (tablesize === 12) {
+            name = tone_names[n2];
+        }
+        else {
+            name = "not implemented";
+        }
+    }
+    name += octaves + 2;
+    console.log("octraves" + octaves);
+    console.log("ratio" + ratio);
+    ratio += Math.pow(2, octaves) - 1;
+    return [ratio, name];
 }
 function getRatioFromStepAlgorithm(n, stepsize, max) {
-    let ratio = getRatioFromTable(stepsize, just_intonation);
+    let ratio = getToneFromTable(stepsize, just_intonation);
     let n2 = n % max;
     let current_ratio = 1;
     let current_idx = 0;
     while (current_idx !== n2) {
-        current_ratio *= ratio;
+        current_ratio *= ratio[0];
         current_idx += stepsize;
         current_idx %= max;
         if (current_ratio > 2) {
@@ -188,7 +218,7 @@ function getRatioFromStepAlgorithm(n, stepsize, max) {
         }
     }
     let octaves = Math.floor(n / max);
-    return current_ratio + octaves;
+    return [current_ratio + octaves + 2, "not implemented"];
 }
 function findCoprimes(num) {
     const coprimes = [];
@@ -207,7 +237,6 @@ function gcd(a, b) {
         return gcd(b, a % b);
     }
 }
-// TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
 // TODO: different equal temeperaments?
 // TODO: arabic scales
 // TODO: visualise keyboard
@@ -217,6 +246,22 @@ function gcd(a, b) {
 // TODO: tell user about VPMK
 // TODO: add a record button to record and output midi
 // TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6th
+// TODO: calculate cent difference
+// https://en.wikipedia.org/wiki/Quarter_tone#Music_of_the_Middle_East
+const tone_names = {
+    0: "A",
+    1: "A#/Bb",
+    2: "B",
+    3: "C",
+    4: "C#/Db",
+    5: "D",
+    6: "D#/Eb",
+    7: "E",
+    8: "F",
+    9: "F#/Gb",
+    10: "G",
+    11: "G#/Ab"
+};
 const just_intonation = {
     0: 1 / 1,
     1: 17 / 16,
@@ -229,7 +274,7 @@ const just_intonation = {
     8: 51 / 32,
     9: 27 / 16,
     10: 57 / 32,
-    11: 15 / 8,
+    11: 15 / 8
 };
 const just_intonation_24 = {
     0: 1 / 1,
@@ -362,14 +407,13 @@ const fortythree_tone = {
     42: 160 / 81,
 };
 const indian_scale = {
-    0: 1 / 1, //sa
-    1: 9 / 8, //re
-    2: 5 / 4, //ga
-    3: 4 / 3, //ma
-    4: 3 / 2, //pa
-    5: 5 / 3, //dha
-    //5: 27 / 16, //dha 
-    6: 15 / 8, //ni
+    0: [1 / 1, "Sa"],
+    1: [9 / 8, "Re"],
+    2: [5 / 4, "Ga"],
+    3: [4 / 3, "Ma"],
+    4: [3 / 2, "Pa"],
+    5: [5 / 3, "Dha"],
+    6: [15 / 8, "Ni"]
 };
 const indian_scale_full = {
     0: 1 / 1,
@@ -399,6 +443,7 @@ const step_method_1 = {};
 const step_method_5 = {};
 const step_method_7 = {};
 const step_method_11 = {};
+// allows this record to take both fractiotalbe and tonetable
 const table_table = {
     "JustIntonation": just_intonation,
     "JustIntonation24": just_intonation_24,
