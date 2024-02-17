@@ -232,7 +232,7 @@ function getToneFromTable<T extends ToneTable | FractionTable>(n: number, table:
     }
   }
   name += octaves + 2;
-  ratio += octaves;
+  ratio += Math.pow(2, octaves) - 1; // TODO: experiment with non power of 2 ratios
   return [ratio, name];
 }
 
