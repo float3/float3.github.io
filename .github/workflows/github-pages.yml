@@ -29,10 +29,6 @@ jobs:
 
       - name: install wasm-pack
         run: |
-          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-          cd ./programs/tuning_systems-wasm
-          wasm-pack build
-          cd ../..
           npm install
           npm install -g typescript
           tsc || true
