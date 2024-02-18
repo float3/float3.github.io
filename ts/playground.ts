@@ -18,6 +18,17 @@ var synth: Tone.Synth<Tone.SynthOptions>;
 var audioContext: AudioContext;
 //var pianoSampler: Tone.Sampler;
 
+interface NoteEvent {
+  note: number;
+  velocity: number;
+  timestamp: number;
+  eventType: 'on' | 'off';
+}
+
+const recordedNotes: NoteEvent[] = [];
+
+var recording: boolean = false;
+
 var playingNotes: ToneList;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -114,6 +125,10 @@ function check(note: [number, OscillatorNode], n: number, newNotes: ToneList) {
 }
 
 function noteOn(n: number) {
+  if (recording) {
+    recordNote(n, 'on');
+  }
+
   let ratio: [number, string] = getRatio(n);
   let root: number = parseFloat(baseFreq.value);
   let freq: number = ratio[0] * root;
@@ -122,6 +137,11 @@ function noteOn(n: number) {
   let volume: number = Math.pow(parseFloat(volumeSlider.value), 2);
   console.log(freq)
   playFrequency(freq, volume, n);
+}
+
+function recordNote(n: number, eventType: 'on' | 'off') {
+  let timestamp = performance.now(); // Capture the current time in milliseconds
+  recordedNotes.push({ note: n, 1, timestamp, eventType: eventType });
 }
 
 function getRatio(n: number): [number, string] {
@@ -235,6 +255,11 @@ function getToneFromTable<T extends ToneTable | FractionTable>(n: number, table:
   ratio += Math.pow(2, octaves) - 1; // TODO: experiment with non power of 2 ratios
   return [ratio, name];
 }
+
+// record played notes and output midi file
+// there should be a record button and a stop recording button and when the stop recording button is pressed the midi file should be downloaded
+
+
 
 function getRatioFromStepAlgorithm(n: number, stepsize: number, max: number): [number, string] {
   let ratio = getToneFromTable(stepsize, just_intonation);

@@ -11,7 +11,8 @@ var equalTemperamentBase;
 var equalTemperamentBaseContainer;
 var synth;
 var audioContext;
-//var pianoSampler: Tone.Sampler;
+const recordedNotes = [];
+var recording = false;
 var playingNotes;
 document.addEventListener("DOMContentLoaded", () => {
     if (navigator.requestMIDIAccess) {
@@ -94,6 +95,9 @@ function check(note, n, newNotes) {
     }
 }
 function noteOn(n) {
+    if (recording) {
+        recordNote(n, 'on');
+    }
     let ratio = getRatio(n);
     let root = parseFloat(baseFreq.value);
     let freq = ratio[0] * root;
@@ -101,6 +105,10 @@ function noteOn(n) {
     let volume = Math.pow(parseFloat(volumeSlider.value), 2);
     console.log(freq);
     playFrequency(freq, volume, n);
+}
+function recordNote(n, eventType) {
+    let timestamp = performance.now(); // Capture the current time in milliseconds
+    recordedNotes.push({ note: n, 1: , timestamp, eventType: eventType });
 }
 function getRatio(n) {
     let ratio;
@@ -199,11 +207,11 @@ function getToneFromTable(n, table) {
         }
     }
     name += octaves + 2;
-    console.log("octraves" + octaves);
-    console.log("ratio" + ratio);
-    ratio += Math.pow(2, octaves) - 1;
+    ratio += Math.pow(2, octaves) - 1; // TODO: experiment with non power of 2 ratios
     return [ratio, name];
 }
+// record played notes and output midi file
+// there should be a record button and a stop recording button and when the stop recording button is pressed the midi file should be downloaded
 function getRatioFromStepAlgorithm(n, stepsize, max) {
     let ratio = getToneFromTable(stepsize, just_intonation);
     let n2 = n % max;
