@@ -108,7 +108,7 @@ function noteOn(n) {
 }
 function recordNote(n, eventType) {
     let timestamp = performance.now(); // Capture the current time in milliseconds
-    recordedNotes.push({ note: n, 1: , timestamp, eventType: eventType });
+    // recordedNotes.push({ note: n, 1, timestamp, eventType: eventType });
 }
 function getRatio(n) {
     let ratio;
