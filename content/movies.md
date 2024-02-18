@@ -3,7 +3,7 @@ title = "movies"
 updated = 1970-01-01
 +++
 
-<script src="/js/movies.js"></script>
+<script src="js/movies.js"></script>
 
 Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_films_condemned_by_the_Legion_of_Decency)
 
@@ -105,6 +105,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Donnie Darko (2001) (2024-01-27)
 - [x] Parasite (2019) (2024-02-03)
 - [x] The Year of the Dragon (1985) (2024-02-10)
+- [x] Memento (2000) (2024-02-18) 
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -114,7 +115,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Spartacus (1960)
 - [ ] Psycho (1960)
 - [ ] Lolita (1962)
+- [ ] Harakiri (1962)
 - [ ] Dr. Strangelove (1964)
+- [ ] Kwaidan (1964)
 - [ ] 2001: A Space Odyssey (1968)
 - [ ] Midnight Cowboy (1969)
 - [ ] El Topo (1970)
@@ -147,11 +150,13 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Platoon (1986)
 - [ ] Full Metal Jacket (1987)
 - [ ] They Live (1988)
+- [ ] Beetlejuice (1988)
 - [ ] アキラ (Akira) (1988)
 - [ ] Die Hard (1988)
 - [ ] Santa Sangre (1989)
 - [ ] Home Alone (1990)
 - [ ] JFK (1991)
+- [ ] A Few Good Men (1992)
 - [ ] Reservoir Dogs (1992)
 - [ ] Falling Down (1993)
 - [ ] 超級學校霸王 (Future Cops) (1993)
@@ -168,8 +173,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] King of Comedy (1999)
 - [ ] Eyes Wide Shut (1999)
 - [ ] Gigantic (1999)
+- [ ] The Sixth Sense (1999)
 - [ ] Requiem for a Dream (2000)
-- [ ] Memento (2000)
 - [ ] Cat Soup (2001)
 - [ ] The Believer (2001)
 - [ ] The Bourne Identity (2002)
@@ -217,6 +222,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Who Am I (2014)
 - [ ] War Dogs (2016)
 - [ ] Punk's Dead: SLC Punk 2 (2016)
+- [ ] The Handmaiden (2016)
 - [ ] A Taxi Driver (2017)
 - [ ] Get Out (2017)
 - [ ] Good Time (2017)
@@ -238,6 +244,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Whale (2022)
 - [ ] The Gray Man (2022)
 - [ ] Something in the Dirt (2022)
+- [ ] Decision to Leave (2022)
 - [ ] The Killer (2023)
 - [ ] Killers of the Flower Moon (2023)
 - [ ] Plane (2023)
@@ -401,6 +408,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Talking Funny (2011)
 - [ ] Little Dancer (2012)
 - [ ] The Imitation Game (2014)
+- [ ] Who Am I – No System is Safe (2014)
 - [ ] Interstellar (2014)
 - [ ] The Whistleblower (2014)
 - [ ] The Interview (2014)
@@ -410,6 +418,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] La La Land (2016)
 - [ ] Dying Laughing (2016)
 - [ ] The Whistleblower (2019)
+- [ ] Wet Season (2019)
 - [ ] Past Lives (2023)
 - [ ] The Creator (2023)
 - [ ] Jackie Chan -  My Stunts
