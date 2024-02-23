@@ -15,7 +15,8 @@ all restaurants are vegan friendly
 
 very good food, open: 5:30-18:00
 
-# Taipei
+# Taiwan
+## Taipei
 ### 御喜自助餐
 25°01'05.3"N 121°32'25.0"E \
 No. 1號, Section 4, Roosevelt Rd, Da’an District, Taipei City, Taiwan 106
@@ -85,4 +86,17 @@ good food, too expensive
 
 
 good vegan dim sum, much too expensive, not worth \
-I didn't wanna include the last 2; I wouldn't go there again, because there are better options with lower prices but I decided to Document them anyways.
+I didn't wanna include the last 2; I wouldn't go there again, 
+because there are better options with lower prices but I decided to Document them anyways.
+
+
+# Denmark
+
+## Copenhagen
+
+### ferment
+55°40'43.2"N 12°34'10.1"E \
+Studiestræde 18, 1455 København, Dänemark
+
+the menu is different time everytime I visit, good kimchi, good ramen 
+ask the owner about the story of how the kimchi started over 8 years ago (2023)
