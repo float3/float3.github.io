@@ -27,7 +27,7 @@ mod tests {
     #[test]
     fn expect() {
         let mut a : Option;
-        answer
+        let answer = true
         a = true;
         //mismatch(Opinion::Some("the existence of ..."));
     }
