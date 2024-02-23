@@ -3,12 +3,18 @@ pub enum Opinion {
     None,
 }
 
+pub enum Option {
+    A,
+    B,
+    C
+}
+
 pub const RATIOANLITY: &str = "Making decisions based on maximizing utility or benefit within constraints.";
 pub const RATIONALITY: &str = "Being reasonable, coherent, and logical in thinking and decision-making, beyond just self-interest";
 
 pub fn mismatch(expects: &str) {}
 
-pub fn test(asd: Option<&str>) {}
+//pub fn test(asd: Option<&str>) {}
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -20,6 +26,9 @@ mod tests {
 
     #[test]
     fn expect() {
-        mismatch(Opinion::Some("the existence of ..."));
+        let mut a : Option;
+        answer
+        a = true;
+        //mismatch(Opinion::Some("the existence of ..."));
     }
 }
