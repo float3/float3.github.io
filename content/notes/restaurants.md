@@ -96,7 +96,7 @@ because there are better options with lower prices but I decided to Document the
 
 ### ferment
 55°40'43.2"N 12°34'10.1"E \
-Studiestræde 18, 1455 København, Dänemark
+Studiestræde 18, 1455 København, Denmark
 
 the menu is different time everytime I visit, good kimchi, good ramen 
 ask the owner about the story of how the kimchi started over 8 years ago (2023)
