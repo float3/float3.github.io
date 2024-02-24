@@ -35,26 +35,28 @@ A: "In my opinion, the existence of a deity or deities is not supported by scien
 <pre class="compact-pre">
 <span class="grey">   | </span>
 <span class="grey">2  | </span><!--                    -->answer(Opinion("the existence of ..."));
-<span class="grey">   | -------</span><span class="error">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `String`, found `Opinion<span><</span>String>`</span>
+<span class="grey">   | -------</span><span class="error">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `String`, found `Opinion&lt;String>`</span>
 <span class="grey">   | |</span>
 <span class="grey">   | arguments to this function are incorrect</span>
 <span class="grey">   | </span>
 <span class="grey">   = note:</span> expected type `String`
-<span class="grey">              <!---->found enum </span>`Opinion<span><<span>String>`
+<span class="grey">              <!---->found enum </span>`Opinion&lt;String>`
 </pre>
 
-This is a type mismatch, the Asker was seeking a statement of fact.
+This is a type mismatch, the Asker was seeking a statemeynt of fact.
 Thankfully our interpreter can do context dependent implicit conversion.
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
 
 here are a couple of other examples and what types they would expect,
-<span>
+<pre><code>
+|----------------------------------------------|-------------------------|-----------------------|
 | Question                                     | Expected Type           | Available Conversions |
 |----------------------------------------------|-------------------------|-----------------------|
-| "do you still want this, or can I eat this?" | `Tuple<Boolean,Boolean>`  | `Boolean`               |
-| "do you want A, B or C"                      | `Enum(A,B,C)`             | `Integer`               |
-| "A or B"                                     | `Enum(A,B)`               | `Boolean, Integer`      |
-</span>
+| "do you still want this, or can I eat this?" | `Tuple&lt;Boolean,Boolean>`| `Boolean`             |
+| "do you want A, B or C"                      | `Enum(A,B,C)`           | `Integer`             |
+| "A or B"                                     | `Enum(A,B)`             | `Boolean, Integer`    |
+|----------------------------------------------|-------------------------|-----------------------|
+</code></pre>
 
 ## Value/Sign mismatch
 
@@ -77,10 +79,10 @@ the context of double negatives. In cases like this the `String` usually overwri
 
 ## Type aliasing and Conflicting Definitions
 
-When having a conversation, two parties might have conflicting definitions 
-of concepts, similar to a "dependency conflict" in software development. This 
-issue is akin to a linker error that arises when your project's dependencies 
-require two different versions of a library, each containing conflicting 
+When having a conversation, two parties might have conflicting definitions
+of concepts, similar to a "dependency conflict" in software development. This
+issue is akin to a linker error that arises when your project's dependencies
+require two different versions of a library, each containing conflicting
 definitions.
 
 <pre class="compact-pre">
