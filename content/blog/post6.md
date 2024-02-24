@@ -60,20 +60,21 @@ here are a couple of other examples and what types they would expect,
 
 Another source of misunderstanding is the use of double negatives.
 
-Sometimes when we ask a question we get an answer in the form of a `Tuple<Boolean,String>` 
+Sometimes when we ask a question we get an answer in the form of a `Tuple<Boolean,String>`
 where examining either the `Boolean` or the `String` will result in different conclusions
 
 a common example would be:
 
 Q: "You don't want desert right?"
-A: "No, I don't." 
+A: "No, I don't."
 
-"No I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`. 
-The boolean `False` could initially suggest agreement with the statement (implying they do want dessert), 
-but the string "I don't" actually affirms the initial question's negative phrasing, 
-indicating they do not want dessert. This creates a situation where the `Boolean` and `String` 
-components of the answer seem to contradict each other if taken at face value without considering 
+"No I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.
+The boolean `False` could initially suggest agreement with the statement (implying they do want dessert),
+but the string "I don't" actually affirms the initial question's negative phrasing,
+indicating they do not want dessert. This creates a situation where the `Boolean` and `String`
+components of the answer seem to contradict each other if taken at face value without considering
 the context of double negatives. In cases like this the `String` usually overwrites the `Boolean`
+
 ## Type aliasing and Conflicting Definitions
 
 When having a conversation, two parties might have conflicting definitions 
