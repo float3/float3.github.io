@@ -23,6 +23,8 @@ updated = 2024-02-23
 
 this blogpost was partially inspired by <https://lajili.com/posts/post-1/>
 
+# IPC 
+
 ## Type mismatches
 
 consider the following conversation
@@ -33,32 +35,45 @@ A: "In my opinion, the existence of a deity or deities is not supported by scien
 <pre class="compact-pre">
 <span class="grey">   | </span>
 <span class="grey">2  | </span><!--                    -->answer(Opinion("the existence of ..."));
-<span class="grey">   | -------</span><span class="error">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `string`, found `Opinion<span><</span>string>`</span>
+<span class="grey">   | -------</span><span class="error">^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `String`, found `Opinion<span><</span>String>`</span>
 <span class="grey">   | |</span>
 <span class="grey">   | arguments to this function are incorrect</span>
 <span class="grey">   | </span>
-<span class="grey">   = note:</span> expected type `string`
-<span class="grey">              <!---->found enum </span>`Opinion<span><<span>string>`
+<span class="grey">   = note:</span> expected type `String`
+<span class="grey">              <!---->found enum </span>`Opinion<span><<span>String>`
 </pre>
 
 This is a type mismatch, the Asker was seeking a statement of fact.
-Thankfully our interpreter is pretty good and can do context dependent implicit conversion.
+Thankfully our interpreter can do context dependent implicit conversion.
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
-another example would
 
 here are a couple of other examples and what types they would expect,
+<span>
+| Question                                     | Expected Type           | Available Conversions |
+|----------------------------------------------|-------------------------|-----------------------|
+| "do you still want this, or can I eat this?" | `Tuple<Boolean,Boolean>`  | `Boolean`               |
+| "do you want A, B or C"                      | `Enum(A,B,C)`             | `Integer`               |
+| "A or B"                                     | `Enum(A,B)`               | `Boolean, Integer`      |
+</span>
 
-| Question                                     | Expected Type          | Available Conversions |
-|----------------------------------------------|------------------------|-----------------------|
-| "do you still want this, or can I eat this?" | Tuple<Boolean,Boolean> | Boolean               |
-| "do you want A, B or C"                      | Enum(A,B,C)            | Integer               |
-| "A or B"                                     | Enum(A,B)              | Boolean, Integer      |
+## Value/Sign mismatch
 
-## Value mismatch
+Another source of misunderstanding is the use of double negatives.
 
-Another source of misunderstanding is the use of double negatives .. 
+Sometimes when we ask a question we get an answer in the form of a `Tuple<Boolean,String>` 
+where examining either the `Boolean` or the `String` will result in different conclusions
 
+a common example would be:
 
+Q: "You don't want desert right?"
+A: "No, I don't." 
+
+"No I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`. 
+The boolean `False` could initially suggest agreement with the statement (implying they do want dessert), 
+but the string "I don't" actually affirms the initial question's negative phrasing, 
+indicating they do not want dessert. This creates a situation where the `Boolean` and `String` 
+components of the answer seem to contradict each other if taken at face value without considering 
+the context of double negatives. In cases like this the `String` usually overwrites the `Boolean`
 ## Type aliasing and Conflicting Definitions
 
 When having a conversation, two parties might have conflicting definitions 
