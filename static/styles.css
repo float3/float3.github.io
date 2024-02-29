@@ -45,3 +45,6 @@ a:visited {
 video {
     width: 100%;
 }
+.invert-colors {
+    filter: invert(1);
+}
