@@ -16,6 +16,3 @@ blogs I like
 
 # Graphics
 - <https://bgolus.medium.com/>
-
-# Fun
-- <https://lajili.com/posts/post-1/>
