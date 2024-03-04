@@ -43,7 +43,7 @@ A: "In my opinion, the existence of a deity or deities is not supported by scien
 <span class="grey">              <!---->found enum </span>`Opinion&lt;String>`
 </pre>
 
-This is a type mismatch, the Asker was seeking a statemeynt of fact.
+This is a type mismatch, the Asker was seeking a statement of fact.
 Thankfully our interpreter can do context dependent implicit conversion.
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
 
