@@ -100,3 +100,17 @@ Studiestræde 18, 1455 København, Denmark
 
 the menu is different time everytime I visit, good kimchi, good ramen 
 ask the owner about the story of how the kimchi started over 8 years ago (2023)
+
+# Finland
+
+## Helsinki
+
+### Sen Việt Vegan
+60°09'12.1"N 24°54'37.4"E
+Atlantinkatu 18, 00220 Helsinki, Finland
+
+good all you can eat buffet at lunch time for 12.50€ (2024)
+
+### Thai Vegan Kitchen
+60°10'00.3"N 24°55'45.9"E
+Lapinlahdenkatu 9, 00180 Helsinki, Finland
