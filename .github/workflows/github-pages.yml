@@ -27,11 +27,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: install wasm-pack
+      - name: build
         run: |
+          cd ./ts
           npm install
-          npm install -g typescript
-          tsc || true
+          npx tsc
+          cd ..
           sh ./scripts/collect_links.sh
           mkdir /tmp/zola
           wget -q -O - "https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp

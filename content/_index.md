@@ -6,7 +6,7 @@ title = "hello brave world!"
 
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
-- [demos](@/demos/_index.md)
+- [piano playground](/tuningplayground)
 
 # Misc
 
