@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const headingText: string = heading.innerText.trim();
         if (heading.innerHTML != "movies" && heading.id !== "index" && heading.id !== "dropped-movies") {
             const button = document.createElement("button");
-            button.textContent = "I'm feelin lucky";
+            button.textContent = "I'm feelin' lucky";
             button.addEventListener("click", () => {
                 getRandomMovie(heading.id);
             });
