@@ -109,6 +109,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Memento (2000) (2024-02-18) 
 - [ ] BREAK (2024-02-25)
 - [x] Mr. Nobody (2009) (2024-03-03)
+- [x] Phone Booth (2002) (2024-03-10)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -358,6 +359,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 
 # J1
 - [x] Call (콜) (The Call) (2020) (2023-11-10)
+- [x] Dune 2 (2024) (2024-03-09)
 
 # Scruffy
 - [x] Live Free or Die Hard (2007) (2022-01-11)
