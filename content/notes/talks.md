@@ -17,7 +17,7 @@ talks I like
 - [Preventing the Collapse of Civilization - Jonathan Blow](https://www.youtube.com/watch?v=pW-SOdj4Kkk)
 - [Object-Oriented Programming is Bad - Brian Will](https://www.youtube.com/watch?v=QM1iUe6IofM)
 - [Replacing the UNIX tradition - Brian Will](https://www.youtube.com/watch?v=L9v4Mg8wi4U)
-- [Zig: A programming language designed for robustness, optimality, and clarity –  Andrew Kelley](https://www.youtube.com/watch?v=Z4oYSByyRak)
+- [Zig: A programming language designed for robustness, optimality, and clarity – Andrew Kelley](https://www.youtube.com/watch?v=Z4oYSByyRak)
 - [Mathematica Keynote - Stephen Wolfram](https://www.youtube.com/watch?v=FzbWAiu50MU)
 - [The Future of Programming - Bret Victor](https://www.youtube.com/watch?v=8pTEmbeENF4)
 - [For A Free Digital Society - Richard M. Stallman](https://www.youtube.com/watch?v=7ZSPf7YnGfE)

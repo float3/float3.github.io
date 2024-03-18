@@ -23,7 +23,7 @@ updated = 2024-02-23
 
 this blogpost was partially inspired by <https://lajili.com/posts/post-1/>
 
-# IPC 
+# IPC
 
 ## Type mismatches
 
@@ -45,9 +45,11 @@ A: "In my opinion, the existence of a deity or deities is not supported by scien
 
 This is a type mismatch, the Asker was seeking a statement of fact.
 Thankfully our interpreter can do context dependent implicit conversion.
+
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
 
 here are a couple of other examples and what types they would expect,
+
 <pre><code>
 |----------------------------------------------|-------------------------|-----------------------|
 | Question                                     | Expected Type           | Available Conversions |
@@ -106,4 +108,4 @@ However, in all other scenarios, it may be necessary to engage in evidence shari
 
 <!--Rational action if you're using the word correctly means the best action
 
-### Evidence sharing--> 
+### Evidence sharing-->
