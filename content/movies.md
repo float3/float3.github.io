@@ -8,6 +8,7 @@ updated = 1970-01-01
 Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_films_condemned_by_the_Legion_of_Decency)
 
 # Index:
+
 - [Index:](#index)
 - [Red Mage:](#red-mage)
 - [Narspog:](#narspog)
@@ -23,6 +24,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Dropped Movies](#dropped-movies)
 
 # Red Mage:
+
 - [x] American Psycho (2000) (2022-09-11)
 - [x] Kill Bill (2003) (2022-09-17)
 - [x] Kill Bill: Volume 2 (2004) (2022-09-17)
@@ -106,7 +108,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Donnie Darko (2001) (2024-01-27)
 - [x] Parasite (2019) (2024-02-03)
 - [x] The Year of the Dragon (1985) (2024-02-10)
-- [x] Memento (2000) (2024-02-18) 
+- [x] Memento (2000) (2024-02-18)
 - [ ] BREAK (2024-02-25)
 - [x] Mr. Nobody (2009) (2024-03-03)
 - [x] Phone Booth (2002) (2024-03-10)
@@ -260,8 +262,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Kill Bill: Volume 3 (TBA)
 
 # Narspog:
+
 - [x] Dr. No (1962) (2022-06-14)
-- [x] From Russia with Love (1963) (2022-07-04) 
+- [x] From Russia with Love (1963) (2022-07-04)
 - [x] Goldfinger (1964) (2022-07-10)
 - [x] Thunderball (1965) (2022-07-29)
 - [x] You Only Live Twice (1967) (2022-07-31)
@@ -297,6 +300,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Austin Powers: The Spy Who Shagged Me (1999) (2023-12-08)
 
 # CCC:
+
 - [x] パプリカ (Paprika) (2006) (UNKNOWN)
 - [x] Cast Away (2000) (2021-04-09)
 - [ ] UNKNOWN () (2021-04-16)
@@ -315,8 +319,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] バブル (Bubble) (2022) (2022-05-13)
 - [x] アキラ (Akira) (1988) (2022-06-17)
 - [x] さよならの朝に約束の花をかざろう (Maquia: When the Promised Flower Blooms) (2018) (2022-07-30)
-- [x] コクリコ坂から (From Up on Poppy Hill)  (2011) (2023-04-28)
-- [x] 風立ちぬ (The Wind Rises) (2013) (2023-05-05) 
+- [x] コクリコ坂から (From Up on Poppy Hill) (2011) (2023-04-28)
+- [x] 風立ちぬ (The Wind Rises) (2013) (2023-05-05)
 - [ ] BREAK (2023-05-12)
 - [x] 風の谷のナウシカ (Nausicaä of the Valley of the Wind) (1984) (2023-05-19)
 - [x] すずめの戸締まり (Suzume) (2023) (2023-07-07)
@@ -324,6 +328,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Tenet (2020) (2023-09-29)
 
 # Pema:
+
 - [x] Bad Trip (2021) (UNKNOWN)
 - [x] BLART Side of the MALL (2022-06-18)
 - [x] The Square (2017) (2022-09-07)
@@ -343,33 +348,39 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Når Befrielsen kommer (2023)
 
 # Jonas:
+
 - [x] アキラ (Akira) (1988) (2023-04-16)
 - [x] Mean Girls (2004) (2023-05-06)
 - [x] 2001: A Space Odyssey (1968) (2023-05-07)
-- [x] Brüno (2009) (2023-06-08) 
+- [x] Brüno (2009) (2023-06-08)
 - [x] Borat (2006) (2023-06-10)
 - [x] Ferris Bueller's Day Off (1986) (2023-06-23)
 - [x] Ali G Indahouse (2002) (2023-12-27)
 - [x] The Dictator (2012) (2023-12-28)
 
 # Valentin
+
 - [x] 週處除三害 (2023) (2023-11-20)
 - [x] 燃冬 (2023) (2023-11-28)
 - [x] 警察故事 (Police Story) (1985) (2023-12-23)
 
 # J1
+
 - [x] Call (콜) (The Call) (2020) (2023-11-10)
 - [x] Dune 2 (2024) (2024-03-09)
 
 # Scruffy
+
 - [x] Live Free or Die Hard (2007) (2022-01-11)
 
 # Ding
+
 - [x] Evil Dead Rise (2023) (2024-01-05)
 - [x] 咒 (Incantation) (2022) (2024-01-14)
 - [x] Blair Witch Project (1999) (2024-01-28)
 
 # Sofi
+
 - [x] The Devil Wears Prada (2006) (2024-02-23)
 - [x] Pretty Woman (1990) (2024-02-24)
 - [x] Crazy Rich Asians (2018) (2024-02-25)
@@ -377,6 +388,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Good Will Hunting (1997) (2024-02-26)
 
 # Misc:
+
 - [x] Andrew Schulz: Infamous (2022) (UNKNOWN)
 - [x] The Little Mermaid (2023) (2023-05-30)
 - [x] Full Metal Jacket (1987) (2023-06-03)
@@ -438,9 +450,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Wet Season (2019)
 - [ ] Past Lives (2023)
 - [ ] The Creator (2023)
-- [ ] Jackie Chan -  My Stunts
-
+- [ ] Jackie Chan - My Stunts
 
 # Dropped Movies
+
 - [x] Little Shop of Horrors (1986) (2024-01-07)
-- [ ] Dude, Where's My Car? (2000) (2023-12-02) 
+- [ ] Dude, Where's My Car? (2000) (2023-12-02)

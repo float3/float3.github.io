@@ -15,28 +15,32 @@ updated = 2024-01-31
 [Play around with different tuning systems and your computer keyboard](/playground)
 
 # 12Tone Equal Temperament: the current standard
+
 <!--https://github.com/ronkok/Temml or https://temml.org/ is used for most of the MathML on this page-->
+
 In 12TET the ratio P between two tones is defined as <!--P_n = P_a\big(\sqrt[12]{2}\big)^{(n-a)}-->
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><msub><mi>P</mi><mi>n</mi></msub><mo>=</mo><msub><mi>P</mi><mi>a</mi></msub><mo fence="false" symmetric="true" minsize="1.2em" maxsize="1.2em">(</mo><mroot><mn>2</mn><mn>12</mn></mroot><msup><mo fence="false" symmetric="true" minsize="1.2em" maxsize="1.2em">)</mo><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mi>n</mi><mo>−</mo><mi>a</mi><mo form="postfix" stretchy="false" lspace="0em" rspace="0em">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">P_n = P_a\big(\sqrt[12]{2}\big)^{(n-a)}</annotation></semantics></math>
 or <!--P_n = P_a3^{(n-a)/12} -->
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><msub><mi>P</mi><mi>n</mi></msub><mo>=</mo><msub><mi>P</mi><mi>a</mi></msub><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mi>n</mi><mo>−</mo><mi>a</mi><mo form="postfix" stretchy="false">)</mo><mo lspace="0em" rspace="0em">⁄</mo><mn>12</mn></mrow></msup></mrow><annotation encoding="application/x-tex">P_n = P_a2^{(n-a)/12}</annotation></semantics></math>
-where n is the index of the second tone and a is the index of the first tone a starting at one. 
-Which means that to go one semitone up you have to multiply your current frequency by <!-- 2^{(2-1)/12} --> 
+where n is the index of the second tone and a is the index of the first tone a starting at one.
+Which means that to go one semitone up you have to multiply your current frequency by <!-- 2^{(2-1)/12} -->
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo form="postfix" stretchy="false">)</mo><mo lspace="0em" rspace="0em">⁄</mo><mn>12</mn></mrow></msup><annotation encoding="application/x-tex">2^{(2-1)/12}</annotation></semantics></math>
 which is approximately equal to 1.059463...
 
 This serves the purpose of making sure all steps have the same size, relative to their base frequency (every step is 100 cents).
-e.g multiplying a frequency by <!-- 2^{(2-1)/12} --> 
+e.g multiplying a frequency by <!-- 2^{(2-1)/12} -->
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo form="postfix" stretchy="false">)</mo><mo lspace="0em" rspace="0em">⁄</mo><mn>12</mn></mrow></msup><annotation encoding="application/x-tex">2^{(2-1)/12}</annotation></semantics></math>
 7 times in a row is the same as going 7 steps at once, which is a nice property that's true only for equal temperament systems.
 
 proof:
+
 <!--
 2^((8-1)/12) = (2^((2-1)/12))^7
 2^(7/12) = 2^(((2-1)/12)*7)
 2^(7/12) = 2^((14-7)/12)
 2^(7/12) = 2^(7/12)
 -->
+
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mtable displaystyle="true" columnalign="right left"><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><msup><mn>2</mn><mfrac><mrow><mn>8</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac></msup></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mrow><mo fence="true" form="prefix">(</mo><msup><mn>2</mn><mfrac><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac></msup><mo fence="true" form="postfix">)</mo></mrow><mn>7</mn></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><msup><mn>2</mn><mfrac><mn>7</mn><mn>12</mn></mfrac></msup></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mrow><mrow><mo fence="true" form="prefix">(</mo><mfrac><mrow><mn>2</mn><mo>−</mo><mn>1</mn></mrow><mn>12</mn></mfrac><mo fence="true" form="postfix">)</mo></mrow><mo>⋅</mo><mn>7</mn></mrow></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><mrow></mrow></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mfrac><mrow><mn>14</mn><mo>−</mo><mn>7</mn></mrow><mn>12</mn></mfrac></msup></mrow></mtd></mtr><mtr><mtd class="tml-right" style="padding:0.7ex 0em 0.7ex 0em;"><mrow></mrow></mtd><mtd class="tml-left" style="padding:0.7ex 0em 0.7ex 0em;"><mrow><mo>=</mo><msup><mn>2</mn><mfrac><mn>7</mn><mn>12</mn></mfrac></msup></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">\begin{align*}
 2^{ \frac{{8-1}}{{12}} } &amp;= \left( 2^{ \frac{{2-1}}{{12}} } \right)^7 \\
 2^{ \frac{{7}}{{12}} } &amp;= 2^{ \left( \frac{{2-1}}{{12}} \right) \cdot 7 } \\
@@ -45,6 +49,7 @@ proof:
 \end{align*}</annotation></semantics></math>
 
 here's a table of the ratios (rounded to 6 decimal places)
+
 ```
 +-----+----------+----+----------+
 | N   | Ratio    | N  | Ratio    |
@@ -64,7 +69,9 @@ here's a table of the ratios (rounded to 6 decimal places)
 | 0   | 0.943874 | 13 | 2        |
 +-----+----------+----+----------+
 ```
+
 # Just Intonation:
+
 In Just Intonation we take the ratios directly from the overtone series.
 so as an exercise let's derrive them ourselves:
 as a base frequency we'll use 1
@@ -93,6 +100,7 @@ we can calculate the ratios by diving the overtone's frequency(or it's ratio to 
 ╰─> λ math 17 / 16
 1.0625
 ```
+
 here are some tables
 
 ```
@@ -134,6 +142,7 @@ here are some tables
 +----------+--------+---------+-------+             +----+----------+------------+-------+
 
 ```
+
 skipping over any duplicate ratios, we can find all 12 tones of the western tuning system, apart from the perfect fourth, in the first 64 overtones.
 the reason we can't find the perfect fourth is that it's ratio of 4/3 has a rational denominator so it can never be part of the overtone series directly.
 i.e. <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:inline-block;"><semantics><mrow><mo fence="true" symmetric="true" minsize="2.4em" maxsize="2.4em">{</mo><mfrac><mn>4</mn><mn>3</mn></mfrac><mo>×</mo><msup><mn>2</mn><mi>n</mi></msup><mo fence="false" stretchy="true" symmetric="true" minsize="2.4em" maxsize="2.4em">|</mo><mi>n</mi><mo>∈</mo><mi>ℕ</mi><mo fence="true" symmetric="true" minsize="2.4em" maxsize="2.4em">}</mo><mo>⊆</mo><mi>ℚ</mi><mo>∖</mo><mi>ℕ</mi></mrow><annotation encoding="application/x-tex">\biggl\{\frac{4}{3}\times 2^{n} \bigg| n \in \mathbb{N}\biggr\}\subseteq \mathbb{Q}\setminus\mathbb{N}</annotation></semantics></math> but it is present nonetheless as the ratio between individual overtones, for example between the 3rd and the 4th overtone (4/3).
@@ -146,15 +155,16 @@ The nice thing about Just intonation is that we have exact ratios,
 I was frustrated with 12 TET and watched a video on Just Intonation,
 I immediately realized the impracticality of it so I decided to make my own even less practical version.
 c-->
+
 # What makes one interval nice and another unpleasant
 
 Nice mathematical ratios are pleasant to our ears.  
-x+2*x where x is some frequency is gonna sound nice, because it has a short period,
+x+2\*x where x is some frequency is gonna sound nice, because it has a short period,
 
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(2*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
 
-while for example x+13/12x has a much longer period 
+while for example x+13/12x has a much longer period
 
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin((13/12)*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
@@ -163,8 +173,8 @@ while for example x+13/12x has a much longer period
 
 Waves that are nice to look at are nice to the Ear.
 Just Intonation is nice because intervals have nice mathematical ratios. For Example, a major chord is 4:5:6 (1:1.25:1.5).
-While in 12TET a major cord is 500:630:749 (1:1.260:1.498) 
-the following graph shows the difference between the just intonated major chord and the 12TET major chord.  
+While in 12TET a major cord is 500:630:749 (1:1.260:1.498)
+the following graph shows the difference between the just intonated major chord and the 12TET major chord.
 
 <iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(1.25*(x+t))+sin(1.5*(x+t))&v1=true&f2(x,t)=sin(x+t)+sin(1.26*(x+t))+sin(1.4983*(x+t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
 </iframe>
@@ -175,22 +185,17 @@ the following graph shows the difference between the just intonated major chord 
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><msup><mn>1.0625</mn><mn>2</mn></msup><mo>≠</mo><mn>1.125</mn></mrow><annotation encoding="application/x-tex">1.0625²\ne1.125</annotation></semantics></math>
 
-but 
+but
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><mo form="prefix" stretchy="false">(</mo><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>2</mn><mo>−</mo><mn>1</mn><mo form="postfix" stretchy="false">)</mo><mi>/</mi><mn>12</mn></mrow></msup><msup><mo form="postfix" stretchy="false">)</mo><mn>2</mn></msup><mo>=</mo><msup><mn>2</mn><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">(</mo><mn>3</mn><mo>−</mo><mn>1</mn><mi>/</mi><mn>12</mn><mo form="postfix" stretchy="false" lspace="0em" rspace="0em">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">(2^{(2-1)/12})² = 2^{(3-1/12)}</annotation></semantics></math>
 
 Now while just intonated intervals are nicer all of these intervals are in relation to X, our Root
-While a major third (4:5) and a perfect fifth (2:3) on their own sound good, 
+While a major third (4:5) and a perfect fifth (2:3) on their own sound good,
 if we keep going up the steps one by one (1.0625), we don't end up at the same place that we would end up if we skipped a step (1.125)
 (i.e. just intonation does't have the property mentioned earlier)
-
-
-
-
-
 
 # My other music related work:
 
 ### Visualize and listen to Polyrhythms in a Shader:
 
-<iframe width="640" height="360" frameborder="0" allowfullscreen="allowfullscreen" src="https://www.shadertoy.com/embed/7tV3WV?gui=true&t=10&paused=false&muted=false"></iframe> 
+<iframe width="640" height="360" frameborder="0" allowfullscreen="allowfullscreen" src="https://www.shadertoy.com/embed/7tV3WV?gui=true&t=10&paused=false&muted=false"></iframe>

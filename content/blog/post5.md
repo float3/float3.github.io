@@ -1,4 +1,3 @@
-
 +++
 title = "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
 date = 2024-02-14
@@ -8,19 +7,19 @@ updated = 2023-02-14
 This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara
 and Instructions on how to flash the bootloader provided by [Ben Jackson](https://ben.com)
 
-
 # Flashing the Firmware and Bootloader of a Steam Controller Dongle
 
 ## Requirements
 
 - A SteamVR controller dongle. Although the original dongles are no longer available directly from Steam,
-   alternative options are available. These include dongles from [Virtual Builds](https://www.virtualbuilds.com/product-page/usb-wireless-receiver-dongle) 
-   and [Tundra Labs](https://tundra-labs.com/shop/vive-dongle), which should serve the purpose well.
+  alternative options are available. These include dongles from [Virtual Builds](https://www.virtualbuilds.com/product-page/usb-wireless-receiver-dongle)
+  and [Tundra Labs](https://tundra-labs.com/shop/vive-dongle), which should serve the purpose well.
 - SteamVR installed on your computer.
 
 ## Warning
 
 It's important to approach this process with caution:
+
 - Assume that this change is permanent, at least if you decide to flash the bootloader as well.
 - This procedure will flash ALL connected dongles. Be sure to remove any dongles that you do not wish to flash.
 
@@ -32,43 +31,45 @@ It's important to approach this process with caution:
 4. Run the commands below. (you will have to adjust these paths for non-standard installation paths for steam and steamvr)
 
 ### Windows
+
 <pre style="background-color: #000000; padding: 10px;"><code>
 <span style="color: cyan;">cd</span> <span style="color: blue;">`C:\Program Files (x86)\Steam\steamapps\common\SteamVR\tools\lighthouse`</span>
 <span style="color: cyan;">bin\win32\lighthouse_watchman_update.exe</span> <span style="color: green;">-D</span> <span style="color: red;">firmware\vr_controller\archive\htc_vrc_dongle_1461100729_2016_04_19.bin</span>
 </code></pre>
 
-
 ### Linux
+
 Looks like flashing it on Linux doesn't work natively, the executable just prints `Can't convert dongle on non-Windows platform:  Can't tell if conflicting Steam is running.`
-This is stupid. so let's use wine. 
+This is stupid. so let's use wine.
 
 you need these dlls
+
 ```sh
 winetricks ole32
 winetricks winmm
 winetricks oleaut32
 ```
 
-you can find the lighthouse_watchman_update.exe [here](/blobs/lighthouse_watchman_update.exe) and the vrcameral_api.dll [here](/blobs/vrcamera_api.dll) 
+you can find the lighthouse_watchman_update.exe [here](/blobs/lighthouse_watchman_update.exe) and the vrcameral_api.dll [here](/blobs/vrcamera_api.dll)
 or in a steamvr windows installation at `C:\Program Files (x86)\Steam\steamapps\common\SteamVR\tools\lighthouse\bin\win32` (they aren't shipped on linux)
 
 then just follow the windows instructions but with wine
 
 ### Issues
 
-This procedure changes the runtime firmware but not the bootloader. 
-If you enter the bootloader mode (e.g., through a firmware update), 
-the device will revert to a Steam controller dongle state, 
+This procedure changes the runtime firmware but not the bootloader.
+If you enter the bootloader mode (e.g., through a firmware update),
+the device will revert to a Steam controller dongle state,
 necessitating a repeat of the process.
 
-For a permanent change, we need to flash the bootloader as well. 
+For a permanent change, we need to flash the bootloader as well.
 
 ## Flashing the Bootloader
 
 1. Follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
 2. Follow the [Flashing the Firmware Guide](#flashing-the-firmware) but use the commands below in the last step (again you may have to adjust the paths if you isntalled the HDK in a differnt directory)
 3. Or download the [watchman_dongle_combined.bin](/blobs/watchman_dongle_combined.bin) here
-   
+
 ### Windows
 
 <pre style="background-color: black; padding: 10px;"><code>
