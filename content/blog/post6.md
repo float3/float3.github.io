@@ -5,16 +5,6 @@ updated = 2024-02-23
 +++
 
 <style>
-    .compact-pre {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    line-height: 1.2;
-    font-family: monospace;
-    margin: 0;
-    white-space: no-wrap;
-    overflow-x: auto;
-    }
   .error { color: red; }
   .note { color: green; }
   .evidence { color: purple; }
