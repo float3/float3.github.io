@@ -7,7 +7,7 @@ you can also find all these links [here](/plaintext/blogs.txt)
 
 blogs I like
 
-# Friends
+## Friends
 
 - <https://pema.dev/>
 - <https://las.rs/>
@@ -15,6 +15,6 @@ blogs I like
 - <https://kttnr.net/>
 - <https://michaelmoroz.github.io/>
 
-# Graphics
+## Graphics
 
 - <https://bgolus.medium.com/>

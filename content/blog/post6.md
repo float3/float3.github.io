@@ -13,6 +13,7 @@ updated = 2024-02-23
     font-family: monospace;
     margin: 0;
     white-space: no-wrap;
+    overflow-x: auto;
     }
   .error { color: red; }
   .note { color: green; }
@@ -23,9 +24,9 @@ updated = 2024-02-23
 
 this blogpost was partially inspired by <https://lajili.com/posts/post-1/>
 
-# IPC
+## IPC
 
-## Type mismatches
+### Type mismatches
 
 consider the following conversation
 
@@ -60,7 +61,7 @@ here are a couple of other examples and what types they would expect,
 |----------------------------------------------|-------------------------|-----------------------|
 </code></pre>
 
-## Value/Sign mismatch
+### Value/Sign mismatch
 
 Another source of misunderstanding is the use of double negatives.
 
@@ -79,7 +80,7 @@ indicating they do not want dessert. This creates a situation where the `Boolean
 components of the answer seem to contradict each other if taken at face value without considering
 the context of double negatives. In cases like this the `String` usually overwrites the `Boolean`
 
-## Type aliasing and Conflicting Definitions
+### Type aliasing and Conflicting Definitions
 
 When having a conversation, two parties might have conflicting definitions
 of concepts, similar to a "dependency conflict" in software development. This
@@ -95,8 +96,8 @@ definitions.
 <span class="grey">   | </span>    <span class="error">^^^^^^^^^^^^^^^^^^^^^^^^</span>
 <span class="grey">   | </span>
 <span class="grey">   = note:</span> the current application depends on 'definitions' version <span class="note">15.3.8 (economics)</span> and <span class="orange">13.7.3 (philosophy)</span>
-<span class="grey">   = note:</span> Answerer's 'definitions' version <span class="note">15.3.8 (economics)</span> defines <code>RATIONALITY</code> as "Making decisions based on maximizing utility or benefit within constraints."
-<span class="grey">   = note:</span> Asker's 'definitions' version <span class="orange">13.7.3 (philosophy)</span> defines <code>RATIONALITY</code> as "Being reasonable, coherent, and logical in thinking and decision-making, beyond just self-interest"
+<span class="grey">   = note:</span> Answerer's 'definitions' version <span class="note">15.3.8 (economics)</span> defines RATIONALITY as "Making decisions based on maximizing utility or benefit within constraints."
+<span class="grey">   = note:</span> Asker's 'definitions' version <span class="orange">13.7.3 (philosophy)</span> defines RATIONALITY as "Being reasonable, coherent, and logical in thinking and decision-making, beyond just self-interest"
 <span class="grey">   = note:</span> consider calling "<span class="evidence">evidence_sharing()</span>" or "<span class="evidence">agree_to_disagree()</span>" or explicitly specifying which version you are referencing to resolve the conflict
 </pre>
 

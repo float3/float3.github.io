@@ -4,17 +4,16 @@ date = 2022-11-29
 updated = 2024-01-31
 +++
 
-# THIS IS A WIP
-
-░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█
-░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█
-░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░
-
-# Recursive Just-Intonation: An unusable Tuning System or a Frustrating Journey through tuning
+```
+░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒█░░▒█░▀█▀░▒█▀▀█░▒
+░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒
+░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒
+```
+## Recursive Just-Intonation: An unusable Tuning System or a Frustrating Journey through tuning
 
 [Play around with different tuning systems and your computer keyboard](/playground)
 
-# 12Tone Equal Temperament: the current standard
+## 12Tone Equal Temperament: the current standard
 
 <!--https://github.com/ronkok/Temml or https://temml.org/ is used for most of the MathML on this page-->
 
@@ -50,7 +49,7 @@ proof:
 
 here's a table of the ratios (rounded to 6 decimal places)
 
-```
+<pre class="compact-pre">
 +-----+----------+----+----------+
 | N   | Ratio    | N  | Ratio    |
 +-----+----------+----+----------+
@@ -68,9 +67,9 @@ here's a table of the ratios (rounded to 6 decimal places)
 | -1  | 0.890899 | 12 | 1.887749 |
 | 0   | 0.943874 | 13 | 2        |
 +-----+----------+----+----------+
-```
+</pre>
 
-# Just Intonation:
+## Just Intonation:
 
 In Just Intonation we take the ratios directly from the overtone series.
 so as an exercise let's derrive them ourselves:
@@ -80,7 +79,7 @@ let's have a look at the 64 first overtones
 
 we can calculate the ratios by diving the overtone's frequency(or it's ratio to the base tone) by the next smaller power of 2
 
-```
+<pre class="compact-pre">
 ┬─[hill@nixos:~]─[20時10分43秒]─[I]
 ╰─> λ math 7 / 4
 1.75
@@ -99,11 +98,11 @@ we can calculate the ratios by diving the overtone's frequency(or it's ratio to 
 ┬─[hill@nixos:~]─[20時11分55秒]─[I]
 ╰─> λ math 17 / 16
 1.0625
-```
+</pre>
 
 here are some tables
 
-```
+<pre class="compact-pre">
 +----------+--------+---------+-------+             +----------+----+---------+-------+
 | Overtone | N      | Ratio   | Ratio |             | Overtone | N  | Ratio   | Ratio |
 +----------+--------+---------+-------+             +----------+----+---------+-------+
@@ -140,8 +139,7 @@ here are some tables
 | 61       | unused | 1.90625 | 61/32 |             | 12 | 15       | 1.875      | 15/8  |
 | 63       | unused | 1.96875 | 63/32 |             | 13 | 2        | 2          | 2/2   |
 +----------+--------+---------+-------+             +----+----------+------------+-------+
-
-```
+</pre>
 
 skipping over any duplicate ratios, we can find all 12 tones of the western tuning system, apart from the perfect fourth, in the first 64 overtones.
 the reason we can't find the perfect fourth is that it's ratio of 4/3 has a rational denominator so it can never be part of the overtone series directly.
@@ -156,32 +154,32 @@ I was frustrated with 12 TET and watched a video on Just Intonation,
 I immediately realized the impracticality of it so I decided to make my own even less practical version.
 c-->
 
-# What makes one interval nice and another unpleasant
+## What makes one interval nice and another unpleasant
 
 Nice mathematical ratios are pleasant to our ears.  
 x+2\*x where x is some frequency is gonna sound nice, because it has a short period,
 
-<iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(2*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
+<iframe class="no-input" width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(2*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
 
 while for example x+13/12x has a much longer period
 
-<iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin((13/12)*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
+<iframe class="no-input" width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin((13/12)*(x+t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
 </iframe>
 
-# Why Just Intonation is good
+## Why Just Intonation is good
 
 Waves that are nice to look at are nice to the Ear.
 Just Intonation is nice because intervals have nice mathematical ratios. For Example, a major chord is 4:5:6 (1:1.25:1.5).
 While in 12TET a major cord is 500:630:749 (1:1.260:1.498)
 the following graph shows the difference between the just intonated major chord and the 12TET major chord.
 
-<iframe width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(1.25*(x+t))+sin(1.5*(x+t))&v1=true&f2(x,t)=sin(x+t)+sin(1.26*(x+t))+sin(1.4983*(x+t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
+<iframe class="no-input" width="1000" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+t)+sin(1.25*(x+t))+sin(1.5*(x+t))&v1=true&f2(x,t)=sin(x+t)+sin(1.26*(x+t))+sin(1.4983*(x+t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
 </iframe>
 
 <!--in this example you might say the example is barely noticable and you would be right, however if we take other chords it becomes a lot more apparent.-->
 
-# Why Just Intonation is bad
+## Why Just Intonation is bad
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block" class="tml-display" style="display:block math;"><semantics><mrow><msup><mn>1.0625</mn><mn>2</mn></msup><mo>≠</mo><mn>1.125</mn></mrow><annotation encoding="application/x-tex">1.0625²\ne1.125</annotation></semantics></math>
 
@@ -194,7 +192,9 @@ While a major third (4:5) and a perfect fifth (2:3) on their own sound good,
 if we keep going up the steps one by one (1.0625), we don't end up at the same place that we would end up if we skipped a step (1.125)
 (i.e. just intonation does't have the property mentioned earlier)
 
-# My other music related work:
+## My other music related work:
+
+[play around with different tuning systems and your computer keyboard](https://hilll.dev/tuningplayground)
 
 ### Visualize and listen to Polyrhythms in a Shader:
 
