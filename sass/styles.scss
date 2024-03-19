@@ -49,7 +49,7 @@ body[theme="light"] {
   }
 
   .dark-mode-invert {
-    filter: invert(1);
+    filter: invert(1) !important;
   }
 }
 
