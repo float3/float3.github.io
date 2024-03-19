@@ -47,6 +47,10 @@ body[theme="light"] {
   body[theme="auto"] {
     @include dark-appearance;
   }
+
+  .dark-mode-invert {
+    filter: invert(1);
+  }
 }
 
 @media (prefers-color-scheme: light) {
