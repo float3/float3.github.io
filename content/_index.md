@@ -1,5 +1,6 @@
 +++
 title = "hello brave world!"
+description = "welcome to my little corner of the internet"
 +++
 
 # Content
