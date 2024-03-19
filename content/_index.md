@@ -1,6 +1,6 @@
 +++
-title = "hello brave world!"
-description = "welcome to my little corner of the internet"
+title = "my website"
+description = "hello brave world, maybe next week"
 +++
 
 # Content
@@ -8,6 +8,7 @@ description = "welcome to my little corner of the internet"
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
 - [piano playground](/tuningplayground)
+- [about](@/about)
 
 # Misc
 
