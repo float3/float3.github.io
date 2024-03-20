@@ -8,7 +8,7 @@ description = "hello brave world, maybe next week"
 - [blog](@/blog/_index.md)
 - [notes](@/notes/_index.md)
 - [piano playground](/tuningplayground)
-- [about](@/about)
+- [about](@/about.md)
 
 # Misc
 

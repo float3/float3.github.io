@@ -4,7 +4,7 @@ updated = 1970-01-01
 +++
 
 you can find me here
-pleas contact me if you're reading this, I would love to chat.
+please contact me if you're reading this, I would love to chat.
 - [mail](mailto:contact%40hilll.dev)
 - [github://float3](https://github.com/float3)
 - [gitlab://float3](https://gitlab.com/float3)
