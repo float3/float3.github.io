@@ -1,6 +1,6 @@
 +++
 title = "my website"
-description = "hello brave world, maybe next week"
+description = "hello"
 +++
 
 # Content
