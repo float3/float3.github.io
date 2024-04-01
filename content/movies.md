@@ -20,7 +20,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Scruffy](#scruffy)
 - [Ding](#ding)
 - [Sofi](#sofi)
-- [Misc:](#misc)
+- [me](#me)
 - [Dropped Movies](#dropped-movies)
 
 # Red Mage:
@@ -112,6 +112,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2024-02-25)
 - [x] Mr. Nobody (2009) (2024-03-03)
 - [x] Phone Booth (2002) (2024-03-10)
+- [x] 週處除三害 (2023) (2024-03-17)
+- [x] 万引き家族 (Shoplifters) (2018) (2024-03-23)
+- [x] Requiem for a Dream (2000) (2024-03-31)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -237,7 +240,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Liverleaf (2018)
 - [ ] The House That Jack Built (2018)
 - [ ] Mandy (2018)
-- [ ] 万引き家族 (Shoplifters) (2018)
 - [ ] The Fanatic (2019)
 - [ ] Joker (I) (2019)
 - [ ] The Lighthouse (I) (2019)
@@ -368,6 +370,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 
 - [x] Call (콜) (The Call) (2020) (2023-11-10)
 - [x] Dune 2 (2024) (2024-03-09)
+- [x] Wish (2023) (2024-03-31)
 
 # Scruffy
 
@@ -387,7 +390,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Black K Klansman (2018) (2024-02-26)
 - [x] Good Will Hunting (1997) (2024-02-26)
 
-# Misc:
+# me
 
 - [x] Andrew Schulz: Infamous (2022) (UNKNOWN)
 - [x] The Little Mermaid (2023) (2023-05-30)
@@ -429,7 +432,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Saving Private Ryan (1998)
 - [ ] The Astronauts Wife (1999)
 - [ ] Vanilla Sky (2001)
-- [ ] Phone Booth (2002)
 - [ ] The Notebook (2004)
 - [ ] Eternal Sunshine of the Spotless Mind (2004)
 - [ ] Cinderella Man (2005)

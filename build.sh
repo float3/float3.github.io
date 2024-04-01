@@ -1,9 +1,7 @@
 
 #!/bin/sh
-cd ./programs/tuning_systems-wasm
-wasm-pack build
-cd ../..
+cd ts
 npm install
-tsc || true
+npx tsc
 sh ./scripts/collect_links.sh
 zola serve
