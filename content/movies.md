@@ -115,6 +115,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 週處除三害 (2023) (2024-03-17)
 - [x] 万引き家族 (Shoplifters) (2018) (2024-03-23)
 - [x] Requiem for a Dream (2000) (2024-03-31)
+- [x] Duel (1971) (2024-04-07)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -134,7 +135,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Straw Dogs (1971)
 - [ ] A Clockwork Orange (1971)
 - [ ] The Last Picture Show (1971)
-- [ ] Duel (1971)
 - [ ] Solaris (1972)
 - [ ] Pink Flamingos (1972)
 - [ ] The Candidate (1972)
@@ -371,6 +371,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Call (콜) (The Call) (2020) (2023-11-10)
 - [x] Dune 2 (2024) (2024-03-09)
 - [x] Wish (2023) (2024-03-31)
+- [x] Past Lives (2023) (2024-04-07)
 
 # Scruffy
 
@@ -450,7 +451,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Dying Laughing (2016)
 - [ ] The Whistleblower (2019)
 - [ ] Wet Season (2019)
-- [ ] Past Lives (2023)
 - [ ] The Creator (2023)
 - [ ] Jackie Chan - My Stunts
 
