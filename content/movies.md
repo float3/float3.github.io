@@ -116,6 +116,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 万引き家族 (Shoplifters) (2018) (2024-03-23)
 - [x] Requiem for a Dream (2000) (2024-03-31)
 - [x] Duel (1971) (2024-04-07)
+- [x] Mandy (2018) (2024-04-14)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -207,7 +208,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Martyrs (2008)
 - [ ] Bronson (2008)
 - [ ] Krabat (2008)
-- [ ] Love Exposure (2008)
 - [ ] 東京残酷警察 (Tōkyō Zankoku Keisatsu) (Tokyo Gore Police) (2008)
 - [ ] Dogtooth (2009)
 - [ ] Inglorious Bastards (2009)
@@ -253,6 +253,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Cube (2021)
 - [ ] The Black Phone (2021)
 - [ ] The Whale (2022)
+- [ ] Triangle of Sadness (2022)
 - [ ] The Gray Man (2022)
 - [ ] Something in the Dirt (2022)
 - [ ] Decision to Leave (2022)
@@ -372,6 +373,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Dune 2 (2024) (2024-03-09)
 - [x] Wish (2023) (2024-03-31)
 - [x] Past Lives (2023) (2024-04-07)
+- [x] Hamilton (2020) (2024-04-14) 
 
 # Scruffy
 
