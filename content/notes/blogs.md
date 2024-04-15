@@ -14,6 +14,8 @@ blogs I like
 - <https://wunkolo.github.io/>
 - <https://kttnr.net/>
 - <https://michaelmoroz.github.io/>
+- <https://dimmadome.net/>
+- <https://oimo.io/>
 
 ## Graphics
 

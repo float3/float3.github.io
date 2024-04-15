@@ -8,6 +8,8 @@ this is some art i've made
 
 ## Shaders:
 
+### Unity
+
 <video controls>
 <source src="/art/2022-01-26 23-08-03-reencoded.mp4">
 </video>
@@ -15,11 +17,11 @@ this is some art i've made
 <source src="/art/2022-01-26 23-08-20-reencoded.mp4">
 </video>
 
+### [Shadertoy](https://www.shadertoy.com/user/Three)
 
 ## 3D Scanning and Photogrammetry:
 
 [British Museum](@/blog/post1.md)
-
 
 ## Renders:
 
