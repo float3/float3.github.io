@@ -1,5 +1,4 @@
-
-#!/bin/sh
+#!/usr/bin/env bash
 cd ./ts
 npm install
 npx tsc

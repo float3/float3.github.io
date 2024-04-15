@@ -25,7 +25,7 @@ very good food, open: 5:30-18:00
 #### 御喜自助餐
 
 25°01'05.3"N 121°32'25.0"E \
-No. 1號, Section 4, Roosevelt Rd, Da’an District, Taipei City, Taiwan 106
+106, Taiwan, Taipei City, Da’an District, 羅斯福路四段1號
 
 nice vegan buffet on NTU campus, eat surrounded by local and international students
 
@@ -46,7 +46,7 @@ rude staff (N=1), very good food, next to previous restaurant
 #### Nameless Vegetarian Breakfast Restaurant 無名素食早餐店
 
 25°02'48.0"N 121°30'50.8"E \
-號, No. 6-12, Huaining St, Zhongzheng District, Taipei City, Taiwan 100
+100, Taiwan, Taipei City, Zhongzheng District, Huaining St, 6-12號
 
 breakfast, next to previous restaurant
 
@@ -76,7 +76,7 @@ good vegan options
 #### Oriental Vegetarian
 
 22°16'41.0"N 114°10'33.3"E \
-Hong Kong, Wan Chai, Hennessy Rd, 237至239號3樓
+239 号 3, 237 Hennessy Rd, Wan Chai, Hong Kong
 
 good imitation shark fin soup
 
@@ -114,19 +114,33 @@ ask the owner about the story of how the kimchi started over 8 years ago (2023)
 
 #### Sen Việt Vegan
 
-60°09'12.1"N 24°54'37.4"E
+60°09'12.1"N 24°54'37.4"E \
 Atlantinkatu 18, 00220 Helsinki, Finland
 
 good all you can eat buffet at lunch time for 12.50€ (2024)
 
 #### Thai Vegan Kitchen
 
-60°10'00.3"N 24°55'45.9"E
+60°10'00.3"N 24°55'45.9"E \
 Lapinlahdenkatu 9, 00180 Helsinki, Finland
-
 
 ## Germany
 
 ### Munich
+
+#### Soy München
+48°09'07.4"N 11°33'37.9"E \
+Theresienstraße 93, 80333 München, Germany
+
+vegan vietnamese restaurant, they do hotpot and regular dishes, good food,
+they don't take VISA cards, only cash, EC or paypal (2024)
+
+### Frankfurt
+
+#### Sunbap
+50°07'20.7"N 8°40'51.6"E \
+Oeder Weg 63, 60318 Frankfurt am Main, Germany
+
+vegan korean restaurant
 
 ### Berlin
