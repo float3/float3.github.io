@@ -6,9 +6,12 @@ description = "hello"
 # Content
 
 - [blog](@/blog/_index.md)
+- [projects](@/projects/_index.md)
+- [art](@/art/_index.md)
 - [notes](@/notes/_index.md)
 - [piano playground](/tuningplayground)
 - [about](@/about.md)
+
 
 # Misc
 
