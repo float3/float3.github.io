@@ -9,18 +9,22 @@ sort_by = "title"
 some real world projects with real world users and real world usecases
 
 ### [AudioLink](https://audiolink.dev/)
-[github://audiolink](https://github.com/llealloo/vrc-udon-audio-link)
-I'm a maintainer on the core team of AudioLink, a audio-visualization library for Unity.
+[github](https://github.com/llealloo/audiolink) \
+[website](https://audiolink.dev) \
+[demo](https://traeumerei.dev) \
+I'm a maintainer on the core team of AudioLink, an audio-visualization library for Unity.
 
 ### [Poiyomi](https://www.poiyomi.com/)
-[github://poiyomi](https://github.com/poiyomi/PoiyomiToonShader)
+[github](https://github.com/poiyomi/PoiyomiToonShader) \
+[website](https://www.poiyomi.com) \
+[patreon](https://www.patreon.com/poiyomi) \
 I frequently did freelancing for Poiyomi to work on his shader which is used by 500000.
 I implemented multiple features and ported pbr features from 
 the Google Filament rendering engine to Unity
 
 ### [vkfetch-rs](https://github.com/float3/vkfetch-rs)
-[github://vkfetch-rs](https://github.com/float3/vkfetch-rs)
-[crates.io://vkfetch-rs](https://crates.io/crates/vkfetch-rs)
+[github](https://github.com/float3/vkfetch-rs) \
+[crates.io](https://crates.io/crates/vkfetch-rs) \
 a port of vkfetch to rust, a neofetch-esque utility to display information about your vulkan capable gpu(s)
 
 ### [PSDTranslate](https://github.com/float3/PSDTranslate) and [psd_translate](https://github.com/float3/psd_translate)
@@ -32,14 +36,14 @@ a GUI utility to launch VRChat with a custom set of launch options
 plus documentation of all known launch options
 
 ### other
-I also frequently contribute to other peoples projects, for a (non-exhaustive) list you can check this:
+I also frequently contribute to other peoples projects, for a (non-exhaustive) list you can check this: \
 [github-resume](https://hilll.dev/resume.github.com/?float3#contributions)
 
 ## Toys
 some toy programs for fun, learning and experimentation
 
 ### [tuning playground](https://hilll.dev/tuningplayground)
-[github://tuningplayground](https://github.com/float3/tuningplayground)
+[github](https://github.com/float3/tuningplayground) \
 a rust -> wasm web app to play around with tuning systems, midi and audio
 
 ### [pathtracer](https://github.com/float3/pathtracer)
