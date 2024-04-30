@@ -35,7 +35,8 @@ in descending order of quality per place \
     - [Thai Vegan Kitchen](#thai-vegan-kitchen)
 - [Germany](#germany)
   - [Munich](#munich)
-    - [Soy München](#soy-münchen)
+    - [Pretty Pizza](#pretty-pizza)
+    - [Soy Vegan](#soy-vegan)
   - [Starnberg](#starnberg)
     - [Manna - Taste \& See](#manna---taste--see)
   - [Frankfurt](#frankfurt)
@@ -174,7 +175,13 @@ Lapinlahdenkatu 9, 00180 Helsinki, Finland
 
 ## Munich
 
-### Soy München
+### Pretty Pizza
+48°08'59.4"N 11°34'37.9"E \
+Schellingstraße 15, 80799 München, Germany
+
+Vegan Pizza
+
+### Soy Vegan
 
 48°09'07.4"N 11°33'37.9"E \
 Theresienstraße 93, 80333 München, Germany
