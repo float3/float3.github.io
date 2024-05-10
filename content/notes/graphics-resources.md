@@ -5,9 +5,6 @@ updated = 1970-01-01
 
 you can also find all these links [here](/plaintext/graphics-resources.txt)
 
-# Index
-
-- [Index](#index)
 - [Siggraph](#siggraph)
   - [Siggraph 2009](#siggraph-2009)
   - [Siggraph 2010](#siggraph-2010)

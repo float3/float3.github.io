@@ -10,7 +10,7 @@ minify_html = true
 
 [markdown]
 highlight_code = true
-highlight_thme = "solarized-dark"
+highlight_thme = "solarized-light"
 render_emoji = false
 external_links_target_blank = false
 external_links_no_follow = false

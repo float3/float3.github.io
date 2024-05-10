@@ -6,9 +6,15 @@ sort_by = "title"
 
 this is some art i've made
 
-## Shaders:
+- [Shaders:](#shaders)
+  - [Unity](#unity)
+  - [Shadertoy](#shadertoy)
+- [3D Scanning and Photogrammetry:](#3d-scanning-and-photogrammetry)
+- [Renders:](#renders)
 
-### Unity
+# Shaders:
+
+## Unity
 
 <video controls>
 <source src="/art/2022-01-26 23-08-03-reencoded.mp4">
@@ -17,13 +23,14 @@ this is some art i've made
 <source src="/art/2022-01-26 23-08-20-reencoded.mp4">
 </video>
 
-### [Shadertoy](https://www.shadertoy.com/user/Three)
+## Shadertoy
+<https://www.shadertoy.com/user/Three>
 
-## 3D Scanning and Photogrammetry:
+# 3D Scanning and Photogrammetry:
 
-[British Museum](@/blog/post1.md)
+[British Museum](@/blog/piracy-at-the-british-museum.md)
 
-## Renders:
+# Renders:
 
 from my pathtracer:
 ![render](https://github.com/float3/pathtracer/blob/master/renders/scene.png?raw=true)
