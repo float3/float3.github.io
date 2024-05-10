@@ -7,9 +7,6 @@ updated = 1970-01-01
 
 Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_films_condemned_by_the_Legion_of_Decency)
 
-# Index:
-
-- [Index:](#index)
 - [Red Mage:](#red-mage)
 - [Narspog:](#narspog)
 - [CCC:](#ccc)
@@ -97,7 +94,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2023-11-12)
 - [ ] BREAK (2023-11-19)
 - [ ] BREAK (2023-11-26)
-- [x] らき☆すた OVA（オリジナルなビジュアルとアニメーション）(Lucky Star OVA) (2008) (2023-12-02)
+- [x] らき ☆ すた OVA（オリジナルなビジュアルとアニメーション）(Lucky Star OVA) (2008) (2023-12-02)
 - [x] 誰も知らない (Nobody Knows) (2004) (2023-12-10)
 - [x] Beau Is Afraid (2023) (2023-12-16)
 - [ ] BREAK (2023-12-24)
@@ -118,6 +115,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Duel (1971) (2024-04-07)
 - [x] Mandy (2018) (2024-04-14)
 - [x] Krabat (2008) (2024-04-21)
+- [x] 艋舺 (Monga) (2010) (2024-04-27)
+- [x] スケバン刑事 (Sukeban Deka The Movie) (1987) (2024-05-03)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -340,9 +339,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Santa Sangre (1989) (2023-05-14)
 - [x] 12 Angry Men (1957) (2023-06-04)
 - [x] Fear and Loathing in Las Vegas (1998) (2023-08-18)
-- [x] 傷物語I 鉄血篇 (Kizumonogatari I: Tekketsu-hen, "Iron-Blooded") (2016) (2023-08-19)
-- [x] 傷物語II 熱血篇 (Kizumonogatari II: Nekketsu-hen, "Hot-Blooded") (2016) (2023-08-19)
-- [x] 傷物語III 冷血篇 (Kizumonogatari III: Reiketsu-hen, "Cold-Blooded") (2017) (2023-08-19)
+- [x] 傷物語 I 鉄血篇 (Kizumonogatari I: Tekketsu-hen, "Iron-Blooded") (2016) (2023-08-19)
+- [x] 傷物語 II 熱血篇 (Kizumonogatari II: Nekketsu-hen, "Hot-Blooded") (2016) (2023-08-19)
+- [x] 傷物語 III 冷血篇 (Kizumonogatari III: Reiketsu-hen, "Cold-Blooded") (2017) (2023-08-19)
 - [x] Oppenheimer (2023) (2023-08-21)
 - [x] Inception (2010) (2023-12-30)
 - [x] Druk (Another Round) (2020) (2023-12-31)
@@ -373,7 +372,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Dune 2 (2024) (2024-03-09)
 - [x] Wish (2023) (2024-03-31)
 - [x] Past Lives (2023) (2024-04-07)
-- [x] Hamilton (2020) (2024-04-14) 
+- [x] Hamilton (2020) (2024-04-14)
 
 # Scruffy
 
