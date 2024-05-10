@@ -31,7 +31,7 @@ jobs:
         run: |
           sh build.sh
           mkdir /tmp/zola
-          wget -q -O - "https://github.com/getzola/zola/releases/download/v0.16.1/zola-v0.16.1-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp
+          wget -q -O - "https://github.com/getzola/zola/releases/download/v0.18.0/zola-v0.18.0-x86_64-unknown-linux-gnu.tar.gz" | tar -xzf - --directory /tmp
           /tmp/zola build
 
       - name: Upload artifact
