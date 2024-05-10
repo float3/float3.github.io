@@ -34,6 +34,8 @@ all restaurants are vegan friendly
 - [Germany](#germany)
   - [Munich](#munich)
     - [Soy München](#soy-munchen)
+  - [Starnberg](#starnberg)
+    - [Manna - Taste \& See](#manna-taste-see)
   - [Frankfurt](#frankfurt)
     - [Sunbap 순밮](#sunbap-sunbap)
   - [Berlin](#berlin)
@@ -168,6 +170,13 @@ Theresienstraße 93, 80333 München, Germany
 
 vegan vietnamese restaurant, they do hotpot and regular dishes, good food,
 they don't take VISA cards, only cash, EC or paypal (2024)
+
+## Starnberg
+
+### Manna - Taste & See
+
+47°59'47.5"N 11°20'30.8"E \
+Bahnhofpl. 10, 82319 Starnberg, Germany
 
 ## Frankfurt
 
