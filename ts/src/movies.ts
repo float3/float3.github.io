@@ -1,3 +1,5 @@
+const timeout = 5;
+
 function getRandomMovie(id: string, button: HTMLButtonElement): void {
 
   const previousWheel = document.getElementById("wheel");
@@ -20,10 +22,23 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
   const wheel = new SpinningWheel("wheel", moviesToWatch);
   wheel.drawWheel();
   wheel.spin();
-  const result = document.createElement("h2");
-  result.id = "result";
-  result.textContent = `random movie: ${moviesToWatch[Math.floor(Math.random() * moviesToWatch.length)]}`;
-  canvas.insertAdjacentElement("afterend", result);
+
+  //wait 5 seconds before showing the result
+
+  setTimeout(() => {
+    let randomMovie = moviesToWatch[Math.floor(Math.random() * moviesToWatch.length)];
+    const result = document.createElement("h2");
+    result.id = "result";
+    result.textContent = "random movie: ";
+
+    const movieLink = document.createElement("a");
+    movieLink.href = `https://libremdb.iket.me/find?q=${encodeURIComponent(randomMovie)}`;
+    movieLink.textContent = randomMovie;
+    movieLink.target = "_blank";
+
+    result.appendChild(movieLink);
+    canvas.insertAdjacentElement("afterend", result);
+  }, timeout * 1000);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -31,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll("h1");
 
   headings.forEach((heading) => {
-    const headingText: string = heading.innerText.trim();
     if (
       heading.innerHTML != "movies" &&
       heading.id !== "index" &&
@@ -66,7 +80,7 @@ class SpinningWheel {
   private segments: string[];
   private angle: number = 0;
   private baseSpeed: number = Math.PI / 16;
-  private spinTimeout: number = 5;
+  private spinTimeout: number = timeout;
   private currentSpinTime: number = 0;
   public spinTime: number = 0;
 
@@ -109,7 +123,7 @@ class SpinningWheel {
   }
 
   spin() {
-    this.spinTime = Math.random() * 5;
+    this.spinTime = timeout;
     this.currentSpinTime = 0;
     this.rotateWheel();
   }
