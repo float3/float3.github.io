@@ -377,6 +377,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Wish (2023) (2024-03-31)
 - [x] Past Lives (2023) (2024-04-07)
 - [x] Hamilton (2020) (2024-04-14)
+- [x] Dancer in the Dark (2000) (2024-05-25)
 
 # Scruffy
 
