@@ -378,6 +378,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Past Lives (2023) (2024-04-07)
 - [x] Hamilton (2020) (2024-04-14)
 - [x] Dancer in the Dark (2000) (2024-05-25)
+- [x] Mad Max: Furiosa (2024) (2024-05-30)
 
 # Scruffy
 
@@ -428,6 +429,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Cuck (2019) (2024-01-16)
 - [x] Borat Subsequent Moviefilm (2020) (2024-01-24)
 - [x] RRR (2022) (2024-03-01)
+- [x] Sour Grapes (1998) (2024-05-31)
 - [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
@@ -462,5 +464,5 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 
 # Dropped Movies
 
-- [x] Little Shop of Horrors (1986) (2024-01-07)
+- [ ] Little Shop of Horrors (1986) (2024-01-07)
 - [ ] Dude, Where's My Car? (2000) (2023-12-02)
