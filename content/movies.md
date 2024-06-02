@@ -120,6 +120,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Zodiac (2007) (2024-05-12)
 - [x] The Fountain (2006) (2024-05-18)
 - [x] 返校 (Detention) (2019) (2024-05-26)
+- [x] 運轉手之戀 (The Cabbie) (2000) (2024-06-02)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
