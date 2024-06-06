@@ -431,6 +431,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Borat Subsequent Moviefilm (2020) (2024-01-24)
 - [x] RRR (2022) (2024-03-01)
 - [x] Sour Grapes (1998) (2024-05-31)
+- [x] Mad Max: Fury Road (2015) (2024-06-06)
 - [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
