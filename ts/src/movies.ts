@@ -32,7 +32,7 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
     result.textContent = "random movie: ";
 
     const movieLink = document.createElement("a");
-    movieLink.href = `https://libremdb.iket.me/find?q=${encodeURIComponent(randomMovie)}`;
+    movieLink.href = `https://imdb.com/find/?q=${encodeURIComponent(randomMovie)}`;
     movieLink.textContent = randomMovie;
     movieLink.target = "_blank";
 
