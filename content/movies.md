@@ -225,7 +225,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Alice in Wonderland (2010)
 - [ ] I Saw the Devil (2010)
 - [ ] Hobo with a Shotgun (2011)
-- [ ] Drive (2011)
 - [ ] Dredd (2012)
 - [ ] Under the Skin (2013)
 - [ ] Snowpiercer (2013)
