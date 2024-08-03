@@ -94,6 +94,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2023-11-12)
 - [ ] BREAK (2023-11-19)
 - [ ] BREAK (2023-11-26)
+- [x] ガヴリールドロップアウト (Gabriel DropOut) (2017) (2023-12-02)
 - [x] らき ☆ すた OVA（オリジナルなビジュアルとアニメーション）(Lucky Star OVA) (2008) (2023-12-02)
 - [x] 誰も知らない (Nobody Knows) (2004) (2023-12-10)
 - [x] Beau Is Afraid (2023) (2023-12-16)
