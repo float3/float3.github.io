@@ -1,7 +1,7 @@
 +++
 title = "Playing East"
-date = 2023-06-01
-updated = 2023-06-15
+date = 2024-08-30
+updated = 2023-08-31
 +++
 
 # Playing East
