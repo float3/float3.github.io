@@ -274,6 +274,16 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Fall Guy (2024)
 - [ ] Love Lies Bleeding (2024)
 - [ ] Kill Bill: Volume 3 (TBA)
+- [ ] Festen
+- [ ] Hundreds of Beavers
+- [ ] Tokyo Cowboy
+- [ ] Shop for Killers
+- [ ] The Idiots (1998)
+- [ ] The Hunt (2013)
+- [ ] Pusher Trilogy
+- [ ] 24 Hour Party People (2002)
+- [ ] Last Stop in Yuma County
+- [ ] Synecdoche, New York (2008)
 
 # Narspog:
 
@@ -440,6 +450,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Sour Grapes (1998) (2024-05-31)
 - [x] Mad Max: Fury Road (2015) (2024-06-06)
 - [x] Monty Python's Life of Brian (1979) (2024-06-10)
+- [x] Perfect Days (2023) (2024-08-23)
+- [x] Deadpool & Wolverine (2024) (2024-09-06)
 - [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
@@ -471,6 +483,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Wet Season (2019)
 - [ ] The Creator (2023)
 - [ ] Jackie Chan - My Stunts
+- [ ] Jodorowsky's Dune (2013)
+- [ ] Amadeus (1984)
+- [ ] 
 
 # Dropped Movies
 

@@ -4,8 +4,7 @@ updated = 1970-01-01
 +++
 
 restaurants I like \
-in descending order of quality per country \
-all restaurants are vegan friendly
+in descending order of quality per place \
 
 - [Singapore](#singapore)
   - [Singapore](#singapore-1)
@@ -39,6 +38,12 @@ all restaurants are vegan friendly
   - [Frankfurt](#frankfurt)
     - [Sunbap 순밮](#sunbap-sunbap)
   - [Berlin](#berlin)
+- [South Korea](#south-korea)
+  - [Seoul](#seoul)
+  - [Busan](#busan)
+    - [Onbab 온밥](#onbab-onbab)
+  - [Hadong](#hadong)
+    - [노루골한옥마을](#norugolhanogmaeul)
 
 # Singapore
 
@@ -188,3 +193,21 @@ Oeder Weg 63, 60318 Frankfurt am Main, Germany
 vegan korean restaurant
 
 ## Berlin
+
+# South Korea
+
+## Seoul
+
+## Busan
+
+### Onbab 온밥
+
+35°09'12.5"N 129°06'53.4"E \
+South Korea, Busan, Suyeong-gu, Suyeong-ro 540beon-gil, 49 1 층
+
+## Hadong
+
+### 노루골한옥마을
+
+35°17'12.5"N 127°38'53.7"E \
+South Korea, Gyeongsangnam-do, Hadong-gun, Hwagae-myeon, Daeseong-ri, 1314-5
