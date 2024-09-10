@@ -4,8 +4,6 @@ date = 2024-08-30
 updated = 2023-08-31
 +++
 
-# Playing East
-
 It was 33°C outside, the late afternoon sun beginning to wane as I stepped into the cool, 24°C air-conditioned third floor of the 이수보드게임카페, Isu Board Game Café, nestled south of the Han River. I had just dragged my luggage all the way from Yongsan Station to Isu, then up the narrow stairs of an unremarkable building. The journey had been long, but this—this was the beginning of something new.
 
 Today would be my first time playing Mahjong with strangers in real life. For years, I’d played Japanese Riichi Mahjong online—two, maybe three years on and off—against strangers on various websites, in virtual reality, and in person at my local group’s weekly meetups. I knew the Yakus well enough, though scoring had always eluded me. Online play rarely demands that you know how to calculate points, and in-person games always had someone else to handle the scoring.
