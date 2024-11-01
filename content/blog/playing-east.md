@@ -30,7 +30,7 @@ The second game came and went, and I felt more relaxed, more confident. I let go
 3: 23,900
 4: 4,600
 
-I was happy—happy with how I played, happy with the experience. The Koreans' characteristic politeness and friendliness had left a lasting impression on me. I managed a few Mangans, along with several smaller hands. Most of the first game had felt like I was playing mind games against myself, but by the second, I found my rhythm. There were even moments of comfortable silence, where we all focused on the game, tile after tile, in quiet concentration.
+I was satisfied with how I played, happy with the experience. The Koreans' characteristic politeness and friendliness had left a lasting impression on me. I managed a few Mangans, along with several smaller hands. Most of the first game had felt like I was playing mind games against myself, but by the second, I found my rhythm. There were even moments of comfortable silence, where we all focused on the game, tile after tile, in quiet concentration.
 
 When the day came to a close, they asked me to pay 6,000₩—about 4 euros. I hadn’t been told about this fee beforehand, but I chalked it up to the language barrier. Even so, the staff had been accommodating, and I was able to communicate far better than I had expected.
 
