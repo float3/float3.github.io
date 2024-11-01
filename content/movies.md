@@ -139,6 +139,11 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2024-09-14)
 - [x] Festen (Celebration) (1998) (2024-09-22)
 - [x] 世界で一番長い写真 (The Longest Photo in the World) (2018) (2024-09-29)
+- [x] Perfect Days (2023) (2024-10-06)
+- [ ] BREAK (2024-10-13)
+- [x] 小雁與吳愛麗 (Yen and Ai-Lee) (2024) (2024-10-16) 
+- [ ] BREAK (2024-10-20)
+- [ ] BREAK (2024-10-27)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -238,7 +243,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Dredd (2012)
 - [ ] Under the Skin (2013)
 - [ ] Snowpiercer (2013)
-- [ ] The Wolf of Wall Street (2013)
 - [ ] Enemy (2013)
 - [ ] The Raid 2 (2014)
 - [ ] Nightcrawler (2014)
@@ -280,7 +284,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] The Fall Guy (2024)
 - [ ] Love Lies Bleeding (2024)
 - [ ] Kill Bill: Volume 3 (TBA)
-- [ ] Festen
 - [ ] Hundreds of Beavers
 - [ ] Tokyo Cowboy
 - [ ] Shop for Killers
@@ -373,6 +376,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Oppenheimer (2023) (2023-08-21)
 - [x] Inception (2010) (2023-12-30)
 - [x] Druk (Another Round) (2020) (2023-12-31)
+- [x] Synecdoche, New York (2008) (2024-10-24)
 - [ ] Dune (2021)
 - [ ] Dune 2 (2023)
 - [ ] Når Befrielsen kommer (2023)
