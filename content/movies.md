@@ -144,6 +144,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 小雁與吳愛麗 (Yen and Ai-Lee) (2024) (2024-10-16) 
 - [ ] BREAK (2024-10-20)
 - [ ] BREAK (2024-10-27)
+- [x] Arrival (2016) (2024-11-04)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
