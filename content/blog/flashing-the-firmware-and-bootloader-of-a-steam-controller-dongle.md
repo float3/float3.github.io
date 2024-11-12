@@ -1,8 +1,8 @@
-+++
-title = "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
-date = 2024-02-14
-updated = 2023-02-14
-+++
+---
+title: "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
+date: 2024-02-14
+updated: 2023-02-14
+---
 
 This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara
 and Instructions on how to flash the bootloader provided by [Ben Jackson](https://ben.com)
@@ -87,7 +87,8 @@ Upon running the command
 
 ### Firmware Flash
 
-<pre style="background-color: black; color: white; padding: 10px;"><code>
+<pre style="background-color: black; color: white; padding: 10px;">
+<code>
 Attempting to update Watchman Dongles to version 1461100729...
 
 Converting steam controller dongle to watchman dongle. Switching to bootloader

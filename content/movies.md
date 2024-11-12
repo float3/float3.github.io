@@ -1,7 +1,7 @@
-+++
-title = "movies"
-updated = 1970-01-01
-+++
+---
+title: "movies"
+updated: 1970-01-02
+---
 
 <script src="/js/movies.js"></script>
 
