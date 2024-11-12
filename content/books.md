@@ -1,7 +1,7 @@
-+++
-title = "books"
-updated = 1970-01-01
-+++
+---
+title: "books"
+updated: 1970-01-02
+---
 
 Books I'm currently reading
 

@@ -1,7 +1,7 @@
-+++
-title = "food"
-updated = 1970-01-01
-+++
+---
+title: "food"
+updated: 1970-01-02
+---
 
 restaurants I like \
 in descending order of quality per place \

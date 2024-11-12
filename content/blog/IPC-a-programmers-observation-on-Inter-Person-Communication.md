@@ -1,8 +1,8 @@
-+++
-title = "IPC - a programmers observations on Inter Person Communication"
-date = 2023-02-23
-updated = 2024-02-23
-+++
+---
+title: "IPC - a programmers observations on Inter Person Communication"
+date: 2023-02-23
+updated: 2024-02-23
+---
 
 <style>
   .error { color: red; }

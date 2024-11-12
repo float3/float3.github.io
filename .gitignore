@@ -1,11 +1,13 @@
-# Zola
-/public
-
-static/tsconfig.tsbuildinfo
-
-static/js/
-
-static/plaintext/blogs.txt
-static/plaintext/graphics-resources.txt
-static/plaintext/papers.txt
-static/plaintext/talks.txt
+.DS_Store
+.gitignore
+node_modules
+public
+prof
+tsconfig.tsbuildinfo
+.obsidian
+.quartz-cache
+private/
+.replit
+replit.nix
+content/js
+content/plaintext

@@ -1,8 +1,8 @@
-+++
-title = "Piracy at the British Museum"
-date = 2023-05-14
-updated = 2023-05-23
-+++
+---
+title: "Piracy at the British Museum"
+date: 2023-05-14
+updated: 2023-05-23
+---
 
 ## Visiting the British Museum
 
