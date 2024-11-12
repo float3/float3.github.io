@@ -10,4 +10,6 @@ private/
 .replit
 replit.nix
 content/js
-content/plaintext
+content/plaintext/blogs.txt
+content/plaintext/graphics-links.txt
+content/plaintext/talks.txt
