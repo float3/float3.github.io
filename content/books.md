@@ -64,6 +64,8 @@ Books I'm currently reading
 
 - [x] Harry Potter and the Methods of Rationality
 - [x] Three Worlds Collide
+- [x] A Girl corrupted by the Internet is the Summoned Hero 
+- [ ] Unsong
 - [-] There is no Antimemetics Department
 - [ ] Flatland
 - [ ] Blood Meridian

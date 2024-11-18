@@ -58,6 +58,9 @@ very good food, open: 5:30-18:00
 
 # Taiwan
 
+in taiwan you can find 素食自助餐 (vegetarian buffet) in many places, they have consistent quality, high variety and are cheap, I highly recommend them
+you can also search for: 卍, a buddhist symbol and often used in the names of vegetarian restaurants
+
 ## Taipei
 
 ### 御喜自助餐
