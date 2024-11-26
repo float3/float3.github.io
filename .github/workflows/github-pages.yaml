@@ -69,17 +69,14 @@ jobs:
           ./build.sh prod
           rm ./www/chords.json | true
           rm ./www/163.bootstrap.js.LICENSE.txt | true
-          mv ./www ./www-master
+          mv ./www ./stable
           echo "building dev"
           # git checkout dev
           # git pull
           ./build.sh dev
           rm ./www/chords.json | true
-          mv ./www ./www-dev
-          mv ./www-master ./www/
-          mkdir -p ./www/dev
-          mv ./www-dev/* ./www/dev/
-          mv ./www/* ../content/piano/
+          mv ./www ./dev
+          mv ./stable ./dev ../content/piano/
 
       - name: build
         run: |
