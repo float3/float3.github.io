@@ -194,7 +194,7 @@ if we keep going up the steps one by one (1.0625), we don't end up at the same p
 
 ## My other music related work:
 
-[play around with different tuning systems and your computer keyboard](/tuningplayground/stable)
+[play around with different tuning systems and your computer keyboard](/piano/stable)
 
 ### Visualize and listen to Polyrhythms in a Shader:
 

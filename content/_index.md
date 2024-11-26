@@ -19,7 +19,7 @@ Content
 - [art](/art.md)
 - [notes](/notes/)
 - [misc](/misc/)
-- [piano playground](/tuningplayground/)
+- [piano playground](/piano/)
 - [about](/about.md)
 
 

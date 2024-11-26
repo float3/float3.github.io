@@ -19,7 +19,7 @@ updated: 2024-11-25
           or this one in case the other site goes down
           </a> 
           <br>
-          theres also the stable version of this page: <a href="/tuningplayground/stable.md">here</a>
+          theres also the stable version of this page: <a href="/piano/stable.md">here</a>
       <div style="display: block">
         <input type="file" id="fileInput" accept=".midi,.mid" />
         <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
