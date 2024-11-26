@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
+    func();
+});
+
+function func() {
+    console.log("Hello, World!");
     const elements = document.querySelectorAll("#interactiveSvg path, #interactiveSvg rect");
     const groupMap = {};
 
@@ -33,4 +38,4 @@ document.addEventListener("DOMContentLoaded", () => {
             groupMap[fillColor].forEach((el) => el.classList.remove("hovered"));
         });
     });
-});
+}
