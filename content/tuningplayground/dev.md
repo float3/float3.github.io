@@ -1,118 +1,25 @@
 ---
-title: "tuningplayground"
+title: "dev"
 date: 2024-01-10
 updated: 2024-11-25
 ---
-  <style>
-    :root {
-      --white-key-height: 100px;
-      --white-key-width: calc(var(--white-key-height) * (23 / 120));
-      --black-key-width: calc(var(--white-key-width) * (15 / 23));
-      --black-key-height: calc(var(--white-key-height) * (80 / 120));
-    }
-
-    .container {
-      display: flex;
-    }
-
-    .keyboard {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .octave {
-      display: flex;
-      position: relative;
-    }
-
-    .white-key {
-      background-color: #fff;
-      border: 1px solid #000;
-      height: var(--white-key-height);
-      width: var(--white-key-width);
-      display: inline-block;
-      position: relative;
-      z-index: 1;
-      outline: 2px solid #000;
-    }
-
-    .black-key {
-      background-color: #000;
-      height: var(--black-key-height);
-      width: var(--black-key-width);
-      position: absolute;
-      margin-left: -7.5px;
-      z-index: 2;
-      outline: 2px solid #000;
-    }
-
-    .white-key:nth-child(1) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (17.5 / 120));
-    }
-
-    .white-key:nth-child(3) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (40.5 / 120));
-    }
-
-    .white-key:nth-child(5) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (88.5 / 120));
-    }
-
-    .white-key:nth-child(6) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (92.5 / 120));
-    }
-
-    .white-key:nth-child(8) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (117.5 / 120));
-    }
-
-    .white-key:nth-child(10) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (141.5 / 120));
-    }
-
-    .white-key:nth-child(12) ~ .black-key {
-      margin-left: calc(var(--white-key-height) * (180.5 / 120));
-    }
-
-    .white-key.key-active {
-      background: #a0a0a0;
-    }
-
-    .black-key.key-active {
-      background: #404040;
-    }
-
-    .key-marked {
-      background: #d77914;
-    }
-
-    .key-active.key-marked {
-      background: #92520d;
-    }
-
-    #markedButtons {
-      display: none;
-    }
-        
-    .keyboard {
-      padding-top: 20px;
-    }
-  </style>
- <body>
-  tuningplayground
-      <p>
+<link href="./tuningplayground.css" rel="stylesheet" type="text/css">
         <noscript> hey this page needs javascript</noscript>
-      </p>
-      <p>
         use your computer keyboard, a midi device, or provide a midi file for
         example
         <a
           href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid"
-          download="mozart_dies_irea.mid"
-          >this one</a
-        >
-        or [this one in case the other site goes down](/content/jm_mozdi.mid)
-      </p>
+          download="mozart_dies_irea.mid">
+          this one
+          </a>
+        or 
+        <a
+          href="/misc/blobs/jm_mozdi.mid"
+          download="mozart_dies_irea.mid">
+          or this one in case the other site goes down
+          </a> 
+          <br>
+          theres also the stable version of this page: <a href="/tuningplayground/stable.md">here</a>
       <div style="display: block">
         <input type="file" id="fileInput" accept=".midi,.mid" />
         <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
@@ -314,4 +221,3 @@ updated: 2024-11-25
       <div id="logContainer"></div>
     </div>
     <script src="./bootstrap.js"></script>
-  </body>

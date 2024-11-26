@@ -1,3 +1,0 @@
----
-title: blobs/binary files
----
