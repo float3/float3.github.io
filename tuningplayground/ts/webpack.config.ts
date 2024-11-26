@@ -38,7 +38,7 @@ module.exports = {
   target: "web",
   plugins: [
     new CopyPlugin({
-      patterns: ["./src/chords.json", "./src/chords.txt", "./src/a1.wav", "./src/sample.mid"],
+      patterns: ["./src/chords.json", "./src/chords.txt"],
       options: {
         concurrency: 100,
       },

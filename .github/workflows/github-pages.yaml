@@ -65,15 +65,11 @@ jobs:
         run: |
           cd tuningplayground
           echo "building master"
-          git fetch
-          git checkout master
           ./build.sh prod
           rm ./www/chords.json | true
           rm ./www/163.bootstrap.js.LICENSE.txt | true
           mv ./www ./stable
           echo "building dev"
-          # git checkout dev
-          # git pull
           ./build.sh dev
           rm ./www/chords.json | true
           mv ./www ./dev

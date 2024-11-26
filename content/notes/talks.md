@@ -3,8 +3,6 @@ title: "talks"
 updated: 1970-01-02
 ---
 
-you can also find all these links [here](/plaintext/talks.txt)
-
 talks I like
 
 - [Winning the War on Error Solving the Halting Problem and Curing Cancer - Matt Might](https://www.youtube.com/watch?v=MdmQUlD7P40)
@@ -27,3 +25,5 @@ talks I like
 - [Outperforming Imperative with Pure Functional Languages - Richard Feldman](https://www.youtube.com/watch?v=vzfy4EKwG_Y)
 - [Why Isn't Functional Programming the Norm? – Richard Feldman](https://www.youtube.com/watch?v=QyJZzq0v7Z4)
 - [Functional Programming for Pragmatists - Richard Feldman](https://www.youtube.com/watch?v=3n17wHe5wEw)
+
+you can also find all these links [here](/plaintext/talks.txt)
