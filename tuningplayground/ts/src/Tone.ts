@@ -1,9 +1,9 @@
 export class Tone {
-  index: number;
-  freq: number;
-  cents: number;
-  name: string;
-  node: OscillatorNode | AudioBufferSourceNode;
+  index: number
+  freq: number
+  cents: number
+  name: string
+  node: OscillatorNode | AudioBufferSourceNode
   constructor(
     index: number,
     freq: number,
@@ -11,11 +11,11 @@ export class Tone {
     name: string,
     node: OscillatorNode | AudioBufferSourceNode,
   ) {
-    this.index = index;
-    this.freq = freq;
-    this.cents = cents;
-    this.name = name;
-    this.node = node;
+    this.index = index
+    this.freq = freq
+    this.cents = cents
+    this.name = name
+    this.node = node
   }
 }
 
@@ -27,7 +27,7 @@ declare global {
       cents: number,
       name: string,
       oscillator: OscillatorNode | AudioBufferSourceNode,
-    ) => Tone;
+    ) => Tone
   }
 }
 
@@ -38,5 +38,5 @@ export function createTone(
   name: string,
   oscillator: OscillatorNode | AudioBufferSourceNode,
 ): Tone {
-  return new Tone(index, freq, cents, name, oscillator);
+  return new Tone(index, freq, cents, name, oscillator)
 }

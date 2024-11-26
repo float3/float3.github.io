@@ -1,1 +1,1 @@
-export const midiMultiplier = 1000;
+export const midiMultiplier = 1000
