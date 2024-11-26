@@ -220,4 +220,4 @@ updated: 2024-11-25
       </div>
       <div id="logContainer"></div>
     </div>
-    <script src="./bootstrap.js"></script>
+    <script src="./stable/bootstrap.js"></script>
