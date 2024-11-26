@@ -1,4 +1,23 @@
-import * as wasm from "wasm"
+let wasm: any
+import("wasm").then((module) => {
+  wasm = module
+  wasm
+    .default()
+    .then(() => {
+      //make sure do anything that can call wasm after wasm has finished importing
+      requestMIDI()
+      playButton.onclick = play
+      document.addEventListener("keydown", keydown)
+      document.addEventListener("keyup", keyup)
+      document.querySelectorAll(".white-key, .black-key").forEach((key) => {
+        addEvents(key)
+      })
+      onload()
+      playingTonesChanged()
+      // linkInputChange();
+    })
+    .catch(console.error)
+})
 import { Tone, createTone } from "./Tone"
 import { requestMIDI } from "./MIDI"
 import { keydown, keyup, visibilityChange, onload } from "./events"
@@ -20,22 +39,6 @@ document.addEventListener("visibilitychange", visibilityChange)
 window.addEventListener("blur", stopAllTones)
 window.addEventListener("hashchange", onload)
 window.createTone = createTone
-wasm
-  .default()
-  .then(() => {
-    //make sure do anything that can call wasm after wasm has finished importing
-    requestMIDI()
-    playButton.onclick = play
-    document.addEventListener("keydown", keydown)
-    document.addEventListener("keyup", keyup)
-    document.querySelectorAll(".white-key, .black-key").forEach((key) => {
-      addEvents(key)
-    })
-    onload()
-    playingTonesChanged()
-    // linkInputChange();
-  })
-  .catch(console.error)
 
 export const playingTones: Record<number, Tone> = []
 export const heldKeys: Record<string, boolean> = {}
@@ -122,7 +125,7 @@ function initOrGetAudioContext(): Promise<AudioContext> {
 let audioBuffer: AudioBuffer | null = null
 function initOrGetAudioBuffer(): Promise<AudioBuffer> {
   if (!audioBuffer) {
-    return fetch("./a1.wav")
+    return fetch("/piano/a1.wav")
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) =>
         initOrGetAudioContext().then((context) => context.decodeAudioData(arrayBuffer)),

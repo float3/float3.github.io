@@ -1,5 +1,5 @@
 ---
-title: "dev"
+title: "tuningplayground debug"
 date: 2024-01-10
 updated: 2024-11-25
 ---
@@ -19,7 +19,7 @@ updated: 2024-11-25
           or this one in case the other site goes down
           </a> 
           <br>
-          theres also the stable version of this page: <a href="/piano/stable.md">here</a>
+          theres also the release version of this page: <a href="/piano/tuningplayground.md">here</a>
       <div style="display: block">
         <input type="file" id="fileInput" accept=".midi,.mid" />
         <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
@@ -220,4 +220,4 @@ updated: 2024-11-25
       </div>
       <div id="logContainer"></div>
     </div>
-    <script src="./dev/bootstrap.js"></script>
+    <script src="/piano/debug/bootstrap.js"></script>

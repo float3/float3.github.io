@@ -63,7 +63,7 @@ I also frequently contribute to other peoples projects, for a (non-exhaustive) l
 some toy programs for fun, learning and experimentation
 
 ## tuning playground
-[running demo](/piano/stable.md) \
+[running demo](/piano/tuningplayground.md) \
 [github](https://github.com/float3/float3.github.io/tree/master/tuningplayground) \
 a rust -> wasm web app to play around with tuning systems, midi and audio
 
