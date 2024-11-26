@@ -41,13 +41,13 @@ a port of vkfetch to rust, a neofetch-esque utility to display information about
 
 ## PSDTranslate
 [C#](https://github.com/float3/PSDTranslate)
-[python](https://github.com/float3/psd_translate)
+[python](https://github.com/float3/psd_translate) \
 a utility to translate layer names in photoshop project files from one language to another
 based on a google translate api library I wrote
 
 ## GoogleTranslate
 [C#](https://github.com/float3/GoogleTranslate.NET)
-[rust](https://github.com/float3/google_translate/)
+[rust](https://github.com/float3/google_translate/) \
 a library to interface with the google translate api, written in C# and rust
 
 ## VRCLauncher
@@ -63,12 +63,12 @@ I also frequently contribute to other peoples projects, for a (non-exhaustive) l
 some toy programs for fun, learning and experimentation
 
 ## tuning playground
-[running demo](https://hilll.dev/tuningplayground)
+[running demo](/tuningplayground/stable.md) \
 [github](https://github.com/float3/tuningplayground) \
 a rust -> wasm web app to play around with tuning systems, midi and audio
 
 ## pathtracer
-<https://github.com/float3/pathtracer>
+<https://github.com/float3/pathtracer> 
 a pathtracer written in rust
 
 ## 3lang

@@ -50,7 +50,7 @@ winetricks winmm
 winetricks oleaut32
 ```
 
-you can find the lighthouse_watchman_update.exe [here](/content/blobs/lighthouse_watchman_update.exe) and the vrcameral_api.dll [here](/content/blobs/vrcamera_api.dll)
+you can find the lighthouse_watchman_update.exe [here](/misc/blobs/lighthouse_watchman_update.exe) and the vrcameral_api.dll [here](/misc/blobs/vrcamera_api.dll)
 or in a steamvr windows installation at `C:\Program Files (x86)\Steam\steamapps\common\SteamVR\tools\lighthouse\bin\win32` (they aren't shipped on linux)
 
 then just follow the windows instructions but with wine
@@ -68,7 +68,7 @@ For a permanent change, we need to flash the bootloader as well.
 
 1. Follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
 2. Follow the [Flashing the Firmware Guide](#flashing-the-firmware) but use the commands below in the last step (again you may have to adjust the paths if you isntalled the HDK in a differnt directory)
-3. Or download the [watchman_dongle_combined.bin](/content/blobs/watchman_dongle_combined.bin) here
+3. Or download the [watchman_dongle_combined.bin](/misc/blobs/watchman_dongle_combined.bin) here
 
 ### Windows
 

@@ -17,10 +17,10 @@ this is some art i've made
 ## Unity
 
 <video controls>
-<source src="/media/2022-01-26_23-08-03-reencoded.mp4">
+<source src="/misc/media/2022-01-26_23-08-03-reencoded.mp4">
 </video>
 <video controls>
-<source src="/media/2022-01-26_23-08-20-reencoded.mp4">
+<source src="/misc/media/2022-01-26_23-08-20-reencoded.mp4">
 </video>
 
 ## Shadertoy
@@ -37,5 +37,5 @@ from my pathtracer:
 
 blender:
 <video controls>
-<source src="/media/render.mp4">
+<source src="/misc/media/render.mp4">
 </video>

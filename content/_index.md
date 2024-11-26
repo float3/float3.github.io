@@ -4,7 +4,9 @@ tags:
   - garden
 ---
 
-<img src="./banner-light.png" height="500"/>
+<div style="text-align: center; padding: 20px;">
+    <img src="./banner-light.png" width="701"/>
+</div>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma.
 this is my place.
