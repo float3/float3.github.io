@@ -1,7 +1,7 @@
-import * as wasm from "wasm";
-import { Tone, createTone } from "./Tone";
-import { requestMIDI } from "./MIDI";
-import { keydown, keyup, visibilityChange, onload } from "./events";
+import * as wasm from "wasm"
+import { Tone, createTone } from "./Tone"
+import { requestMIDI } from "./MIDI"
+import { keydown, keyup, visibilityChange, onload } from "./events"
 import {
   playingTonesChanged,
   keyActive,
@@ -13,43 +13,43 @@ import {
   tranposeValue,
   volumeValue,
   // linkInputChange,
-} from "./UI";
+} from "./UI"
 
-document.addEventListener("DOMContentLoaded", DOMContentLoaded);
-document.addEventListener("visibilitychange", visibilityChange);
-window.addEventListener("blur", stopAllTones);
-window.addEventListener("hashchange", onload);
-window.createTone = createTone;
+document.addEventListener("DOMContentLoaded", DOMContentLoaded)
+document.addEventListener("visibilitychange", visibilityChange)
+window.addEventListener("blur", stopAllTones)
+window.addEventListener("hashchange", onload)
+window.createTone = createTone
 wasm
   .default()
   .then(() => {
     //make sure do anything that can call wasm after wasm has finished importing
-    requestMIDI();
-    playButton.onclick = play;
-    document.addEventListener("keydown", keydown);
-    document.addEventListener("keyup", keyup);
+    requestMIDI()
+    playButton.onclick = play
+    document.addEventListener("keydown", keydown)
+    document.addEventListener("keyup", keyup)
     document.querySelectorAll(".white-key, .black-key").forEach((key) => {
-      addEvents(key);
-    });
-    onload();
-    playingTonesChanged();
+      addEvents(key)
+    })
+    onload()
+    playingTonesChanged()
     // linkInputChange();
   })
-  .catch(console.error);
+  .catch(console.error)
 
-export const playingTones: Record<number, Tone> = [];
-export const heldKeys: Record<string, boolean> = {};
-export const markedKeys: number[] = [];
+export const playingTones: Record<number, Tone> = []
+export const heldKeys: Record<string, boolean> = {}
+export const markedKeys: number[] = []
 // let recording: boolean;
 
 export function stopAllTones(): void {
   Object.keys(playingTones).forEach((key) => {
-    const tone_index: number = parseInt(key);
-    playingTones[tone_index].node.stop();
-    delete playingTones[tone_index];
-    keyActive(tone_index, false);
-  });
-  playingTonesChanged();
+    const tone_index: number = parseInt(key)
+    playingTones[tone_index].node.stop()
+    delete playingTones[tone_index]
+    keyActive(tone_index, false)
+  })
+  playingTonesChanged()
 }
 
 /**
@@ -59,13 +59,9 @@ export function stopAllTones(): void {
  * @param velocity
  * @param cancel
  */
-export function noteOn(
-  tone_index: number,
-  velocity?: number,
-  cancel?: boolean,
-): void {
-  _noteOn(tone_index, velocity, cancel);
-  playingTonesChanged();
+export function noteOn(tone_index: number, velocity?: number, cancel?: boolean): void {
+  _noteOn(tone_index, velocity, cancel)
+  playingTonesChanged()
 }
 
 /**
@@ -75,113 +71,103 @@ export function noteOn(
  * @param velocity
  * @param cancel
  */
-export function _noteOn(
-  tone_index: number,
-  velocity?: number,
-  cancel?: boolean,
-) {
-  tone_index += tranposeValue;
-  const tone: Tone = wasm.get_tone(tone_index) as Tone;
-  const volume = Math.pow(volumeValue, 2);
+export function _noteOn(tone_index: number, velocity?: number, cancel?: boolean) {
+  tone_index += tranposeValue
+  const tone: Tone = wasm.get_tone(tone_index) as Tone
+  const volume = Math.pow(volumeValue, 2)
   // if (velocity) {
   //   volume *= velocity / 127;
   // }
   switch (soundMethod.value) {
     case "native":
-      playFrequencyNative(tone, volume).catch(console.error);
-      break;
+      playFrequencyNative(tone, volume).catch(console.error)
+      break
     case "sample":
-      playFrequencySample(tone, volume, cancel).catch(console.error);
-      break;
+      playFrequencySample(tone, volume, cancel).catch(console.error)
+      break
   }
-  keyActive(tone_index, true);
+  keyActive(tone_index, true)
 }
 
 export function noteOff(tone_index: number): void {
-  tone_index += tranposeValue;
-  if (!(tone_index in playingTones)) return;
+  tone_index += tranposeValue
+  if (!(tone_index in playingTones)) return
 
   switch (soundMethod.value) {
     case "native":
-      playingTones[tone_index].node.stop();
-      break;
+      playingTones[tone_index].node.stop()
+      break
     case "sample":
-      break;
+      break
   }
-  delete playingTones[tone_index];
-  playingTonesChanged();
-  keyActive(tone_index, false);
+  delete playingTones[tone_index]
+  playingTonesChanged()
+  keyActive(tone_index, false)
 }
 
-let audioContext: AudioContext | null = null;
+let audioContext: AudioContext | null = null
 function initOrGetAudioContext(): Promise<AudioContext> {
   return new Promise((resolve, reject) => {
     try {
       if (!audioContext) {
-        audioContext = new window.AudioContext();
+        audioContext = new window.AudioContext()
       }
-      resolve(audioContext);
+      resolve(audioContext)
     } catch (error) {
-      reject(error);
+      reject(error)
     }
-  });
+  })
 }
 
-let audioBuffer: AudioBuffer | null = null;
+let audioBuffer: AudioBuffer | null = null
 function initOrGetAudioBuffer(): Promise<AudioBuffer> {
   if (!audioBuffer) {
     return fetch("a1.wav")
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) =>
-        initOrGetAudioContext().then((context) =>
-          context.decodeAudioData(arrayBuffer),
-        ),
+        initOrGetAudioContext().then((context) => context.decodeAudioData(arrayBuffer)),
       )
       .then((newAudioBuffer) => {
-        audioBuffer = newAudioBuffer;
-        return audioBuffer;
-      });
+        audioBuffer = newAudioBuffer
+        return audioBuffer
+      })
   } else {
-    return Promise.resolve(audioBuffer);
+    return Promise.resolve(audioBuffer)
   }
 }
 
-async function playFrequencySample(
-  tone: Tone,
-  volume: number,
-  cancel?: boolean,
-): Promise<void> {
-  const localAudioContext = await initOrGetAudioContext();
-  const source = localAudioContext.createBufferSource();
-  source.buffer = await initOrGetAudioBuffer();
-  const gainNode = localAudioContext.createGain();
-  gainNode.gain.value = volume;
-  source.connect(gainNode);
-  gainNode.connect(localAudioContext.destination);
-  source.playbackRate.value = tone.freq / 220;
-  source.start();
-  tone.node = source;
-  playingTones[tone.index] = tone;
-  playingTonesChanged();
+async function playFrequencySample(tone: Tone, volume: number, cancel?: boolean): Promise<void> {
+  const localAudioContext = await initOrGetAudioContext()
+  const source = localAudioContext.createBufferSource()
+  source.buffer = await initOrGetAudioBuffer()
+  const gainNode = localAudioContext.createGain()
+  gainNode.gain.value = volume
+  source.connect(gainNode)
+  gainNode.connect(localAudioContext.destination)
+  source.playbackRate.value = tone.freq / 220
+  source.start()
+  tone.node = source
+  playingTones[tone.index] = tone
+  playingTonesChanged()
   if (cancel) {
     source.onended = () => {
-      noteOff(tone.index);
-    };
+      noteOff(tone.index)
+    }
   }
 }
 
 async function playFrequencyNative(tone: Tone, volume: number): Promise<void> {
-  const localAudioContext = await initOrGetAudioContext();
-  const oscillator = localAudioContext.createOscillator();
-  const gainNode = localAudioContext.createGain();
-  gainNode.gain.value = volume;
-  gainNode.connect(localAudioContext.destination);
-  oscillator.type = "square"; // TODO: make this configurable
-  oscillator.frequency.setValueAtTime(tone.freq, localAudioContext.currentTime);
-  oscillator.connect(gainNode);
-  oscillator.start();
-  tone.node = oscillator;
-  if (tone.index in playingTones) playingTones[tone.index].node.stop();
-  playingTones[tone.index] = tone;
-  playingTonesChanged();
+  const localAudioContext = await initOrGetAudioContext()
+  const oscillator = localAudioContext.createOscillator()
+  const gainNode = localAudioContext.createGain()
+  gainNode.gain.value = volume
+  gainNode.connect(localAudioContext.destination)
+  oscillator.type = "square" // TODO: make this configurable
+  oscillator.frequency.setValueAtTime(tone.freq, localAudioContext.currentTime)
+  oscillator.connect(gainNode)
+  oscillator.start()
+  tone.node = oscillator
+  if (tone.index in playingTones) playingTones[tone.index].node.stop()
+  playingTones[tone.index] = tone
+  playingTonesChanged()
 }
