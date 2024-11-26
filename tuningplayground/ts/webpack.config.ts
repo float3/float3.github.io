@@ -1,9 +1,9 @@
-import CopyPlugin from "copy-webpack-plugin";
-import TerserPlugin from "terser-webpack-plugin";
-import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
-import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
-import path from "path";
-import exp from "constants";
+import CopyPlugin from "copy-webpack-plugin"
+import TerserPlugin from "terser-webpack-plugin"
+import JsonMinimizerPlugin from "json-minimizer-webpack-plugin"
+import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin"
+import path from "path"
+import exp from "constants"
 
 module.exports = {
   module: {
@@ -38,12 +38,7 @@ module.exports = {
   target: "web",
   plugins: [
     new CopyPlugin({
-      patterns: [
-        "./src/chords.json",
-        "./src/chords.txt",
-        "./src/a1.wav",
-        "./src/sample.mid",
-      ],
+      patterns: ["./src/chords.json", "./src/chords.txt", "./src/a1.wav", "./src/sample.mid"],
       options: {
         concurrency: 100,
       },
@@ -74,4 +69,4 @@ module.exports = {
   experiments: {
     syncWebAssembly: true,
   },
-};
+}
