@@ -1,0 +1,27 @@
+[package]
+authors = ["hill <hill@hilll.dev>"]
+description = "expose my rust libraries to wasm"
+edition = "2021"
+license = "AGPL-3.0"
+name = "tuningplayground"
+repository = "https://github.com/float3/tuningplayground"
+version = "1.0.0"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["mini-alloc", "wasm"]
+console_error_panic_hook = ["dep:console_error_panic_hook"]
+mini-alloc = ["dep:mini-alloc"]
+wasm = ["dep:wasm-bindgen"]
+
+[dependencies]
+console_error_panic_hook = { version = "0.1.7", optional = true }
+mini-alloc = { version = "0.4.2", optional = true }
+wasm-bindgen = { version = "0.2.92", optional = true }
+tuning_systems = { path = "../tuning_systems" }
+keymapping = { path = "../keymapping" }
+
+# [dev-dependencies]
+# wasm-bindgen-test = { version = "0.3.41" }

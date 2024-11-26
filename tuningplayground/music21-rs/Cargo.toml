@@ -1,0 +1,20 @@
+[package]
+authors = ["hill <hill@hilll.dev>"]
+description = "a rust port of music21 (for now just the chord naming algorithm)"
+edition = "2021"
+keywords = ["music", "chords", "music21"]
+license = "LICENSE"
+name = "music21-rs"
+repository = "https://github.com/float3/tuningplayground"
+version = "0.0.1"
+
+[features]
+default = []
+
+[dependencies]
+itertools = "0.13.0"
+lazy_static = "1.5.0"
+tuning_systems = { path = "../tuning_systems" }
+
+# [dev-dependencies]
+# pyo3 = { version = "0.15", features = ["extension-module"] }

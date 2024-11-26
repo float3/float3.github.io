@@ -1,0 +1,31 @@
+# TODO
+// TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
+// TODO: different equal temeperaments?
+// TODO: arabic scales
+// TODO: visualise keyboard
+// TODO: japanese/chinese scales
+// TODO: MIDI file playing
+// TODO: calculate co primes for base size and let user choose one of them??
+// TODO: tell user about VPMK
+// TODO: add a record button to record and output midi
+// TODO: have tuning system with just_intonation but derrive half of the ratios from the reverse ratio of the first one so the perfect fifth also provides the perfect fourth and the major third also provides minor 6thi
+// TODO: turkish tuning
+// TODO: implement Midi player
+// TODO: implement TONE.js
+// TODO: usize vs u32
+// TODO: add bass clef
+// TODO: Fix visibility pub(crate) and fix tests maybe inline them per file
+// TODO: make better tests
+// TOOD: extend keymapping library
+// TODO: fix the keyboard numbers, for now using offset hack
+// TODO: fix transpose
+// TODO: fix keyboard offset
+// TODO: fix C10 being parsed as C1 by some part of the program
+// TODO: FIX LOOKUPTABLE GENERATION to use numbers instead of tones so we have enharmonic agnosticism
+// TODO: link to source code and to dev/master version of site
+// TODO: cache volume
+// TODO: generate embeds
+
+
+// TODO: LUT binary format, no hashmap just array
+// TODO: remove std

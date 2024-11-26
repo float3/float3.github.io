@@ -1,6 +1,8 @@
 on:
   push:
-    branches: ["master"]
+    branches:
+      - master
+      - dev
   workflow_dispatch:
 
 permissions:
@@ -21,11 +23,62 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
 
       - name: setup node
         uses: actions/setup-node@v4.1.0
         with:
-          node-version: 20
+          node-version: 21
+
+      - name: python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+
+      - name: dependencies
+        run: |
+          cd tuningplayground
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
+          sh rustup.sh --default-toolchain nightly --profile minimal -y
+          rustup component add rustfmt clippy --toolchain nightly
+          source "$HOME/.cargo/env"
+          rustup update
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
+
+      - name: lint
+        run: |
+          cd tuningplayground
+          ./lint.sh
+
+      - name: commit
+        run: |
+          cd tuningplayground
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add .
+          git diff --staged --quiet || git commit -m "lint"
+          git push || echo "No changes to commit"
+
+      - name: build
+        run: |
+          cd tuningplayground
+          echo "building master"
+          git fetch
+          git checkout master
+          ./build.sh prod
+          rm ./www/chords.json | true
+          rm ./www/163.bootstrap.js.LICENSE.txt | true
+          mv ./www ./www-master
+          echo "building dev"
+          git checkout dev
+          git pull
+          ./build.sh dev
+          rm ./www/chords.json | true
+          mv ./www ./www-dev
+          mv ./www-master ./www/
+          mkdir -p ./www/dev
+          mv ./www-dev/* ./www/dev/
 
       - name: build
         run: |
