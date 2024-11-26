@@ -413,3 +413,27 @@ audio::-webkit-media-controls-panel {
     transform: rotateX(0deg) rotateY(0deg) scale(1);
   }
 }
+
+[saved-theme="dark"] {
+
+  #interactiveSvg path:hover,
+  #interactiveSvg rect:hover {
+    filter: brightness(1.7);
+  }
+
+  .hovered {
+    filter: brightness(1.6);
+  }
+}
+
+[saved-theme="light"] {
+
+  #interactiveSvg path:hover,
+  #interactiveSvg rect:hover {
+    filter: brightness(0.5);
+  }
+
+  .hovered {
+    filter: brightness(0.6);
+  }
+}
