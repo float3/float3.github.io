@@ -1,0 +1,55 @@
+.light-out {
+    color: #0466e7;
+}
+
+.light-emitted {
+    color: #ffbc3f;
+}
+
+.integral {
+    color: #7be9ff;
+}
+
+.brdf {
+    color: #fe7fb3;
+}
+
+.light-in {
+    color: #dd6fff;
+}
+
+.irradiance {
+    color: #9dc141;
+}
+
+.reference {
+    color: #4d8dc3;
+}
+
+.container>* {
+    overflow: hidden;
+}
+
+@keyframes moveUpDown {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(var(--amplitude));
+    }
+}
+
+/* #interactiveSvg path,
+#interactiveSvg rect {
+    transform-origin: center;
+} */
+
+/* #interactiveSvg path:hover,
+#interactiveSvg rect:hover {
+    transform: scale(1.1);
+}
+
+.hovered {
+    transform: scale(1.05);
+} */

@@ -11,9 +11,7 @@ const config: QuartzConfig = {
     pageTitle: "hilll.dev",
     enableSPA: true,
     enablePopovers: true,
-    analytics: {
-      provider: "plausible",
-    },
+    analytics: null,
     locale: "en-US",
     baseUrl: "hilll.dev",
     ignorePatterns: ["private", "templates"],
