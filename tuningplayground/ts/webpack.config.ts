@@ -39,7 +39,6 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
-        "./src/index.html",
         "./src/chords.json",
         "./src/chords.txt",
         "./src/a1.wav",
