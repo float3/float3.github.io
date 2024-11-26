@@ -28,7 +28,8 @@ Misc
 - [rss feed](/index.xml)
 - [pgp](/plaintext/public-key.txt)
 - [source](https://github.com/float3/float3.github.io)
-- [old-site](https://float3.github.io/float3.github.io.old)
+- [old-site](/float3.github.io.new.old)
+- [old-old-site](/float3.github.io.old)
 
 Contact
 
