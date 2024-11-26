@@ -30,7 +30,7 @@ the concept of rewarding or punishing assumes agency, that we simply do not have
 I don't want to die today, I don't want to die tomorrow, therefore I will never want to die.
 ¬(I don't want to die today) ∧ ¬(I don't want to die tomorrow) → (I want to live forever (as long as p))
 
-## the middle path
+<!-- ## the middle path
 
 Just like not making a choice is also a choice,
-a third choice is just another (a second) seccond choice, nothing sepcial
+a third choice is just another (a second) seccond choice, nothing sepcial -->

@@ -28,7 +28,7 @@ this is some art i've made
 
 # 3D Scanning and Photogrammetry:
 
-[British Museum](@/blog/piracy-at-the-british-museum.md)
+[British Museum](/posts/piracy-at-the-british-museum.md)
 
 # Renders:
 
