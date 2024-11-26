@@ -47,6 +47,20 @@ jobs:
           rustup update
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
+      - name: cache venv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: tuningplayground/music21-rs/venv
+          key: ${{ runner.os }}-venv
+
+      - name: cache pycache
+        id: cache-pycache
+        uses: actions/cache@v4
+        with:
+          path: tuningplayground/music21-rs/__pycache__
+          key: ${{ runner.os }}-pycache
+
       - name: lint
         run: |
           cd tuningplayground
