@@ -6,7 +6,7 @@ date: 2024-11-26
 
 unity shader things i've learned over the years
 
-- [dark side of the moon fresnel, orthographic camera bug](#dark-side-of-the-moon-fresnel-orthographic-camera-bug)
+- [dark side of the moon fresnel, orthographic camera issue](#dark-side-of-the-moon-fresnel-orthographic-camera-issue)
 - [depth parallax](#depth-parallax)
 - [detect reflection probe rendering](#detect-reflection-probe-rendering)
 - [warnings](#warnings)
@@ -25,7 +25,7 @@ unity shader things i've learned over the years
 - [light calculations](#light-calculations)
 - [unity lighting macro usage example:](#unity-lighting-macro-usage-example)
 
-# dark side of the moon fresnel, orthographic camera bug
+# dark side of the moon fresnel, orthographic camera issue
 
 ![dark side of the moon](/misc/media/darkside-of-the-moon.png)
 
@@ -136,8 +136,6 @@ bool IsNan_float(float4 In)
 #else
 #define _WorldSpaceStereoCameraCenterPos _WorldSpaceCameraPos
 #endif
-
-//from kaj https://github.com/DarthShader/Kaj-Unity-Shaders/blob/master/Shaders/Kaj/KajCore.cginc#L1039-L1101
 
 //invert matrix
 float4x4 inverse(float4x4 input)
