@@ -1,5 +1,6 @@
 www/
 www-dev/
+stable/
 debug/
 target/
 Cargo.lock
