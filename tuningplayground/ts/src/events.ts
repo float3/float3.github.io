@@ -1,4 +1,7 @@
-import * as wasm from "wasm"
+let wasm: any
+import("wasm").then((module) => {
+  wasm = module
+})
 import { heldKeys, noteOn, noteOff } from "."
 import { stopAllTones } from "."
 import { markKey, markedButtons } from "./UI"

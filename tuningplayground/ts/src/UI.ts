@@ -1,4 +1,7 @@
-import * as wasm from "wasm"
+let wasm: any
+import("wasm").then((module) => {
+  wasm = module
+})
 import * as abcjs from "abcjs"
 import { _noteOn, markedKeys, noteOff, noteOn, playingTones, stopAllTones } from "."
 import { playMIDIFile, stopMIDIFile } from "./MIDI"
@@ -54,7 +57,7 @@ let midiFilePromise: Promise<ArrayBuffer> | null = null
 
 function initOrGetMidiFile(): Promise<ArrayBuffer> {
   if (!midiFilePromise) {
-    midiFilePromise = fetch("./sample.mid")
+    midiFilePromise = fetch("/piano/sample.mid")
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
         midiFile = buffer

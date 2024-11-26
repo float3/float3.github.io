@@ -45,6 +45,8 @@ float3 viewDir = !IsOrtho() ? normalize(_WorldSpaceCameraPos - i.worldPos.xyz) :
 
 # depth parallax
 
+the right one is mine, the left one is a common parallax shader
+
 ![depth parallax](/misc/media/depth_parallax.mp4)
 
 if you want to output correct fragment depth when doing parallax follow my example shader here:
