@@ -3,7 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function func() {
-    console.log("Hello, World!");
     const elements = document.querySelectorAll("#interactiveSvg path, #interactiveSvg rect");
     const groupMap = {};
 
