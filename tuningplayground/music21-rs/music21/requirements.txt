@@ -1,0 +1,8 @@
+chardet
+joblib
+jsonpickle
+matplotlib
+more_itertools
+numpy<2.0.0
+webcolors>=1.5
+requests
