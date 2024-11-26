@@ -3,14 +3,13 @@ title: "tuningplayground"
 date: 2024-01-10
 updated: 2024-11-25
 ---
-
   <style>
     :root {
       --white-key-height: 100px;
       --white-key-width: calc(var(--white-key-height) * (23 / 120));
       --black-key-width: calc(var(--white-key-width) * (15 / 23));
       --black-key-height: calc(var(--white-key-height) * (80 / 120));
-}
+    }
 
     .container {
       display: flex;
@@ -112,6 +111,7 @@ updated: 2024-11-25
           download="mozart_dies_irea.mid"
           >this one</a
         >
+        or [this one in case the other site goes down](/content/jm_mozdi.mid)
       </p>
       <div style="display: block">
         <input type="file" id="fileInput" accept=".midi,.mid" />
