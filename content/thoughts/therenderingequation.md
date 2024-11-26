@@ -138,5 +138,14 @@ To find
 <span style="color:#7be9ff">the integral within the unit hemisphere</span> of
 <span style="color:#dd6fff">the light coming from any given direction</span> multiplied by
 <span style="color:#fe7fb3">the chances of such light rays bouncing towards the viewer</span><sup><span style="color:#4d8dc3">1</span></sup> and also by
-<span style="color:#9dc141">the irradiance factor over the normal at the point</span>.<sup><span style="color:#4d8dc3">2</span>,<span style="color:#4d8dc3">3</span></sup>
+<span style="color:#9dc141">the cosine term/irradiance factor over the normal at the point</span>.<sup><span style="color:#4d8dc3">2</span></sup>
+<br></br>
+Note that <span style="color:#dd6fff">incoming light</span> is <span style="color:#0466e7">outgoing light</span> from a previous point, making the domain of the integral infinite and the equation recursive.
 
+
+<span style="color:#4d8dc3">
+1. <a href="https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function">Bidirectional reflectance distribution function</a> <br>
+2. <a href="https://en.wikipedia.org/wiki/Rendering_equation">https://en.wikipedia.org/wiki/Rendering_equation</a>
+</span>
+
+inspiration for this post: https://blog.chuckleplant.com/2017/05/28/light-shafts.html

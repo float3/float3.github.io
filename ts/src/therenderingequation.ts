@@ -1,6 +1,9 @@
 document.addEventListener("nav", () => {
     func();
+    console.log("nav event");
 });
+
+console.log("therenderingequation.ts");
 
 function func(): void {
     const elements: NodeListOf<SVGPathElement | SVGRectElement> = document.querySelectorAll("#interactiveSvg path, #interactiveSvg rect");
