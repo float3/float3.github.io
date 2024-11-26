@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -24,6 +24,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
         with:
+          token: ${{ secrets.TOKEN }}
           submodules: recursive
 
       - name: setup node
