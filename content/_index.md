@@ -9,7 +9,7 @@ tags:
 </div>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma.
-this is my place.
+this is my place. you can find me on social media: https://www.shadertoy.com/user/three
 
 Content
 
@@ -20,7 +20,6 @@ Content
 - [misc](/misc/)
 - [piano playground](/piano/)
 - [about](/about.md)
-
 
 Misc
 
