@@ -12,3 +12,5 @@ content/js
 content/misc/plaintext/blogs.txt
 content/misc/plaintext/graphics-resources.txt
 content/misc/plaintext/talks.txt
+content/piano/dev/*
+content/piano/stable/*
