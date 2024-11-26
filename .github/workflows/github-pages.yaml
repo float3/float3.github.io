@@ -79,6 +79,8 @@ jobs:
           mv ./www-master ./www/
           mkdir -p ./www/dev
           mv ./www-dev/* ./www/dev/
+          cd ..
+          mv tuningplayground/www/* content/tuningplayground/
 
       - name: build
         run: |
