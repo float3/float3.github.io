@@ -1,4 +1,4 @@
-const timeout = 5;
+const timeout = 0.25;
 
 function getRandomMovie(id: string, button: HTMLButtonElement): void {
 
@@ -22,8 +22,6 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
   const wheel = new SpinningWheel("wheel", moviesToWatch);
   wheel.drawWheel();
   wheel.spin();
-
-  //wait 5 seconds before showing the result
 
   setTimeout(() => {
     let randomMovie = moviesToWatch[Math.floor(Math.random() * moviesToWatch.length)];
@@ -80,7 +78,6 @@ class SpinningWheel {
   private segments: string[];
   private angle: number = 0;
   private baseSpeed: number = Math.PI / 16;
-  private spinTimeout: number = timeout;
   private currentSpinTime: number = 0;
   public spinTime: number = 0;
 
@@ -131,10 +128,9 @@ class SpinningWheel {
   rotateWheel() {
     this.currentSpinTime += 20;
     if (this.currentSpinTime >= this.spinTime * 1000) {
-      clearTimeout(this.spinTimeout);
       return;
     }
     this.drawWheel();
-    this.spinTimeout = setTimeout(() => this.rotateWheel(), 20);
+    setTimeout(() => this.rotateWheel(), 20);
   }
 }
