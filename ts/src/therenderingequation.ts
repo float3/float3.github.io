@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("nav", () => {
     func();
 });
 
-function func() {
-    const elements = document.querySelectorAll("#interactiveSvg path, #interactiveSvg rect");
-    const groupMap = {};
+function func(): void {
+    const elements: NodeListOf<SVGPathElement | SVGRectElement> = document.querySelectorAll("#interactiveSvg path, #interactiveSvg rect");
+    const groupMap: Record<string, (SVGPathElement | SVGRectElement)[]> = {};
 
     elements.forEach((element) => {
         const fillColor = window.getComputedStyle(element).fill;
@@ -30,11 +30,11 @@ function func() {
         const fillColor = window.getComputedStyle(element).fill;
 
         element.addEventListener("mouseenter", () => {
-            groupMap[fillColor].forEach((el) => el.classList.add("hovered"));
+            groupMap[fillColor]?.forEach((el) => el.classList.add("hovered"));
         });
 
         element.addEventListener("mouseleave", () => {
-            groupMap[fillColor].forEach((el) => el.classList.remove("hovered"));
+            groupMap[fillColor]?.forEach((el) => el.classList.remove("hovered"));
         });
     });
 }

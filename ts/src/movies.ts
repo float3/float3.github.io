@@ -39,7 +39,7 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
   }, timeout * 1000);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("nav", () => {
   let headings: NodeListOf<HTMLHeadingElement> =
     document.querySelectorAll("h1");
 

@@ -5,7 +5,7 @@ date: 2024-11-26
 ---
 
 <link href="./therenderingequation.css" rel="stylesheet" type="text/css">
-<script src="./therenderingequation.js"></script>
+<script src="/js/therenderingequation.js"></script>
 <div class="container">
 
 <svg id="interactiveSvg" width="701" height="761" viewBox="0 0 960 761" fill="none"
