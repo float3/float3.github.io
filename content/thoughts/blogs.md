@@ -1,6 +1,7 @@
 ---
 title: "blogs"
 updated: 1970-01-02
+date: 1970-01-02
 ---
 
 you can also find all these links [here](/plaintext/blogs.txt)
