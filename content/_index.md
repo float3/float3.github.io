@@ -1,6 +1,10 @@
 ---
 title: hilll.dev
+tags:
+  - garden
 ---
+
+<img src="./banner-light.png" height="500"/>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma.
 this is my place.

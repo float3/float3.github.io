@@ -20,12 +20,17 @@ body {
   font-synthesis: style;
 }
 
-img[src*="banner.svg"] {
+img[src*="banner-dark.png"],
+img[src*="banner-light.png"] {
   opacity: 0.8;
 }
 
-[saved-theme="dark"] body[data-slug="index"] img[src*="banner.svg"] {
-  filter: invert(100%);
+[saved-theme="dark"] body[data-slug="index"] img[src*="banner-light.png"] {
+  content: url("banner-dark.png");
+}
+
+[saved-theme="light"] body[data-slug="index"] img[src*="banner-dark.png"] {
+  content: url("banner-light.png");
 }
 
 body[data-slug="thoughts/craft"] {
@@ -186,7 +191,7 @@ audio::-webkit-media-controls-panel {
 
   --shadow: #1a1917;
   --bounce-light: #f5d7a6;
-  --timing-fn: cubic-bezier(0.455, 0.190, 0, 0.985);
+  --timing-fn: cubic-bezier(0.455, 0.19, 0, 0.985);
 
   body.animation-ready & {
     animation-play-state: running;
@@ -195,7 +200,7 @@ audio::-webkit-media-controls-panel {
   }
 
   [saved-theme="dark"] body.animation-ready & {
-    animation-duration: 0.5s;
+    animation-duration: 1.5s;
     animation-name: sunset;
   }
 
