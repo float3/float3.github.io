@@ -9,12 +9,75 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
+  - package-ecosystem: "npm"
+    directory: "/ts"
+    schedule:
+      interval: "weekly"
+    groups:
+      production-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "npm"
+    directory: "/tuningplayground/ts"
+    schedule:
+      interval: "weekly"
+    groups:
+      production-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
     groups:
       ci-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/tuningplayground"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/tuningplayground/keymapping"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/tuningplayground/music21-rs"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/tuningplayground/tuning_systems"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/tuningplayground/tuningplayground"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
         applies-to: "version-updates"
         patterns:
           - "*"

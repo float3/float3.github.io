@@ -12,8 +12,7 @@ rm -rf tuningplayground/www tuningplayground/www-dev
           ./build.sh dev
           rm ./www/chords.json | true
           rm ./www/chords.txt | true
-          mv ./www ./debug
-          mv ./debug ../content/piano/
+          mv ./www ../content/piano/debug
           mv ./stable ../content/piano/tuningplayground/
           mv ../content/piano/tuningplayground/chords.* ../content/piano/
 cd ..
