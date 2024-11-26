@@ -13,12 +13,13 @@ this is my place.
 
 Content
 
-- [blog](/blog/index.md)
-- [thoughts](/thoughts/index.md)
+- [blog](/blog/)
+- [thoughts](/thoughts/)
 - [projects](/projects.md)
 - [art](/art.md)
-- [notes](/notes/index.md)
-- [piano playground](/tuningplayground)
+- [notes](/notes/)
+- [misc](/misc/)
+- [piano playground](/tuningplayground/)
 - [about](/about.md)
 
 
