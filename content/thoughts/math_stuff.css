@@ -1,8 +1,8 @@
-.light-out {
+.light-out .PAB {
     color: #0466e7;
 }
 
-.light-emitted {
+.light-emitted .PBA {
     color: #ffbc3f;
 }
 
@@ -10,11 +10,11 @@
     color: #7be9ff;
 }
 
-.brdf {
+.brdf .PA {
     color: #fe7fb3;
 }
 
-.light-in {
+.light-in .PB {
     color: #dd6fff;
 }
 
