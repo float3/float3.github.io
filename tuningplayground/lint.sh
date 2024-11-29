@@ -24,6 +24,14 @@ wasm-pack build --target web --dev
 
 cd ../ts
 npm update
-npm audit fix --force
+npm audit fix
 npx prettier . --write
 # npx eslint . --fix
+
+cd ../../
+npm update
+npm audit fix
+
+cd ts
+npm update
+npm audit fix
