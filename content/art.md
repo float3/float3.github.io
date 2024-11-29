@@ -1,4 +1,3 @@
-
 ---
 title: "art"
 sort_by: "title"

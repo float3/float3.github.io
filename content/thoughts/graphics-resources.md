@@ -1,7 +1,9 @@
 ---
-title: "graphics resources"
+title: graphics resources
 updated: 1970-01-02
 date: 1970-01-02
+tags:
+  - graphics
 ---
 
 you can also find all these links [here](/plaintext/graphics-resources.txt)

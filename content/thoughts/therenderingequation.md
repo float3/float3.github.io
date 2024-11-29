@@ -1,7 +1,9 @@
 ---
-title: "rendering equation"
+title: rendering equation
 updated: 2024-11-26
 date: 2024-11-26
+tags:
+  - graphics
 ---
 
 <link href="./therenderingequation.css" rel="stylesheet" type="text/css">

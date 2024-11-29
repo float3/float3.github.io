@@ -1,7 +1,9 @@
 ---
-title: "Playing East"
+title: Playing East
 date: 2024-08-30
 updated: 2023-08-31
+tags:
+  - writing
 ---
 
 It was 33°C outside, the late afternoon sun beginning to wane as I stepped into the cool, 24°C air-conditioned third floor of the 이수보드게임카페, Isu Board Game Café, nestled south of the Han River. I had just dragged my luggage all the way from Yongsan Station to Isu, then up the narrow stairs of an unremarkable building. The journey had been long, but this—this was the beginning of something new.
