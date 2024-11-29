@@ -1,14 +1,15 @@
 ---
 title: rendering equation
 updated: 2024-11-26
-date: 2024-11-26
+date: 2024-11-29
 tags:
   - graphics
+  - math
+  - physics
 ---
 
-<link href="./therenderingequation.css" rel="stylesheet" type="text/css">
+<link href="./math_stuff.css" rel="stylesheet" type="text/css">
 <script src="/js/therenderingequation.js"></script>
-<div class="container">
 
 <svg id="interactiveSvg" width="701" height="761" viewBox="0 0 960 761" fill="none"
     xmlns="http://www.w3.org/2000/svg">
@@ -119,6 +120,7 @@ tags:
         fill="#DD6FFF" />
 </svg>
 
+<div class="container">
 
 $$
 \begin{equation}
