@@ -1,5 +1,5 @@
 ---
-title: rendering equation
+title: the rendering equation
 updated: 2024-11-26
 date: 2024-11-29
 tags:
