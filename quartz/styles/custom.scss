@@ -20,17 +20,17 @@ body {
   font-synthesis: style;
 }
 
-img[src*="banner-dark.png"],
-img[src*="banner-light.png"] {
+img[src*="/misc/media/banner-dark.png"],
+img[src*="/misc/media/banner-light.png"] {
   opacity: 0.8;
 }
 
-[saved-theme="dark"] body[data-slug="index"] img[src*="banner-light.png"] {
-  content: url("banner-dark.png");
+[saved-theme="dark"] body[data-slug="index"] img[src*="/misc/media/banner-light.png"] {
+  content: url("/misc/media/banner-dark.png");
 }
 
-[saved-theme="light"] body[data-slug="index"] img[src*="banner-dark.png"] {
-  content: url("banner-light.png");
+[saved-theme="light"] body[data-slug="index"] img[src*="/misc/media/banner-dark.png"] {
+  content: url("/misc/media/banner-light.png");
 }
 
 body[data-slug="thoughts/craft"] {

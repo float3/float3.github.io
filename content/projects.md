@@ -1,4 +1,3 @@
-
 ---
 title: "projects"
 sort_by: "title"

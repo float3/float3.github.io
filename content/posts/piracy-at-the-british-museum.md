@@ -1,7 +1,9 @@
 ---
-title: "Piracy at the British Museum"
+title: Piracy at the British Museum
 date: 2023-05-14
 updated: 2023-05-23
+tags:
+  - art
 ---
 
 ## Visiting the British Museum

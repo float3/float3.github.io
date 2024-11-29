@@ -1,7 +1,9 @@
 ---
-title: "tuningplayground"
+title: tuningplayground
 date: 2024-01-10
 updated: 2024-11-25
+tags:
+  - music
 ---
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">
         <noscript> hey this page needs javascript</noscript>
