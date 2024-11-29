@@ -155,7 +155,11 @@ the same seems to be true for えい → えー
 endings in ㅅ ㅆ ㅊ ㅎ are pronounced "t"
 endings in ㅇ are pronounced "ng"
 
-## Chines
+## Chinese
+
+### Mandarin
 ![](misc/media/chinese_sounds.png)
+
+### Hokkien
 
 https://en.m.wikipedia.org/wiki/Hokkien#Computing
