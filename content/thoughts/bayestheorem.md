@@ -1,5 +1,5 @@
 ---
-title: bayesian theorem
+title: bayes theorem
 date: 2024-11-29
 tags:
   - math
