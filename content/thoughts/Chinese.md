@@ -142,10 +142,18 @@ https://en.m.wikipedia.org/wiki/Hokkien#Computing
 
 ## Grammar
 
-X不X is a common structure in Chinese, for example:
+### X不X/X不XY
+
+X不X is a common question structure in Chinese, for example:
 - 有沒有 yǒu méiyǒu
 - 知道不知道 zhīdào bù zhīdào
 - 喜歡不喜歡 xǐhuān bù xǐhuān
 - 會不會 huì bù huì
+
+if X is actually two characters it can be shortened as such:
+
+XY不XY -> X不XY
+- 知不知道 zhī bù zhīdào
+- 喜不喜歡 xǐ bù xǐhuān
 
 ## Weird Hanzi
