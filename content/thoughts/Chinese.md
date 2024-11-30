@@ -144,7 +144,7 @@ https://en.m.wikipedia.org/wiki/Hokkien#Computing
 
 X不X is a common structure in Chinese, for example:
 - 有沒有 yǒu méiyǒu
-- 知不知道 zhīdào bù zhīdào
+- 知道不知道 zhīdào bù zhīdào
 - 喜歡不喜歡 xǐhuān bù xǐhuān
 - 會不會 huì bù huì
 
