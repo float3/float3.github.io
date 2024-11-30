@@ -5,13 +5,13 @@ tags:
   - language
   - korean
 ---
-- [Korean](#korean)
-  - [Vowels](#vowels)
-    - [Problem Vowels](#problem-vowels)
-  - [Consonants](#consonants)
-    - [Problem Consonants](#problem-consonants)
+- [Vowels](#vowels)
+  - [Problem Vowels](#problem-vowels)
+- [Consonants](#consonants)
+  - [Problem Consonants](#problem-consonants)
+- [Accents](#accents)
+- [Jeju](#jeju)
 
-# Korean
 ## Vowels
 |    Hangul    |  ㅏ   |  ㅐ   |  ㅑ   |  ㅒ   |  ㅓ   |  ㅔ   |  ㅕ   |  ㅖ   |  ㅗ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅛ   |  ㅜ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅠ   |  ㅡ   |  ㅢ   |  ㅣ   |
 | :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -36,3 +36,10 @@ tags:
 
 endings in ㅅ ㅆ ㅊ ㅎ are pronounced "t"
 endings in ㅇ are pronounced "ng"
+
+## Accents
+
+In some regional Korean accents, the polite ending "yo" (요) can be pronounced as "ye" (예). For example:
+안녕하세요 → 안녕하세예
+
+## Jeju

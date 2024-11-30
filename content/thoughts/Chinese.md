@@ -16,6 +16,7 @@ tags:
     - [phonetic reduction](#phonetic-reduction)
     - [dropping initials in compound words](#dropping-initials-in-compound-words)
 - [Hokkien](#hokkien)
+- [Grammar](#grammar)
 - [Weird Hanzi](#weird-hanzi)
 
 
@@ -138,5 +139,13 @@ for example:
 ## Hokkien
 
 https://en.m.wikipedia.org/wiki/Hokkien#Computing
+
+## Grammar
+
+X不X is a common structure in Chinese, for example:
+- 有沒有 yǒu méiyǒu
+- 知不知道 zhīdào bù zhīdào
+- 喜歡不喜歡 xǐhuān bù xǐhuān
+- 會不會 huì bù huì
 
 ## Weird Hanzi
