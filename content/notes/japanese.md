@@ -4,7 +4,7 @@ date: 2024-11-30
 updated: 2024-12-05
 tags:
   - language
-  - Japanese
+  - japanese
 ---
 - [Kana](#kana)
   - [Archaic Kana](#archaic-kana)
