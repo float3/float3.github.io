@@ -33,7 +33,7 @@ export default {
       title: "探索",
     },
     footer: {
-      createdWith: "使用以下創建",
+      createdWith: "Created with",
     },
     graph: {
       title: "關係圖譜",

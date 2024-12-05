@@ -11,8 +11,8 @@ this is my place. you can find me on social media: https://www.shadertoy.com/use
 
 Content
 
-- [posts](/posts/)
-- [thoughts](/thoughts/)
+- [blog](/blog/)
+- [notes](/notes/)
 - [projects](/projects.md)
 - [art](/art.md)
 - [misc](/misc/)

@@ -10,7 +10,8 @@ html {
   width: 100vw;
 }
 
-body {
+body,
+section {
   margin: 0;
   box-sizing: border-box;
   background-color: var(--light);
@@ -89,7 +90,7 @@ a {
     line-height: 1.4rem;
 
     &:has(> img) {
-      background-color: none;
+      background-color: transparent;
       border-radius: 0;
       padding: 0;
     }
@@ -103,7 +104,7 @@ a {
 
   &.external .external-icon {
     height: 1ex;
-    margin: 0 0.2em;
+    margin: 0 0.15em;
 
     >path {
       fill: var(--dark);
@@ -567,7 +568,7 @@ div:has(> .overflow) {
 
 ul.overflow,
 ol.overflow {
-  max-height: 350px;
+  max-height: 100%;
   overflow-y: auto;
 
   // clearfix
