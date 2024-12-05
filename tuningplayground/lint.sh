@@ -12,6 +12,7 @@ python3 -m test
 python3 -m generate_chords
 
 cd ../
+cargo upgrade -i allow
 cargo update --workspace
 cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
 cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
@@ -20,6 +21,7 @@ cargo check --all-targets --all-features --workspace
 cargo test --all-targets --all-features --workspace
 
 cd ./tuningplayground
+cargo upgrade -i allow
 wasm-pack build --target web --dev
 
 cd ../ts
