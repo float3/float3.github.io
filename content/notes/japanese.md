@@ -128,22 +128,22 @@ tags:
 ### [ん](https://en.wikipedia.org/wiki/%E3%82%93 "ん")
 the pronounciation of ん changes:
 These are a few of the ways it can change:
--[n] (before n, t, d, r, ts, and z)
--[m] (before m, p and b)
--[ŋ] (before k and g)
--[ɲ] (before ni, ch and j)
--[ɴ] (at the end of utterances)[a]
--[ɯ͍̃] (before vowels, palatal approximants (y), consonants h, f, s, sh and w)
--[ĩ] (after the vowel i if another vowel, palatal approximant or consonant f, s, sh, h or w follows
+- n (before n, t, d, r, ts, and z)
+- m (before m, p and b)
+- ŋ (before k and g)
+- ɲ (before ni, ch and j)
+- ɴ (at the end of utterances)[a]
+- ɯ͍̃ (before vowels, palatal approximants (y), consonants h, f, s, sh and w)
+- ĩ (after the vowel i if another vowel, palatal approximant or consonant f, s, sh, h or w follows
 
 ### おう/いえ
 
-a sequence of おう becomes おー
-so
-(き)のう as in 昨日 is pronounced きのー
-行こう 行こー
-会おう あおー
-unless the お is the core vowel like in 匂う(におう) it won’t be におー
+a sequence of おう becomes おー \
+so \
+(き)のう as in 昨日 is pronounced きのー \
+行こう 行こー \
+会おう あおー \
+unless the お is the core vowel like in 匂う(におう) it won’t be におー \
 
 the same is true for えい → えー
 
@@ -177,12 +177,14 @@ for some reason 一ヶ is pronounced 一カ
     - **はし (hashi)**: Bridge or chopsticks (context-dependent)
     - **はっし (hasshi)**: Abbreviation of 発信 (_hasshin_, transmission)
     - **はっしー (hasshī)**: A nickname, often informal or casual.
+  
+this is important for haikus, tanka and Pitch Accent and sometimes japanese music
 
 ### w kana
 
 when pronouncing some kana that start with a w speakers only pronounce the vowel
 
-を　ー＞　お
+を　ー＞　お \
 ゑ　ー＞　え
 
 but
