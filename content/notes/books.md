@@ -1,6 +1,6 @@
 ---
 title: "books"
-updated: 1970-01-02
+date: 1970-01-02
 ---
 
 Books I'm currently reading
