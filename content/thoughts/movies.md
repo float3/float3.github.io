@@ -149,6 +149,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] The Revenant (2015) (2024-11-17)
 - [x] Fritz the Cat (1972) (2024-11-24)
 - [x] Heavy Traffic (1973) (2024-11-24)
+- [x] BlacKkKlansman (2018) (2024-12-01) 
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
