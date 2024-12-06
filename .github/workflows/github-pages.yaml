@@ -67,16 +67,15 @@ jobs:
 
       - name: commit
         run: |
-          cd tuningplayground
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add .
+          git add -A
           git diff --staged --quiet || git commit -m "lint"
           git push || echo "No changes to commit"
 
       - name: build
         run: |
-          sh build.sh
+          sh ./build.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
