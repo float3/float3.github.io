@@ -63,7 +63,7 @@ jobs:
 
       - name: lint
         run: |
-          ./fullupdate.sh
+          ./update.sh
 
       - name: commit
         run: |
