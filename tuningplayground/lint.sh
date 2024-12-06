@@ -25,15 +25,15 @@ cargo upgrade -i allow
 wasm-pack build --target web --dev
 
 cd ../ts
-npm update
-npm audit fix
-npx prettier . --write
-# npx eslint . --fix
+pnpm update
+pnpm audit fix
+pnpx prettier . --write
+# pnpx eslint . --fix
 
 cd ../../
-npm update
-npm audit fix
+pnpm update
+pnpm audit fix
 
 cd ts
-npm update
-npm audit fix
+pnpm update
+pnpm audit fix

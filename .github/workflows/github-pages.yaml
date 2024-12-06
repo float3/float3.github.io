@@ -63,8 +63,7 @@ jobs:
 
       - name: lint
         run: |
-          cd tuningplayground
-          ./lint.sh
+          ./fullupdate.sh
 
       - name: commit
         run: |

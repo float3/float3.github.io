@@ -1,0 +1,48 @@
+[package]
+name = "textprocessing"
+version = "1.0.0"
+edition = "2021"
+authors = ["hill <hill@hilll.dev>"]
+description = "expose some text processing functions to wasm"
+license = "AGPL-3.0"
+repository = "https://github.com/float3/textprocessing"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = ["mini-alloc", "wasm"]
+console_error_panic_hook = ["dep:console_error_panic_hook"]
+mini-alloc = ["dep:mini-alloc"]
+wasm = ["dep:wasm-bindgen"]
+
+[dependencies]
+character_converter = "2.1.5"
+chinese-number = "0.7.7"
+console_error_panic_hook = { version = "0.1.7", optional = true }
+japanese = "0.1.2"
+mini-alloc = { version = "0.4.2", optional = true }
+pinyin_zhuyin = "0.2.0"
+wasm-bindgen = { version = "0.2.92", optional = true }
+
+[profile.release]
+codegen-units = 1
+debug = false
+debug-assertions = false
+incremental = true
+lto = true
+opt-level = 3
+overflow-checks = false
+panic = "unwind"
+rpath = false
+split-debuginfo = "off"
+strip = "symbols"
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ['-3']
+
+[package.metadata.wasm-pack.profile.release.wasm-bindgen]
+debug-js-glue = false
+demangle-name-section = false
+dwarf-debug-info = false
+omit-default-module-path = false

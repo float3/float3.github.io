@@ -1,10 +1,7 @@
-let wasm: any
-import("wasm").then((module) => {
-  wasm = module
-})
 import * as abcjs from "abcjs"
-import { _noteOn, markedKeys, noteOff, noteOn, playingTones, stopAllTones } from "."
-import { playMIDIFile, stopMIDIFile } from "./MIDI"
+import { _noteOn, markedKeys, noteOff, noteOn, playingTones, stopAllTones } from "./index.js"
+import { playMIDIFile, stopMIDIFile } from "./MIDI.js"
+import { wasm } from "./index.js"
 
 const octaveSize = document.getElementById("octaveSize") as HTMLInputElement
 const stepSize = document.getElementById("stepSize") as HTMLInputElement
@@ -100,7 +97,7 @@ function fileInputChange(event: Event): Promise<void> {
 
 function playMarkedKeys(): void {
   markedKeys.forEach((note) => _noteOn(note, undefined, true))
-  playingTonesChanged
+  playingTonesChanged()
 }
 
 function sharedMarkedKeys(): void {
@@ -116,7 +113,7 @@ export function play(): void {
 }
 
 export function DOMContentLoaded(): void {
-  handleTuningSelectChange
+  handleTuningSelectChange()
 }
 
 export function handleTuningSelectChange(): void {

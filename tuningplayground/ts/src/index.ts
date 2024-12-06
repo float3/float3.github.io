@@ -1,4 +1,4 @@
-let wasm: any
+export let wasm: typeof import("wasm")
 import("wasm").then((module) => {
   wasm = module
   wasm
@@ -18,9 +18,9 @@ import("wasm").then((module) => {
     })
     .catch(console.error)
 })
-import { Tone, createTone } from "./Tone"
-import { requestMIDI } from "./MIDI"
-import { keydown, keyup, visibilityChange, onload } from "./events"
+import { Tone, createTone } from "./Tone.js"
+import { requestMIDI } from "./MIDI.js"
+import { keydown, keyup, visibilityChange, onload } from "./events.js"
 import {
   playingTonesChanged,
   keyActive,
@@ -32,7 +32,7 @@ import {
   tranposeValue,
   volumeValue,
   // linkInputChange,
-} from "./UI"
+} from "./UI.js"
 
 document.addEventListener("DOMContentLoaded", DOMContentLoaded)
 document.addEventListener("visibilitychange", visibilityChange)
