@@ -1,6 +1,6 @@
-import { noteOn, noteOff } from "."
+import { noteOn, noteOff } from "./index.js"
 import { Midi } from "@tonejs/midi"
-import { midiMultiplier } from "./config"
+import { midiMultiplier } from "./config.js"
 
 export function requestMIDI(): void {
   if (navigator.requestMIDIAccess) {

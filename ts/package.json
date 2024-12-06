@@ -1,5 +1,9 @@
 {
   "devDependencies": {
-    "typescript": "^5.7.2"
+    "@eslint/js": "^9.16.0",
+    "eslint": "^9.16.0",
+    "globals": "^15.13.0",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.17.0"
   }
 }

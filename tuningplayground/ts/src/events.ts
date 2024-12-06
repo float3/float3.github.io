@@ -1,10 +1,7 @@
-let wasm: any
-import("wasm").then((module) => {
-  wasm = module
-})
-import { heldKeys, noteOn, noteOff } from "."
-import { stopAllTones } from "."
-import { markKey, markedButtons } from "./UI"
+import { heldKeys, noteOn, noteOff } from "./index.js"
+import { stopAllTones } from "./index.js"
+import { markKey, markedButtons } from "./UI.js"
+import { wasm } from "./index.js"
 
 export function visibilityChange(): void {
   if (document.hidden) {

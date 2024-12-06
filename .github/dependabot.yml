@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pnpm"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -9,7 +9,7 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pnpm"
     directory: "/ts"
     schedule:
       interval: "weekly"
@@ -18,8 +18,17 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "npm"
+  - package-ecosystem: "pnpm"
     directory: "/tuningplayground/ts"
+    schedule:
+      interval: "weekly"
+    groups:
+      production-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "pnpm"
+    directory: "/textprocessing/ts"
     schedule:
       interval: "weekly"
     groups:
@@ -74,6 +83,15 @@ updates:
           - "*"
   - package-ecosystem: "cargo"
     directory: "/tuningplayground/tuningplayground"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/textprocessing"
     schedule:
       interval: "weekly"
     groups:

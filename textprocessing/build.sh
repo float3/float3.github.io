@@ -13,7 +13,7 @@ else
 fi
 
 rm -rf www
-cd ./tuningplayground
+cd ./textprocessing
 wasm-pack build --target web $MODE $ARGS
 cd ../ts
 pnpm install
