@@ -18,4 +18,5 @@ wasm-pack build --target web $MODE $ARGS
 cd ../ts
 pnpm install
 npx tsc
+pnpm install -D webpack-cli
 pnpx webpack --mode $WEBPACK_MODE
