@@ -4,8 +4,8 @@ node() {
     pnpx npm-upgrade
     pnpm update
     pnpm audit fix
-    pnpx prettier . --write
-    pnpx eslint . --fix
+    pnpx prettier $1 --write
+    pnpx eslint $1 --fix
 }
 
 cargo() {
@@ -38,19 +38,19 @@ cd ../tuningplayground
 wasm-pack build --target web --dev
 
 cd $current_path
-node
+node quartz
 
 cd ./ts
-node
+node src
 
 cd ../tuningplayground/
 cargo
 
 cd ./ts
-node
+node src
 
 cd ../tuningplayground
 cargo
 
 cd ../../textprocessing/ts
-node
+node src
