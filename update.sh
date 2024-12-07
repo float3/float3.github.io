@@ -52,5 +52,5 @@ node src
 cd ../tuningplayground
 cargo
 
-cd ../../textprocessing/ts
-node src
+# cd ../../textprocessing/ts
+# node src
