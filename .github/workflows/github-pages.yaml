@@ -65,7 +65,7 @@ jobs:
 
       - name: lint
         run: |
-          sh ./update.sh
+          bash ./update.sh
 
       - name: commit
         run: |
@@ -77,7 +77,7 @@ jobs:
 
       - name: build
         run: |
-          sh ./build.sh
+          bash ./build.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
