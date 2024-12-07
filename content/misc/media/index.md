@@ -14,6 +14,8 @@ tags:
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
 [helmet_guy.mp4](/misc/media/helmet_guy.mp4) \
+[hiragana-gogen.pdf](/misc/media/hiragana-gogen.pdf) \
+[katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
 [PXL_20241016_102737105.RESTORED.jpg](/misc/media/PXL_20241016_102737105.RESTORED.jpg)
