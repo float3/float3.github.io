@@ -148,14 +148,14 @@ These are a few of the ways it can change:
 - ɯ͍̃ (before vowels, palatal approximants (y), consonants h, f, s, sh and w)
 - ĩ (after the vowel i if another vowel, palatal approximant or consonant f, s, sh, h or w follows
 
-### おう/いえ
+### おう/えい
 
 a sequence of おう becomes おー \
 so \
 (き)のう as in 昨日 is pronounced きのー \
 行こう 行こー \
 会おう あおー \
-unless the お is the core vowel like in 匂う(におう) it won’t be におー \
+unless the お is the core vowel like in 匂う(におう) it won’t be におー
 
 the same is true for えい → えー
 
