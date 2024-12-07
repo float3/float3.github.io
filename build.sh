@@ -12,8 +12,7 @@ mv ./www ./stable
 
 echo "building dev"
 ./build.sh dev
-# rm ./www/chords.json | true
-# rm ./www/chords.txt | true
+rm ./www/chords.json ./www/chord.txt | true
 mv ./www ../content/piano/debug
 mv ./stable ../content/piano/tuningplayground/
 mv ../content/piano/tuningplayground/chords.* ../content/piano/
