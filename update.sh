@@ -4,6 +4,7 @@ node_up() {
     pnpx npm-upgrade
     pnpm update
     pnpm audit fix
+    pnpm install
     pnpx prettier $1 --write
     pnpx eslint $1 --fix
 }
@@ -38,7 +39,10 @@ cd ../tuningplayground
 wasm-pack build --target web --dev
 
 cd $current_path
-node_up quartz
+pnpx npm-upgrade
+pnpm update
+pnpm audit fix
+pnpm install
 
 cd ./ts
 node_up src
