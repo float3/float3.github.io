@@ -14,7 +14,12 @@ tags:
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
 [helmet_guy.mp4](/misc/media/helmet_guy.mp4) \
+[hiragana-1.png](/misc/media/hiragana-1.png) \
+[hiragana-2.png](/misc/media/hiragana-2.png) \
+[hiragana-3.png](/misc/media/hiragana-3.png) \
 [hiragana-gogen.pdf](/misc/media/hiragana-gogen.pdf) \
+[katakana-1.png](/misc/media/katakana-1.png) \
+[katakana-2.png](/misc/media/katakana-2.png) \
 [katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
