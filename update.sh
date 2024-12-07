@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-node() {
+node_up() {
     pnpx npm-upgrade
     pnpm update
     pnpm audit fix
@@ -8,7 +8,7 @@ node() {
     pnpx eslint $1 --fix
 }
 
-cargo() {
+cargo_up() {
     cargo upgrade -i allow
     cargo update --workspace
     cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
@@ -40,18 +40,16 @@ wasm-pack build --target web --dev
 cd $current_path
 
 cd ./ts
-node src
+node_up src
 
 cd ../tuningplayground/
-cargo
+cargo_up
 
 cd ./ts
-node src
-
-echo test
+node_up src
 
 cd ../tuningplayground
-cargo
+cargo_up
 
 # cd ../../textprocessing/ts
-# node src
+# node_up src
