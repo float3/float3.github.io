@@ -48,6 +48,8 @@ cargo
 cd ./ts
 node src
 
+echo test
+
 cd ../tuningplayground
 cargo
 
