@@ -25,4 +25,4 @@ cd ..
 sh ./scripts/collect_links.sh
 
 pnpm install
-pnpx quartz build
+npx quartz build
