@@ -1,6 +1,9 @@
 ---
 title: "books"
 date: 1970-01-02
+tags:
+  - list
+  - reading
 ---
 
 Books I'm currently reading
@@ -65,6 +68,7 @@ Books I'm currently reading
 - [x] Harry Potter and the Methods of Rationality
 - [x] Three Worlds Collide
 - [x] A Girl corrupted by the Internet is the Summoned Hero
+- [x] The Waves, Arisen 
 - [ ] Unsong
 - [-] There is no Antimemetics Department
 - [ ] Flatland

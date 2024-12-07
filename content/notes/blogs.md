@@ -2,11 +2,21 @@
 title: "blogs"
 updated: 1970-01-02
 date: 1970-01-02
+tags:
+  - list
+  - graphics
+  - friends
+  - programming
+  - fp
 ---
 
 you can also find all these links [here](/plaintext/blogs.txt)
 
 blogs I like
+
+## Misc
+
+https://www.wheresyoured.at/
 
 ## Friends
 

@@ -2,6 +2,8 @@
 title: "IPC - a programmers observations on Inter Person Communication"
 date: 2023-02-23
 updated: 2024-02-23
+tags:
+  - programming
 ---
 
 <style>
@@ -43,12 +45,12 @@ here are a couple of other examples and what types they would expect,
 
 <pre><code>
 |----------------------------------------------|-------------------------|-----------------------|
-| Question                                     | Expected Type           | Available Conversions |
-|----------------------------------------------|-------------------------|-----------------------|
-| "do you still want this, or can I eat this?" | `Tuple&lt;Boolean,Boolean>`| `Boolean`             |
-| "do you want A, B or C"                      | `Enum(A,B,C)`           | `Integer`             |
-| "A or B"                                     | `Enum(A,B)`             | `Boolean, Integer`    |
-|----------------------------------------------|-------------------------|-----------------------|
+| Question                                       | Expected Type               | Available Conversions   |
+| ---------------------------------------------- | --------------------------- | ----------------------- |
+| "do you still want this, or can I eat this?"   | `Tuple&lt;Boolean,Boolean>` | `Boolean`               |
+| "do you want A, B or C"                        | `Enum(A,B,C)`               | `Integer`               |
+| "A or B"                                       | `Enum(A,B)`                 | `Boolean, Integer`      |
+| ---------------------------------------------- | -------------------------   | ----------------------- |
 </code></pre>
 
 ### Value/Sign mismatch

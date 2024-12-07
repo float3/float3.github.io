@@ -2,6 +2,9 @@
 title: "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
 date: 2024-02-14
 updated: 2023-02-14
+tags:
+  - steamvr
+  - vr
 ---
 
 This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara

@@ -7,7 +7,8 @@ title: hilll.dev
 </div>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma, I don't negotiate with terrorists and I don't respond to blackmail. \
-this is my place. you can find me on social media: \ https://www.shadertoy.com/user/three
+this is my place. you can find me on social media: \ 
+https://www.shadertoy.com/user/three
 
 Content
 
@@ -29,6 +30,8 @@ Misc
 
 Contact
 
+- [github://float3](https://github.com/float3)
+- [gitlab://float3](https://gitlab.com/float3)
 - [mail](mailto:contact%40hilll.dev)
 <!--- [i2p Mail](mailto:hill%40mail.i2p)
 - irc: hill on [irc.rizon.net](https://rizon.net/chat)-->

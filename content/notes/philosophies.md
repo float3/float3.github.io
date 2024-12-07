@@ -2,6 +2,8 @@
 title: "Philosophies"
 date: 2023-03-03
 updated: 2024-03-03
+tags:
+  - writing
 ---
 
 here I put things that I wanna write down but that are too small to have their own blog post

@@ -2,6 +2,8 @@
 title: "food"
 updated: 1970-01-02
 date: 2024-11-20
+tags:
+  - list
 ---
 
 restaurants I like \
