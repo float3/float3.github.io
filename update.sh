@@ -28,12 +28,12 @@ cd tuningplayground/music21-rs/music21
 git pull origin master
 
 cd ..
-python3.13 -m venv venv
+python -m venv venv
 source venv/bin/activate
-pip3.13 install -r music21/requirements.txt
-pip3.13 install music21
-python3.13 -m test
-python3.13 -m generate_chords
+pip install -r music21/requirements.txt
+pip install music21
+python -m test
+python -m generate_chords
 
 cd ../tuningplayground
 wasm-pack build --target web --dev
