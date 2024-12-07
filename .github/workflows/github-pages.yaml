@@ -47,6 +47,8 @@ jobs:
           rustup update
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
 
+          npm install -g pnpm
+
       - name: cache venv
         id: cache-venv
         uses: actions/cache@v4
