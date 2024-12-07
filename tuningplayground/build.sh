@@ -19,4 +19,4 @@ cd ../ts
 pnpm install
 npx tsc
 pnpm install -D webpack-cli
-pnpx webpack --mode $WEBPACK_MODE
+npx webpack --mode $WEBPACK_MODE
