@@ -27,16 +27,16 @@ cd tuningplayground/music21-rs/music21
 git pull origin master
 
 cd $current_path
-node()
+node
 
 cd ./ts
-node()
+node
 
 cd ../tuningplayground/ts
-node()
+node
 
 cd ../../textprocessing/ts
-node()
+node
 
 cd $current_path
 
@@ -49,10 +49,10 @@ pip3 install music21
 python3 -m test
 python3 -m generate_chords
 
-cargo()
+cargo
 
 cd ../tuningplayground
-cargo()
+cargo
 wasm-pack build --target web --dev
 
 
