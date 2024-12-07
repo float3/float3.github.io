@@ -1,10 +1,10 @@
-const CopyPlugin = require("copy-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const JsonMinimizerPlugin = require("json-minimizer-webpack-plugin");
-const HTMLMinimizerPlugin = require("html-minimizer-webpack-plugin");
-const path = require("path");
+import CopyPlugin from "copy-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
+import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
+import path from "path";
 
-module.exports = {
+export default {
   module: {
     rules: [
       {
@@ -15,23 +15,11 @@ module.exports = {
         test: /\.txt$/i,
         type: "asset/resource",
       },
-      {
-        test: /\.html$/i,
-        type: "asset/resource",
-      },
-      {
-        test: /\.wav$/,
-        type: "asset/resource",
-      },
-      {
-        test: /\.midi?$/,
-        type: "asset/resource",
-      },
     ],
   },
   entry: "./dist/bootstrap.js",
   output: {
-    path: path.resolve(__dirname, "../www/"),
+    path: path.resolve(path.dirname(""), "../www/"),
     filename: "bootstrap.js",
   },
   target: "web",
