@@ -1,9 +1,9 @@
-import CopyPlugin from "copy-webpack-plugin";
-import TerserPlugin from "terser-webpack-plugin";
-import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
-import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
-import path from "path";
-import exp from "constants";
+import CopyPlugin from "copy-webpack-plugin"
+import TerserPlugin from "terser-webpack-plugin"
+import JsonMinimizerPlugin from "json-minimizer-webpack-plugin"
+import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin"
+import path from "path"
+import exp from "constants"
 
 module.exports = {
   module: {
@@ -75,4 +75,4 @@ module.exports = {
   experiments: {
     syncWebAssembly: true,
   },
-};
+}

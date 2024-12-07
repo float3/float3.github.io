@@ -23,6 +23,7 @@ this is some art i've made
 </video>
 
 ## Shadertoy
+
 <https://www.shadertoy.com/user/Three>
 
 # 3D Scanning and Photogrammetry:
@@ -36,5 +37,6 @@ from my pathtracer:
 
 blender:
 <video controls>
+
 <source src="/misc/media/render.mp4">
 </video>

@@ -1,43 +1,43 @@
 .light-out .PAB {
-    color: #0466e7;
+  color: #0466e7;
 }
 
 .light-emitted .PBA {
-    color: #ffbc3f;
+  color: #ffbc3f;
 }
 
 .integral {
-    color: #7be9ff;
+  color: #7be9ff;
 }
 
 .brdf .PA {
-    color: #fe7fb3;
+  color: #fe7fb3;
 }
 
 .light-in .PB {
-    color: #dd6fff;
+  color: #dd6fff;
 }
 
 .irradiance {
-    color: #9dc141;
+  color: #9dc141;
 }
 
 .reference {
-    color: #4d8dc3;
+  color: #4d8dc3;
 }
 
-.container>* {
-    overflow: hidden;
+.container > * {
+  overflow: hidden;
 }
 
 @keyframes moveUpDown {
-    from {
-        transform: translateY(0);
-    }
+  from {
+    transform: translateY(0);
+  }
 
-    to {
-        transform: translateY(var(--amplitude));
-    }
+  to {
+    transform: translateY(var(--amplitude));
+  }
 }
 
 /* #interactiveSvg path,

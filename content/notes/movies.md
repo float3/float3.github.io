@@ -129,7 +129,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 친절한 금자씨 (Lady Vengeance) (2005) (2024-07-07)
 - [x] El Topo (1970) (2024-07-13)
 - [x] Drive (2011) (2024-07-20)
-- [x] 愛のむきだし (Love Exposure) (2008) (2024-07-27) 
+- [x] 愛のむきだし (Love Exposure) (2008) (2024-07-27)
 - [x] The Wolf of Wall Street (2013) (2024-08-03)
 - [x] Catch Me If You Can (2002) (2024-08-10)
 - [x] Good Will Hunting (1997) (2024-08-18)
@@ -141,7 +141,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] 世界で一番長い写真 (The Longest Photo in the World) (2018) (2024-09-29)
 - [x] Perfect Days (2023) (2024-10-06)
 - [ ] BREAK (2024-10-13)
-- [x] 小雁與吳愛麗 (Yen and Ai-Lee) (2024) (2024-10-16) 
+- [x] 小雁與吳愛麗 (Yen and Ai-Lee) (2024) (2024-10-16)
 - [ ] BREAK (2024-10-20)
 - [ ] BREAK (2024-10-27)
 - [x] Arrival (2016) (2024-11-04)
@@ -149,7 +149,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] The Revenant (2015) (2024-11-17)
 - [x] Fritz the Cat (1972) (2024-11-24)
 - [x] Heavy Traffic (1973) (2024-11-24)
-- [x] BlacKkKlansman (2018) (2024-12-01) 
+- [x] BlacKkKlansman (2018) (2024-12-01)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -504,7 +504,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Jackie Chan - My Stunts
 - [ ] Jodorowsky's Dune (2013)
 - [ ] Amadeus (1984)
-- [ ] 
+- [ ]
 
 # Dropped Movies
 
