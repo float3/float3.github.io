@@ -1,6 +1,8 @@
 ---
 title: "projects"
 sort_by: "title"
+tags:
+  - programming
 ---
 
 - [Real World Projects](#real-world-projects)

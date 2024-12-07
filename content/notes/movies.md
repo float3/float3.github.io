@@ -1,6 +1,9 @@
 ---
 title: "movies"
 date: 1970-01-02
+tags:
+  - movies
+  - list
 ---
 
 <script src="/js/movies.js"></script>

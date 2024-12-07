@@ -6,6 +6,8 @@ tags:
   - graphics
   - math
   - physics
+  - statistics
+  - teaching
 ---
 
 <link href="./math_stuff.css" rel="stylesheet" type="text/css">

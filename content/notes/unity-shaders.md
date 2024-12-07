@@ -4,6 +4,7 @@ updated: 2024-11-26
 date: 2024-11-26
 tags:
   - graphics
+  - programming
 ---
 
 unity shader things i've learned over the years

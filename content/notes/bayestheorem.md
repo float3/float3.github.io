@@ -4,6 +4,7 @@ date: 2024-11-29
 tags:
   - math
   - statistics
+  - teaching
 ---
 
 <link href="./math_stuff.css" rel="stylesheet" type="text/css">
