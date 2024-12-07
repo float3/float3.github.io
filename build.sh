@@ -20,7 +20,7 @@ mv ../content/piano/tuningplayground/chords.* ../content/piano/
 
 cd ../ts 
 pnpm install
-pnpx tsc
+npx tsc
 cd ..
 sh ./scripts/collect_links.sh
 

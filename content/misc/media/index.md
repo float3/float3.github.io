@@ -10,13 +10,13 @@ tags:
 [banner-dark.png](misc/media/banner-dark.png) \
 [banner-light.png](misc/media/banner-light.png) \
 [beijing_tones.png](/misc/media/beijing_tones.png) \
-[beating_sir_aloone_damageless.webm](/misc/media/beating_sir_aloone_damageless.webm) \
 [chinese_sounds](misc/media/chinese_sounds.png) \
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
 [helmet_guy.mp4](/misc/media/helmet_guy.mp4) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
+[PXL_20241016_102737105.RESTORED.jpg](/misc/media/PXL_20241016_102737105.RESTORED.jpg)
 [render.mp4](/misc/media/render.mp4) \
 [render.png](/misc/media/render.png) \
 [statue_with_child.mp4](/misc/media/statue_with_child.mp4)

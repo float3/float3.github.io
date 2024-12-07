@@ -17,5 +17,5 @@ cd ./textprocessing
 wasm-pack build --target web $MODE $ARGS
 cd ../ts
 pnpm install
-pnpx tsc
+npx tsc
 pnpx webpack --mode $WEBPACK_MODE
