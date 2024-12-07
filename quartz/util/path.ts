@@ -86,12 +86,12 @@ export function simplifySlug(fp: FullSlug): SimpleSlug {
 }
 
 export function transformInternalLink(link: string): RelativeURL {
-  let [fplike, anchor] = splitAnchor(decodeURI(link))
+  const [fplike, anchor] = splitAnchor(decodeURI(link))
 
   const folderPath = isFolderPath(fplike)
-  let segments = fplike.split("/").filter((x) => x.length > 0)
-  let prefix = segments.filter(isRelativeSegment).join("/")
-  let fp = segments.filter((seg) => !isRelativeSegment(seg) && seg !== "").join("/")
+  const segments = fplike.split("/").filter((x) => x.length > 0)
+  const prefix = segments.filter(isRelativeSegment).join("/")
+  const fp = segments.filter((seg) => !isRelativeSegment(seg) && seg !== "").join("/")
 
   // manually add ext here as we want to not strip 'index' if it has an extension
   const simpleSlug = simplifySlug(slugifyFilePath(fp as FilePath))
@@ -204,14 +204,14 @@ export interface TransformOptions {
 }
 
 export function transformLink(src: FullSlug, target: string, opts: TransformOptions): RelativeURL {
-  let targetSlug = transformInternalLink(target)
+  const targetSlug = transformInternalLink(target)
 
   if (opts.strategy === "relative") {
     return targetSlug as RelativeURL
   } else {
     const folderTail = isFolderPath(targetSlug) ? "/" : ""
     const canonicalSlug = stripSlashes(targetSlug.slice(".".length))
-    let [targetCanonical, targetAnchor] = splitAnchor(canonicalSlug)
+    const [targetCanonical, targetAnchor] = splitAnchor(canonicalSlug)
 
     if (opts.strategy === "shortest") {
       // if the file name is unique, then it's just the filename

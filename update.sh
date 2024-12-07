@@ -26,22 +26,7 @@ current_path=$(pwd)
 cd tuningplayground/music21-rs/music21
 git pull origin master
 
-cd $current_path
-node
-
-cd ./ts
-node
-
-cd ../tuningplayground/ts
-node
-
-cd ../../textprocessing/ts
-node
-
-cd $current_path
-
-cd ./tuningplayground
-cd ./music21-rs
+cd ..
 python3 -m venv venv
 . venv/bin/activate
 pip3 install -r music21/requirements.txt
@@ -49,10 +34,23 @@ pip3 install music21
 python3 -m test
 python3 -m generate_chords
 
+cd ../tuningplayground
+wasm-pack build --target web --dev
+
+cd $current_path
+node
+
+cd ./ts
+node
+
+cd ../tuningplayground/
 cargo
+
+cd ./ts
+node
 
 cd ../tuningplayground
 cargo
-wasm-pack build --target web --dev
 
-
+cd ../../textprocessing/ts
+node

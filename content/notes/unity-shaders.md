@@ -36,6 +36,7 @@ the fresnel effect is not working correctly on the right spheres
 because unity doesn't calculate the view direction correctly when using an orthographic camera
 
 this is how to do it correctly:
+
 ```hlsl
 bool IsOrtho()
 {
@@ -288,7 +289,7 @@ float4 GetWorldPositionFromDepthValue(float2 uv, float linearDepth)
 }
 
 float3 point_quat_rotate( float3 v, float4 quaternion)
-{ 
+{
 	return v + 2.0 * cross(quaternion.xyz, cross(quaternion.xyz, v) + quaternion.w * v);
 }
 
@@ -354,7 +355,7 @@ half2 calcScreenUVs(float4 screenPos)
 	#else
 	uv.xy *= _ScreenParams.xy;
 	#endif
-    
+
 	return uv;
 }
 
@@ -505,7 +506,7 @@ float3 coord =
     shadowCoord1 * weights.y +     // case: Cascaded two
     shadowCoord2 * weights.z +     // case: Cascaded three
     shadowCoord3 * weights.w;     // case: Cascaded four
-                    
+
 return UNITY_SAMPLE_SHADOW(_ShadowMapTexture, coord);
 }
 ```
@@ -577,26 +578,27 @@ o.pos = float4(float2(1, -1) * (v.uv * 2 - 1), 0, 1);
 this technique allows you to write in screenspace only to pixels that are affected by a light that has a specific layer mask, allowing you to render over a specific layer with your effect
 
 ![2022-01-26_23-08-20-reencoded.mp4](/misc/media/2022-01-26_23-08-20-reencoded.mp4)
- 
+
 first you need to create a color swatch to get a nan light, or write a script to set a light to nan, then choose your lights layer mask correctly
 
 %APPDATA%\Unity\Editor-5.x\Preferences\Presets
 
 ```
 m_Presets:
-  - m_Name: 
+  - m_Name:
     m_Color: {r: 1, g: 1, b: 1, a: 1}
-  - m_Name: 
+  - m_Name:
     m_Color: {r: NaN, g: NaN, b: NaN, a: NaN}
-  - m_Name: 
+  - m_Name:
     m_Color: {r: -0.5, g: -0.5, b: -0.5, a: -0.5}
-  - m_Name: 
+  - m_Name:
     m_Color: {r: -5, g: -5, b: -5, a: -5}
 ```
+
 (btw you can also do infinite or negative values here)
 
-
 then you grabpass and check if the color of the pixel is nan
+
 ```hlsl
 float4 pixelValue = _MyGrabTex.Load(int3(i.pos.x, i.pos.y, 0));
 	if (!any(isnan(asfloat(_Zero ^ asuint(pixelValue)))))
@@ -607,15 +609,13 @@ float4 pixelValue = _MyGrabTex.Load(int3(i.pos.x, i.pos.y, 0));
 }
 ```
 
-we have to do it in this roundabout way because the compiler assumes that texture samples can't be NaN so if you run isNan on the result of the grabpass that check will be optimized out, therefore we multiply with a uniform (_Zero)
+we have to do it in this roundabout way because the compiler assumes that texture samples can't be NaN so if you run isNan on the result of the grabpass that check will be optimized out, therefore we multiply with a uniform (\_Zero)
 
 full example: https://github.com/float3/ShaderArchive/blob/master/Misc/AudioLinkScreenSpaceNaNMarching.shader
-
 
 # raymarching with depth
 
 https://github.com/float3/ShaderArchive/blob/master/Misc/AudioLinkScreenSpaceNaNMarching.shader
-
 
 # camera calculations
 
@@ -952,7 +952,6 @@ Mesh CalculateMeshData(float3 normal, float4 tangent, bool facing)
     return meshData;
 }
 ```
-
 
 # light calculations
 

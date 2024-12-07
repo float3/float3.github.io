@@ -12,6 +12,7 @@ tags:
 ░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒█▄▄█░▒█▒█▒█░▒█░░▒
 ░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒█░░░░▒▀▄▀▄▀░▄█▄░▒
 ```
+
 1st:buy PCB and electronics seperately it's more difficult but you will learn about0 buying components because you will learn a lot about electronics
 
 This is a blogpost documenting my processes of learning about electronics and specifically analog electronics.
