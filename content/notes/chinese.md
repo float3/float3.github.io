@@ -91,7 +91,7 @@ tags:
 
 ![](misc/media/taipei_tones.png)
 
-needs verification:
+needs verification: /
 apparently characters are pronounced differently in taiwanese mandarin than in standard mandarin
 
 here are some common ones (Guóyǔ/Pǔtōnghuà):
@@ -140,9 +140,9 @@ need verification:
 
 #### dropping initials in compound words
 
-for example:
-真的嗎 can be pronounced as zhēnemá
-今天 can be pronounced as jīniān
+for example: /
+真的嗎 can be pronounced as zhēnemá /
+今天 can be pronounced as jīniān /
 非常 can be pronounced as fēiáng
 
 ## Hokkien
@@ -171,10 +171,11 @@ XY不XY -> X不XY
 
 ### 合成字/合文
 ![](/misc/media/PXL_20241016_102737105.RESTORED.jpg)
-this one i found in the mountains in taiwan, i believe it says
-招財進寶
-日日有見財
-日進斗金
+
+this one i found in the mountains in taiwan, i believe it says /
+招財進寶 /
+日日有見財 /
+日進斗金 /
 黃金萬兩
 
 ## Weird Hanzi
