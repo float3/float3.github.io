@@ -7,7 +7,7 @@ title: hilll.dev
 </div>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma, I don't negotiate with terrorists and I don't respond to blackmail. \
-this is my place. you can find me on social media: \ 
+this is my place. you can find me on social media: \
 https://www.shadertoy.com/user/three
 
 Content
