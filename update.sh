@@ -38,6 +38,7 @@ cd ../tuningplayground
 wasm-pack build --target web --dev
 
 cd $current_path
+node_up quartz
 
 cd ./ts
 node_up src
