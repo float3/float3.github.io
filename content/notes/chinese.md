@@ -170,7 +170,7 @@ XY不XY -> X不XY
 ## Hanzi
 
 ### 合成字/合文
-![[/misc/media/PXL_20241016_102737105.RESTORED.jpg]]
+![](/misc/media/PXL_20241016_102737105.RESTORED.jpg)
 this one i found in the mountains in taiwan, i believe it says
 招財進寶
 日日有見財
