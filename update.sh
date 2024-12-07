@@ -3,7 +3,7 @@
 node() {
     pnpx npm-upgrade
     pnpm update
-    pnpm audit fix --force
+    pnpm audit fix
     pnpx prettier . --write
     pnpx eslint . --fix
 }
@@ -28,7 +28,7 @@ git pull origin master
 
 cd ..
 python3 -m venv venv
-. venv/bin/activate
+source venv/bin/activate
 pip3 install -r music21/requirements.txt
 pip3 install music21
 python3 -m test
