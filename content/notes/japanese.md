@@ -15,8 +15,18 @@ tags:
   - [Origin of Hiragana and Katakana](#origin-of-hiragana-and-katakana)
     - [Hiragana](#hiragana)
     - [Katakana](#katakana)
+  - [digraphs](#digraphs)
+  - [diacritics](#diacritics)
+  - [uncommon kana](#uncommon-kana)
+    - [あ゙ (ア゙) ゔ ん゙](#あ゙-ア゙-ゔ-ん゙)
+    - [wu](#wu)
+    - [va vi vu ve vo](#va-vi-vu-ve-vo)
+    - [small e](#small-e)
+    - [kwa kwi kwe](#kwa-kwi-kwe)
+    - [l](#l)
+    - [鼻濁音 (ng)](#鼻濁音-ng)
   - [ん](#ん)
-  - [おう/いえ](#おういえ)
+  - [おう/えい](#おうえい)
   - [一ヶ](#一ヶ)
   - [は](#は)
   - [haku（拍）or mōra（モーラ）](#haku拍or-mōraモーラ)
@@ -32,14 +42,14 @@ tags:
 
 ## Kana
 
-|           | ∅                                                           | _k_                                                           | _s_                                                             | _t_                                                             | _n_                                                           | _h_                                                           | _m_                                                           | _y_                                                           | _r_                                                           | _w_                                                           |
-| --------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
-| **_a_**   | [あア](<https://en.wikipedia.org/wiki/A_(kana)> "A (kana)") | [かカ](<https://en.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") | [さサ](<https://en.wikipedia.org/wiki/Sa_(kana)> "Sa (kana)")   | [たタ](<https://en.wikipedia.org/wiki/Ta_(kana)> "Ta (kana)")   | [なナ](<https://en.wikipedia.org/wiki/Na_(kana)> "Na (kana)") | [はハ](<https://en.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [まマ](<https://en.wikipedia.org/wiki/Ma_(kana)> "Ma (kana)") | [やヤ](<https://en.wikipedia.org/wiki/Ya_(kana)> "Ya (kana)") | [らラ](<https://en.wikipedia.org/wiki/Ra_(kana)> "Ra (kana)") | [わワ](<https://en.wikipedia.org/wiki/Wa_(kana)> "Wa (kana)") |
-| **_i_**   | [いイ](<https://en.wikipedia.org/wiki/I_(kana)> "I (kana)") | [きキ](<https://en.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [しシ](<https://en.wikipedia.org/wiki/Shi_(kana)> "Shi (kana)") | [ちチ](<https://en.wikipedia.org/wiki/Chi_(kana)> "Chi (kana)") | [にニ](<https://en.wikipedia.org/wiki/Ni_(kana)> "Ni (kana)") | [ひヒ](<https://en.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [みミ](<https://en.wikipedia.org/wiki/Mi_(kana)> "Mi (kana)") | [𛀆𛄠](<https://en.wikipedia.org/wiki/Yi_(kana)> "Yi (kana)")\* | [りリ](<https://en.wikipedia.org/wiki/Ri_(kana)> "Ri (kana)") | [ゐヰ](<https://en.wikipedia.org/wiki/Wi_(kana)> "Wi (kana)") |
-| **_u_**   | [うウ](<https://en.wikipedia.org/wiki/U_(kana)> "U (kana)") | [くク](<https://en.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") | [すス](<https://en.wikipedia.org/wiki/Su_(kana)> "Su (kana)")   | [つツ](<https://en.wikipedia.org/wiki/Tsu_(kana)> "Tsu (kana)") | [ぬヌ](<https://en.wikipedia.org/wiki/Nu_(kana)> "Nu (kana)") | [ふフ](<https://en.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [むム](<https://en.wikipedia.org/wiki/Mu_(kana)> "Mu (kana)") | [ゆユ](<https://en.wikipedia.org/wiki/Yu_(kana)> "Yu (kana)") | [るル](<https://en.wikipedia.org/wiki/Ru_(kana)> "Ru (kana)") | [𛄟𛄢](<https://en.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)")\* |
-| **_e_**   | [えエ](<https://en.wikipedia.org/wiki/E_(kana)> "E (kana)") | [けケ](<https://en.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [せセ](<https://en.wikipedia.org/wiki/Se_(kana)> "Se (kana)")   | [てテ](<https://en.wikipedia.org/wiki/Te_(kana)> "Te (kana)")   | [ねネ](<https://en.wikipedia.org/wiki/Ne_(kana)> "Ne (kana)") | [へヘ](<https://en.wikipedia.org/wiki/He_(kana)> "He (kana)") | [めメ](<https://en.wikipedia.org/wiki/Me_(kana)> "Me (kana)") | [𛀁𛄡](<https://en.wikipedia.org/wiki/Ye_(kana)> "Ye (kana)")\* | [れレ](<https://en.wikipedia.org/wiki/Re_(kana)> "Re (kana)") | [ゑヱ](<https://en.wikipedia.org/wiki/We_(kana)> "We (kana)") |
-| **_o_**   | [おオ](<https://en.wikipedia.org/wiki/O_(kana)> "O (kana)") | [こコ](<https://en.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [そソ](<https://en.wikipedia.org/wiki/So_(kana)> "So (kana)")   | [とト](<https://en.wikipedia.org/wiki/To_(kana)> "To (kana)")   | [のノ](<https://en.wikipedia.org/wiki/No_(kana)> "No (kana)") | [ほホ](<https://en.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [もモ](<https://en.wikipedia.org/wiki/Mo_(kana)> "Mo (kana)") | [よヨ](<https://en.wikipedia.org/wiki/Yo_(kana)> "Yo (kana)") | [ろロ](<https://en.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") | [をヲ](<https://en.wikipedia.org/wiki/Wo_(kana)> "Wo (kana)") |
-| **(_n_)** | [んン](<https://en.wikipedia.org/wiki/N_(kana)> "N (kana)") |                                                               |                                                                 |                                                                 |                                                               |                                                               |                                                               |                                                               |                                                               |                                                               |
+|         | **∅**                                                       | **k**                                                         | **s**                                                           | **t**                                                           | **n**                                                         | **h**                                                         | **m**                                                         | **y**                                                         | **r**                                                         | **w**                                                         |
+| ------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
+| **a**   | [あア](<https://en.wikipedia.org/wiki/A_(kana)> "A (kana)") | [かカ](<https://en.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") | [さサ](<https://en.wikipedia.org/wiki/Sa_(kana)> "Sa (kana)")   | [たタ](<https://en.wikipedia.org/wiki/Ta_(kana)> "Ta (kana)")   | [なナ](<https://en.wikipedia.org/wiki/Na_(kana)> "Na (kana)") | [はハ](<https://en.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [まマ](<https://en.wikipedia.org/wiki/Ma_(kana)> "Ma (kana)") | [やヤ](<https://en.wikipedia.org/wiki/Ya_(kana)> "Ya (kana)") | [らラ](<https://en.wikipedia.org/wiki/Ra_(kana)> "Ra (kana)") | [わワ](<https://en.wikipedia.org/wiki/Wa_(kana)> "Wa (kana)") |
+| **i**   | [いイ](<https://en.wikipedia.org/wiki/I_(kana)> "I (kana)") | [きキ](<https://en.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [しシ](<https://en.wikipedia.org/wiki/Shi_(kana)> "Shi (kana)") | [ちチ](<https://en.wikipedia.org/wiki/Chi_(kana)> "Chi (kana)") | [にニ](<https://en.wikipedia.org/wiki/Ni_(kana)> "Ni (kana)") | [ひヒ](<https://en.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [みミ](<https://en.wikipedia.org/wiki/Mi_(kana)> "Mi (kana)") | [𛀆𛄠](<https://en.wikipedia.org/wiki/Yi_(kana)> "Yi (kana)")\* | [りリ](<https://en.wikipedia.org/wiki/Ri_(kana)> "Ri (kana)") | [ゐヰ](<https://en.wikipedia.org/wiki/Wi_(kana)> "Wi (kana)") |
+| **u**   | [うウ](<https://en.wikipedia.org/wiki/U_(kana)> "U (kana)") | [くク](<https://en.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") | [すス](<https://en.wikipedia.org/wiki/Su_(kana)> "Su (kana)")   | [つツ](<https://en.wikipedia.org/wiki/Tsu_(kana)> "Tsu (kana)") | [ぬヌ](<https://en.wikipedia.org/wiki/Nu_(kana)> "Nu (kana)") | [ふフ](<https://en.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [むム](<https://en.wikipedia.org/wiki/Mu_(kana)> "Mu (kana)") | [ゆユ](<https://en.wikipedia.org/wiki/Yu_(kana)> "Yu (kana)") | [るル](<https://en.wikipedia.org/wiki/Ru_(kana)> "Ru (kana)") | [𛄟𛄢](<https://en.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)")\* |
+| **e**   | [えエ](<https://en.wikipedia.org/wiki/E_(kana)> "E (kana)") | [けケ](<https://en.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [せセ](<https://en.wikipedia.org/wiki/Se_(kana)> "Se (kana)")   | [てテ](<https://en.wikipedia.org/wiki/Te_(kana)> "Te (kana)")   | [ねネ](<https://en.wikipedia.org/wiki/Ne_(kana)> "Ne (kana)") | [へヘ](<https://en.wikipedia.org/wiki/He_(kana)> "He (kana)") | [めメ](<https://en.wikipedia.org/wiki/Me_(kana)> "Me (kana)") | [𛀁𛄡](<https://en.wikipedia.org/wiki/Ye_(kana)> "Ye (kana)")\* | [れレ](<https://en.wikipedia.org/wiki/Re_(kana)> "Re (kana)") | [ゑヱ](<https://en.wikipedia.org/wiki/We_(kana)> "We (kana)") |
+| **o**   | [おオ](<https://en.wikipedia.org/wiki/O_(kana)> "O (kana)") | [こコ](<https://en.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [そソ](<https://en.wikipedia.org/wiki/So_(kana)> "So (kana)")   | [とト](<https://en.wikipedia.org/wiki/To_(kana)> "To (kana)")   | [のノ](<https://en.wikipedia.org/wiki/No_(kana)> "No (kana)") | [ほホ](<https://en.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [もモ](<https://en.wikipedia.org/wiki/Mo_(kana)> "Mo (kana)") | [よヨ](<https://en.wikipedia.org/wiki/Yo_(kana)> "Yo (kana)") | [ろロ](<https://en.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") | [をヲ](<https://en.wikipedia.org/wiki/Wo_(kana)> "Wo (kana)") |
+| **(n)** | [んン](<https://en.wikipedia.org/wiki/N_(kana)> "N (kana)") |                                                               |                                                                 |                                                                 |                                                               |                                                               |                                                               |                                                               |                                                               |                                                               |
 
 ### Archaic Kana
 
@@ -93,7 +103,7 @@ tags:
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 ### Origin of Hiragana and Katakana
-
+![[kana_development_chart.png]]
 #### Hiragana
 
 ![](/misc/media/hiragana-1.png)
@@ -101,18 +111,18 @@ tags:
 ![](/misc/media/hiragana-3.png)
 
 <!--
-|         | **_a_** | **_i_** | **_u_** | **_e_** | **_o_** | **(_n_)** |
-| ------- | ------- | ------- | ------- | ------- | ------- | --------- |
-| **∅**   | あ      | い      | う      | え      | お      | ん        |
-| **_k_** | か      | き      | く      | け      | こ      |           |
-| **_s_** | さ      | し      | す      | せ      | そ      |           |
-| **_t_** | た      | ち      | つ      | て      | と      |           |
-| **_n_** | な      | に      | ぬ      | ね      | の      |           |
-| **_h_** | は      | ひ      | ふ      | へ      | ほ      |           |
-| **_m_** | ま      | み      | む      | め      | も      |           |
-| **_y_** | や      | 𛀆       | ゆ      | 𛀁       | よ      |           |
-| **_r_** | ら      | り      | る      | れ      | ろ      |           |
-| **_w_** | わ      | ゐ      | 𛄟       | ゑ      | を      |           |
+|       | **a** | **i** | **u** | **e** | **o** | **(n)** |
+| ----- | ----- | ----- | ----- | ----- | ----- | ------- |
+| **∅** | あ    | い    | う    | え    | お    | ん      |
+| **k** | か    | き    | く    | け    | こ    |         |
+| **s** | さ    | し    | す    | せ    | そ    |         |
+| **t** | た    | ち    | つ    | て    | と    |         |
+| **n** | な    | に    | ぬ    | ね    | の    |         |
+| **h** | は    | ひ    | ふ    | へ    | ほ    |         |
+| **m** | ま    | み    | む    | め    | も    |         |
+| **y** | や    | 𛀆     | ゆ    | 𛀁     | よ    |         |
+| **r** | ら    | り    | る    | れ    | ろ    |         |
+| **w** | わ    | ゐ    | 𛄟     | ゑ    | を    |         |
 -->
 
 #### Katakana
@@ -121,19 +131,103 @@ tags:
 ![](/misc/media/katakana-2.png)
 
 <!-- 
-|         | **_a_** | **_i_** | **_u_** | **_e_** | **_o_** | **(_n_)** |
-| ------- | ------- | ------- | ------- | ------- | ------- | --------- |
-| **∅**   | ア      | イ      | ウ      | エ      | オ      | ン        |
-| **_k_** | カ      | キ      | ク      | ケ      | コ      |           |
-| **_s_** | サ      | シ      | ス      | セ      | ソ      |           |
-| **_t_** | タ      | チ      | ツ      | テ      | ト      |           |
-| **_n_** | ナ      | ニ      | ヌ      | ネ      | ノ      |           |
-| **_h_** | ハ      | ヒ      | フ      | ヘ      | ホ      |           |
-| **_m_** | マ      | ミ      | ム      | メ      | モ      |           |
-| **_y_** | ヤ      | 𛄠       | ユ      | 𛄡       | ヨ      |           |
-| **_r_** | ラ      | リ      | ル      | レ      | ロ      |           |
-| **_w_** | ワ      | ヰ      | 𛄢       | ヱ      | ヲ      |           |
+|       | **a** | **i** | **u** | **e** | **o** | **(n)** |
+| ----- | ----- | ----- | ----- | ----- | ----- | ------- |
+| **∅** | ア    | イ    | ウ    | エ    | オ    | ン      |
+| **k** | カ    | キ    | ク    | ケ    | コ    |         |
+| **s** | サ    | シ    | ス    | セ    | ソ    |         |
+| **t** | タ    | チ    | ツ    | テ    | ト    |         |
+| **n** | ナ    | ニ    | ヌ    | ネ    | ノ    |         |
+| **h** | ハ    | ヒ    | フ    | ヘ    | ホ    |         |
+| **m** | マ    | ミ    | ム    | メ    | モ    |         |
+| **y** | ヤ    | 𛄠     | ユ    | 𛄡     | ヨ    |         |
+| **r** | ラ    | リ    | ル    | レ    | ロ    |         |
+| **w** | ワ    | ヰ    | 𛄢     | ヱ    | ヲ    |         |
 -->
+
+### digraphs
+
+|          | **g**                                                             | **j_ _(z)**                                                       | **j_ _(d)**                                                       | **b**                                                             | **p**                                                             | **ng**                                                                       |
+| -------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| ***ya*** | [ぎゃ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%83 "ぎゃ") | [じゃ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%83 "じゃ") | [ぢゃ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%83 "ぢゃ") | [びゃ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%83 "びゃ") | [ぴゃ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%83 "ぴゃ") | [き゚ゃ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%83 "き゚ゃ") |
+| ***yu*** | [ぎゅ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%85 "ぎゅ") | [じゅ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%85 "じゅ") | [ぢゅ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%85 "ぢゅ") | [びゅ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%85 "びゅ") | [ぴゅ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%85 "ぴゅ") | [き゚ゅ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%85 "き゚ゅ") |
+| ***yo*** | [ぎょ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%87 "ぎょ") | [じょ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%87 "じょ") | [ぢょ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%87 "ぢょ") | [びょ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%87 "びょ") | [ぴょ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%87 "ぴょ") | [き゚ょ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%87 "き゚ょ") |
+
+
+|          | ***g***                                                           | ***j (z)***                                                       | ***j (d)***                                                       | ***b***                                                           | ***p***                                                           | ***ng***                                                                     |
+| -------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| ***ya*** | [ぎゃ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%83 "ぎゃ") | [じゃ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%83 "じゃ") | [ぢゃ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%83 "ぢゃ") | [びゃ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%83 "びゃ") | [ぴゃ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%83 "ぴゃ") | [き゚ゃ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%83 "き゚ゃ") |
+| ***yu*** | [ぎゅ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%85 "ぎゅ") | [じゅ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%85 "じゅ") | [ぢゅ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%85 "ぢゅ") | [びゅ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%85 "びゅ") | [ぴゅ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%85 "ぴゅ") | [き゚ゅ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%85 "き゚ゅ") |
+| ***yo*** | [ぎょ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%87 "ぎょ") | [じょ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%87 "じょ") | [ぢょ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%87 "ぢょ") | [びょ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%87 "びょ") | [ぴょ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%87 "ぴょ") | [き゚ょ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%87 "き゚ょ") |
+
+### diacritics
+
+|       | **g**                                                         | **z**                                                           | **d**                                                           | **b**                                                         | **p**                                                         | **ng**                                                          | **l**                                                           |
+| ----- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- |
+| **a** | [がガ](https://en.m.wikipedia.org/wiki/Ka_(kana) "Ka (kana)") | [ざザ](https://en.m.wikipedia.org/wiki/Sa_(kana) "Sa (kana)")   | [だダ](https://en.m.wikipedia.org/wiki/Ta_(kana) "Ta (kana)")   | [ばバ](https://en.m.wikipedia.org/wiki/Ha_(kana) "Ha (kana)") | [ぱパ](https://en.m.wikipedia.org/wiki/Ha_(kana) "Ha (kana)") | [か゚カ゚](https://en.m.wikipedia.org/wiki/Ka_(kana) "Ka (kana)") | [ら゚ラ゚](https://en.m.wikipedia.org/wiki/Ra_(kana) "Ra (kana)") |
+| **i** | [ぎギ](https://en.m.wikipedia.org/wiki/Ki_(kana) "Ki (kana)") | [じジ](https://en.m.wikipedia.org/wiki/Shi_(kana) "Shi (kana)") | [ぢヂ](https://en.m.wikipedia.org/wiki/Chi_(kana) "Chi (kana)") | [びビ](https://en.m.wikipedia.org/wiki/Hi_(kana) "Hi (kana)") | [ぴピ](https://en.m.wikipedia.org/wiki/Hi_(kana) "Hi (kana)") | [き゚キ゚](https://en.m.wikipedia.org/wiki/Ki_(kana) "Ki (kana)") | [り゚リ゚](https://en.m.wikipedia.org/wiki/Ri_(kana) "Ri (kana)") |
+| **u** | [ぐグ](https://en.m.wikipedia.org/wiki/Ku_(kana) "Ku (kana)") | [ずズ](https://en.m.wikipedia.org/wiki/Su_(kana) "Su (kana)")   | [づヅ](https://en.m.wikipedia.org/wiki/Tsu_(kana) "Tsu (kana)") | [ぶブ](https://en.m.wikipedia.org/wiki/Fu_(kana) "Fu (kana)") | [ぷプ](https://en.m.wikipedia.org/wiki/Fu_(kana) "Fu (kana)") | [く゚ク゚](https://en.m.wikipedia.org/wiki/Ku_(kana) "Ku (kana)") | [る゚ル゚](https://en.m.wikipedia.org/wiki/Ru_(kana) "Ru (kana)") |
+| **e** | [げゲ](https://en.m.wikipedia.org/wiki/Ke_(kana) "Ke (kana)") | [ぜゼ](https://en.m.wikipedia.org/wiki/Se_(kana) "Se (kana)")   | [でデ](https://en.m.wikipedia.org/wiki/Te_(kana) "Te (kana)")   | [べベ](https://en.m.wikipedia.org/wiki/He_(kana) "He (kana)") | [ぺペ](https://en.m.wikipedia.org/wiki/He_(kana) "He (kana)") | [け゚ケ゚](https://en.m.wikipedia.org/wiki/Ke_(kana) "Ke (kana)") | [れ゚レ゚](https://en.m.wikipedia.org/wiki/Re_(kana) "Re (kana)") |
+| **o** | [ごゴ](https://en.m.wikipedia.org/wiki/Ko_(kana) "Ko (kana)") | [ぞゾ](https://en.m.wikipedia.org/wiki/So_(kana) "So (kana)")   | [どド](https://en.m.wikipedia.org/wiki/To_(kana) "To (kana)")   | [ぼボ](https://en.m.wikipedia.org/wiki/Ho_(kana) "Ho (kana)") | [ぽポ](https://en.m.wikipedia.org/wiki/Ho_(kana) "Ho (kana)") | [こ゚コ゚](https://en.m.wikipedia.org/wiki/Ko_(kana) "Ko (kana)") | [ろ゚ロ゚](https://en.m.wikipedia.org/wiki/Ro_(kana) "Ro (kana)") |
+
+### uncommon kana
+
+https://dl.ndl.go.jp/pid/854017/1/22
+
+#### あ゙ (ア゙) ゔ ん゙
+In informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound. 
+In one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, “あ゙” is used to represent the relaxed sound one might make when soaking in a hot bath.
+
+#### wu
+うぅ/ウゥ instead of the obsolete wu kana
+
+#### va vi vu ve vo
+Usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], ビ[bi], ブ[bu], ベ[be], and ボ[bo], for example, in loanwords such as バイオリン (baiorin "violin"), but (less usually) the distinction can be preserved by using [w-] with voicing marks or by using [wu] and a vowel kana, as in 
+- ヴァ (ヷ) (va)
+- ヴィ (ヸ) (vi)
+- ヴ       (vu)
+- ヴェ (ヹ) (ve)
+- ヴォ (ヺ) (vo)
+hiragana:
+- ゔぁ (わ゙) (va)
+- ゔぃ (ゐ゙) (vi)
+- ゔ　　　　(vu)
+- ゔぇ (ゑ゙) (ve)
+- ゔぉ (を゙) (vo)
+
+#### small e
+In loanwords, digraphs with a small e-kana can be formed. For example, キェ (or きぇ in hiragana), which is transcribed as kye.
+
+#### kwa kwi kwe
+In earlier Japanese, digraphs could also be formed with w-kana. Although obsolete in modern Japanese, the digraphs くゎ (/kʷa/) and くゐ/くうぃ(/kʷi/), are preserved in certain Okinawan orthographies. In addition, the kana え can be used in Okinawan to form the digraph くぇ, which represents the /kʷe/ sound.
+- くゎ (kwa)
+- くゐ / くうぃ (kwi)
+- くぇ (kwe)
+
+#### l
+- ら゚ (la)
+- り゚ (li)
+- る゚ (lu)
+- れ゚ (le)
+- ろ゚ (lo)
+katakana:
+- ラ゚ (la)
+- リ゚ (li)
+- ル゚ (lu)
+- レ゚ (le)
+- ロ゚ (lo)
+
+#### 鼻濁音 (ng)
+- か゚ (カ゚)
+- き゚ (キ゚)
+- く゚ (ク゚)
+- け゚ (ケ゚)
+- こ゚ (コ゚)
+and therefore also:
+- き゚ゃ
+- き゚ゅ
+- き゚ょ
+these are only used in spoken, not written language, for example by older people in the Yamagata Prefecture (山形弁)
 
 ### ん
 
@@ -153,8 +247,8 @@ These are a few of the ways it can change:
 a sequence of おう becomes おー \
 so \
 (き)のう as in 昨日 is pronounced きのー \
-行こう 行こー \
-会おう あおー \
+行こう -> 行こー \
+会おう -> あおー \
 unless the お is the core vowel like in 匂う(におう) it won’t be におー
 
 the same is true for えい → えー
@@ -243,7 +337,7 @@ but
 
 kanji can have up to three different types of readings
 
-|                 | **_on'yomi (音読み)_**                                                                                                                                         | **_kun'yomi (訓読み)_**                                                                                            | **_nanori (名乗り)_**                                                                                                                   |
+|                 | **on'yomi (音読み)**                                                                                                                                           | **kun'yomi (訓読み)**                                                                                              | **nanori (名乗り)**                                                                                                                     |
 | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | **description** | The Chinese reading of a kanji, used primarily in compound words (熟語). It often reflects the original Chinese pronunciation when the character was borrowed. | The native Japanese reading of a kanji, used for standalone words or when combined with okurigana (kana suffixes). | A specialized reading used for proper nouns, especially names (given names and family names). It often deviates from standard readings. |
 | **examples:**   | --------------------------                                                                                                                                     | -----------------------                                                                                            | -------------------------                                                                                                               |

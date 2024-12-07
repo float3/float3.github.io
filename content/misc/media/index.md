@@ -3,6 +3,7 @@ title: media
 tags:
   - art
   - graphics
+  - list
 ---
 
 [2022-01-26_23-08-03-reencoded.mp4](/misc/media/2022-01-26_23-08-03-reencoded.mp4) \
@@ -18,6 +19,7 @@ tags:
 [hiragana-2.png](/misc/media/hiragana-2.png) \
 [hiragana-3.png](/misc/media/hiragana-3.png) \
 [hiragana-gogen.pdf](/misc/media/hiragana-gogen.pdf) \
+[kana_development_chart.png](/misc/media/kana_development_chart.png) \
 [katakana-1.png](/misc/media/katakana-1.png) \
 [katakana-2.png](/misc/media/katakana-2.png) \
 [katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
