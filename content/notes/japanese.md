@@ -190,6 +190,7 @@ Usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], �
 - ヴ       (vu)
 - ヴェ (ヹ) (ve)
 - ヴォ (ヺ) (vo)
+
 hiragana:
 - ゔぁ (わ゙) (va)
 - ゔぃ (ゐ゙) (vi)
@@ -212,6 +213,7 @@ In earlier Japanese, digraphs could also be formed with w-kana. Although obsolet
 - る゚ (lu)
 - れ゚ (le)
 - ろ゚ (lo)
+
 katakana:
 - ラ゚ (la)
 - リ゚ (li)
@@ -225,10 +227,12 @@ katakana:
 - く゚ (ク゚)
 - け゚ (ケ゚)
 - こ゚ (コ゚)
+
 and therefore also:
 - き゚ゃ
 - き゚ゅ
 - き゚ょ
+
 these are only used in spoken, not written language, for example by older people in the Yamagata Prefecture (山形弁)
 
 ### ん
