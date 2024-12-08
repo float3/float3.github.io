@@ -30,3 +30,8 @@ tags:
 [render.png](/misc/media/render.png) \
 [statue_with_child.mp4](/misc/media/statue_with_child.mp4)
 [taipei_tones.png](/misc/media/taipei_tones.png) \
+[ㄱ.png](/misc/media/ㄱ.png) \
+[ㄴ.png](/misc/media/ㄴ.png) \
+[ㅅ.png](/misc/media/ㅅ.png) \
+[ㅇ.png](/misc/media/ㅇ.png) \
+[ㅁ.png](/misc/media/ㅁ.png) \
