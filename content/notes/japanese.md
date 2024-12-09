@@ -171,6 +171,7 @@ tags:
 | **ya** | [ぎゃ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%83 "ぎゃ") | [じゃ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%83 "じゃ") | [ぢゃ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%83 "ぢゃ") | [びゃ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%83 "びゃ") | [ぴゃ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%83 "ぴゃ") | [き゚ゃ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%83 "き゚ゃ") |
 | **yu** | [ぎゅ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%85 "ぎゅ") | [じゅ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%85 "じゅ") | [ぢゅ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%85 "ぢゅ") | [びゅ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%85 "びゅ") | [ぴゅ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%85 "ぴゅ") | [き゚ゅ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%85 "き゚ゅ") |
 | **yo** | [ぎょ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%87 "ぎょ") | [じょ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%87 "じょ") | [ぢょ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%87 "ぢょ") | [びょ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%87 "びょ") | [ぴょ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%87 "ぴょ") | [き゚ょ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%87 "き゚ょ") |
+
 - Note that the き゚ゃ, き゚ゅ and き゚ょ, though they exist, [are not used in standard Japanese orthography](https://en.wikipedia.org/wiki/Dakuten_and_handakuten#Phonetic_shifts "Dakuten and handakuten").
 - _zi_+_y_* and _di_+_y_* are often transcribed _j*_ instead of _zy*_ and _dy*_, according to contemporary pronunciation. The form [_jy*_](https://en.wikipedia.org/wiki/W%C4%81puro_r%C5%8Dmaji#Spelling_conventions "Wāpuro rōmaji") is also used in some cases.
 
@@ -179,21 +180,26 @@ tags:
 https://dl.ndl.go.jp/pid/854017/1/22
 
 #### あ゙ (ア゙) ゔ ん゙
-In informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound. 
+
+In informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound.
 In one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, “あ゙” is used to represent the relaxed sound one might make when soaking in a hot bath.
 
 #### wu
+
 うぅ/ウゥ instead of the obsolete wu kana
 
 #### va vi vu ve vo
-Usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], ビ[bi], ブ[bu], ベ[be], and ボ[bo], for example, in loanwords such as バイオリン (baiorin "violin"), but (less usually) the distinction can be preserved by using [w-] with voicing marks or by using [wu] and a vowel kana, as in 
+
+Usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], ビ[bi], ブ[bu], ベ[be], and ボ[bo], for example, in loanwords such as バイオリン (baiorin "violin"), but (less usually) the distinction can be preserved by using [w-] with voicing marks or by using [wu] and a vowel kana, as in
+
 - ヴァ (ヷ) (va)
 - ヴィ (ヸ) (vi)
-- ヴ       (vu)
+- ヴ (vu)
 - ヴェ (ヹ) (ve)
 - ヴォ (ヺ) (vo)
 
 hiragana:
+
 - ゔぁ (わ゙) (va)
 - ゔぃ (ゐ゙) (vi)
 - ゔ　　　　(vu)
@@ -201,15 +207,19 @@ hiragana:
 - ゔぉ (を゙) (vo)
 
 #### small e
+
 In loanwords, digraphs with a small e-kana can be formed. For example, キェ (or きぇ in hiragana), which is transcribed as kye.
 
 #### kwa kwi kwe
+
 In earlier Japanese, digraphs could also be formed with w-kana. Although obsolete in modern Japanese, the digraphs くゎ (/kʷa/) and くゐ/くうぃ(/kʷi/), are preserved in certain Okinawan orthographies. In addition, the kana え can be used in Okinawan to form the digraph くぇ, which represents the /kʷe/ sound.
+
 - くゎ (kwa)
 - くゐ / くうぃ (kwi)
 - くぇ (kwe)
 
 #### l
+
 - ら゚ (la)
 - り゚ (li)
 - る゚ (lu)
@@ -217,6 +227,7 @@ In earlier Japanese, digraphs could also be formed with w-kana. Although obsolet
 - ろ゚ (lo)
 
 katakana:
+
 - ラ゚ (la)
 - リ゚ (li)
 - ル゚ (lu)
@@ -224,6 +235,7 @@ katakana:
 - ロ゚ (lo)
 
 #### 鼻濁音 (ng)
+
 - か゚ (カ゚)
 - き゚ (キ゚)
 - く゚ (ク゚)
@@ -231,6 +243,7 @@ katakana:
 - こ゚ (コ゚)
 
 and therefore also:
+
 - き゚ゃ
 - き゚ゅ
 - き゚ょ

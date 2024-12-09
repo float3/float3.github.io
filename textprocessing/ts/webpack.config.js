@@ -1,7 +1,7 @@
-import TerserPlugin from "terser-webpack-plugin/dist/index.js";
-import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
-import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
-import path from "path";
+import TerserPlugin from "terser-webpack-plugin/dist/index.js"
+import JsonMinimizerPlugin from "json-minimizer-webpack-plugin"
+import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin"
+import path from "path"
 
 export default {
   entry: "./dist/bootstrap.js",
@@ -35,4 +35,4 @@ export default {
   experiments: {
     syncWebAssembly: true,
   },
-};
+}

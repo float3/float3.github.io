@@ -6,6 +6,7 @@ tags:
   - languages
   - wasm
 ---
+
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">
 <table>
    <thead>
