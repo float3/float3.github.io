@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 node_up() {
-    pnpx npm-upgrade
+    if [[ -z "$GITHUB_ACTIONS" ]]; then
+        pnpx npm-upgrade
+    fi
     pnpm update
     pnpm audit fix
     pnpm install
@@ -60,6 +62,7 @@ cd ../tuningplayground
 cargo_up
 
 cd ../../textprocessing/
+ls
 cargo_up
 
 cd ./ts
