@@ -30,6 +30,7 @@ git pull origin master
 cd ..
 python -m venv venv
 source venv/bin/activate
+pip install --upgrade pip
 pip install -r music21/requirements.txt
 pip install music21
 python -m test
