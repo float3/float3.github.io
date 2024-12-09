@@ -224,4 +224,4 @@ theres also the release version of this page: <a href="/tools/tuningplayground.m
 </div>
 <div id="logContainer"></div>
 </div>
-<script src="./textplayground_debug/bootstrap.js"></script>
+<script src="./tuningplayground_debug/bootstrap.js"></script>
