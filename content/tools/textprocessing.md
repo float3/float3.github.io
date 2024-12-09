@@ -27,6 +27,30 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td>
+        pin1yin1
+        <button onclick="copyToClipboard('left4')">Copy</button>
+        <input id="left4" oninput="transformLeftToRight(4)">
+      </td>
+      <td>
+        pīnyīn
+        <button onclick="copyToClipboard('right4')">Copy</button>
+        <input id="right4" oninput="transformRightToLeft(4)">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        pin1yin1 
+        <button onclick="copyToClipboard('left5')">Copy</button>
+        <input id="left5" oninput="transformLeftToRight(5)">
+      </td>
+      <td>
+        zhùyīn(ㄓㄨˋ ㄧㄣ)
+        <button onclick="copyToClipboard('right5')">Copy</button>
+        <input id="right5" oninput="transformRightToLeft(5)">
+      </td>
+    </tr>
+    <tr>
+      <td>
         Traditional 
         <button onclick="copyToClipboard('left1')">Copy</button>
         <input id="left1" oninput="transformLeftToRight(1)">
