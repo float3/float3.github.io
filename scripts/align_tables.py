@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 
 def merge_strings(left_file, right_file, separator):

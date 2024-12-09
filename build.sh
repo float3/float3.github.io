@@ -21,7 +21,8 @@ cd ../ts
 pnpm install
 npx tsc
 cd ..
-sh ./scripts/collect_links.sh
+./scripts/collect_links.sh
+./scripts/media.sh
 
 pnpm install
 npx quartz build
