@@ -8,6 +8,8 @@ use chinese_number::{ChineseCase, ChineseCountMethod, ChineseVariant, NumberToCh
 
 use japanese::converter;
 
+use hanja;
+
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
@@ -152,12 +154,48 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
-    pub fn convert_japanese_to_kana(text: String) -> String {
+    pub fn convert_hiragana_to_katakana(text: String) -> String {
         converter::convert_hiragana_to_katakana_string(&text)
     }
 
     #[wasm_bindgen]
-    pub fn convert_japanese_to_kanji(text: String) -> String {
+    pub fn convert_katakana_to_hiragna(text: String) -> String {
         converter::convert_katakana_to_hiragana_string(&text)
+    }
+
+    #[wasm_bindgen]
+    pub fn hangul_to_hanja(input: &str) -> String {
+        input
+            .chars()
+            .map(|c| {
+                // For simplicity, we take the first available hanja variant.
+                // In practice, you might want to handle errors or multiple variants.
+                hanja::get(c).expect("No Hanja found for given Hangul character")[0].0
+            })
+            .collect()
+    }
+
+    #[wasm_bindgen]
+    pub fn hanja_to_hangul(input: &str) -> String {
+        input
+            .chars()
+            .map(|c| {
+                // We must invert the lookup. Since the hanja::get function
+                // works from Hangul to Hanja, we need to search all Hangul
+                // characters that produce this Hanja. This is inefficient:
+                // a real implementation would likely use a precomputed map.
+
+                // For demonstration, assume we have a known range of Hangul
+                // and attempt to find the corresponding character:
+                for hangul_candidate in '\u{AC00}'..='\u{D7A3}' {
+                    if let Some(results) = hanja::get(hangul_candidate) {
+                        if results.iter().any(|&(h, _)| h == c) {
+                            return hangul_candidate;
+                        }
+                    }
+                }
+                panic!("No Hangul found for given Hanja character");
+            })
+            .collect()
     }
 }

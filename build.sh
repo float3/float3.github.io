@@ -15,13 +15,13 @@ mv ./www ./stable
 echo "building dev"
 ./build.sh dev
 rm ./www/chords.json ./www/chord.txt | true
-mv ./www ../content/piano/debug
-mv ./stable ../content/piano/tuningplayground/
-mv ../content/piano/tuningplayground/chords.* ../content/piano/
+mv ./www ../content/tools/debug
+mv ./stable ../content/tools/tuningplayground/
+mv ../content/tools/tuningplayground/chords.* ../content/tools/
 
 cd ../textprocessing
 ./build.sh prod
-mv ./www ../content/textprocessing/wasm/
+mv ./www ../content/tools/textprocessing/wasm/
 
 cd ../ts 
 pnpm install

@@ -54,18 +54,27 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
     case 1:
       switch (side) {
         case Side.LEFT:
-          return wasm.convert_japanese_to_kana(text)
+          return wasm.traditional_to_simplified_wasm(text)
         case Side.RIGHT:
-          return wasm.convert_japanese_to_kanji(text)
+          return wasm.simplified_to_traditional_wasm(text)
         default:
           return text
       }
     case 2:
       switch (side) {
         case Side.LEFT:
-          return wasm.number_to_chinese_f128(text, true, 1)
+          return wasm.convert_hiragana_to_katakana(text)
         case Side.RIGHT:
+          return wasm.convert_katakana_to_hiragana(text)
+        default:
           return text
+      }
+    case 3:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.hanja_to_hangul(text)
+        case Side.RIGHT:
+          return wasm.hangul_to_hanja(text)
         default:
           return text
       }
