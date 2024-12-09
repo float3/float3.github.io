@@ -14,6 +14,7 @@ tags:
   - [VRCLauncher](#vrclauncher)
   - [other](#other)
 - [Toys](#toys)
+  - [wasm tools](#wasm-tools)
   - [tuning playground](#tuning-playground)
   - [pathtracer](#pathtracer)
   - [3lang](#3lang)
@@ -72,9 +73,12 @@ I also frequently contribute to other peoples projects, for a (non-exhaustive) l
 
 some toy programs for fun, learning and experimentation
 
+## wasm tools
+[tools](/tools)
+
 ## tuning playground
 
-[running demo](/piano/tuningplayground.md) \
+[running demo](/tools/tuningplayground.md) \
 [github](https://github.com/float3/float3.github.io/tree/master/tuningplayground) \
 a rust -> wasm web app to play around with tuning systems, midi and audio
 

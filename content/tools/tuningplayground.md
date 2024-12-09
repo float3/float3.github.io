@@ -23,7 +23,7 @@ or
 or this one in case the other site goes down
 </a>
 <br>
-theres also the debug version of this page: <a href="/piano/debug.md">here</a>
+theres also the debug version of this page: <a href="./tuningplayground_debug.md">here</a>
 <div style="display: block">
    <input type="file" id="fileinput" accept=".midi,.mid" />
    <!-- <input type="text" id="linkinput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="enter midi file link"> -->

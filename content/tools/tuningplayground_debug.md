@@ -23,7 +23,7 @@ or
 or this one in case the other site goes down
 </a> 
 <br>
-theres also the release version of this page: <a href="/piano/tuningplayground.md">here</a>
+theres also the release version of this page: <a href="./tuningplayground.md">here</a>
 <div style="display: block">
    <input type="file" id="fileInput" accept=".midi,.mid" />
    <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
@@ -224,4 +224,4 @@ theres also the release version of this page: <a href="/piano/tuningplayground.m
 </div>
 <div id="logContainer"></div>
 </div>
-<script src="./debug/bootstrap.js"></script>
+<script src="./textplayground_debug/bootstrap.js"></script>
