@@ -257,7 +257,7 @@ export function addEvents(key: Element) {
 
   key.addEventListener("mousedown", (event) => {
     const mouseEvent = event as MouseEvent
-    if (mouseEvent.ctrlKey) {
+    if (mouseEvent.shiftKey) {
       markOrUnmarkKey(note)
     } else {
       noteOn(note)
