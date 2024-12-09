@@ -10,7 +10,7 @@ node_up() {
 }
 
 cargo_up() {
-    cargo-upggrade upgrade
+    cargo upgrade
     cargo update --workspace
     cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
     cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
