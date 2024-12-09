@@ -41,11 +41,13 @@ jobs:
         run: |
           cd tuningplayground
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
-          sh rustup.sh --default-toolchain nightly --profile minimal -y
+          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf -o init.sh
+          chmod +x rustup.sh init.sh
+          ./rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
           source "$HOME/.cargo/env"
           rustup update
-          curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
+          ./init.sh
           cargo install cargo-edit
           npm install -g pnpm
 
@@ -65,7 +67,7 @@ jobs:
 
       - name: lint
         run: |
-          bash ./update.sh
+          ./update.sh
 
       - name: commit
         run: |
@@ -77,7 +79,7 @@ jobs:
 
       - name: build
         run: |
-          bash ./build.sh
+          ./build.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
