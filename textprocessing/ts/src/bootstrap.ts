@@ -28,7 +28,7 @@ function copyToClipboard(inputId: string): void {
         alert('Failed to copy.');
       }
     } catch (err) {
-      alert('Error copying to clipboard.');
+      alert('Error copying to clipboard.' + err);
     }
     document.body.removeChild(textarea);
     return;
