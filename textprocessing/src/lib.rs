@@ -205,11 +205,11 @@ mod wasm_functions {
         let mut aggregate_pinyin = String::new();
         for pinyin in text.as_str().to_pinyin() {
             if let Some(pinyin) = pinyin {
-                aggregate_pinyin.push_str(&pinyin.with_tone());
-                aggregate_pinyin.push_str(" ");
+                aggregate_pinyin.push_str(pinyin.with_tone());
+                aggregate_pinyin.push(' ');
             }
         }
-        return aggregate_pinyin;
+        aggregate_pinyin
     }
 
     #[wasm_bindgen]
@@ -218,12 +218,12 @@ mod wasm_functions {
         for multi in text.as_str().to_pinyin_multi() {
             if let Some(multi) = multi {
                 for pinyin in multi {
-                    aggregate_pinyin.push_str(&pinyin.with_tone());
-                    aggregate_pinyin.push_str(" ");
+                    aggregate_pinyin.push_str(pinyin.with_tone());
+                    aggregate_pinyin.push(' ');
                 }
                 println!();
             }
         }
-        return aggregate_pinyin;
+        aggregate_pinyin
     }
 }
