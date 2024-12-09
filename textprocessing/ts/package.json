@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "textprocessing",
   "main": "bootstrap.js",
+  "type": "module",
   "scripts": {
     "serve_release": "webpack-dev-server --mode production",
     "serve_dev": "webpack-dev-server --mode development"
@@ -37,6 +38,7 @@
     "html-minimizer-webpack-plugin": "^5.0.0",
     "json-minimizer-webpack-plugin": "^5.0.0",
     "prettier": "^3.4.2",
+    "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "webpack": "^5.97.1",

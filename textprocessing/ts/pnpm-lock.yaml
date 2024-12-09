@@ -15,16 +15,10 @@ dependencies:
     specifier: ^6.4.4
     version: 6.4.4
   wasm:
-    specifier: file:../tuningplayground/pkg
-    version: file:../tuningplayground/pkg
+    specifier: file:../pkg
+    version: file:../pkg
 
 devDependencies:
-  '@eslint/eslintrc':
-    specifier: ^3.2.0
-    version: 3.2.0
-  '@eslint/js':
-    specifier: ^9.16.0
-    version: 9.16.0
   '@types/node':
     specifier: ^22.10.1
     version: 22.10.1
@@ -46,9 +40,6 @@ devDependencies:
   eslint-plugin-prettier:
     specifier: ^5.2.1
     version: 5.2.1(eslint-config-prettier@9.1.0)(eslint@9.16.0)(prettier@3.4.2)
-  globals:
-    specifier: ^15.13.0
-    version: 15.13.0
   html-minimizer-webpack-plugin:
     specifier: ^5.0.0
     version: 5.0.0(webpack@5.97.1)
@@ -67,9 +58,6 @@ devDependencies:
   typescript:
     specifier: ^5.7.2
     version: 5.7.2
-  typescript-eslint:
-    specifier: ^8.17.0
-    version: 8.17.0(eslint@9.16.0)(typescript@5.7.2)
   webpack:
     specifier: ^5.97.1
     version: 5.97.1(webpack-cli@5.1.4)
@@ -1743,11 +1731,6 @@ packages:
     engines: {node: '>=18'}
     dev: true
 
-  /globals@15.13.0:
-    resolution: {integrity: sha512-49TewVEz0UxZjr1WYYsWpPrhyC/B/pA8Bq0fUmet2n+eR7yn0IvNzNaoBwnK6mdkzcN+se7Ez9zUgULTz2QH4g==}
-    engines: {node: '>=18'}
-    dev: true
-
   /globby@14.0.2:
     resolution: {integrity: sha512-s3Fq41ZVh7vbbe2PN3nrW7yC7U7MFVc5c98/iTl9c2GawNMKx/J648KQRW6WKkuU8GIbbh2IXfIRQjOZnXcTnw==}
     engines: {node: '>=18'}
@@ -3023,25 +3006,6 @@ packages:
       mime-types: 2.1.35
     dev: true
 
-  /typescript-eslint@8.17.0(eslint@9.16.0)(typescript@5.7.2):
-    resolution: {integrity: sha512-409VXvFd/f1br1DCbuKNFqQpXICoTB+V51afcwG1pn1a3Cp92MqAUges3YjwEdQ0cMUoCIodjVDAYzyD8h3SYA==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-    peerDependencies:
-      eslint: ^8.57.0 || ^9.0.0
-      typescript: '*'
-    peerDependenciesMeta:
-      typescript:
-        optional: true
-    dependencies:
-      '@typescript-eslint/eslint-plugin': 8.17.0(@typescript-eslint/parser@8.17.0)(eslint@9.16.0)(typescript@5.7.2)
-      '@typescript-eslint/parser': 8.17.0(eslint@9.16.0)(typescript@5.7.2)
-      '@typescript-eslint/utils': 8.17.0(eslint@9.16.0)(typescript@5.7.2)
-      eslint: 9.16.0
-      typescript: 5.7.2
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
@@ -3326,7 +3290,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  file:../tuningplayground/pkg:
-    resolution: {directory: ../tuningplayground/pkg, type: directory}
-    name: tuningplayground
+  file:../pkg:
+    resolution: {directory: ../pkg, type: directory}
+    name: textprocessing
     dev: false

@@ -17,9 +17,13 @@ mv ./www ../content/piano/debug
 mv ./stable ../content/piano/tuningplayground/
 mv ../content/piano/tuningplayground/chords.* ../content/piano/
 
+cd ../textprocessing
+./build.sh prod
+mv ./www/ ../content/textprocessing/wasm
+
 cd ../ts 
 pnpm install
-npx tsc
+pnpm exec tsc
 
 cd ..
 ./scripts/collect_links.sh
