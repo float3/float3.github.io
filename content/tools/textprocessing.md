@@ -51,7 +51,7 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td colspan="2" style="font-size: smaller;">
-        Hangeul to Hanja conversion is not perfect as the first matching Hanja character is picked.
+        Hangeul to Hanja, and Hanja to Hangeul conversion is not perfect as the first matching Hanja character is picked.
       </td>
     </tr>    
     <tr>
