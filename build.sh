@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 rm -rf content/piano/debug content/piano/tuningplayground/
-rm -rf tuningplayground/www tuningplayground/www-dev
+rm -rf tuningplayground/www tuningplayground/www-dev tuningplayground/tuningplayground/pkg
+rm -rf content/textprocessing/wasm
+rm -rf textprocessing/www textprocessing/pkg
 
 cd tuningplayground
 
@@ -19,7 +21,7 @@ mv ../content/piano/tuningplayground/chords.* ../content/piano/
 
 cd ../textprocessing
 ./build.sh prod
-mv ./www/ ../content/textprocessing/wasm
+mv ./www ../content/textprocessing/wasm/
 
 cd ../ts 
 pnpm install
@@ -30,4 +32,4 @@ cd ..
 ./scripts/media.sh
 
 pnpm install
-npx quartz build
+pnpm exec quartz build
