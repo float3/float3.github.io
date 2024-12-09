@@ -11,17 +11,18 @@ echo "building master"
 ./build.sh prod
 rm ./www/163.bootstrap.js.LICENSE.txt | true
 mv ./www ./stable
+mv ./stable ../content/tools/tuningplayground/
 
 echo "building dev"
 ./build.sh dev
 rm ./www/chords.json ./www/chord.txt | true
 mv ./www ../content/tools/debug
-mv ./stable ../content/tools/tuningplayground/
-mv ../content/tools/tuningplayground/chords.* ../content/tools/
+
+mv ../content/tools/tuningplayground/chords.* ../content/misc/media/
 
 cd ../textprocessing
 ./build.sh prod
-mv ./www ../content/tools/textprocessing/wasm/
+mv ./www ../content/tools/textprocessing/
 
 cd ../ts 
 pnpm install

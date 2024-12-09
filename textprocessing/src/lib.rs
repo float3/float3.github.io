@@ -8,8 +8,6 @@ use chinese_number::{ChineseCase, ChineseCountMethod, ChineseVariant, NumberToCh
 
 use japanese::converter;
 
-use hanja;
-
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 

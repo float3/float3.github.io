@@ -9,7 +9,7 @@ tags:
 
 made with love and rust (compiled to wasm)
 
-<script src="./wasm/bootstrap.js"></script>
+<script src="./textprocessing/bootstrap.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">
 <table>
    <thead>

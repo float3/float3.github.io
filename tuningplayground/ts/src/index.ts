@@ -125,7 +125,7 @@ function initOrGetAudioContext(): Promise<AudioContext> {
 let audioBuffer: AudioBuffer | null = null
 function initOrGetAudioBuffer(): Promise<AudioBuffer> {
   if (!audioBuffer) {
-    return fetch("/piano/a1.wav")
+    return fetch("/misc/media/a1.wav")
       .then((response) => response.arrayBuffer())
       .then((arrayBuffer) =>
         initOrGetAudioContext().then((context) => context.decodeAudioData(arrayBuffer)),
