@@ -30,6 +30,7 @@ pnpm exec tsc
 cd ..
 ./scripts/collect_links.sh
 ./scripts/indices.sh
+./scripts/debug_version.sh
 
 pnpm install
 npx quartz build
