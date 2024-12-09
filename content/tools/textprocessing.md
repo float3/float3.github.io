@@ -17,12 +17,12 @@ made with love and rust (compiled to wasm)
       <td>
         Pinyin 
         <button onclick="copyToClipboard('left0')">Copy</button>
-        <input id="left0" oninput="transformLeftToRight(0)">
+        <input id="left0" oninput="transformLeftToRight(0)" value="zhù">
       </td>
       <td>
         Zhuyin 
         <button onclick="copyToClipboard('right0')">Copy</button>
-        <input id="right0" oninput="transformRightToLeft(0)">
+        <input id="right0" oninput="transformRightToLeft(0)" value="ㄓㄨˋ">
       </td>
     </tr>
     <tr>
@@ -51,38 +51,38 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td>
-        Traditional 
+        Traditional 繁體字
         <button onclick="copyToClipboard('left1')">Copy</button>
-        <input id="left1" oninput="transformLeftToRight(1)">
+        <input id="left1" oninput="transformLeftToRight(1)" value="為什麼">
       </td>
       <td>
-        Simplified 
+        Simplified 簡體字
         <button onclick="copyToClipboard('right1')">Copy</button>
-        <input id="right1" oninput="transformRightToLeft(1)">
+        <input id="right1" oninput="transformRightToLeft(1)" value="为什么">
       </td>
     </tr>
     <tr>
       <td>
         Hiragana 
         <button onclick="copyToClipboard('left2')">Copy</button>
-        <input id="left2" oninput="transformLeftToRight(2)">
+        <input id="left2" oninput="transformLeftToRight(2)" value="ひらがなゐゑきゃを゙ら゚くゎら゚け゚">
       </td>
       <td>
         Katakana 
         <button onclick="copyToClipboard('right2')">Copy</button>
-        <input id="right2" oninput="transformRightToLeft(2)">
+        <input id="right2" oninput="transformRightToLeft(2)" value="ヒラガナヰヱキャヲヹラヺクヮラヺケヺ">
       </td>
     </tr>
     <tr>
       <td>
         Hanja 
         <button onclick="copyToClipboard('left3')">Copy</button>
-        <input id="left3" oninput="transformLeftToRight(3)">
+        <input id="left3" oninput="transformLeftToRight(3)" value="我愛你">
       </td>
       <td>
         Hangeul 
         <button onclick="copyToClipboard('right3')">Copy</button>
-        <input id="right3" oninput="transformRightToLeft(3)">
+        <input id="right3" oninput="transformRightToLeft(3)" value="아애니">
       </td>
     </tr>
   </tbody>
