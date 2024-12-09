@@ -17,7 +17,7 @@ echo "building dev"
 rm ./www/chords.* | true
 mv ./www ../content/tools/tuningplayground_debug/
 
-mv ../content/tools/tuningplayground/chords.* ../content/misc/media/
+mv ../content/tools/tuningplayground/chords.* ../content/misc/plaintext/
 
 cd ../textprocessing
 ./build.sh prod
@@ -29,7 +29,7 @@ pnpm exec tsc
 
 cd ..
 ./scripts/collect_links.sh
-./scripts/media.sh
+./scripts/indices.sh
 
 pnpm install
 npx quartz build
