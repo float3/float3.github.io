@@ -81,18 +81,18 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
     case 4:
       switch (side) {
         case Side.LEFT:
-          return wasm.encode_pinyin_wasm(text)
+          return wasm.to_pinyin_wasm(text)
         case Side.RIGHT:
-          return wasm.decode_pinyin_wasm(text)
+          return text
         default:
           return text
       }
     case 5:
       switch (side) {
         case Side.LEFT:
-          return wasm.encode_zhuyin_wasm(text)
+          return wasm.to_pinyin_multi_wasm(text)
         case Side.RIGHT:
-          return wasm.decode_zhuyin_wasm(text)
+          return text
         default:
           return text
       }

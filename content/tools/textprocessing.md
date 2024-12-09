@@ -66,9 +66,9 @@ made with love and rust (compiled to wasm)
         <input id="right3" oninput="transformRightToLeft(3)" value="아애니">
       </td>
     </tr>
-    <!-- <tr>
+    <tr>
       <td>
-        pin1yin1
+        漢字
         <button onclick="copyToClipboard('left4')">Copy</button>
         <input id="left4" oninput="transformLeftToRight(4)">
       </td>
@@ -80,15 +80,15 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td>
-        pin1yin1 
+        p
         <button onclick="copyToClipboard('left5')">Copy</button>
         <input id="left5" oninput="transformLeftToRight(5)">
       </td>
       <td>
-        zhùyīn(ㄓㄨˋ ㄧㄣ)
+        z
         <button onclick="copyToClipboard('right5')">Copy</button>
         <input id="right5" oninput="transformRightToLeft(5)">
       </td>
-    </tr> -->
+    </tr> 
   </tbody>
 </table>
