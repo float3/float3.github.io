@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-rm -rf content/piano/debug content/piano/tuningplayground/
-rm -rf tuningplayground/www tuningplayground/www-dev tuningplayground/tuningplayground/pkg
-rm -rf content/textprocessing/wasm
-rm -rf textprocessing/www textprocessing/pkg
+cd content/tools/
+rm -rf tuningplayground debug textprocessing
+cd ../..
 
 cd tuningplayground
 
