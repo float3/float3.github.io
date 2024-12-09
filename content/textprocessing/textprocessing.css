@@ -1,18 +1,18 @@
 body {
-    font-family: sans-serif;
-    padding: 20px;
+  font-family: sans-serif;
+  padding: 20px;
 }
 
 table {
-    border-collapse: collapse;
-    width: 100%;
+  border-collapse: collapse;
+  width: 100%;
 }
 
 td {
-    vertical-align: top;
-    padding: 5px;
+  vertical-align: top;
+  padding: 5px;
 }
 
 input {
-    width: 95%;
+  width: 95%;
 }

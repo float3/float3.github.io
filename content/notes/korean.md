@@ -164,10 +164,10 @@ A complex final is written left to right:
 
 Blocks are always written in phonetic order, initial-medial-final. Therefore:
 
-* Syllables with a horizontal medial are written downward: 읍 (eup)
-* Syllables with a vertical medial and simple final are written clockwise: 쌍 (ssang)
-* Syllables with a wrapping medial switch direction (down-right-down): 된 (doen)
-* Syllables with a complex final are written left to right at the bottom: 밟 (balp).
+- Syllables with a horizontal medial are written downward: 읍 (eup)
+- Syllables with a vertical medial and simple final are written clockwise: 쌍 (ssang)
+- Syllables with a wrapping medial switch direction (down-right-down): 된 (doen)
+- Syllables with a complex final are written left to right at the bottom: 밟 (balp).
 
 399 combinations are possible for two-letter syllables and 10,773 possible combinations for syllables with more than two letters (27 possible final endings), for a total of 11,172 possible combinations of Korean alphabet letters to form syllables.
 this only takes into account regular vowels and consonants.
@@ -205,7 +205,6 @@ the name of a vowel is just it's sound
 |  **Final**  | **Revised Romanization** |                        _k_                         |  _k_  |                        _n_                         |                        _t_                         |   –   |                        _l_                         |                        _m_                         |                        _p_                         |   –   |                        _t_                         |  _t_  |                        _ng_                        |                        _t_                         |   –   |                        _t_                         |                        _k_                         |                        _t_                         |                        _p_                         |                        _t_                         |
 |             |     **Romanization**     |                         g                          |  kk   |                         n                          |                         d                          |   -   |                         l                          |                         m                          |                         b                          |   -   |                         s                          |  ss   |                         ng                         |                         j                          |   -   |                         ch                         |                         k                          |                         t                          |                         p                          |                         h                          |
 |             |         **IPA**          |                        /k̚/                         |       |                        /n/                         |                        /t̚/                         |  _–_  |                        /ɭ/                         |                        /m/                         |                        /p̚/                         |   –   |                        /t̚/                         |       |                        /ŋ/                         |                        /t̚/                         |  _–_  |                        /t̚/                         |                        /k̚/                         |                        /t̚/                         |                        /p̚/                         |                        /t̚/                         |
-
 
 |    Hangul    |         |       ㄱ       |           ㄲ           |      ㄴ       |       ㄷ       |           ㄸ           |      ㄹ       |      ㅁ       |      ㅂ       |          ㅃ           |      ㅅ      |          ㅆ          |      ㅇ       |      ㅈ       |          ㅉ           |       ㅊ       |      ㅋ       |      ㅌ       |      ㅍ       |      ㅎ       |
 | :----------: | :-----: | :------------: | :--------------------: | :-----------: | :------------: | :--------------------: | :-----------: | :-----------: | :-----------: | :-------------------: | :----------: | :------------------: | :-----------: | :-----------: | :-------------------: | :------------: | :-----------: | :-----------: | :-----------: | :-----------: |
