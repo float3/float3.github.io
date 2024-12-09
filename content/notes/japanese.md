@@ -13,8 +13,6 @@ tags:
   - [Katakana ligature](#katakana-ligature)
   - [Polysyllabic katakana](#polysyllabic-katakana)
   - [Origin of Hiragana and Katakana](#origin-of-hiragana-and-katakana)
-    - [Hiragana](#hiragana)
-    - [Katakana](#katakana)
   - [diacritics](#diacritics)
   - [digraphs](#digraphs)
   - [uncommon kana](#uncommon-kana)
@@ -106,13 +104,12 @@ tags:
 
 ![](/misc/media/kana_development_chart.png)
 
-#### Hiragana
+<!-- #### Hiragana
 
 ![](/misc/media/hiragana-1.png)
 ![](/misc/media/hiragana-2.png)
 ![](/misc/media/hiragana-3.png)
 
-<!--
 |       | **a** | **i** | **u** | **e** | **o** | **(n)** |
 | ----- | ----- | ----- | ----- | ----- | ----- | ------- |
 | **∅** | あ    | い    | う    | え    | お    | ん      |
@@ -125,14 +122,12 @@ tags:
 | **y** | や    | 𛀆     | ゆ    | 𛀁     | よ    |         |
 | **r** | ら    | り    | る    | れ    | ろ    |         |
 | **w** | わ    | ゐ    | 𛄟     | ゑ    | を    |         |
--->
 
 #### Katakana
 
 ![](/misc/media/katakana-1.png)
 ![](/misc/media/katakana-2.png)
 
-<!-- 
 |       | **a** | **i** | **u** | **e** | **o** | **(n)** |
 | ----- | ----- | ----- | ----- | ----- | ----- | ------- |
 | **∅** | ア    | イ    | ウ    | エ    | オ    | ン      |
