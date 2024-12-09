@@ -17,7 +17,7 @@ Content
 - [projects](/projects.md)
 - [art](/art.md)
 - [misc](/misc/)
-- [piano](piano/tuningplayground.md)
+- [tools](/tools/)
 - [about](/about.md)
 
 Misc

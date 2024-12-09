@@ -18,7 +18,6 @@ content/misc/media/chords.*
 
 content/tools/*/*.wasm
 content/tools/*/*.js
-content/tools/tuningplayground/*
 
 content/.trash/
 content/.obsidian/
