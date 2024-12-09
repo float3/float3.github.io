@@ -101,7 +101,7 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
-    pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i64) -> String {
+    pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i32) -> String {
         let variant: ChineseVariant = ChineseVariant::Traditional;
 
         let case: ChineseCase = match uppercase {

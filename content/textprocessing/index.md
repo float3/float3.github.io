@@ -6,7 +6,7 @@ tags:
   - languages
   - wasm
 ---
-
+<script src="./wasm/bootstrap.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">
 <table>
    <thead>
@@ -16,6 +16,10 @@ tags:
       </tr>
    </thead>
    <tbody>
+      <tr>
+         <td><input id="left0" oninput="transformLeftToRight(0)"></td>
+         <td><input id="right0" oninput="transformRightToLeft(0)"></td>
+      </tr>
       <tr>
          <td><input id="left1" oninput="transformLeftToRight(1)"></td>
          <td><input id="right1" oninput="transformRightToLeft(1)"></td>
@@ -58,4 +62,3 @@ tags:
       </tr>
    </tbody>
 </table>
-<script src="/textprocessing/wasm/bootstrap.js"></script>
