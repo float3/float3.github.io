@@ -61,7 +61,14 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
           return text
       }
     case 2:
-      return text.toLowerCase()
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, true, 1)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
     default:
       return text
   }

@@ -32,4 +32,4 @@ cd ..
 ./scripts/media.sh
 
 pnpm install
-npm quartz build
+npx quartz build
