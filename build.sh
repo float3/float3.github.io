@@ -20,6 +20,7 @@ mv ../content/piano/tuningplayground/chords.* ../content/piano/
 cd ../ts 
 pnpm install
 npx tsc
+
 cd ..
 ./scripts/collect_links.sh
 ./scripts/media.sh
