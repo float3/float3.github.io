@@ -23,7 +23,7 @@ Content
 Misc
 
 - [rss feed](/index.xml)
-- [pgp](/plaintext/public-key.txt)
+- [pgp](/misc/plaintext/public-key.txt)
 - [source](https://github.com/float3/float3.github.io)
 - [old-site](/float3.github.io.old)
 - [old-old-site](/float3.github.io.old.old)
