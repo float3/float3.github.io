@@ -58,6 +58,9 @@ devDependencies:
   typescript:
     specifier: ^5.7.2
     version: 5.7.2
+  typescript-eslint:
+    specifier: ^8.17.0
+    version: 8.17.0(eslint@9.16.0)(typescript@5.7.2)
   webpack:
     specifier: ^5.97.1
     version: 5.97.1(webpack-cli@5.1.4)
@@ -3004,6 +3007,25 @@ packages:
     dependencies:
       media-typer: 0.3.0
       mime-types: 2.1.35
+    dev: true
+
+  /typescript-eslint@8.17.0(eslint@9.16.0)(typescript@5.7.2):
+    resolution: {integrity: sha512-409VXvFd/f1br1DCbuKNFqQpXICoTB+V51afcwG1pn1a3Cp92MqAUges3YjwEdQ0cMUoCIodjVDAYzyD8h3SYA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
+      typescript: '*'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@typescript-eslint/eslint-plugin': 8.17.0(@typescript-eslint/parser@8.17.0)(eslint@9.16.0)(typescript@5.7.2)
+      '@typescript-eslint/parser': 8.17.0(eslint@9.16.0)(typescript@5.7.2)
+      '@typescript-eslint/utils': 8.17.0(eslint@9.16.0)(typescript@5.7.2)
+      eslint: 9.16.0
+      typescript: 5.7.2
+    transitivePeerDependencies:
+      - supports-color
     dev: true
 
   /typescript@5.7.2:
