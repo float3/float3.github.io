@@ -5,6 +5,7 @@ updated: 2023-02-14
 tags:
   - steamvr
   - vr
+  - programming
 ---
 
 This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara

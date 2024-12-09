@@ -157,7 +157,7 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
-    pub fn convert_katakana_to_hiragna(text: String) -> String {
+    pub fn convert_katakana_to_hiragana(text: String) -> String {
         converter::convert_katakana_to_hiragana_string(&text)
     }
 
