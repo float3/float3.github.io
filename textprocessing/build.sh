@@ -12,11 +12,10 @@ else
   exit 1
 fi
 
-rm -rf www
-cd ./textprocessing
+rm -rf www pkg
 wasm-pack build --target web $MODE $ARGS
-cd ../ts
+
+cd ./ts
 pnpm install
-npx tsc
-pnpm install -D webpack-cli
-pnpx webpack --mode $WEBPACK_MODE
+pnpm exec tsc
+pnpm exec webpack --mode $WEBPACK_MODE

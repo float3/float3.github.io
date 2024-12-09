@@ -21,9 +21,9 @@ character_converter = "2.1.5"
 chinese-number = "0.7.7"
 console_error_panic_hook = { version = "0.1.7", optional = true }
 japanese = "0.1.2"
-mini-alloc = { version = "0.4.2", optional = true }
+mini-alloc = { version = "0.6.0", optional = true }
 pinyin_zhuyin = "0.2.0"
-wasm-bindgen = { version = "0.2.92", optional = true }
+wasm-bindgen = { version = "0.2.99", optional = true }
 
 [profile.release]
 codegen-units = 1
@@ -39,7 +39,7 @@ split-debuginfo = "off"
 strip = "symbols"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ['-3']
+wasm-opt = ['-O4']
 
 [package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false

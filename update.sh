@@ -56,5 +56,8 @@ node_up src
 cd ../tuningplayground
 cargo_up
 
-# cd ../../textprocessing/ts
-# node_up src
+cd ../../textprocessing/
+cargo_up
+
+cd ./ts
+node_up src
