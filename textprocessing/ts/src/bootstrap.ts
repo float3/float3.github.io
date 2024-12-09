@@ -6,39 +6,42 @@ import { transformLeftToRight, transformRightToLeft } from "./index.js"
  * @param inputId - The ID of the input element to copy from.
  */
 function copyToClipboard(inputId: string): void {
-  const inputElement = document.getElementById(inputId) as HTMLInputElement | null;
+  const inputElement = document.getElementById(inputId) as HTMLInputElement | null
   if (!inputElement) {
-    alert(`Input element with ID "${inputId}" not found.`);
-    return;
+    alert(`Input element with ID "${inputId}" not found.`)
+    return
   }
 
-  const textToCopy = inputElement.value;
+  const textToCopy = inputElement.value
   if (!navigator.clipboard) {
-    const textarea = document.createElement('textarea');
-    textarea.value = textToCopy;
-    textarea.style.position = 'fixed';
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
+    const textarea = document.createElement("textarea")
+    textarea.value = textToCopy
+    textarea.style.position = "fixed"
+    document.body.appendChild(textarea)
+    textarea.focus()
+    textarea.select()
     try {
-      const successful = document.execCommand('copy');
+      const successful = document.execCommand("copy")
       if (successful) {
-        alert('Copied to clipboard!');
+        alert("Copied to clipboard!")
       } else {
-        alert('Failed to copy.');
+        alert("Failed to copy.")
       }
     } catch (err) {
-      alert('Error copying to clipboard.' + err);
+      alert("Error copying to clipboard." + err)
     }
-    document.body.removeChild(textarea);
-    return;
+    document.body.removeChild(textarea)
+    return
   }
 
-  navigator.clipboard.writeText(textToCopy).then(() => {
-    alert('Copied to clipboard!');
-  }).catch(() => {
-    alert('Failed to copy.');
-  });
+  navigator.clipboard
+    .writeText(textToCopy)
+    .then(() => {
+      alert("Copied to clipboard!")
+    })
+    .catch(() => {
+      alert("Failed to copy.")
+    })
 }
 
 declare global {
@@ -51,4 +54,4 @@ declare global {
 
 window.transformLeftToRight = transformLeftToRight
 window.transformRightToLeft = transformRightToLeft
-window.copyToClipboard = copyToClipboard;
+window.copyToClipboard = copyToClipboard
