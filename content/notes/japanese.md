@@ -288,7 +288,9 @@ the same is true for えい → えー
 
 ### 一ヶ
 
-for some reason 一ヶ is pronounced 一カ
+note that ヶ is not ケ \
+一ヶ is pronounced 一カ \
+ヶ a graphical abbreviation of 箇
 
 ### は
 
@@ -381,5 +383,8 @@ kanji can have up to three different types of readings
 | **石**          | せき                                                                                                                                                           | いし                                                                                                               | あら                                                                                                                                    |
 
 ### Weird Kanji
+
+々
+〆
 
 #### Kanji that are unique in JP (different from both traditional and simplified chinese)
