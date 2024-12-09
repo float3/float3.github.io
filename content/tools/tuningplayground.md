@@ -21,76 +21,76 @@ or
    href="/misc/blobs/jm_mozdi.mid"
    download="mozart_dies_irea.mid">
 or this one in case the other site goes down
-</a>
+</a> 
 <br>
-theres also the debug version of this page: <a href="/tools/tuningplayground_debug.md">here</a>
+theres also a debug version of this page: <a href="/tools/tuningplayground_debug.md">here</a>
 <div style="display: block">
-   <input type="file" id="fileinput" accept=".midi,.mid" />
-   <!-- <input type="text" id="linkinput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="enter midi file link"> -->
-   <button id="playbutton">play</button>
-   <button id="stopbutton">stop</button>
+   <input type="file" id="fileInput" accept=".midi,.mid" />
+   <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
+   <button id="playButton">Play</button>
+   <button id="stopButton">Stop</button>
 </div>
 <p>
-   <label for="tuningselect">select tuning system:</label>
-   <select id="tuningselect" name="tuningselect">
-      <option value="justintonation">just intonation</option>
-      <option value="justintonation24">just intonation 24</option>
-      <option value="stepmethod">just intonated step method</option>
-      <option value="equaltemperament">equal temperament</option>
+   <label for="tuningSelect">Select Tuning System:</label>
+   <select id="tuningSelect" name="tuningSelect">
+      <option value="JustIntonation">Just Intonation</option>
+      <option value="JustIntonation24">Just Intonation 24</option>
+      <option value="StepMethod">Just Intonated Step Method</option>
+      <option value="EqualTemperament">Equal Temperament</option>
       <!-- <option value="thai">thai</option>
-         <option value="javanese">javanese</option> -->
-      <option value="wholetone">wholetone</option>
-      <option value="quartertone">quartertone</option>
-      <option value="pythagoreantuning">pythagorean tuning</option>
-      <option value="fivelimit">five limit</option>
-      <option value="elevenlimit">eleven limit</option>
-      <option value="fortythreetone">fortythree tone tuning</option>
-      <option value="indian">indian</option>
-      <option value="indianalt">indian alt</option>
-      <option value="indianfull">indian full</option>
-      <!-- <option value="meantone_temperament">meantone temperament</option>
-         <option value="well_temperament">well temperament</option> -->
-      <option value="equal_temperament">equal temperament</option>
+         <option value="Javanese">Javanese</option> -->
+      <option value="WholeTone">WholeTone</option>
+      <option value="QuarterTone">QuarterTone</option>
+      <option value="PythagoreanTuning">Pythagorean Tuning</option>
+      <option value="FiveLimit">Five Limit</option>
+      <option value="ElevenLimit">Eleven Limit</option>
+      <option value="FortythreeTone">Fortythree tone tuning</option>
+      <option value="Indian">Indian</option>
+      <option value="IndianAlt">Indian Alt</option>
+      <option value="IndianFull">Indian Full</option>
+      <!-- <option value="meantone_temperament">Meantone Temperament</option>
+         <option value="well_temperament">Well Temperament</option> -->
+      <option value="equal_temperament">Equal Temperament</option>
    </select>
 </p>
 <p>
-   <label for="soundmethod">select sound method:</label>
-   <select id="soundmethod" name="soundmethod">
-      <option value="sample">sample</option>
-      <option value="native">native</option>
+   <label for="soundMethod">Select Sound Method:</label>
+   <select id="soundMethod" name="soundMethod">
+      <option value="sample">Sample</option>
+      <option value="native">Native</option>
       <!-- <option value="tone.js">tone.js</option> -->
    </select>
 </p>
 <p>
-   volume:
+   Volume:
    <input
       type="range"
-      id="volumeslider"
+      id="volumeSlider"
       min="0"
       max="1"
       step="0.01"
       value="0.25"
       />
 </p>
-<p>transpose: <input id="transpose" /></p>
-<div id="stepsizecontainer" style="display: none">
-   <label for="stepsize">step size (co-primes with 12):</label>
-   <select id="stepsize">
+<p>Transpose: <input id="transpose" /></p>
+<div id="stepSizeContainer" style="display: none">
+   <label for="stepSize">Step Size (co-primes with 12):</label>
+   <select id="stepSize">
       <option value="1">1</option>
       <option value="5">5</option>
       <option value="7" selected>7</option>
       <option value="11">11</option>
    </select>
 </div>
-<div id="octavesize_container" style="display: block">
-   <label for="octavesize">octave size:</label>
-   <input id="octavesize" value="12" />
+<div id="octaveSize_container" style="display: block">
+   <label for="octaveSize">Octave Size:</label>
+   <input id="octaveSize" value="12" />
 </div>
-<div id="markedbuttons" style="display: none">
-   <button id="playmarked">play marked notes</button>
-   <button id="sharemarked">share marked notes</button>
+<div id="markedButtons" style="display: none">
+   <button id="playMarked">Play Marked Notes</button>
+   <button id="shareMarked">Share Marked Notes</button>
 </div>
-<div id="output" style="background-color: white; color: black"></div>
+<div id="output" style="background-color: #00000000; color: white"></div>
 <div class="keyboard dark-mode-invert">
    <!-- <div class="octave">
       <div class="white-key" data-note="0"></div>
@@ -222,6 +222,6 @@ theres also the debug version of this page: <a href="/tools/tuningplayground_deb
       <div class="white-key" data-note="108"></div>
    </div>
 </div>
-<div id="logcontainer"></div>
+<div id="logContainer"></div>
 </div>
 <script src="./tuningplayground/bootstrap.js"></script>
