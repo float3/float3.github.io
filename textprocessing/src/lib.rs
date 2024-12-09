@@ -8,6 +8,9 @@ use chinese_number::{ChineseCase, ChineseCountMethod, ChineseVariant, NumberToCh
 
 use japanese::converter;
 
+use pinyin::ToPinyin;
+use pinyin::ToPinyinMulti;
+
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
@@ -195,5 +198,32 @@ mod wasm_functions {
                 panic!("No Hangul found for given Hanja character");
             })
             .collect()
+    }
+
+    #[wasm_bindgen]
+    pub fn to_pinyin_wasm(text: String) -> String {
+        let mut aggregate_pinyin = String::new();
+        for pinyin in text.as_str().to_pinyin() {
+            if let Some(pinyin) = pinyin {
+                aggregate_pinyin.push_str(&pinyin.with_tone());
+                aggregate_pinyin.push_str(" ");
+            }
+        }
+        return aggregate_pinyin;
+    }
+
+    #[wasm_bindgen]
+    pub fn to_pinyin_multi_wasm(text: String) -> String {
+        let mut aggregate_pinyin = String::new();
+        for multi in text.as_str().to_pinyin_multi() {
+            if let Some(multi) = multi {
+                for pinyin in multi {
+                    aggregate_pinyin.push_str(&pinyin.with_tone());
+                    aggregate_pinyin.push_str(" ");
+                }
+                println!();
+            }
+        }
+        return aggregate_pinyin;
     }
 }
