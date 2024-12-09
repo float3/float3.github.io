@@ -1,5 +1,7 @@
 let wasmModulePromise: Promise<typeof import("wasm")>
 
+console.debug("Loading WASM module...")
+
 function loadWasm(): Promise<typeof import("wasm")> {
   if (!wasmModulePromise) {
     wasmModulePromise = import("wasm").then(async (module) => {

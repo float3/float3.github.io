@@ -13,9 +13,9 @@
   },
   "scripts": {
     "quartz": "./quartz/bootstrap-cli.mjs",
-    "docs": "npx quartz build --serve -d docs",
-    "check": "tsc --noEmit && npx prettier . --check",
-    "format": "npx prettier . --write",
+    "docs": "pnpm exec quartz build --serve -d docs",
+    "check": "tsc --noEmit && pnpm exec prettier . --check",
+    "format": "pnpm exec prettier . --write",
     "test": "tsx ./quartz/util/path.test.ts && tsx ./quartz/depgraph.test.ts",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"
   },
