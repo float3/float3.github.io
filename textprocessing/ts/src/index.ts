@@ -1,5 +1,3 @@
-import { pinyin_to_zhuyin_wasm_extended } from "wasm"
-
 let wasmModulePromise: Promise<typeof import("wasm")>
 
 function loadWasm(): Promise<typeof import("wasm")> {
@@ -22,20 +20,20 @@ enum Side {
 }
 
 export async function transformLeftToRight(index: number): Promise<void> {
-  const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null;
-  const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null;
+  const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null
+  const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null
   if (leftEl && rightEl) {
-    const left = leftEl.value;
-    rightEl.value = await mockTransform(left, index, Side.LEFT);
+    const left = leftEl.value
+    rightEl.value = await mockTransform(left, index, Side.LEFT)
   }
 }
 
 export async function transformRightToLeft(index: number): Promise<void> {
-  const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null;
-  const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null;
+  const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null
+  const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null
   if (rightEl && leftEl) {
-    const right = rightEl.value;
-    leftEl.value = await mockTransform(right, index, Side.RIGHT);
+    const right = rightEl.value
+    leftEl.value = await mockTransform(right, index, Side.RIGHT)
   }
 }
 
@@ -45,20 +43,24 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
     case 0:
       switch (side) {
         case Side.LEFT:
-          return wasm.pinyin_to_zhuyin_wasm_extended(text);
+          return wasm.pinyin_to_zhuyin_wasm_extended(text)
         case Side.RIGHT:
-          return wasm.zhuyin_to_pinyin_wasm_extended(text);
+          return wasm.zhuyin_to_pinyin_wasm_extended(text)
+        default:
+          return text
       }
     case 1:
       switch (side) {
         case Side.LEFT:
-          return wasm.convert_japanese_to_kana(text);
+          return wasm.convert_japanese_to_kana(text)
         case Side.RIGHT:
-          return wasm.convert_japanese_to_kanji(text);
+          return wasm.convert_japanese_to_kanji(text)
+        default:
+          return text
       }
     case 2:
-      return text.toLowerCase();
+      return text.toLowerCase()
     default:
-      return text;
+      return text
   }
 }
