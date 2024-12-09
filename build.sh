@@ -9,13 +9,13 @@ cd tuningplayground
 
 echo "building master"
 ./build.sh prod
-rm ./www/163.bootstrap.js.LICENSE.txt | true
+rm ./www/*.bootstrap.js.LICENSE.txt | true
 mv ./www ./stable
 mv ./stable ../content/tools/tuningplayground/
 
 echo "building dev"
 ./build.sh dev
-rm ./www/chords.json ./www/chord.txt | true
+rm ./www/chords.* | true
 mv ./www ../content/tools/debug
 
 mv ../content/tools/tuningplayground/chords.* ../content/misc/media/
