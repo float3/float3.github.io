@@ -1,4 +1,3 @@
-import CopyPlugin from "copy-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin/dist/index.js";
 import JsonMinimizerPlugin from "json-minimizer-webpack-plugin";
 import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin";
