@@ -46,7 +46,7 @@ jobs:
           source "$HOME/.cargo/env"
           rustup update
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf | sh
-
+          cargo install cargo-edit
           npm install -g pnpm
 
       - name: cache venv
