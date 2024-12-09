@@ -40,7 +40,7 @@ python -m generate_chords
 
 cd ../tuningplayground
 wasm-pack build --target web --dev
-cd ../textprocessing
+cd ../../textprocessing
 wasm-pack build --target web --dev
 
 cd $current_path
