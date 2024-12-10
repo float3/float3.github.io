@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+current_path=$(pwd)
+
 cd content/tools/
 rm -rf tuningplayground tuningplayground_debug textprocessing
-cd ../..
+cd $current_path
 
 cd tuningplayground
 

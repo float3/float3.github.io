@@ -12,11 +12,10 @@ else
   exit 1
 fi
 
-rm -rf www
-cd ./tuningplayground
+rm -rf www pkg
 wasm-pack build --target web $MODE $ARGS
 
-cd ../ts
+cd ./ts
 pnpm install
 pnpm exec tsc
 pnpm exec webpack --mode $WEBPACK_MODE
