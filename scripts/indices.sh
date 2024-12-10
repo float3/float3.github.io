@@ -4,7 +4,9 @@ generate_index() {
     local dir="$1"
     local title="$2"
 
-    cd "$(dirname "$0")/../content/misc/$dir"
+    local pwd=$(pwd)
+
+    cd "./content/misc/$dir"
     cat <<EOF > index.md
 ---
 title: $title
@@ -24,6 +26,8 @@ EOF
         echo "[$f](/misc/$dir/$f)" >> index.md
       fi
     done
+
+    cd $pwd
 }
 
 generate_index "media" "media"
