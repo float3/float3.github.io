@@ -8,3 +8,4 @@ Cargo.lock
 *.pdb
 rustup.sh
 init.sh
+pkg/

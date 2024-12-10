@@ -15,8 +15,8 @@ dependencies:
     specifier: ^6.4.4
     version: 6.4.4
   wasm:
-    specifier: file:../tuningplayground/pkg
-    version: file:../tuningplayground/pkg
+    specifier: file:../pkg
+    version: file:../pkg
 
 devDependencies:
   '@eslint/eslintrc':
@@ -3308,7 +3308,7 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  file:../tuningplayground/pkg:
-    resolution: {directory: ../tuningplayground/pkg, type: directory}
+  file:../pkg:
+    resolution: {directory: ../pkg, type: directory}
     name: tuningplayground
     dev: false
