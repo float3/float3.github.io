@@ -23,7 +23,7 @@ function copyToClipboard(inputId: string): void {
     try {
       const successful = document.execCommand("copy")
       if (successful) {
-        alert("Copied to clipboard!")
+        // alert("Copied to clipboard!")
       } else {
         alert("Failed to copy.")
       }
@@ -37,7 +37,7 @@ function copyToClipboard(inputId: string): void {
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
-      alert("Copied to clipboard!")
+      // alert("Copied to clipboard!")
     })
     .catch(() => {
       alert("Failed to copy.")

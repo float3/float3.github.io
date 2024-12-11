@@ -226,4 +226,18 @@ mod wasm_functions {
         }
         aggregate_pinyin
     }
+
+    #[wasm_bindgen]
+    pub fn hanja_to_hangul_all_variants(input: &str) -> String {
+        input
+            .chars()
+            .map(|c| {
+                hanja::get(c)
+                    .expect("No Hanja found for given Hangul character")
+                    .iter()
+                    .map(|(hanja, _)| hanja)
+                    .collect::<String>()
+            })
+            .collect()
+    }
 }

@@ -96,6 +96,15 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
         default:
           return text
       }
+    case 6:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.hanja_to_hangul_all_variants(text)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
     default:
       return text
   }
