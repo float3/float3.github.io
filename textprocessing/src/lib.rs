@@ -56,6 +56,8 @@ extern "C" {
 
 #[cfg(feature = "wasm")]
 mod wasm_functions {
+    use std::collections::HashSet;
+
     use super::*;
 
     #[wasm_bindgen]
@@ -209,6 +211,7 @@ mod wasm_functions {
                 aggregate_pinyin.push(' ');
             }
         }
+        aggregate_pinyin.pop();
         aggregate_pinyin
     }
 
@@ -221,23 +224,42 @@ mod wasm_functions {
                     aggregate_pinyin.push_str(pinyin.with_tone());
                     aggregate_pinyin.push(' ');
                 }
-                println!();
             }
         }
+        aggregate_pinyin.pop();
         aggregate_pinyin
     }
 
     #[wasm_bindgen]
     pub fn hanja_to_hangul_all_variants(input: &str) -> String {
-        input
-            .chars()
-            .map(|c| {
-                hanja::get(c)
-                    .expect("No Hanja found for given Hangul character")
-                    .iter()
-                    .map(|(hanja, _)| hanja)
-                    .collect::<String>()
-            })
-            .collect()
+        let mut readings: Vec<String> = Vec::new();
+
+        for hanja_char in input.chars() {
+            let mut hangul_candidates = HashSet::new();
+
+            // Iterate over the known range of Hangul syllables
+            for hangul_candidate in '\u{AC00}'..='\u{D7A3}' {
+                if let Some(results) = hanja::get(hangul_candidate) {
+                    if results.iter().any(|&(h, _)| h == hanja_char) {
+                        hangul_candidates.insert(hangul_candidate);
+                    }
+                }
+            }
+
+            if hangul_candidates.is_empty() {
+                panic!(
+                    "No Hangul readings found for Hanja character {}",
+                    hanja_char
+                );
+            }
+
+            // Convert the HashSet into a sorted String
+            let mut candidate_list: Vec<char> = hangul_candidates.into_iter().collect();
+            candidate_list.sort(); // Optional: Sort to ensure consistent order
+
+            readings.push(candidate_list.into_iter().collect());
+        }
+
+        readings.join(" ")
     }
 }

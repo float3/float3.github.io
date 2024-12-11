@@ -35,4 +35,11 @@ cd ..
 ./scripts/debug_version.sh
 
 pnpm install
-npx quartz build
+
+if [[ -z "$GITHUB_ACTIONS" ]]; then
+    ARGS="--serve"
+else
+    ARGS=""
+fi
+
+npx quartz build $ARGS

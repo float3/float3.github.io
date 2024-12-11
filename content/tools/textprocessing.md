@@ -14,15 +14,20 @@ made with love and rust (compiled to wasm)
 <table>
   <tbody>
     <tr>
+      <td colspan="2">
+        Chinese
+      </td>
+    </tr>
+    <tr>
       <td>
         Pinyin 
         <button onclick="copyToClipboard('left0')">Copy</button>
-        <input id="left0" oninput="transformLeftToRight(0)" value="zhù">
+        <input id="left0" oninput="transformLeftToRight(0)" value="zhùang">
       </td>
       <td>
         Zhuyin 
         <button onclick="copyToClipboard('right0')">Copy</button>
-        <input id="right0" oninput="transformRightToLeft(0)" value="ㄓㄨˋ">
+        <input id="right0" oninput="transformRightToLeft(0)" value="ㄓㄨㄤˋ">
       </td>
     </tr>
     <tr>
@@ -46,7 +51,7 @@ made with love and rust (compiled to wasm)
       <td>
         pīnyīn
         <button onclick="copyToClipboard('right4')">Copy</button>
-        <input id="right4" oninput="transformRightToLeft(4)" value="hàn zì " disabled>
+        <input id="right4" oninput="transformRightToLeft(4)" value="hàn zì" disabled>
       </td>
     </tr>
     <tr>
@@ -58,9 +63,14 @@ made with love and rust (compiled to wasm)
       <td>
         pīnyīn all readings
         <button onclick="copyToClipboard('right5')">Copy</button>
-        <input id="right5" oninput="transformRightToLeft(5)" value="de dī dí dì " disabled>
+        <input id="right5" oninput="transformRightToLeft(5)" value="de dī dí dì" disabled>
       </td>
     </tr> 
+    <tr>
+      <td colspan="2">
+        Japanese
+      </td>
+    </tr>
     <tr>
       <td>
         Hiragana 
@@ -74,6 +84,11 @@ made with love and rust (compiled to wasm)
       </td>
     </tr>
     <tr>
+      <td colspan="2">
+        Korean
+      </td>
+    </tr>
+    <tr>
       <td colspan="2" style="font-size: smaller;">
         Hangeul to Hanja, and Hanja to Hangeul conversion is not perfect as the first matching Hanja character is picked.
       </td>
@@ -82,15 +97,15 @@ made with love and rust (compiled to wasm)
       <td>
         Hanja
         <button onclick="copyToClipboard('left3')">Copy</button>
-        <input id="left3" oninput="transformLeftToRight(3)" value="我愛你">
+        <input id="left3" oninput="transformLeftToRight(3)" value="在元韓國">
       </td>
       <td>
         Hangeul 
         <button onclick="copyToClipboard('right3')">Copy</button>
-        <input id="right3" oninput="transformRightToLeft(3)" value="아애니">
+        <input id="right3" oninput="transformRightToLeft(3)" value="재원한국">
       </td>
     </tr>
-    <tr>
+    <!-- <tr>
       <td>
         Hanja
         <button onclick="copyToClipboard('left6')">Copy</button>
@@ -98,9 +113,9 @@ made with love and rust (compiled to wasm)
       </td>
       <td>
         Hangeul 
-        <button onclick="copyToClipboard('right3')">Copy</button>
+        <button onclick="copyToClipboard('right6')">Copy</button>
         <input id="right6" oninput="transformRightToLeft(6)" value="아애니">
       </td>
-    </tr>
+    </tr> -->
   </tbody>
 </table>
