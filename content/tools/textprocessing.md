@@ -39,6 +39,30 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td>
+        Hanzi
+        <button onclick="copyToClipboard('left4')">Copy</button>
+        <input id="left4" oninput="transformLeftToRight(4)" value="漢字">
+      </td>
+      <td>
+        pīnyīn
+        <button onclick="copyToClipboard('right4')">Copy</button>
+        <input id="right4" oninput="transformRightToLeft(4)" value="hàn zì " disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Hanzi
+        <button onclick="copyToClipboard('left5')">Copy</button>
+        <input id="left5" oninput="transformLeftToRight(5)" value="的">
+      </td>
+      <td>
+        pīnyīn all readings
+        <button onclick="copyToClipboard('right5')">Copy</button>
+        <input id="right5" oninput="transformRightToLeft(5)" value="de dī dí dì " disabled>
+      </td>
+    </tr> 
+    <tr>
+      <td>
         Hiragana 
         <button onclick="copyToClipboard('left2')">Copy</button>
         <input id="left2" oninput="transformLeftToRight(2)" value="ひらがな">
@@ -68,27 +92,15 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td>
-        漢字
-        <button onclick="copyToClipboard('left4')">Copy</button>
-        <input id="left4" oninput="transformLeftToRight(4)">
+        Hanja
+        <button onclick="copyToClipboard('left6')">Copy</button>
+        <input id="left6" oninput="transformLeftToRight(6)" value="我愛你">
       </td>
       <td>
-        pīnyīn
-        <button onclick="copyToClipboard('right4')">Copy</button>
-        <input id="right4" oninput="transformRightToLeft(4)">
+        Hangeul 
+        <button onclick="copyToClipboard('right3')">Copy</button>
+        <input id="right6" oninput="transformRightToLeft(6)" value="아애니">
       </td>
     </tr>
-    <tr>
-      <td>
-        p
-        <button onclick="copyToClipboard('left5')">Copy</button>
-        <input id="left5" oninput="transformLeftToRight(5)">
-      </td>
-      <td>
-        z
-        <button onclick="copyToClipboard('right5')">Copy</button>
-        <input id="right5" oninput="transformRightToLeft(5)">
-      </td>
-    </tr> 
   </tbody>
 </table>
