@@ -2667,8 +2667,8 @@ packages:
     engines: {node: '>=10.12.0'}
     hasBin: true
 
-  sass@1.82.0:
-    resolution: {integrity: sha512-j4GMCTa8elGyN9A7x7bEglx0VgSpNUG4W4wNedQ33wSMdnkqQCT8HTwOaVSV4e6yQovcu/3Oc4coJP/l0xhL2Q==}
+  sass@1.83.0:
+    resolution: {integrity: sha512-qsSxlayzoOjdvXMVLkzF84DJFc2HZEL/rFyGIKbbilYtAvlCxyuzUeff9LawTn4btVnLKg75Z8MMr1lxU1lfGw==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -4211,7 +4211,7 @@ snapshots:
       esbuild: 0.24.0
       resolve: 1.22.8
       safe-identifier: 0.4.2
-      sass: 1.82.0
+      sass: 1.83.0
       sass-embedded: 1.82.0
 
   esbuild@0.23.1:
@@ -5666,7 +5666,7 @@ snapshots:
 
   sass-migrator@2.2.1: {}
 
-  sass@1.82.0:
+  sass@1.83.0:
     dependencies:
       chokidar: 4.0.1
       immutable: 5.0.3
