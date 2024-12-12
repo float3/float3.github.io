@@ -39,13 +39,16 @@ jobs:
 
       - name: dependencies
         run: |
-          cd tuningplayground
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
           curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf -o init.sh
           chmod +x rustup.sh init.sh
           ./rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
           source "$HOME/.cargo/env"
+          export PWD=$(pwd)
+          cd /home/runner/.cargo/bin
+          rm rustfmt rust-analyzer cargo-fmt
+          cd $PWD
           rustup update
           ./init.sh
           cargo install cargo-edit
