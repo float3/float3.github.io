@@ -20,10 +20,8 @@ written by pema99 https://github.com/pema99/glsl2hlsl/
   <textarea id="in">
 // http://www.pouet.net/prod.php?which=57245
 // If you intend to reuse this shader, please add credits to 'Danilo Guanabara'
-
 #define t iTime
 #define r iResolution.xy
-
 void mainImage( out vec4 fragColor, in vec2 fragCoord ){
 	vec3 c;
 	float l,z=t;

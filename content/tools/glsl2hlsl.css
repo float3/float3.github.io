@@ -12,6 +12,7 @@ textarea {
     float: left;
     height: 100%;
     resize: none;
+    padding-bottom: 400px;
 }
 
 h2 {
