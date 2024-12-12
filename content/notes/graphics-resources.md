@@ -6,6 +6,8 @@ tags:
   - graphics
   - programming
   - list
+  - unity
+  - shaders
 ---
 
 you can also find all these links [here](/plaintext/graphics-resources.txt)

@@ -1,6 +1,4 @@
 import TerserPlugin from "terser-webpack-plugin/dist/index.js"
-import JsonMinimizerPlugin from "json-minimizer-webpack-plugin"
-import HTMLMinimizerPlugin from "html-minimizer-webpack-plugin"
 import path from "path"
 
 export default {
@@ -28,8 +26,6 @@ export default {
           mangle: true,
         },
       }),
-      new JsonMinimizerPlugin(),
-      new HTMLMinimizerPlugin(),
     ],
   },
   experiments: {

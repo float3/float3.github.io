@@ -38,10 +38,17 @@ pip install music21
 python -m test
 python -m generate_chords
 
-cd ../tuningplayground
-wasm-pack build --target web --dev
-cd ../../textprocessing
-wasm-pack build --target web --dev
+cd $current_path
+cd ./tuningplayground
+wasm-pack build --target web --release
+
+cd $current_path
+cd ../textprocessing
+wasm-pack build --target web --release
+
+cd $current_path
+cd ./glsl2hlsl/glsl2hlsl-wasm
+wasm-pack build --target web --release
 
 cd $current_path
 pnpx npm-upgrade
@@ -52,15 +59,28 @@ pnpm install
 cd ./ts
 node_up src
 
-cd ../tuningplayground/
+cd $current_path
+
+cd ./tuningplayground/
 cargo_up
 
 cd ./ts
 node_up src
 
-cd ../../textprocessing/
-ls
+cd $current_path
+
+cd ./textprocessing/
 cargo_up
+
+cd ./ts
+node_up src
+
+cd $current_path
+
+cd ./glsl2hlsl/
+cargo_up
+
+cd ./glsl2hlsl-wasm/
 
 cd ./ts
 node_up src

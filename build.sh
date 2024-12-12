@@ -3,7 +3,7 @@
 current_path=$(pwd)
 
 cd content/tools/
-rm -rf tuningplayground tuningplayground_debug textprocessing
+rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl
 cd $current_path
 
 cd tuningplayground
@@ -24,6 +24,11 @@ mv ../content/tools/tuningplayground/chords.* ../content/misc/plaintext/
 cd ../textprocessing
 ./build.sh prod
 mv ./www ../content/tools/textprocessing/
+
+cd ../glsl2hlsl
+./build.sh prod
+mv ./glsl2hlsl-wasm/www ../content/tools/glsl2hlsl/
+
 
 cd ../ts 
 pnpm install

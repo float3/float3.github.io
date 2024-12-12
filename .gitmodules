@@ -1,3 +1,6 @@
 [submodule "tuningplayground/music21-rs/music21"]
 	path = tuningplayground/music21-rs/music21
 	url = git@github.com:cuthbertLab/music21
+[submodule "glsl2hlsl"]
+	path = glsl2hlsl
+	url = git@github.com:float3/glsl2hlsl.git

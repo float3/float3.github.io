@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+textarea {
+    width: 50%;
+    float: left;
+    height: 100%;
+    resize: none;
+}
+
+h2 {
+    width: 50%;
+    float: left;
+    margin: 0;
+}
+
+input {
+    padding: 10;
+    font-size: 26px;
+}
+
+.areas {
+    height: 80%;
+}
