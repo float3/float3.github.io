@@ -45,10 +45,7 @@ jobs:
           ./rustup.sh --default-toolchain nightly --profile minimal -y
           rustup component add rustfmt clippy --toolchain nightly
           source "$HOME/.cargo/env"
-          export PWD=$(pwd)
-          cd /home/runner/.cargo/bin
-          rm rustfmt rust-analyzer cargo-fmt
-          cd $PWD
+          rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
           rustup update
           ./init.sh
           cargo install cargo-edit
