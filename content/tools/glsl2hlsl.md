@@ -48,7 +48,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ){
 <br>
 <br>
 <input id="download" type="button" value="Download from URL or ID">
-<input id="shader" value="https://www.shadertoy.com/view/XsXXDn" style="width:30%">
+<input id="shader" value="https://www.shadertoy.com/view/XsXXDn" style="width:100%">
 <br>
 <br>
 <br>
