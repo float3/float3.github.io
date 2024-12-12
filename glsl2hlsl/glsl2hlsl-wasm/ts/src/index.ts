@@ -14,13 +14,13 @@ const extract = document.getElementById("extract") as HTMLInputElement
 const convertButton = document.getElementById("convert") as HTMLButtonElement
 const downloadButton = document.getElementById("download") as HTMLButtonElement
 
-convertButton.addEventListener("click", (_e: MouseEvent) => {
+convertButton.addEventListener("click", () => {
   if (inp && outp && extract && raymarch) {
     outp.value = wasm.transpile(inp.value, extract.checked, raymarch.checked)
   }
 })
 
-downloadButton.addEventListener("click", (_e: MouseEvent) => {
+downloadButton.addEventListener("click", () => {
   if (shader && extract && raymarch) {
     const arr = shader.value.split("/").filter((x) => x.length > 0)
 
