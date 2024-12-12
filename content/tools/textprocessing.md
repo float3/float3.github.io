@@ -5,6 +5,8 @@ tags:
   - text
   - language
   - wasm
+  - tools
+  - rust
 ---
 
 made with love and rust (compiled to wasm)

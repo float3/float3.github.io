@@ -5,6 +5,8 @@ updated: 2024-11-25
 tags:
   - music
   - wasm
+  - tools
+  - rust
 ---
 
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">

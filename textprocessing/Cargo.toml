@@ -34,7 +34,7 @@ debug = false
 debug-assertions = false
 incremental = true
 lto = true
-opt-level = 3
+opt-level = 's'
 overflow-checks = false
 panic = "unwind"
 rpath = false
@@ -42,7 +42,7 @@ split-debuginfo = "off"
 strip = "symbols"
 
 [package.metadata.wasm-pack.profile.release]
-wasm-opt = ['-O4']
+wasm-opt = ['-Os']
 
 [package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false
