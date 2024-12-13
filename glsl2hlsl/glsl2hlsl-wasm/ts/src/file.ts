@@ -1,7 +1,7 @@
 let textFile: string | null = null
 
-let makeTextFile = (text: string): string => {
-  let data = new Blob([text], { type: "text/plain" })
+const makeTextFile = (text: string): string => {
+  const data = new Blob([text], { type: "text/plain" })
 
   if (textFile !== null) {
     window.URL.revokeObjectURL(textFile)
@@ -11,14 +11,14 @@ let makeTextFile = (text: string): string => {
   return textFile
 }
 
-let links = document.querySelector("#links")
+const links = document.querySelector("#links")
 
 // Set up downloading
 export function downloadFile(name: string, contents: string): void {
-  let c = document.createElement("br")
+  const c = document.createElement("br")
   links?.appendChild(c)
 
-  let a = document.createElement("a")
+  const a = document.createElement("a")
   // a.style.display = "none"
   a.href = makeTextFile(contents)
   a.download = name
@@ -30,10 +30,10 @@ export function downloadFile(name: string, contents: string): void {
 }
 
 export function downloadImage(name: string, contents: string): void {
-  let c = document.createElement("br")
+  const c = document.createElement("br")
   links?.appendChild(c)
 
-  let a = document.createElement("a")
+  const a = document.createElement("a")
   a.innerHTML = name
   a.href = contents
   a.download = name
@@ -45,7 +45,7 @@ export function downloadImage(name: string, contents: string): void {
 }
 
 export function reset(): void {
-  let links = document.querySelector("#links")
+  const links = document.querySelector("#links")
   if (links) {
     links.innerHTML = "<p></p><h2>Textures (Ctrl+Click and Save-As):</h2><br>"
   }
