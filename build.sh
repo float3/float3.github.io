@@ -43,4 +43,4 @@ pnpm exec tsc
 cd $current_path
 pnpm install
 
-npx quartz build $ARGS
+npx quartz build $QUARTZ_ARGS
