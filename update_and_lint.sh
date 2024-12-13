@@ -39,7 +39,7 @@ cd ./tuningplayground
 wasm-pack build --target web $ARGS
 
 cd $current_path
-cd ../textprocessing
+cd ./textprocessing
 wasm-pack build --target web $ARGS
 
 cd $current_path
