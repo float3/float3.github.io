@@ -67,17 +67,17 @@ window.downloadImage = downloadImage
 const links: HTMLDivElement | null = document.querySelector("#links")
 
 export function downloadFile(name: string, contents: string): void {
-  const c = document.createElement("br")
-  links?.appendChild(c)
+  // const c = document.createElement("br")
+  // links?.appendChild(c)
 
   const a = document.createElement("a")
-  // a.style.display = "none"
+  a.style.display = "none"
   a.href = makeTextFile(contents)
   a.download = name
   links?.appendChild(a)
 
   document.body.appendChild(a)
-  // a.click()
+  a.click()
   // document.body.removeChild(a)
 }
 
