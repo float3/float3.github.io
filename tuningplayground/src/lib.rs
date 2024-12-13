@@ -93,7 +93,7 @@ static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
 
 fn static_data() -> &'static LUTType {
     CHORD_LUT.get_or_init(|| {
-        include_str!("../ts/src/chords.txt")
+        include_str!("../../content/misc/plaintext/chords.txt")
             .split(";")
             .map(|s| s.to_string())
             .collect::<LUTType>()

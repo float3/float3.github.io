@@ -16,10 +16,7 @@ mv ./stable ../content/tools/tuningplayground/
 
 echo "building dev"
 ./build.sh dev
-rm ./www/chords.* | true
 mv ./www ../content/tools/tuningplayground_debug/
-
-mv ../content/tools/tuningplayground/chords.* ../content/misc/plaintext/
 
 cd ../textprocessing
 ./build.sh prod
@@ -29,15 +26,9 @@ cd ../glsl2hlsl
 ./build.sh prod
 mv ./glsl2hlsl-wasm/www ../content/tools/glsl2hlsl/
 
-
 cd ../ts 
 pnpm install
 pnpm exec tsc
-
-cd ..
-./scripts/collect_links.sh
-./scripts/indices.sh
-./scripts/debug_version.sh
 
 pnpm install
 
