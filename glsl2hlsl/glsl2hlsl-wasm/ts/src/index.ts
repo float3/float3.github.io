@@ -2,9 +2,9 @@ export let wasm: typeof import("glsl2hlsl-wasm")
 
 declare global {
   interface Window {
-    downloadFile: (name: string, contents: string) => void;
-    downloadImage: (name: string, contents: string) => void;
-    reset: () => void;
+    downloadFile: (name: string, contents: string) => void
+    downloadImage: (name: string, contents: string) => void
+    reset: () => void
   }
 }
 
