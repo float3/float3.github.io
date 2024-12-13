@@ -16,5 +16,6 @@ content/.obsidian/
 rustup.sh
 init.sh
 
+content/js
 content/tools/*/*.wasm
 content/tools/*/*.js
