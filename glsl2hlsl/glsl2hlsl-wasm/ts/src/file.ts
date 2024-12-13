@@ -11,27 +11,33 @@ const makeTextFile = (text: string): string => {
   return textFile
 }
 
+let links = document.querySelector("#links")
+
 // Set up downloading
 export function downloadFile(name: string, contents: string): void {
+  const c = document.createElement("br")
+  links?.appendChild(c)
+
   const a = document.createElement("a")
-  a.style.display = "none"
+  // a.style.display = "none"
   a.href = makeTextFile(contents)
   a.download = name
-  document.body.appendChild(a)
+  links?.appendChild(a)
 
+  document.body.appendChild(a)
   // a.click()
   // document.body.removeChild(a)
 }
 
 export function downloadImage(name: string, contents: string): void {
   const c = document.createElement("br")
-  document.querySelector("#links")?.appendChild(c)
+  links?.appendChild(c)
 
   const a = document.createElement("a")
   a.innerHTML = name
   a.href = contents
   a.download = name
-  document.querySelector("#links")?.appendChild(a)
+  links?.appendChild(a)
 
   document.body.appendChild(a)
   // a.click()
