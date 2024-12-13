@@ -3,6 +3,7 @@ export let wasm: typeof import("glsl2hlsl-wasm")
 import("glsl2hlsl-wasm").then((module) => {
   wasm = module
   wasm.default()
+  wasm.main()
 })
 
 const inp = document.getElementById("in") as HTMLTextAreaElement

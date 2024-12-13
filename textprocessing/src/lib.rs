@@ -15,14 +15,10 @@ use pinyin::ToPinyinMulti;
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
+#[cfg(feature = "wasm")]
 #[cfg(feature = "mini-alloc")]
 #[global_allocator]
 static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
-
-#[cfg(feature = "console_error_panic_hook")]
-pub(crate) fn set_panic_hook() {
-    console_error_panic_hook::set_once();
-}
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen(start)]
@@ -30,7 +26,7 @@ pub(crate) fn main() {
     #[cfg(debug_assertions)]
     log("main");
     #[cfg(feature = "console_error_panic_hook")]
-    set_panic_hook();
+    console_error_panic_hook::set_once();
 }
 
 #[cfg(feature = "wasm")]

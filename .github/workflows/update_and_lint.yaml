@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   update_and_lint:
+    if: ${{ github.actor != 'github-actions[bot]' && !contains(github.event.head_commit.message, 'update and lint') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
