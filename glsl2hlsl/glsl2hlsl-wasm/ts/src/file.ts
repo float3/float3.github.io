@@ -23,7 +23,7 @@ window.reset = reset
 window.downloadFile = downloadFile
 window.downloadImage = downloadImage
 
-let links: HTMLDivElement | null = document.querySelector("#links")
+const links: HTMLDivElement | null = document.querySelector("#links")
 
 export function downloadFile(name: string, contents: string): void {
   const c = document.createElement("br")
