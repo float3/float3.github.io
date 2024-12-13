@@ -1,3 +1,11 @@
+declare global {
+  interface Window {
+    downloadFile: (name: string, contents: string) => void
+    downloadImage: (name: string, contents: string) => void
+    reset: () => void
+  }
+}
+
 let textFile: string | null = null
 
 let makeTextFile = (text: string): string => {
@@ -11,9 +19,12 @@ let makeTextFile = (text: string): string => {
   return textFile
 }
 
+window.reset = reset
+window.downloadFile = downloadFile
+window.downloadImage = downloadImage
+
 let links = document.querySelector("#links")
 
-// Set up downloading
 export function downloadFile(name: string, contents: string): void {
   let c = document.createElement("br")
   links?.appendChild(c)
@@ -45,7 +56,6 @@ export function downloadImage(name: string, contents: string): void {
 }
 
 export function reset(): void {
-  let links = document.querySelector("#links")
   if (links) {
     links.innerHTML = "<p></p><h2>Textures (Ctrl+Click and Save-As):</h2><br>"
   }
