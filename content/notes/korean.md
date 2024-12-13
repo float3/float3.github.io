@@ -24,19 +24,19 @@ some of my notes may not apply to north korean
 
 ### Pronunciation
 
-The shape of tongue when pronouncing [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") (g,k):
+The shape of tongue when pronouncing [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") (g,k): \
 ![](/misc/media/ㄱ.png)
 
-The shape of tongue when pronouncing [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") (n):
+The shape of tongue when pronouncing [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") (n): \
 ![](/misc/media/ㄴ.png)
 
-The shape of teeth and tongue when pronouncing [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") (s)
+The shape of teeth and tongue when pronouncing [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") (s) \
 ![](/misc/media/ㅅ.png)
 
-[ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") (ng) is similar to the throat hole.
+[ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") (ng) is similar to the throat hole. \
 ![](/misc/media/ㅇ.png)
 
-[ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") (m) is similar to a closed mouth.
+[ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") (m) is similar to a closed mouth. \
 ![](/misc/media/ㅁ.png)
 
 ### Letter placement within a block
