@@ -32,14 +32,7 @@ current_path=$(pwd)
 cd tuningplayground/music21-rs/music21
 git pull origin master
 
-cd ..
-python -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r music21/requirements.txt
-pip install music21
-python -m test
-python -m generate_chords
+# need to provide packages so that pnpm doesn't complain
 
 cd $current_path
 cd ./tuningplayground
@@ -84,6 +77,7 @@ cd ./glsl2hlsl/
 cargo_up
 
 cd ./glsl2hlsl-wasm/
+cargo_up
 
 cd ./ts
 node_up src

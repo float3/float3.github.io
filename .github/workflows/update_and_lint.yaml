@@ -11,14 +11,11 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "github-pages"
+  group: "update_and_lint"
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  update_and_lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,6 +28,11 @@ jobs:
         uses: actions/setup-node@v4.1.0
         with:
           node-version: 22
+
+      - name: python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
 
       - name: dependencies
         run: |
@@ -46,15 +48,28 @@ jobs:
           cargo install cargo-edit
           npm install -g pnpm
 
-      - name: build
-        run: |
-          ./build.sh
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+      - name: cache venv
+        id: cache-venv
+        uses: actions/cache@v4
         with:
-          path: "public"
+          path: tuningplayground/music21-rs/venv
+          key: ${{ runner.os }}-venv
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4.0.5
+      - name: cache pycache
+        id: cache-pycache
+        uses: actions/cache@v4
+        with:
+          path: tuningplayground/music21-rs/__pycache__
+          key: ${{ runner.os }}-pycache
+
+      - name: update and lint
+        run: |
+          ./update_and_lint.sh
+
+      - name: commit
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || git commit -m "update and lint"
+          git push || echo "No changes to commit"

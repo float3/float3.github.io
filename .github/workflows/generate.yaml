@@ -1,0 +1,62 @@
+on:
+  push:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "generate"
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          token: ${{ secrets.TOKEN }}
+          submodules: recursive
+
+      - name: setup node
+        uses: actions/setup-node@v4.1.0
+        with:
+          node-version: 22
+
+      - name: python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: cache venv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: tuningplayground/music21-rs/venv
+          key: ${{ runner.os }}-venv
+
+      - name: cache pycache
+        id: cache-pycache
+        uses: actions/cache@v4
+        with:
+          path: tuningplayground/music21-rs/__pycache__
+          key: ${{ runner.os }}-pycache
+
+      - name: generate files
+        run: |
+          ./generate.sh
+
+      - name: commit
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add -A
+          git diff --staged --quiet || git commit -m "generate"
+          git pull --rebase
+          git push || echo "No changes to commit"
