@@ -9,7 +9,8 @@ static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
 
 #[cfg(feature = "wasm")]
 #[cfg(feature = "console_error_panic_hook")]
-pub(crate) fn set_panic_hook() {
+#[allow(dead_code)]
+pub fn set_panic_hook() {
     console_error_panic_hook::set_once();
 }
 
