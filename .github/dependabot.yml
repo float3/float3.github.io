@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
@@ -9,7 +9,7 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/ts"
     schedule:
       interval: "weekly"
@@ -18,7 +18,7 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/tuningplayground/ts"
     schedule:
       interval: "weekly"
@@ -27,7 +27,7 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/textprocessing/ts"
     schedule:
       interval: "weekly"
@@ -36,7 +36,7 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "pnpm"
+  - package-ecosystem: "npm"
     directory: "/glsl2hlsl/glsl2hlsl-wasm/ts"
     schedule:
       interval: "weekly"
