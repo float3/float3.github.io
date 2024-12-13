@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "dev" ]; then
+if [ "$1" = "dev" ] || [[ -n "$GITHUB_ACTIONS" ]]; then
   MODE="--dev"
   WEBPACK_MODE="development"
   ARGS="--features console_error_panic_hook"

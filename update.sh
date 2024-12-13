@@ -23,6 +23,9 @@ cargo_up() {
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
     git pull
+    ARGS=""
+else
+    ARGS="--release"
 fi
 
 current_path=$(pwd)
@@ -40,15 +43,15 @@ python -m generate_chords
 
 cd $current_path
 cd ./tuningplayground
-wasm-pack build --target web --release
+wasm-pack build --target web $ARGS
 
 cd $current_path
 cd ../textprocessing
-wasm-pack build --target web --release
+wasm-pack build --target web $ARGS
 
 cd $current_path
 cd ./glsl2hlsl/glsl2hlsl-wasm
-wasm-pack build --target web --release
+wasm-pack build --target web $ARGS
 
 cd $current_path
 pnpx npm-upgrade
