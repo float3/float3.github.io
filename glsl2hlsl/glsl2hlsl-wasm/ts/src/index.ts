@@ -47,38 +47,33 @@ declare global {
   }
 }
 
-let textFile: string | null = null
-
-const makeTextFile = (text: string): string => {
-  const data = new Blob([text], { type: "text/plain" })
-
-  if (textFile !== null) {
-    window.URL.revokeObjectURL(textFile)
-  }
-
-  textFile = window.URL.createObjectURL(data)
-  return textFile
-}
-
 window.reset = reset
 window.downloadFile = downloadFile
 window.downloadImage = downloadImage
 
 const links: HTMLDivElement | null = document.querySelector("#links")
 
-export function downloadFile(name: string, contents: string): void {
-  // const c = document.createElement("br")
-  // links?.appendChild(c)
+const makeTextFile = (text: string): string => {
+  const data = new Blob([text], { type: "text/plain" })
+  return window.URL.createObjectURL(data)
+}
 
+export function downloadFile(name: string, contents: string): void {
   const a = document.createElement("a")
   a.style.display = "none"
-  a.href = makeTextFile(contents)
+  const url = makeTextFile(contents)
+  a.href = url
   a.download = name
   links?.appendChild(a)
 
   document.body.appendChild(a)
   a.click()
-  // document.body.removeChild(a)
+
+  // give the browser a moment before revoking
+  setTimeout(() => {
+    window.URL.revokeObjectURL(url)
+    a.remove()
+  }, 1000)
 }
 
 export function downloadImage(name: string, contents: string): void {
