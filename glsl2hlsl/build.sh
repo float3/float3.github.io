@@ -13,7 +13,7 @@ fi
 
 cd ./glsl2hlsl-wasm
 rm -rf www pkg
-wasm-pack build --target web $ARGS
+wasm-pack build --target bundler $ARGS
 
 cd ./ts
 pnpm install

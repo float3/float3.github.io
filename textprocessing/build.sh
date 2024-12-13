@@ -13,7 +13,7 @@ else
 fi
 
 rm -rf www pkg
-wasm-pack build --target web $MODE $ARGS
+wasm-pack build --target bundler $MODE $ARGS
 
 cd ./ts
 pnpm install
