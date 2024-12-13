@@ -2,6 +2,14 @@ import TerserPlugin from "terser-webpack-plugin/dist/index.js"
 import path from "path"
 
 export default {
+  module: {
+    rules: [
+      {
+        type: "webassembly/async",
+        test: /\.wasm$/,
+      },
+    ],
+  },
   entry: "./dist/bootstrap.js",
   output: {
     path: path.resolve(path.dirname(""), "../www/"),
@@ -28,7 +36,7 @@ export default {
       }),
     ],
   },
-  // experiments: {
-  //   syncWebAssembly: true,
-  // },
+  experiments: {
+    asyncWebAssembly: true,
+  },
 }

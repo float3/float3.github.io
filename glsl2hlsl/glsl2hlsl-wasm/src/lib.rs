@@ -19,8 +19,8 @@ pub(crate) fn main() {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 extern "C" {
-    fn download_file(name: &str, contents: &str);
-    fn download_image(name: &str, contents: &str);
+    fn downloadFile(name: &str, contents: &str);
+    fn downloadImage(name: &str, contents: &str);
     fn reset();
 }
 
@@ -50,9 +50,9 @@ pub fn download(json: String, extract_props: bool, raymarch: bool) {
     let images = get_image_files(&shader);
     reset();
     for f in files.iter() {
-        download_file(&f.name, &f.contents);
+        downloadFile(&f.name, &f.contents);
     }
     for f in images.iter() {
-        download_image(&f.name, &f.contents);
+        downloadImage(&f.name, &f.contents);
     }
 }

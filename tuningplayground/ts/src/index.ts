@@ -2,23 +2,21 @@ export let wasm: typeof import("wasm")
 import("wasm").then((module) => {
   wasm = module
   wasm.main()
-  wasm
-    .default()
-    .then(() => {
-      //make sure do anything that can call wasm after wasm has finished importing
-      requestMIDI()
-      playButton.onclick = play
-      document.addEventListener("keydown", keydown)
-      document.addEventListener("keyup", keyup)
-      document.querySelectorAll(".white-key, .black-key").forEach((key) => {
-        addEvents(key)
-      })
-      onload()
-      playingTonesChanged()
-      // linkInputChange();
-    })
-    .catch(console.error)
-})
+
+  //make sure do anything that can call wasm after wasm has finished importing
+  requestMIDI()
+  playButton.onclick = play
+  document.addEventListener("keydown", keydown)
+  document.addEventListener("keyup", keyup)
+  document.querySelectorAll(".white-key, .black-key").forEach((key) => {
+    addEvents(key)
+  })
+  onload()
+  playingTonesChanged()
+  // linkInputChange();
+
+}).catch(console.error)
+
 import { Tone, createTone } from "./Tone.js"
 import { requestMIDI } from "./MIDI.js"
 import { keydown, keyup, visibilityChange, onload } from "./events.js"

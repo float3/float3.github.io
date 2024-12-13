@@ -36,15 +36,15 @@ git pull origin master
 
 cd $current_path
 cd ./tuningplayground
-wasm-pack build --target web $ARGS
+wasm-pack build --target bundler $ARGS
 
 cd $current_path
 cd ./textprocessing
-wasm-pack build --target web $ARGS
+wasm-pack build --target bundler $ARGS
 
 cd $current_path
 cd ./glsl2hlsl/glsl2hlsl-wasm
-wasm-pack build --target web $ARGS
+wasm-pack build --target bundler $ARGS
 
 cd $current_path
 pnpx npm-upgrade
