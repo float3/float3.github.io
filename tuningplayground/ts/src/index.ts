@@ -1,6 +1,7 @@
 export let wasm: typeof import("wasm")
 import("wasm").then((module) => {
   wasm = module
+  wasm.main()
   wasm
     .default()
     .then(() => {

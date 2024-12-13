@@ -6,6 +6,7 @@ function loadWasm(): Promise<typeof import("wasm")> {
   if (!wasmModulePromise) {
     wasmModulePromise = import("wasm").then(async (module) => {
       await module.default()
+      module.main()
       return module
     })
   }

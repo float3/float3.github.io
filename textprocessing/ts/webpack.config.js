@@ -28,7 +28,7 @@ export default {
       }),
     ],
   },
-  experiments: {
-    syncWebAssembly: true,
-  },
+  // experiments: {
+  //   syncWebAssembly: true,
+  // },
 }
