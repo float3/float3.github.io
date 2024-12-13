@@ -8,9 +8,11 @@ use wasm_bindgen::prelude::*;
 static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
 
 #[cfg(feature = "wasm")]
-#[cfg(feature = "console_error_panic_hook")]
-#[allow(dead_code)]
-pub fn set_panic_hook() {
+#[wasm_bindgen(start)]
+pub(crate) fn main() {
+    #[cfg(debug_assertions)]
+    log("main");
+    #[cfg(feature = "console_error_panic_hook")]
     console_error_panic_hook::set_once();
 }
 
