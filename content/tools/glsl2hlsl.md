@@ -18,6 +18,7 @@ and by antiero https://github.com/antiero/glsl2hlsl/ \
 and my own improvements \
 glsl2hlsl is MIT Licensed
 <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
+
 <div class="areas">
   <table>
     <tr>
