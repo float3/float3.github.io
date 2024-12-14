@@ -19,9 +19,9 @@ if __name__ == "__main__":
     # sort the dictionary by key
     data = dict(sorted(data.items()))
 
-    with open("../../content/misc/plaintext/chords.txt", "w") as outfile:
+    with open("../../../content/misc/plaintext/chords.txt", "w") as outfile:
         for key, value in data.items():
             outfile.write(f"{value};")
 
-    with open("../../content/misc/plaintext/chords.json", "w") as outfile:
+    with open("../../../content/misc/plaintext/chords.json", "w") as outfile:
         json.dump(data, outfile, separators=(",", ":"))

@@ -4,7 +4,7 @@
 ./scripts/indices.sh
 ./scripts/debug_version.sh
 
-cd ./tuningplayground/music21-rs/
+cd ./wasm/tuningplayground/music21-rs/
 
 python -m venv venv
 source venv/bin/activate
