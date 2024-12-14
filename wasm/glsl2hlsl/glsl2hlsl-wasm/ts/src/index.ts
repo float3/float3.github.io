@@ -41,7 +41,7 @@ downloadButton.addEventListener("click", () => {
   }
 })
 
-const makeTextFile = (text: string): { textFile: string, cleanup: () => void } => {
+const makeTextFile = (text: string): { textFile: string; cleanup: () => void } => {
   const data = new Blob([text], { type: "text/plain" })
 
   const textFile = window.URL.createObjectURL(data)
@@ -119,7 +119,7 @@ function populateShader(): void {
       inp.value = json.Shader.renderpass[0].code
     }
   }
-  const shaderId = shader.value.split('/').pop()
+  const shaderId = shader.value.split("/").pop()
   xhttp.open("GET", `https://www.shadertoy.com/api/v1/shaders/${shaderId}?key=NtHtMm`)
   xhttp.send()
 }
