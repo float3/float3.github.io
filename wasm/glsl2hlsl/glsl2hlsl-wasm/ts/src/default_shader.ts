@@ -1,5 +1,6 @@
 export const DEFAULT_SHADER = "https://www.shadertoy.com/view/4XK3Wt"
-export const DEFAULT_SHADER_SOURCE = `void mainImage( out vec4 O, vec2 U ){
+export const DEFAULT_SHADER_SOURCE =
+    `void mainImage( out vec4 O, vec2 U ){
 
     vec2 r = iResolution.xy;
     vec2 uv = U/r;
