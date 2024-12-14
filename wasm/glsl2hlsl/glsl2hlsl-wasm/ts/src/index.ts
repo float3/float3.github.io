@@ -29,7 +29,7 @@ downloadButton.addEventListener("click", () => {
     const xhttp = new XMLHttpRequest()
     xhttp.onload = function () {
       if (this.responseText) {
-        console.log(this.responseText)
+        wasm.download(this.responseText, extract.checked, raymarch.checked)
       }
     }
 
@@ -41,17 +41,16 @@ downloadButton.addEventListener("click", () => {
   }
 })
 
-let textFile: string | null = null
-
-const makeTextFile = (text: string): string => {
+const makeTextFile = (text: string): { textFile: string; cleanup: () => void } => {
   const data = new Blob([text], { type: "text/plain" })
 
-  if (textFile) {
+  const textFile = window.URL.createObjectURL(data)
+
+  const cleanup = () => {
     window.URL.revokeObjectURL(textFile)
   }
 
-  textFile = window.URL.createObjectURL(data)
-  return textFile
+  return { textFile, cleanup }
 }
 
 declare global {
@@ -71,13 +70,16 @@ const links: HTMLDivElement = document.querySelector("#links") as HTMLDivElement
 export function downloadFile(name: string, contents: string): void {
   const a = document.createElement("a")
   a.style.display = "none"
-  a.href = makeTextFile(contents)
+  const { textFile, cleanup } = makeTextFile(contents)
+  a.href = textFile
   a.download = name
   links.appendChild(a)
 
   document.body.appendChild(a)
   a.click()
-  // document.body.removeChild(a)
+
+  document.body.removeChild(a)
+  cleanup()
 }
 
 export function downloadImage(name: string, contents: string): void {
@@ -91,7 +93,7 @@ export function downloadImage(name: string, contents: string): void {
   links.appendChild(a)
 
   // document.body.appendChild(a)
-  // a.click()
+  a.click()
   // document.body.removeChild(a)
 }
 
@@ -107,18 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
 })
 
 shader.addEventListener("input", () => {
-  populateShader()
-})
-
-function populateShader(): void {
   const xhttp = new XMLHttpRequest()
   xhttp.onload = function () {
     if (this.responseText) {
-      const json = JSON.parse(this.responseText)
-      inp.value = json.Shader.renderpass[0].code
+      inp.value = (JSON.parse(this.responseText)).Shader.renderpass[0].code
     }
   }
   const shaderId = shader.value.split("/").pop()
   xhttp.open("GET", `https://www.shadertoy.com/api/v1/shaders/${shaderId}?key=NtHtMm`)
   xhttp.send()
-}
+})
