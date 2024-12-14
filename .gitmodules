@@ -1,0 +1,3 @@
+[submodule "wasm/tuningplayground/music21-rs/music21"]
+	path = wasm/tuningplayground/music21-rs/music21
+	url = git@github.com:cuthbertLab/music21
