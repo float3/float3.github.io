@@ -1,11 +1,4 @@
-document.addEventListener("nav", () => {
-  func()
-  console.log("nav event")
-})
-
-console.log("therenderingequation.ts")
-
-function func(): void {
+document.addEventListener("DOMContentLoaded", () => {
   const elements: NodeListOf<SVGPathElement | SVGRectElement> = document.querySelectorAll(
     "#interactiveSvg path, #interactiveSvg rect",
   )
@@ -42,4 +35,4 @@ function func(): void {
       groupMap[fillColor]?.forEach((el) => el.classList.remove("hovered"))
     })
   })
-}
+}})
