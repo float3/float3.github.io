@@ -25,11 +25,6 @@ jobs:
           token: ${{ secrets.TOKEN }}
           submodules: recursive
 
-      - name: setup node
-        uses: actions/setup-node@v4.1.0
-        with:
-          node-version: 22
-
       - name: python
         uses: actions/setup-python@v5
         with:
