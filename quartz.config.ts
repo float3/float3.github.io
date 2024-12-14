@@ -9,10 +9,10 @@ import * as Plugin from "./quartz/plugins"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "hilll.dev",
-    enableSPA: true,
+    enableSPA: false,
     enablePopovers: true,
     analytics: null,
-    locale: "en-US",
+    locale: "zh-TW",
     baseUrl: "hilll.dev",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
