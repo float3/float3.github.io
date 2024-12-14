@@ -93,7 +93,7 @@ export function downloadImage(name: string, contents: string): void {
   links.appendChild(a)
 
   // document.body.appendChild(a)
-  a.click()
+  // a.click()
   // document.body.removeChild(a)
 }
 
