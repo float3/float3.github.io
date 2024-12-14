@@ -1,11 +1,11 @@
+import { DEFAULT_SHADER, DEFAULT_SHADER_SOURCE } from "./default_shader.js"
+
 export let wasm: typeof import("glsl2hlsl-wasm")
 
 import("glsl2hlsl-wasm").then((module) => {
   wasm = module
   wasm.main()
 })
-
-const DEFAULT_SHADER = "https://www.shadertoy.com/view/ld3Gz2"
 
 const inp = document.getElementById("in") as HTMLTextAreaElement
 const outp = document.getElementById("out") as HTMLTextAreaElement
@@ -104,10 +104,10 @@ export function reset(): void {
 
 document.addEventListener("DOMContentLoaded", () => {
   shader.value = DEFAULT_SHADER
-  populateShader()
+  inp.value = DEFAULT_SHADER_SOURCE
 })
 
-shader.addEventListener("change", () => {
+shader.addEventListener("input", () => {
   populateShader()
 })
 
