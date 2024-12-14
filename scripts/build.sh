@@ -3,8 +3,10 @@
 if [[ -z "$GITHUB_ACTIONS" ]]; then
     ARGS="dev"
     QUARTZ_ARGS="--serve"
+    echo "::warning::Building in development mode."
 else
     ARGS="prod"
+    QUARTZ_ARGS=""
 fi
 
 root_path=$(pwd)

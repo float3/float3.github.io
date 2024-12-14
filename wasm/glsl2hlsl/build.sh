@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "dev" ] || [[ -n "$GITHUB_ACTIONS" ]]; then
+if [ "$1" = "dev" ] || [[ -z "$GITHUB_ACTIONS" ]]; then
   ARGS="--dev --features console_error_panic_hook"
   WEBPACK_MODE="development"
+  echo "::warning::Building in development mode."
 elif [ "$1" = "prod" ]; then
   ARGS="--release"
   WEBPACK_MODE="production"
