@@ -53,28 +53,31 @@ window.downloadImage = downloadImage
 
 const links: HTMLDivElement | null = document.querySelector("#links")
 
+let textFile: string | null = null
+
 const makeTextFile = (text: string): string => {
   const data = new Blob([text], { type: "text/plain" })
-  return window.URL.createObjectURL(data)
+
+  if (textFile !== null) {
+    window.URL.revokeObjectURL(textFile)
+  }
+
+  textFile = window.URL.createObjectURL(data)
+  return textFile
 }
 
 export function downloadFile(name: string, contents: string): void {
   const a = document.createElement("a")
   a.style.display = "none"
-  const url = makeTextFile(contents)
-  a.href = url
+  a.href = makeTextFile(contents)
   a.download = name
   links?.appendChild(a)
 
   document.body.appendChild(a)
   a.click()
-
-  // give the browser a moment before revoking
-  setTimeout(() => {
-    window.URL.revokeObjectURL(url)
-    a.remove()
-  }, 1000)
+  document.body.removeChild(a)
 }
+
 
 export function downloadImage(name: string, contents: string): void {
   const c = document.createElement("br")
@@ -86,7 +89,7 @@ export function downloadImage(name: string, contents: string): void {
   a.download = name
   links?.appendChild(a)
 
-  document.body.appendChild(a)
+  // document.body.appendChild(a)
   // a.click()
   // document.body.removeChild(a)
 }
