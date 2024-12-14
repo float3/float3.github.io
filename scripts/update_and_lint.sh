@@ -29,21 +29,21 @@ else
 fi
 
 root_path=$(pwd)
-cd tuningplayground/music21-rs/music21
+cd wasm
+wasm_path=$(pwd)
+
+cd $wasm_path/tuningplayground/music21-rs/music21
 git pull origin master
 
 # need to provide packages so that pnpm doesn't complain
 
-cd $root_path
-cd ./tuningplayground
+cd $wasm_path/tuningplayground
 wasm-pack build --target bundler $ARGS
 
-cd $root_path
-cd ./textprocessing
+cd $wasm_path/textprocessing
 wasm-pack build --target bundler $ARGS
 
-cd $root_path
-cd ./glsl2hlsl/glsl2hlsl-wasm
+cd $wasm_path/glsl2hlsl/glsl2hlsl-wasm
 wasm-pack build --target bundler $ARGS
 
 cd $root_path
@@ -55,9 +55,7 @@ pnpm install
 cd ./ts
 node_up src
 
-cd $root_path
-
-cd ./tuningplayground/
+cd $wasm_path/tuningplayground/
 cargo_up
 
 cd ./tuning_systems/
@@ -72,17 +70,13 @@ cargo_up
 cd ../ts
 node_up src
 
-cd $root_path
-
-cd ./textprocessing/
+cd $wasm_path/textprocessing/
 cargo_up
 
 cd ./ts
 node_up src
 
-cd $root_path
-
-cd ./glsl2hlsl/
+cd $wasm_path/glsl2hlsl/
 cargo_up
 
 cd ./glsl2hlsl-wasm/
