@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 if [ "$1" = "dev" ] || [[ -z "$GITHUB_ACTIONS" ]]; then
-  MODE="--dev"
+  ARGS="--dev --features console_error_panic_hook"
   WEBPACK_MODE="development"
-  ARGS="--features console_error_panic_hook"
+  echo "::warning::Building in development mode."
 elif [ "$1" = "prod" ]; then
-  MODE="--release"
+  ARGS="--release"
   WEBPACK_MODE="production"
 else
   echo "Invalid argument. Use 'dev' for development or 'prod' for production."
@@ -13,7 +13,7 @@ else
 fi
 
 rm -rf www pkg
-wasm-pack build --target bundler $MODE $ARGS
+wasm-pack build --target bundler $ARGS
 
 cd ./ts
 pnpm install
