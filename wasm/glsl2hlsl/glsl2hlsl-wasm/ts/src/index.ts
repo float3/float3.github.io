@@ -77,7 +77,7 @@ export function downloadFile(name: string, contents: string): void {
 
   document.body.appendChild(a)
   a.click()
-  document.body.removeChild(a)
+  // document.body.removeChild(a)
 }
 
 export function downloadImage(name: string, contents: string): void {
