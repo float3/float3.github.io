@@ -15,9 +15,35 @@ const JUNGSEONG_LIST: [char; 21] = [
     'ㅏ', 'ㅐ', 'ㅑ', 'ㅒ', 'ㅓ', 'ㅔ', 'ㅕ', 'ㅖ', 'ㅗ', 'ㅘ', 'ㅙ', 'ㅚ', 'ㅛ', 'ㅜ', 'ㅝ', 'ㅞ',
     'ㅟ', 'ㅠ', 'ㅡ', 'ㅢ', 'ㅣ',
 ];
-const JONGSEONG_LIST: [char; 28] = [
+const JONGSEONG_LIST: [char; 29] = [
     '\0', 'ㄱ', 'ㄲ', 'ㄳ', 'ㄴ', 'ㄵ', 'ㄶ', 'ㄷ', 'ㄹ', 'ㄺ', 'ㄻ', 'ㄼ', 'ㄽ', 'ㄾ', 'ㄿ', 'ㅀ',
-    'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
+    'ㅁ', 'ㅂ', 'ㅄ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ',
+];
+
+const CHOSEONG_LIST_RR: [&str; 19] = [
+    "g", "kk", "n", "d", "tt", "r", "m", "b", "pp", "s", "ss", "", "j", "jj", "ch", "k", "t", "p",
+    "h",
+];
+const JUNGSEONG_LIST_RR: [&str; 21] = [
+    "a", "ae", "ya", "yae", "eo", "e", "yeo", "ye", "o", "wa", "wae", "oe", "yo", "u", "wo", "we",
+    "wi", "yu", "eu", "ui", "i",
+];
+const JONGSEONG_LIST_RR: [&str; 28] = [
+    "\0", "k", "kk", "ks", "n", "nj", "nh", "t", "l", "lk", "lm", "lb", "ls", "lt", "lp", "lh",
+    "m", "b", "bs", "s", "ss", "ng", "j", "ch", "k", "t", "p", "h",
+];
+
+const CHOSEONG_LIST_MR: [&str; 19] = [
+    "k", "kk", "n", "d", "tt", "r", "m", "b", "pp", "s", "ss", "", "ch", "tch", "ch'", "k'", "t'",
+    "p'", "h",
+];
+const JUNGSEONG_LIST_MR: [&str; 21] = [
+    "a", "ae", "ya", "yae", "ŏ", "e", "yŏ", "ye", "o", "wa", "wae", "oe", "yo", "u", "wŏ", "we",
+    "wi", "yu", "ŭ", "ŭi", "i",
+];
+const JONGSEONG_LIST_MR: [&str; 28] = [
+    "\0", "k", "kk", "ks", "n", "nj", "nh", "t", "l", "lk'", "lm", "lb", "ls", "lt", "lp", "lh",
+    "m", "b", "ps", "t", "t", "ng", "t", "ch", "k", "t", "p", "h",
 ];
 
 /// Decompose a single Hangeul syllable into (choseong, jungseong, jongseong)
