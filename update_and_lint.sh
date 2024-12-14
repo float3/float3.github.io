@@ -60,7 +60,16 @@ cd $current_path
 cd ./tuningplayground/
 cargo_up
 
-cd ./ts
+cd ./tuning_systems/
+cargo_up
+
+cd ../keymapping
+cargo_up
+
+cd ../music21-rs
+cargo_up
+
+cd ../ts
 node_up src
 
 cd $current_path

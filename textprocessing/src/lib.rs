@@ -163,37 +163,37 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
-    pub fn hangul_to_hanja(input: &str) -> String {
+    pub fn hangeul_to_hanja(input: &str) -> String {
         input
             .chars()
             .map(|c| {
                 // For simplicity, we take the first available hanja variant.
                 // In practice, you might want to handle errors or multiple variants.
-                hanja::get(c).expect("No Hanja found for given Hangul character")[0].0
+                hanja::get(c).expect("No Hanja found for given Hangeul character")[0].0
             })
             .collect()
     }
 
     #[wasm_bindgen]
-    pub fn hanja_to_hangul(input: &str) -> String {
+    pub fn hanja_to_hangeul(input: &str) -> String {
         input
             .chars()
             .map(|c| {
                 // We must invert the lookup. Since the hanja::get function
-                // works from Hangul to Hanja, we need to search all Hangul
+                // works from Hangeul to Hanja, we need to search all Hangeul
                 // characters that produce this Hanja. This is inefficient:
                 // a real implementation would likely use a precomputed map.
 
-                // For demonstration, assume we have a known range of Hangul
+                // For demonstration, assume we have a known range of Hangeul
                 // and attempt to find the corresponding character:
-                for hangul_candidate in '\u{AC00}'..='\u{D7A3}' {
-                    if let Some(results) = hanja::get(hangul_candidate) {
+                for hangeul_candidate in '\u{AC00}'..='\u{D7A3}' {
+                    if let Some(results) = hanja::get(hangeul_candidate) {
                         if results.iter().any(|&(h, _)| h == c) {
-                            return hangul_candidate;
+                            return hangeul_candidate;
                         }
                     }
                 }
-                panic!("No Hangul found for given Hanja character");
+                panic!("No Hangeul found for given Hanja character");
             })
             .collect()
     }
@@ -223,30 +223,30 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
-    pub fn hanja_to_hangul_all_variants(input: &str) -> String {
+    pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
         let mut readings: Vec<String> = Vec::new();
 
         for hanja_char in input.chars() {
-            let mut hangul_candidates = HashSet::new();
+            let mut hangeul_candidates = HashSet::new();
 
-            // Iterate over the known range of Hangul syllables
-            for hangul_candidate in '\u{AC00}'..='\u{D7A3}' {
-                if let Some(results) = hanja::get(hangul_candidate) {
+            // Iterate over the known range of Hangeul syllables
+            for hangeul_candidate in '\u{AC00}'..='\u{D7A3}' {
+                if let Some(results) = hanja::get(hangeul_candidate) {
                     if results.iter().any(|&(h, _)| h == hanja_char) {
-                        hangul_candidates.insert(hangul_candidate);
+                        hangeul_candidates.insert(hangeul_candidate);
                     }
                 }
             }
 
-            if hangul_candidates.is_empty() {
+            if hangeul_candidates.is_empty() {
                 panic!(
-                    "No Hangul readings found for Hanja character {}",
+                    "No Hangeul readings found for Hanja character {}",
                     hanja_char
                 );
             }
 
             // Convert the HashSet into a sorted String
-            let mut candidate_list: Vec<char> = hangul_candidates.into_iter().collect();
+            let mut candidate_list: Vec<char> = hangeul_candidates.into_iter().collect();
             candidate_list.sort(); // Optional: Sort to ensure consistent order
 
             readings.push(candidate_list.into_iter().collect());

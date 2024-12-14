@@ -6,7 +6,7 @@ tags:
   - korean
 ---
 
-- [Hangul](#hangul)
+- [hangeul](#hangeul)
   - [Pronunciation](#pronunciation)
   - [Letter placement within a block](#letter-placement-within-a-block)
   - [Vowels](#vowels)
@@ -20,7 +20,7 @@ tags:
 
 some of my notes may not apply to north korean
 
-## Hangul
+## hangeul
 
 ### Pronunciation
 
@@ -172,9 +172,17 @@ Blocks are always written in phonetic order, initial-medial-final. Therefore:
 399 combinations are possible for two-letter syllables and 10,773 possible combinations for syllables with more than two letters (27 possible final endings), for a total of 11,172 possible combinations of Korean alphabet letters to form syllables.
 this only takes into account regular vowels and consonants.
 
+not all possible combinations are valid
+
+valid 초성 (choseong, first part): ㄱ ㄲ ㄴ ㄷ ㄸ ㄹ ㅁ ㅂ ㅃ ㅅ ㅆ ㅇ ㅈ ㅉ ㅊ ㅋ ㅌ ㅍ ㅎ (19)
+valid 중성 (jungseong, middle part): ㅏ ㅐ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅗ ㅘ ㅙ ㅚ ㅛ ㅜ ㅝ ㅞ ㅟ ㅠ ㅡ ㅢ ㅣ (21)
+valid 종성 (jongseong, last part) (optional): [none] ㄱ ㄲ ㄳ ㄴ ㄵ ㄶ ㄷ ㄹ ㄺ ㄻ ㄼ ㄽ ㄾ ㄿ ㅀ ㅁ ㅂ ㅄ ㅅ ㅆ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ (28)
+
+more weird hangeul jamo
+
 ### Vowels
 
-|    Hangul    |  ㅏ   |  ㅐ   |  ㅑ   |  ㅒ   |  ㅓ   |  ㅔ   |  ㅕ   |  ㅖ   |  ㅗ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅛ   |  ㅜ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅠ   |  ㅡ   |  ㅢ   |  ㅣ   |
+|   hangeul    |  ㅏ   |  ㅐ   |  ㅑ   |  ㅒ   |  ㅓ   |  ㅔ   |  ㅕ   |  ㅖ   |  ㅗ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅛ   |  ㅜ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅠ   |  ㅡ   |  ㅢ   |  ㅣ   |
 | :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | Romanization |  _a_  | _ae_  | _ya_  | _yae_ | _eo_  |  _e_  | _yeo_ | _ye_  |  _o_  | _wa_  | _wae_ | _oe_  | _yo_  |  _u_  | _wo_  | _we_  | _wi_  | _yu_  | _eu_  | _ui_  |  _i_  |
 |     IPA      |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |
@@ -183,14 +191,14 @@ the name of a vowel is just it's sound
 
 #### Double Vowels
 
-|    Hangul    |  ㅐ   |  ㅒ   |  ㅔ   |  ㅖ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅢ   |
+|   hangeul    |  ㅐ   |  ㅒ   |  ㅔ   |  ㅖ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅢ   |
 | :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | Romanization | _ae_  | _yae_ |  _e_  | _ye_  | _wa_  | _wae_ | _oe_  | _wo_  | _we_  | _wi_  | _ui_  |
 |     IPA      |       |       |       |       |       |       |       |       |       |       |       |
 
 #### Jeju Vowels
 
-|    Hangul    |   ㆍ   |       |
+|   hangeul    |   ㆍ   |       |
 | :----------: | :----: | :---: |
 | Romanization |  _o_   |       |
 |     Name     | area-a |       |
@@ -198,7 +206,7 @@ the name of a vowel is just it's sound
 
 ### Consonants
 
-| **Hangul**  |                          | [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") |  ㄲ   | [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") | [ㄷ](https://en.wikipedia.org/wiki/%E3%84%B7 "ㄷ") |  ㄸ   | [ㄹ](https://en.wikipedia.org/wiki/%E3%84%B9 "ㄹ") | [ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") | [ㅂ](https://en.wikipedia.org/wiki/%E3%85%82 "ㅂ") |  ㅃ   | [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") |  ㅆ   | [ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") | [ㅈ](https://en.wikipedia.org/wiki/%E3%85%88 "ㅈ") |  ㅉ   | [ㅊ](https://en.wikipedia.org/wiki/%E3%85%8A "ㅊ") | [ㅋ](https://en.wikipedia.org/wiki/%E3%85%8B "ㅋ") | [ㅌ](https://en.wikipedia.org/wiki/%E3%85%8C "ㅌ") | [ㅍ](https://en.wikipedia.org/wiki/%E3%85%8D "ㅍ") | [ㅎ](https://en.wikipedia.org/wiki/%E3%85%8E "ㅎ") |
+| **hangeul** |                          | [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") |  ㄲ   | [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") | [ㄷ](https://en.wikipedia.org/wiki/%E3%84%B7 "ㄷ") |  ㄸ   | [ㄹ](https://en.wikipedia.org/wiki/%E3%84%B9 "ㄹ") | [ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") | [ㅂ](https://en.wikipedia.org/wiki/%E3%85%82 "ㅂ") |  ㅃ   | [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") |  ㅆ   | [ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") | [ㅈ](https://en.wikipedia.org/wiki/%E3%85%88 "ㅈ") |  ㅉ   | [ㅊ](https://en.wikipedia.org/wiki/%E3%85%8A "ㅊ") | [ㅋ](https://en.wikipedia.org/wiki/%E3%85%8B "ㅋ") | [ㅌ](https://en.wikipedia.org/wiki/%E3%85%8C "ㅌ") | [ㅍ](https://en.wikipedia.org/wiki/%E3%85%8D "ㅍ") | [ㅎ](https://en.wikipedia.org/wiki/%E3%85%8E "ㅎ") |
 | :---------: | :----------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: |
 | **Initial** | **Revised Romanization** |                        _g_                         | _kk_  |                        _n_                         |                        _d_                         | _tt_  |                        _r_                         |                        _m_                         |                        _b_                         | _pp_  |                        _s_                         | _ss_  |                                                    |                        _j_                         | _jj_  |                        _ch_                        |                        _k_                         |                        _t_                         |                        _p_                         |                        _h_                         |
 |             |         **IPA**          |                        /k/                         |  /k͈/  |                        /n/                         |                        /t/                         |  /t͈/  |                        /ɾ/                         |                        /m/                         |                        /p/                         |  /p͈/  |                        /s/                         |  /s͈/  |                       silent                       |                        /t͡ɕ/                        | /t͈͡ɕ͈/  |                       /t͡ɕʰ/                        |                        /kʰ/                        |                        /tʰ/                        |                        /pʰ/                        |                        /h/                         |
@@ -206,7 +214,7 @@ the name of a vowel is just it's sound
 |             |     **Romanization**     |                         g                          |  kk   |                         n                          |                         d                          |   -   |                         l                          |                         m                          |                         b                          |   -   |                         s                          |  ss   |                         ng                         |                         j                          |   -   |                         ch                         |                         k                          |                         t                          |                         p                          |                         h                          |
 |             |         **IPA**          |                        /k̚/                         |       |                        /n/                         |                        /t̚/                         |  _–_  |                        /ɭ/                         |                        /m/                         |                        /p̚/                         |   –   |                        /t̚/                         |       |                        /ŋ/                         |                        /t̚/                         |  _–_  |                        /t̚/                         |                        /k̚/                         |                        /t̚/                         |                        /p̚/                         |                        /t̚/                         |
 
-|    Hangul    |         |       ㄱ       |           ㄲ           |      ㄴ       |       ㄷ       |           ㄸ           |      ㄹ       |      ㅁ       |      ㅂ       |          ㅃ           |      ㅅ      |          ㅆ          |      ㅇ       |      ㅈ       |          ㅉ           |       ㅊ       |      ㅋ       |      ㅌ       |      ㅍ       |      ㅎ       |
+|   hangeul    |         |       ㄱ       |           ㄲ           |      ㄴ       |       ㄷ       |           ㄸ           |      ㄹ       |      ㅁ       |      ㅂ       |          ㅃ           |      ㅅ      |          ㅆ          |      ㅇ       |      ㅈ       |          ㅉ           |       ㅊ       |      ㅋ       |      ㅌ       |      ㅍ       |      ㅎ       |
 | :----------: | :-----: | :------------: | :--------------------: | :-----------: | :------------: | :--------------------: | :-----------: | :-----------: | :-----------: | :-------------------: | :----------: | :------------------: | :-----------: | :-----------: | :-------------------: | :------------: | :-----------: | :-----------: | :-----------: | :-----------: |
 | Romanization | Initial |      _g_       |          _kk_          |      _n_      |      _d_       |          _tt_          |      _r_      |      _m_      |      _b_      |         _pp_          |     _s_      |         _ss_         |       –       |      _j_      |         _jj_          |      _ch_      |      _k_      |      _t_      |      _p_      |      _h_      |
 |              |  Final  |      _k_       |          _k_           |               |      _t_       |           –            |      _l_      |               |      _p_      |           –           |     _t_      |         _t_          |     _ng_      |      _t_      |           –           |      _t_       |               |               |               |      _t_      |
@@ -220,7 +228,7 @@ endings in ㅇ are pronounced "ng"
 
 #### Jeju Consonants
 
-|    Hangul    |        ㅿ        |           ㆆ            |
+|   hangeul    |        ㅿ        |           ㆆ            |
 | :----------: | :--------------: | :---------------------: |
 | Romanization |       _z_        |           _ʔ_           |
 |     Name     | 반시옷 (bansiot) | 여린히읗 (yeorin hieut) |
