@@ -3,6 +3,7 @@
 node_up() {
     if [[ -z "$GITHUB_ACTIONS" ]]; then
         pnpx npm-upgrade
+        echo "::warning::upgrading npm packages"
     fi
     pnpm update
     pnpm audit fix
@@ -24,6 +25,7 @@ cargo_up() {
 if [[ -z "$GITHUB_ACTIONS" ]]; then
     git pull
     ARGS=""
+    echo "::warning::Building in development mode."
 else
     ARGS="--release"
 fi
