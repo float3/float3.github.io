@@ -15,14 +15,14 @@ made with love and rust (compiled to wasm)
 written by pema99 https://github.com/pema99/glsl2hlsl/ \
 merged changes by Kit https://github.com/cutesthypnotist/glsl2hlsl/ \
 and by antiero https://github.com/antiero/glsl2hlsl/ \
-and my own improvements
+and my own improvements \
 glsl2hlsl is MIT Licensed
 <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
 <div class="areas">
   <table>
     <tr>
-      <th><h2>Shadertoy code:</h2></th>
-      <th><h2>Shaderlab (Unity) code:</h2></th>
+      <th><h3>Shadertoy code:</h3></th>
+      <th><h3>Shaderlab (Unity) code:</h3></th>
     </tr>
     <tr>
       <td><textarea id="in"></textarea></td>
