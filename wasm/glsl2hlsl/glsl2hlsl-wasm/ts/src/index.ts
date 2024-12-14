@@ -112,7 +112,7 @@ shader.addEventListener("input", () => {
   const xhttp = new XMLHttpRequest()
   xhttp.onload = function () {
     if (this.responseText) {
-      inp.value = (JSON.parse(this.responseText)).Shader.renderpass[0].code
+      inp.value = JSON.parse(this.responseText).Shader.renderpass[0].code
     }
   }
   const shaderId = shader.value.split("/").pop()
