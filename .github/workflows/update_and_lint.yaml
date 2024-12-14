@@ -53,14 +53,14 @@ jobs:
         id: cache-venv
         uses: actions/cache@v4
         with:
-          path: tuningplayground/music21-rs/venv
+          path: wasm/tuningplayground/music21-rs/venv
           key: ${{ runner.os }}-venv
 
       - name: cache pycache
         id: cache-pycache
         uses: actions/cache@v4
         with:
-          path: tuningplayground/music21-rs/__pycache__
+          path: wasm/tuningplayground/music21-rs/__pycache__
           key: ${{ runner.os }}-pycache
 
       - name: update and lint
