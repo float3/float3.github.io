@@ -1,4 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env nix-shell
+#!nix-shell -i bash -p nodejs pnpm rustup cargo wasm-pack git
 
 node_up() {
     if [[ -z "$GITHUB_ACTIONS" ]]; then

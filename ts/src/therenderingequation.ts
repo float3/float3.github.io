@@ -35,4 +35,4 @@ document.addEventListener("DOMContentLoaded", () => {
       groupMap[fillColor]?.forEach((el) => el.classList.remove("hovered"))
     })
   })
-}})
+})
