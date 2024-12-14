@@ -78,7 +78,6 @@ export function downloadFile(name: string, contents: string): void {
   document.body.removeChild(a)
 }
 
-
 export function downloadImage(name: string, contents: string): void {
   const c = document.createElement("br")
   links?.appendChild(c)
