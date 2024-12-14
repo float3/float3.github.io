@@ -77,7 +77,10 @@ cd $current_path
 cd ./textprocessing/
 cargo_up
 
-cd ./ts
+cd ./hangeul_conversion
+cargo_up
+
+cd ../ts
 node_up src
 
 cd $current_path

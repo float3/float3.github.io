@@ -100,6 +100,15 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
+    directory: "/textprocessing/hangeul_conversion"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
     directory: "/glsl2hlsl"
     schedule:
       interval: "weekly"
