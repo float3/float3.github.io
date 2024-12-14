@@ -10,6 +10,8 @@ rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
 rustup update
 ./init.sh
 
-cargo install cargo-edit
+if [ "$GITHUB_JOB" == "Update"]; then
+    cargo install cargo-edit
+fi
 
 npm install -g pnpm
