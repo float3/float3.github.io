@@ -1,4 +1,3 @@
-
 export const DEFAULT_SHADER_SOURCE = `
 // Copyright Inigo Quilez, 2015 - https://iquilezles.org/
 // I am the sole copyright owner of this Work.
@@ -837,5 +836,5 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 
     fragColor = vec4( col, 1.0 );
 }
-`; export const DEFAULT_SHADER = "https://www.shadertoy.com/view/ld3Gz2"
-
+`
+export const DEFAULT_SHADER = "https://www.shadertoy.com/view/ld3Gz2"
