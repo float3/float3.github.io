@@ -41,16 +41,17 @@ downloadButton.addEventListener("click", () => {
   }
 })
 
-const makeTextFile = (text: string): { textFile: string; cleanup: () => void } => {
+let textFile: string | null = null
+
+const makeTextFile = (text: string): string => {
   const data = new Blob([text], { type: "text/plain" })
 
-  const textFile = window.URL.createObjectURL(data)
-
-  const cleanup = () => {
+  if (textFile) {
     window.URL.revokeObjectURL(textFile)
   }
 
-  return { textFile, cleanup }
+  textFile = window.URL.createObjectURL(data)
+  return textFile
 }
 
 declare global {
@@ -70,15 +71,13 @@ const links: HTMLDivElement = document.querySelector("#links") as HTMLDivElement
 export function downloadFile(name: string, contents: string): void {
   const a = document.createElement("a")
   a.style.display = "none"
-  const textFileData = makeTextFile(contents)
-  a.href = textFileData.textFile
+  a.href = makeTextFile(contents)
   a.download = name
   links.appendChild(a)
 
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(a)
-  textFileData.cleanup()
 }
 
 export function downloadImage(name: string, contents: string): void {
@@ -92,7 +91,7 @@ export function downloadImage(name: string, contents: string): void {
   links.appendChild(a)
 
   // document.body.appendChild(a)
-  a.click()
+  // a.click()
   // document.body.removeChild(a)
 }
 
