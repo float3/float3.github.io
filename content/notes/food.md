@@ -176,6 +176,7 @@ Lapinlahdenkatu 9, 00180 Helsinki, Finland
 ## Munich
 
 ### Pretty Pizza
+
 48°08'59.4"N 11°34'37.9"E \
 Schellingstraße 15, 80799 München, Germany
 
