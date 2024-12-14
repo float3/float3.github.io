@@ -16,6 +16,7 @@ written by pema99 https://github.com/pema99/glsl2hlsl/ \
 merged changes by Kit https://github.com/cutesthypnotist/glsl2hlsl/ \
 and by antiero https://github.com/antiero/glsl2hlsl/ \
 and my own improvements
+glsl2hlsl is MIT Licensed
 <noscript>This page contains webassembly and javascript content, please enable javascript in your browser.</noscript>
 <div class="areas">
   <table>
