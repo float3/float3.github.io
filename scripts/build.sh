@@ -7,40 +7,38 @@ else
     ARGS="prod"
 fi
 
-current_path=$(pwd)
+root_path=$(pwd)
+cd wasm
+wasm_path=$(pwd)
 
-cd ./content/tools/
+cd $root_path/content/tools/
 rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl
 
-cd $current_path
-cd ./tuningplayground
+cd $wasm_path/tuningplayground
 
 echo "building master"
 ./build.sh prod
 rm ./www/*.bootstrap.js.LICENSE.txt | true
 mv ./www ./stable
-mv ./stable ../content/tools/tuningplayground/
+mv ./stable $root_path/content/tools/tuningplayground/
 
 echo "building dev"
 ./build.sh dev
-mv ./www ../content/tools/tuningplayground_debug/
+mv ./www $root_path/content/tools/tuningplayground_debug/
 
-cd $current_path
-cd ./textprocessing
+cd $wasm_path/textprocessing
 ./build.sh $ARGS
-mv ./www ../content/tools/textprocessing/
+mv ./www $root_path/content/tools/textprocessing/
 
-cd $current_path
-cd ./glsl2hlsl
+cd $wasm_path/glsl2hlsl
 ./build.sh $ARGS
-mv ./glsl2hlsl-wasm/www ../content/tools/glsl2hlsl/
+mv ./glsl2hlsl-wasm/www $root_path/content/tools/glsl2hlsl/
 
-cd $current_path
-cd ./ts 
+cd $root_path/ts 
 pnpm install
 pnpm exec tsc
 
-cd $current_path
+cd $root_path
 pnpm install
 
 npx quartz build $QUARTZ_ARGS

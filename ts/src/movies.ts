@@ -39,6 +39,7 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
 }
 
 document.addEventListener("nav", () => {
+  console.log("nav event")
   const headings: NodeListOf<HTMLHeadingElement> = document.querySelectorAll("h1")
 
   headings.forEach((heading) => {

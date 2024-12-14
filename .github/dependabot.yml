@@ -19,7 +19,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directory: "/tuningplayground/ts"
+    directory: "/wasm/tuningplayground/ts"
     schedule:
       interval: "weekly"
     groups:
@@ -28,7 +28,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directory: "/textprocessing/ts"
+    directory: "/wasm/textprocessing/ts"
     schedule:
       interval: "weekly"
     groups:
@@ -37,7 +37,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directory: "/glsl2hlsl/glsl2hlsl-wasm/ts"
+    directory: "/wasm/glsl2hlsl/glsl2hlsl-wasm/ts"
     schedule:
       interval: "weekly"
     groups:
@@ -55,7 +55,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/tuningplayground"
+    directory: "/wasm/tuningplayground"
     schedule:
       interval: "weekly"
     groups:
@@ -64,7 +64,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/tuningplayground/keymapping"
+    directory: "/wasm/tuningplayground/keymapping"
     schedule:
       interval: "weekly"
     groups:
@@ -73,7 +73,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/tuningplayground/music21-rs"
+    directory: "/wasm/tuningplayground/music21-rs"
     schedule:
       interval: "weekly"
     groups:
@@ -82,7 +82,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/tuningplayground/tuning_systems"
+    directory: "/wasm/tuningplayground/tuning_systems"
     schedule:
       interval: "weekly"
     groups:
@@ -91,7 +91,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/textprocessing"
+    directory: "/wasm/textprocessing"
     schedule:
       interval: "weekly"
     groups:
@@ -100,7 +100,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/glsl2hlsl"
+    directory: "/wasm/glsl2hlsl"
     schedule:
       interval: "weekly"
     groups:
@@ -109,7 +109,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/glsl2hlsl/glsl2hlsl-wasm"
+    directory: "/wasm/glsl2hlsl/glsl2hlsl-wasm"
     schedule:
       interval: "weekly"
     groups:

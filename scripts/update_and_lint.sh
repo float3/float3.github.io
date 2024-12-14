@@ -28,25 +28,25 @@ else
     ARGS="--release"
 fi
 
-current_path=$(pwd)
+root_path=$(pwd)
 cd tuningplayground/music21-rs/music21
 git pull origin master
 
 # need to provide packages so that pnpm doesn't complain
 
-cd $current_path
+cd $root_path
 cd ./tuningplayground
 wasm-pack build --target bundler $ARGS
 
-cd $current_path
+cd $root_path
 cd ./textprocessing
 wasm-pack build --target bundler $ARGS
 
-cd $current_path
+cd $root_path
 cd ./glsl2hlsl/glsl2hlsl-wasm
 wasm-pack build --target bundler $ARGS
 
-cd $current_path
+cd $root_path
 pnpx npm-upgrade
 pnpm update
 pnpm audit fix
@@ -55,7 +55,7 @@ pnpm install
 cd ./ts
 node_up src
 
-cd $current_path
+cd $root_path
 
 cd ./tuningplayground/
 cargo_up
@@ -72,7 +72,7 @@ cargo_up
 cd ../ts
 node_up src
 
-cd $current_path
+cd $root_path
 
 cd ./textprocessing/
 cargo_up
@@ -80,7 +80,7 @@ cargo_up
 cd ./ts
 node_up src
 
-cd $current_path
+cd $root_path
 
 cd ./glsl2hlsl/
 cargo_up
