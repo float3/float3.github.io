@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-if [[ -z "$GITHUB_ACTIONS" ]]; then
+
+if [ "$GITHUB_ACTIONS" == "true" ]; then
+    ARGS="prod"
+    QUARTZ_ARGS=""
+else
     ARGS="dev"
     QUARTZ_ARGS="--serve"
     echo "::warning::Building in development mode."
-else
-    ARGS="prod"
-    QUARTZ_ARGS=""
 fi
 
 root_path=$(pwd)
@@ -18,15 +19,9 @@ rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl
 
 cd $wasm_path/tuningplayground
 
-echo "building master"
-./build.sh prod
+./build.sh $ARGS
 rm ./www/*.bootstrap.js.LICENSE.txt | true
-mv ./www ./stable
-mv ./stable $root_path/content/tools/tuningplayground/
-
-echo "building dev"
-./build.sh dev
-mv ./www $root_path/content/tools/tuningplayground_debug/
+mv ./www $root_path/content/tools/tuningplayground/
 
 cd $wasm_path/textprocessing
 ./build.sh $ARGS
