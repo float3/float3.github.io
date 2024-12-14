@@ -43,7 +43,6 @@ jobs:
           rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
           rustup update
           ./init.sh
-          cargo install cargo-edit
           npm install -g pnpm
 
       - name: build

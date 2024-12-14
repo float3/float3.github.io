@@ -1,0 +1,15 @@
+name: test
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: test
+        run: |
+          env | sort
+          env | sort | grep GITHUB
