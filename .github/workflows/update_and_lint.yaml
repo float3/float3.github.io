@@ -65,7 +65,7 @@ jobs:
 
       - name: update and lint
         run: |
-          ./update_and_lint.sh
+          ./scripts/update_and_lint.sh
 
       - name: commit
         run: |

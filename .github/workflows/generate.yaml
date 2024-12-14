@@ -37,7 +37,7 @@ jobs:
 
       - name: generate files
         run: |
-          ./generate.sh
+          ./scripts/generate.sh
 
       - name: commit
         run: |

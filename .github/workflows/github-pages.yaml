@@ -48,7 +48,7 @@ jobs:
 
       - name: build
         run: |
-          ./build.sh
+          ./scripts/build.sh
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
