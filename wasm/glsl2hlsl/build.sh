@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [ "$1" = "dev" ] || [[ -z "$GITHUB_ACTIONS" ]]; then
+if [ "$1" = "prod" || [ "$GITHUB_ACTIONS" == "true" ]; then
+  ARGS="--release"
+  WEBPACK_MODE="production"
+elif [ "$1" = "dev" ]; then
   ARGS="--dev --features console_error_panic_hook"
   WEBPACK_MODE="development"
   echo "::warning::Building in development mode."
-elif [ "$1" = "prod" ]; then
-  ARGS="--release"
-  WEBPACK_MODE="production"
 else
   echo "Invalid argument. Use 'dev' for development or 'prod' for production."
   exit 1

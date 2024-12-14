@@ -11,7 +11,6 @@ tags:
 
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">
 <noscript> hey this page needs javascript</noscript> use your computer keyboard, a midi device, or provide a midi file for example <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid"> this one </a> or <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irea.mid"> or this one in case the other site goes down </a>
-<br> theres also a debug version of this page: <a href="/tools/tuningplayground_debug.md">here</a>
 <div style="display: block">
   <input type="file" id="fileInput" accept=".midi,.mid" />
   <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->

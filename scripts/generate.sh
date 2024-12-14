@@ -2,7 +2,6 @@
 
 ./scripts/collect_links.sh
 ./scripts/indices.sh
-./scripts/debug_version.sh
 
 cd ./wasm/tuningplayground/music21-rs/
 
