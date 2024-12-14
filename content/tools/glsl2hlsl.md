@@ -32,10 +32,8 @@ written by pema99 https://github.com/pema99/glsl2hlsl/
 // these conditions are too restrictive please contact me and we'll
 // definitely work it out.
 
-
 // You can buy a metal print of this shader here:
 // https://www.redbubble.com/i/metal-print/Snail-by-InigoQuilez/39845499.0JXQP
-
 
 // antialiasing - make AA 2, meaning 4x AA, if you have a fast machine
 #define AA 1
