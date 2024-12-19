@@ -24,12 +24,12 @@ made with love and rust (compiled to wasm)
       <td>
         Pinyin 
         <button onclick="copyToClipboard('left0')">Copy</button>
-        <input id="left0" oninput="transformLeftToRight(0)" value="zhùang">
+        <input id="left0" oninput="transformLeftToRight(0)" value="wèi shén me">
       </td>
       <td>
         Zhuyin 
         <button onclick="copyToClipboard('right0')">Copy</button>
-        <input id="right0" oninput="transformRightToLeft(0)" value="ㄓㄨㄤˋ">
+        <input id="right0" oninput="transformRightToLeft(0)" value="ㄨㄟˋ ㄕㄣˊ ㄇㄜ˙">
       </td>
     </tr>
     <tr>
@@ -72,12 +72,12 @@ made with love and rust (compiled to wasm)
       <td>
         Hanzi
         <button onclick="copyToClipboard('left9')">Copy</button>
-        <input id="left9" oninput="transformLeftToRight(9)" value="漢字">
+        <input id="left9" oninput="transformLeftToRight(9)" value="行">
       </td>
       <td>
         Zhuyin all readings
         <button onclick="copyToClipboard('right9')">Copy</button>
-        <input id="right9" oninput="transformRightToLeft(9)" value="ㄏㄢˋ ㄗˋ" disabled>
+        <input id="right9" oninput="transformRightToLeft(9)" value="ㄒㄧㄥˊ ㄏㄤˊ ㄏㄥˊ ㄒㄧㄥˋ ㄏㄤˋ" disabled>
       </td>
     </tr>
     <tr>
@@ -140,12 +140,120 @@ made with love and rust (compiled to wasm)
       <td>
         Arabic
         <button onclick="copyToClipboard('left7')">Copy</button>
-        <input id="left7" oninput="transformLeftToRight(7)" value="1234567890">
+        <input id="left7" oninput="transformLeftToRight(7)" value="3339">
       </td>
       <td>
         Roman
         <button onclick="copyToClipboard('right7')">Copy</button>
-        <input id="right7" oninput="transformRightToLeft(7)" value="CXXIIIIVXVIX">
+        <input id="right7" oninput="transformRightToLeft(7)" value="MMMCCCXXXIX">
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left18')">Copy</button>
+        <input id="left18" oninput="transformLeftToRight(18)" value="1234567890">
+      </td>
+      <td>
+        Japanese
+        <button onclick="copyToClipboard('right18')">Copy</button>
+        <input id="right18" oninput="transformRightToLeft(18)" value="一二三四五六七八九零" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left10')">Copy</button>
+        <input id="left10" oninput="transformLeftToRight(10)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right10')">Copy</button>
+        <input id="right10" oninput="transformRightToLeft(10)" value="壹秭貳垓參京肆兆伍億陸萬柒仟捌佰玖拾" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left11')">Copy</button>
+        <input id="left11" oninput="transformLeftToRight(11)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right11')">Copy</button>
+        <input id="right11" oninput="transformRightToLeft(11)" value="拾貳億參仟肆佰伍拾陸萬柒仟捌佰玖拾" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left12')">Copy</button>
+        <input id="left12" oninput="transformLeftToRight(12)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right12')">Copy</button>
+        <input id="right12" oninput="transformRightToLeft(12)" value="拾貳億參仟肆佰伍拾陸萬柒仟捌佰玖拾" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left13')">Copy</button>
+        <input id="left13" oninput="transformLeftToRight(13)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right13')">Copy</button>
+        <input id="right13" oninput="transformRightToLeft(13)" value="拾貳億參仟肆佰伍拾陸萬柒仟捌佰玖拾" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left14')">Copy</button>
+        <input id="left14" oninput="transformLeftToRight(14)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right14')">Copy</button>
+        <input id="right14" oninput="transformRightToLeft(14)" value="一秭二垓三京四兆五億六萬七千八百九十" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left15')">Copy</button>
+        <input id="left15" oninput="transformLeftToRight(15)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right15')">Copy</button>
+        <input id="right15" oninput="transformRightToLeft(15)" value="十二億三千四百五十六萬七千八百九十" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left16')">Copy</button>
+        <input id="left16" oninput="transformLeftToRight(16)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right16')">Copy</button>
+        <input id="right16" oninput="transformRightToLeft(16)" value="十二億三千四百五十六萬七千八百九十" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left17')">Copy</button>
+        <input id="left17" oninput="transformLeftToRight(17)" value="1234567890">
+      </td>
+      <td>
+        Chinese
+        <button onclick="copyToClipboard('right17')">Copy</button>
+        <input id="right17" oninput="transformRightToLeft(17)" value="十二億三千四百五十六萬七千八百九十" disabled>
       </td>
     </tr>
     <!-- <tr>
