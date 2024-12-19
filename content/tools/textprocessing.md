@@ -59,13 +59,37 @@ made with love and rust (compiled to wasm)
     <tr>
       <td>
         Hanzi
+        <button onclick="copyToClipboard('left8')">Copy</button>
+        <input id="left8" oninput="transformLeftToRight(8)" value="漢字">
+      </td>
+      <td>
+        Zhuyin
+        <button onclick="copyToClipboard('right8')">Copy</button>
+        <input id="right8" oninput="transformRightToLeft(8)" value="ㄏㄢˋ ㄗˋ" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Hanzi
+        <button onclick="copyToClipboard('left9')">Copy</button>
+        <input id="left9" oninput="transformLeftToRight(9)" value="漢字">
+      </td>
+      <td>
+        Zhuyin all readings
+        <button onclick="copyToClipboard('right9')">Copy</button>
+        <input id="right9" oninput="transformRightToLeft(9)" value="ㄏㄢˋ ㄗˋ" disabled>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Hanzi
         <button onclick="copyToClipboard('left5')">Copy</button>
-        <input id="left5" oninput="transformLeftToRight(5)" value="的">
+        <input id="left5" oninput="transformLeftToRight(5)" value="行">
       </td>
       <td>
         pīnyīn all readings
         <button onclick="copyToClipboard('right5')">Copy</button>
-        <input id="right5" oninput="transformRightToLeft(5)" value="de dī dí dì" disabled>
+        <input id="right5" oninput="transformRightToLeft(5)" value="xíng háng héng xìng hàng" disabled>
       </td>
     </tr> 
     <tr>
@@ -92,7 +116,7 @@ made with love and rust (compiled to wasm)
     </tr>
     <tr>
       <td colspan="2" style="font-size: smaller;">
-        Hangeul to Hanja, and Hanja to Hangeul conversion is not perfect as the first matching Hanja character is picked.
+        Hangeul to Hanja, and Hanja to Hangeul conversion is not perfect as the first match is picked but the library returns a list of matches.
       </td>
     </tr>    
     <tr>
@@ -105,6 +129,23 @@ made with love and rust (compiled to wasm)
         Hangeul 
         <button onclick="copyToClipboard('right3')">Copy</button>
         <input id="right3" oninput="transformRightToLeft(3)" value="재원한국">
+      </td>
+    </tr>
+    <tr>
+      <td colespan="2">
+        Numbers
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Arabic
+        <button onclick="copyToClipboard('left7')">Copy</button>
+        <input id="left7" oninput="transformLeftToRight(7)" value="1234567890">
+      </td>
+      <td>
+        Roman
+        <button onclick="copyToClipboard('right7')">Copy</button>
+        <input id="right7" oninput="transformRightToLeft(7)" value="CXXIIIIVXVIX">
       </td>
     </tr>
     <!-- <tr>
