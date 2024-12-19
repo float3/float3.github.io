@@ -8,6 +8,8 @@ use chinese_number::{ChineseCase, ChineseCountMethod, ChineseVariant, NumberToCh
 
 use japanese::converter;
 
+use roman::{from, to};
+
 use pinyin::ToPinyin;
 use pinyin::ToPinyinMulti;
 
@@ -58,17 +60,31 @@ mod wasm_functions {
 
     #[wasm_bindgen]
     pub fn pinyin_to_zhuyin_wasm_extended(pinyin: String) -> String {
-        pinyin_to_zhuyin(&pinyin)
-            .or_else(|| encode_pinyin(&pinyin).and_then(|encoded| pinyin_to_zhuyin(&encoded)))
-            .or_else(|| encode_zhuyin(&pinyin))
-            .unwrap_or_default()
+        pinyin
+            .split(' ')
+            .map(|pinyin| {
+                pinyin_to_zhuyin(&pinyin)
+                    .or_else(|| {
+                        encode_pinyin(&pinyin).and_then(|encoded| pinyin_to_zhuyin(&encoded))
+                    })
+                    .or_else(|| encode_zhuyin(&pinyin))
+                    .unwrap_or_default()
+            })
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
     #[wasm_bindgen]
     pub fn zhuyin_to_pinyin_wasm_extended(zhuyin: String) -> String {
-        zhuyin_to_pinyin(&zhuyin)
-            .or_else(|| decode_zhuyin(&zhuyin))
-            .unwrap_or_default()
+        pinyin
+            .split(' ')
+            .map(|zhuyin| {
+                zhuyin_to_pinyin(&zhuyin)
+                    .or_else(|| decode_zhuyin(&zhuyin))
+                    .unwrap_or_default()
+            })
+            .collect::<Vec<String>>()
+            .join(" ")
     }
 
     #[wasm_bindgen]
@@ -99,42 +115,6 @@ mod wasm_functions {
     #[wasm_bindgen]
     pub fn zhuyin_to_pinyin_wasm(zhuyin: String) -> String {
         zhuyin_to_pinyin(&zhuyin).unwrap_or_default()
-    }
-
-    #[wasm_bindgen]
-    pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i32) -> String {
-        let variant: ChineseVariant = ChineseVariant::Traditional;
-
-        let case: ChineseCase = match uppercase {
-            true => ChineseCase::Upper,
-            false => ChineseCase::Lower,
-        };
-
-        let method: ChineseCountMethod = match countmethod {
-            0 => ChineseCountMethod::Low,
-            1 => ChineseCountMethod::TenThousand,
-            2 => ChineseCountMethod::Middle,
-            _ => ChineseCountMethod::High,
-        };
-
-        let parsed_number = number
-            .parse::<i128>()
-            .map(|num| num.to_chinese(variant, case, method))
-            .or_else(|_| {
-                number
-                    .parse::<u128>()
-                    .map(|num| num.to_chinese(variant, case, method))
-            })
-            .or_else(|_| {
-                number
-                    .parse::<f64>()
-                    .map(|num| num.to_chinese(variant, case, method))
-            });
-
-        match parsed_number {
-            Ok(Ok(chinese)) => chinese,
-            _ => String::from(""),
-        }
     }
 
     #[wasm_bindgen]
@@ -210,6 +190,11 @@ mod wasm_functions {
     }
 
     #[wasm_bindgen]
+    pub fn to_zhuyin_wasm(hanzi: String) -> String {
+        pinyin_to_zhuyin_wasm_extended(to_pinyin_wasm(hanzi))
+    }
+
+    #[wasm_bindgen]
     pub fn to_pinyin_multi_wasm(text: String) -> String {
         let mut aggregate_pinyin = String::new();
         for multi in text.as_str().to_pinyin_multi().flatten() {
@@ -220,6 +205,11 @@ mod wasm_functions {
         }
         aggregate_pinyin.pop();
         aggregate_pinyin
+    }
+
+    #[wasm_bindgen]
+    pub fn to_zhuyin_multi_wasm(text: String) -> String {
+        pinyin_to_zhuyin_wasm_extended(to_pinyin_multi_wasm(text))
     }
 
     #[wasm_bindgen]
@@ -253,5 +243,51 @@ mod wasm_functions {
         }
 
         readings.join(" ")
+    }
+
+    #[wasm_bindgen]
+    pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i32) -> String {
+        let variant: ChineseVariant = ChineseVariant::Traditional;
+
+        let case: ChineseCase = match uppercase {
+            true => ChineseCase::Upper,
+            false => ChineseCase::Lower,
+        };
+
+        let method: ChineseCountMethod = match countmethod {
+            0 => ChineseCountMethod::Low,
+            1 => ChineseCountMethod::TenThousand,
+            2 => ChineseCountMethod::Middle,
+            _ => ChineseCountMethod::High,
+        };
+
+        let parsed_number = number
+            .parse::<i128>()
+            .map(|num| num.to_chinese(variant, case, method))
+            .or_else(|_| {
+                number
+                    .parse::<u128>()
+                    .map(|num| num.to_chinese(variant, case, method))
+            })
+            .or_else(|_| {
+                number
+                    .parse::<f64>()
+                    .map(|num| num.to_chinese(variant, case, method))
+            });
+
+        match parsed_number {
+            Ok(Ok(chinese)) => chinese,
+            _ => String::from(""),
+        }
+    }
+
+    #[wasm_bindgen]
+    pub fn arabic_to_roman(number: String) -> String {
+        roman::to(number.parse::<u32>().unwrap())
+    }
+
+    #[wasm_bindgen]
+    pub fn roman_to_arabic(roman: String) -> String {
+        roman::from(&roman).to_string()
     }
 }

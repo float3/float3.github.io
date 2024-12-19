@@ -105,6 +105,34 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
         default:
           return text
       }
+    case 7:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.arabic_to_roman(text)
+        case Side.RIGHT:
+          return wasm.roman_to_arabic(text)
+        default:
+          return text
+      }
+    case 8:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.to_zhuyin_wasm(text)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 9:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.to_zhuyin_multi_wasm(text)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+
     default:
       return text
   }
