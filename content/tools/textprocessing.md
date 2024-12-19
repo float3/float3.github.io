@@ -157,7 +157,7 @@ made with love and rust (compiled to wasm)
       <td>
         Japanese
         <button onclick="copyToClipboard('right18')">Copy</button>
-        <input id="right18" oninput="transformRightToLeft(18)" value="一二三四五六七八九零" disabled>
+        <input id="right18" oninput="transformRightToLeft(18)" value="十ニ億三千四百五十六万七千八百九十" disabled>
       </td>
     </tr>
     <tr>
