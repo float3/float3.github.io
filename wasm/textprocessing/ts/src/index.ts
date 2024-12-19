@@ -5,7 +5,7 @@ console.debug("Loading WASM module...")
 function loadWasm(): Promise<typeof import("wasm")> {
   if (!wasmModulePromise) {
     wasmModulePromise = import("wasm").then(async (module) => {
-      await module.main()
+      // await module.main()
       return module
     })
   }
@@ -132,7 +132,87 @@ async function mockTransform(text: string, index: number, side: Side): Promise<s
         default:
           return text
       }
-
+    case 10:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, true, 0)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 11:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, true, 1)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 12:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, true, 2)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 13:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, true, 3)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 14:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, false, 0)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 15:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, false, 1)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 16:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, false, 2)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 17:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_chinese_f128(text, false, 3)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
+    case 18:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.number_to_japanese(text)
+        case Side.RIGHT:
+          return text
+        default:
+          return text
+      }
     default:
       return text
   }
