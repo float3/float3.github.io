@@ -3,7 +3,9 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn number_to_japanese(number: String) -> String {
-    japanese_number_converter::JapaneseNumber::convert(number.parse::<usize>().unwrap()).kanji()
+    japanese_number_converter::JapaneseNumber::convert(number.parse::<usize>().unwrap())
+        .kanji()
+        .to_string()
 }
 
 #[wasm_bindgen]
