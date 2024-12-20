@@ -1,3 +1,3 @@
-pub fn solve(input: &str) -> Option<String> {
+pub fn solve(_input: &str) -> Option<String> {
     todo!()
 }

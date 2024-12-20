@@ -101,5 +101,35 @@ node_up src
 cd $wasm_path/adventofcode/
 cargo_up
 
-cd ./ts
+cd aoc2015
+cargo_up
+
+cd ../aoc2016
+cargo_up
+
+cd ../aoc2017
+cargo_up
+
+cd ../aoc2018
+cargo_up
+
+cd ../aoc2019
+cargo_up
+
+cd ../aoc2020
+cargo_up
+
+cd ../aoc2021
+cargo_up
+
+cd ../aoc2022
+cargo_up
+
+cd ../aoc2023
+cargo_up
+
+cd ../aoc2024
+cargo_up
+
+cd ../ts
 node_up src

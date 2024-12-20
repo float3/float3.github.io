@@ -71,3 +71,23 @@ pub fn retrieve_solution(year: u32, day: u32, problem: u8) -> String {
         _ => panic!("Year not found"),
     }
 }
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> Option<String> {
+    use std::env::consts::FAMILY;
+
+    match year {
+        2015 => aoc2015::solve(input, day, problem),
+        2016 => aoc2016::solve(input, day, problem),
+        2017 => aoc2017::solve(input, day, problem),
+        2018 => aoc2018::solve(input, day, problem),
+        2019 => aoc2019::solve(input, day, problem),
+        2020 => aoc2020::solve(input, day, problem),
+        2021 => aoc2021::solve(input, day, problem),
+        2022 => aoc2022::solve(input, day, problem),
+        2023 => aoc2023::solve(input, day, problem),
+        2024 => aoc2024::solve(input, day, problem),
+        _ => panic!("Year not found"),
+    }
+}
