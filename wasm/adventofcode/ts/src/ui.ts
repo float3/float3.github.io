@@ -11,8 +11,8 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   for (let i = 1; i <= tabCount; i++) {
     const tabButton = document.createElement("button")
     if (i === 1) tabButton.classList.add("active")
-    tabButton.textContent = `Tab ${i}`
-    tabButton.dataset.tab = `tab${i}`
+    tabButton.textContent = `${2015 + i}`
+    tabButton.dataset.tab = `day${i + 1}`
     tabsWrapper.appendChild(tabButton)
   }
 
