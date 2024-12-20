@@ -12,7 +12,7 @@ export default {
   },
   entry: "./dist/bootstrap.js",
   output: {
-    path: path.resolve(path.dirname(""), "../www/"),
+    path: path.resolve(path.dirname(""), "../../../content/tools/tuningplayground"),
     filename: "bootstrap.js",
   },
   target: "web",

@@ -35,3 +35,39 @@ extern "C" {
     #[wasm_bindgen(js_namespace = console)]
     fn info(s: &str);
 }
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
+    match year {
+        2015 => aoc2015::retrieve_problem(day, problem),
+        2016 => aoc2016::retrieve_problem(day, problem),
+        2017 => aoc2017::retrieve_problem(day, problem),
+        2018 => aoc2018::retrieve_problem(day, problem),
+        2019 => aoc2019::retrieve_problem(day, problem),
+        2020 => aoc2020::retrieve_problem(day, problem),
+        2021 => aoc2021::retrieve_problem(day, problem),
+        2022 => aoc2022::retrieve_problem(day, problem),
+        2023 => aoc2023::retrieve_problem(day, problem),
+        2024 => aoc2024::retrieve_problem(day, problem),
+        _ => panic!("Year not found"),
+    }
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn retrieve_solution(year: u32, day: u32, problem: u8) -> String {
+    match year {
+        2015 => aoc2015::retrieve_solution(day, problem),
+        2016 => aoc2016::retrieve_solution(day, problem),
+        2017 => aoc2017::retrieve_solution(day, problem),
+        2018 => aoc2018::retrieve_solution(day, problem),
+        2019 => aoc2019::retrieve_solution(day, problem),
+        2020 => aoc2020::retrieve_solution(day, problem),
+        2021 => aoc2021::retrieve_solution(day, problem),
+        2022 => aoc2022::retrieve_solution(day, problem),
+        2023 => aoc2023::retrieve_solution(day, problem),
+        2024 => aoc2024::retrieve_solution(day, problem),
+        _ => panic!("Year not found"),
+    }
+}

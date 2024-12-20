@@ -1,10 +1,11 @@
 export interface TabConfig {
-  tabCount: number
-  subTabCount: number
+  years: number
+  days: number
+  problems: number
 }
 
 export function createTabs(container: HTMLElement, config: TabConfig) {
-  const { tabCount, subTabCount } = config
+  const { years: tabCount, days: subTabCount, problems: subSubTabCount } = config
   const tabsWrapper = document.createElement("div")
   tabsWrapper.className = "tabs"
 
@@ -31,41 +32,54 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
       subtabButton.textContent = `day ${j}`
       subtabButton.dataset.subtab = `subtab${i}-${j}`
       subtabsWrapper.appendChild(subtabButton)
-    }
 
-    tabContent.appendChild(subtabsWrapper)
+      const subSubtabsWrapper = document.createElement("div")
+      subSubtabsWrapper.className = "subsubtabs"
 
-    for (let j = 1; j <= subTabCount; j++) {
-      const subtabContent = document.createElement("div")
-      subtabContent.id = `subtab${i}-${j}`
-      subtabContent.className = j === 1 ? "subtab-content active" : "subtab-content"
-
-      const fields = document.createElement("div")
-      fields.className = "fields"
-
-      const leftCol = document.createElement("div")
-      leftCol.className = "left-col"
-      const leftInput = document.createElement("input")
-      leftInput.type = "text"
-      leftInput.placeholder = "Field 1"
-      leftCol.appendChild(leftInput)
-
-      const rightCol = document.createElement("div")
-      rightCol.className = "right-col"
-      for (let k = 2; k <= 3; k++) {
-        const rightInput = document.createElement("input")
-        rightInput.type = "text"
-        rightInput.placeholder = `Field ${k}`
-        rightCol.appendChild(rightInput)
+      for (let k = 1; k <= subSubTabCount; k++) {
+        const subsubtabButton = document.createElement("button")
+        if (k === 1) subsubtabButton.classList.add("active")
+        subsubtabButton.textContent = `problem ${k}`
+        subsubtabButton.dataset.subtab = `subtab${i}-${j}-${k}`
+        subtabsWrapper.appendChild(subsubtabButton)
       }
 
-      fields.appendChild(leftCol)
-      fields.appendChild(rightCol)
-      subtabContent.appendChild(fields)
-      tabContent.appendChild(subtabContent)
-    }
+      tabContent.appendChild(subtabsWrapper)
 
-    container.appendChild(tabContent)
+      for (let j = 1; j <= subTabCount; j++) {
+        for (let k = 1; k <= subSubTabCount; k++) {
+          const subtabContent = document.createElement("div")
+          subtabContent.id = `subtab${i}-${j}`
+          subtabContent.className = j === 1 ? "subtab-content active" : "subtab-content"
+
+          const fields = document.createElement("div")
+          fields.className = "fields"
+
+          const leftCol = document.createElement("div")
+          leftCol.className = "left-col"
+          const leftInput = document.createElement("input")
+          leftInput.type = "text"
+          leftInput.placeholder = "Field 1"
+          leftCol.appendChild(leftInput)
+
+          const rightCol = document.createElement("div")
+          rightCol.className = "right-col"
+          for (let k = 2; k <= 3; k++) {
+            const rightInput = document.createElement("input")
+            rightInput.type = "text"
+            rightInput.placeholder = `Field ${k}`
+            rightCol.appendChild(rightInput)
+          }
+
+          fields.appendChild(leftCol)
+          fields.appendChild(rightCol)
+          subtabContent.appendChild(fields)
+          tabContent.appendChild(subtabContent)
+        }
+      }
+
+      container.appendChild(tabContent)
+    }
   }
 
   tabsWrapper.querySelectorAll("button").forEach((btn) => {
