@@ -20,5 +20,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   await initWasm()
 
   const container = document.getElementById("adventofcode") as HTMLElement
-  createTabs(container, { tabCount: 2, subTabCount: 24 })
+  createTabs(container, { tabCount: 10, subTabCount: 25 })
 })
