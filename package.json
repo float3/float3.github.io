@@ -63,7 +63,7 @@
     "mermaid": "^11.4.1",
     "micromorph": "^0.4.5",
     "pixi.js": "^8.6.6",
-    "pnpm": "^9.15.0",
+    "pnpm": "^9.15.1",
     "preact": "^10.25.3",
     "preact-render-to-string": "^6.5.12",
     "pretty-bytes": "^6.1.1",
@@ -112,7 +112,7 @@
     "@types/source-map-support": "^0.5.10",
     "@types/ws": "^8.5.13",
     "@types/yargs": "^17.0.33",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.24.2",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
