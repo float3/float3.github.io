@@ -1,4 +1,4 @@
-interface TabConfig {
+export interface TabConfig {
   tabCount: number
   subTabCount: number
 }
@@ -8,7 +8,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   const tabsWrapper = document.createElement("div")
   tabsWrapper.className = "tabs"
 
-  // Create tab buttons
   for (let i = 1; i <= tabCount; i++) {
     const tabButton = document.createElement("button")
     if (i === 1) tabButton.classList.add("active")
@@ -19,7 +18,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   container.appendChild(tabsWrapper)
 
-  // Create tab contents
   for (let i = 1; i <= tabCount; i++) {
     const tabContent = document.createElement("div")
     tabContent.id = `tab${i}`
@@ -70,7 +68,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     container.appendChild(tabContent)
   }
 
-  // Interactions
   tabsWrapper.querySelectorAll("button").forEach((btn) => {
     btn.addEventListener("click", () => {
       tabsWrapper.querySelectorAll("button").forEach((b) => b.classList.remove("active"))
@@ -98,13 +95,3 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     })
   })
 }
-
-// Example usage
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("app")
-  if (!container) return
-  container.innerHTML = "" // clear any existing content if needed
-
-  // You can change these values dynamically
-  createTabs(container, { tabCount: 3, subTabCount: 24 })
-})
