@@ -15,10 +15,9 @@ cd wasm
 wasm_path=$(pwd)
 
 cd $root_path/content/tools/
-rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl
+rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl adventofcode
 
 cd $wasm_path/tuningplayground
-
 ./build.sh $ARGS
 rm ./www/*.bootstrap.js.LICENSE.txt | true
 mv ./www $root_path/content/tools/tuningplayground/
@@ -30,6 +29,10 @@ mv ./www $root_path/content/tools/textprocessing/
 cd $wasm_path/glsl2hlsl
 ./build.sh $ARGS
 mv ./glsl2hlsl-wasm/www $root_path/content/tools/glsl2hlsl/
+
+cd $wasm_path/adventofcode
+./build.sh $ARGS
+mv ./www $root_path/content/tools/adventofcode/
 
 cd $root_path/ts 
 pnpm install
