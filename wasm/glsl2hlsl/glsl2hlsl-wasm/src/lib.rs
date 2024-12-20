@@ -1,4 +1,5 @@
 use glsl2hlsl::{get_files, get_image_files, make_shader, ShaderType};
+#[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]

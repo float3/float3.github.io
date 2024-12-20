@@ -1,4 +1,7 @@
 #[cfg(feature = "wasm")]
+use wasm_bindgen::prelude::*;
+
+#[cfg(feature = "wasm")]
 pub mod wasm;
 
 #[cfg(target_arch = "wasm32")]
