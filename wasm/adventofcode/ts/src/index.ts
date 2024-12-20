@@ -24,7 +24,7 @@ export async function transformLeftToRight(index: number): Promise<void> {
   const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null
   if (leftEl && rightEl) {
     const left = leftEl.value
-    rightEl.value = await transform(left, index, Side.LEFT)
+    rightEl.value = await mockTransform(left, index, Side.LEFT)
   }
 }
 
@@ -33,11 +33,11 @@ export async function transformRightToLeft(index: number): Promise<void> {
   const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null
   if (rightEl && leftEl) {
     const right = rightEl.value
-    leftEl.value = await transform(right, index, Side.RIGHT)
+    leftEl.value = await mockTransform(right, index, Side.RIGHT)
   }
 }
 
-async function transform(text: string, index: number, side: Side): Promise<string> {
+async function mockTransform(text: string, index: number, side: Side): Promise<string> {
   const wasm = await loadWasm()
   switch (index) {
     case 0:
