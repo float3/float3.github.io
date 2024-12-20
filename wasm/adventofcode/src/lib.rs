@@ -74,7 +74,7 @@ pub fn retrieve_solution(year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> Option<String> {
+pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::solve(input, day, problem),
         2016 => aoc2016::solve(input, day, problem),

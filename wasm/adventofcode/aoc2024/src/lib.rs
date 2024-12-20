@@ -26,15 +26,15 @@ pub mod day25;
 
 pub fn retrieve_problem(day: u32, problem: u8) -> String {
     match day {
-        01 => day01::retrieve_problem(problem),
-        02 => day02::retrieve_problem(problem),
-        03 => day03::retrieve_problem(problem),
-        04 => day04::retrieve_problem(problem),
-        05 => day05::retrieve_problem(problem),
-        06 => day06::retrieve_problem(problem),
-        07 => day07::retrieve_problem(problem),
-        08 => day08::retrieve_problem(problem),
-        09 => day09::retrieve_problem(problem),
+        1 => day01::retrieve_problem(problem),
+        2 => day02::retrieve_problem(problem),
+        3 => day03::retrieve_problem(problem),
+        4 => day04::retrieve_problem(problem),
+        5 => day05::retrieve_problem(problem),
+        6 => day06::retrieve_problem(problem),
+        7 => day07::retrieve_problem(problem),
+        8 => day08::retrieve_problem(problem),
+        9 => day09::retrieve_problem(problem),
         10 => day10::retrieve_problem(problem),
         11 => day11::retrieve_problem(problem),
         12 => day12::retrieve_problem(problem),
@@ -57,15 +57,15 @@ pub fn retrieve_problem(day: u32, problem: u8) -> String {
 
 pub fn retrieve_solution(day: u32, solution: u8) -> String {
     match day {
-        01 => day01::retrieve_solution(solution),
-        02 => day02::retrieve_solution(solution),
-        03 => day03::retrieve_solution(solution),
-        04 => day04::retrieve_solution(solution),
-        05 => day05::retrieve_solution(solution),
-        06 => day06::retrieve_solution(solution),
-        07 => day07::retrieve_solution(solution),
-        08 => day08::retrieve_solution(solution),
-        09 => day09::retrieve_solution(solution),
+        1 => day01::retrieve_solution(solution),
+        2 => day02::retrieve_solution(solution),
+        3 => day03::retrieve_solution(solution),
+        4 => day04::retrieve_solution(solution),
+        5 => day05::retrieve_solution(solution),
+        6 => day06::retrieve_solution(solution),
+        7 => day07::retrieve_solution(solution),
+        8 => day08::retrieve_solution(solution),
+        9 => day09::retrieve_solution(solution),
         10 => day10::retrieve_solution(solution),
         11 => day11::retrieve_solution(solution),
         12 => day12::retrieve_solution(solution),
@@ -86,17 +86,17 @@ pub fn retrieve_solution(day: u32, solution: u8) -> String {
     }
 }
 
-pub fn solve(input: &str, day: u32, problem: u8) -> Option<String> {
+pub fn solve(input: &str, day: u32, problem: u8) -> String {
     match day {
-        01 => day01::solve(input, problem),
-        02 => day02::solve(input, problem),
-        03 => day03::solve(input, problem),
-        04 => day04::solve(input, problem),
-        05 => day05::solve(input, problem),
-        06 => day06::solve(input, problem),
-        07 => day07::solve(input, problem),
-        08 => day08::solve(input, problem),
-        09 => day09::solve(input, problem),
+        1 => day01::solve(input, problem),
+        2 => day02::solve(input, problem),
+        3 => day03::solve(input, problem),
+        4 => day04::solve(input, problem),
+        5 => day05::solve(input, problem),
+        6 => day06::solve(input, problem),
+        7 => day07::solve(input, problem),
+        8 => day08::solve(input, problem),
+        9 => day09::solve(input, problem),
         10 => day10::solve(input, problem),
         11 => day11::solve(input, problem),
         12 => day12::solve(input, problem),
