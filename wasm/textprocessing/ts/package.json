@@ -22,9 +22,6 @@
   },
   "homepage": "https://github.com/float3/float3.github.io#readme",
   "dependencies": {
-    "@tonejs/midi": "^2.0.28",
-    "@types/webmidi": "^2.1.0",
-    "abcjs": "^6.4.4",
     "wasm": "file:../pkg"
   },
   "devDependencies": {
