@@ -8,10 +8,10 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   const tabsWrapper = document.createElement("div")
   tabsWrapper.className = "tabs"
 
-  for (let i = 0; i <= tabCount; i++) {
+  for (let i = 1; i <= tabCount; i++) {
     const tabButton = document.createElement("button")
     if (i === 1) tabButton.classList.add("active")
-    tabButton.textContent = `${2015 + i}`
+    tabButton.textContent = `${2014 + i}`
     tabButton.dataset.tab = `tab${i}`
     tabsWrapper.appendChild(tabButton)
   }
