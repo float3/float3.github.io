@@ -8,10 +8,7 @@ license = "AGPL-3.0"
 repository = "https://github.com/float3/float3.github.io"
 
 [workspace]
-members = ["hangeul_conversion"]
-
-[workspace]
-members = ["hangeul_conversion"]
+members = ["aoc2024"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]

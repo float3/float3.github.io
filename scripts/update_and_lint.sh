@@ -49,8 +49,15 @@ wasm-pack build --target bundler $ARGS
 cd $wasm_path/glsl2hlsl/glsl2hlsl-wasm
 wasm-pack build --target bundler $ARGS
 
+cd $wasm_path/adventofcode
+wasm-pack build --target bundler $ARGS
+
+
 cd $root_path
-pnpx npm-upgrade
+if [[ -z "$GITHUB_ACTIONS" ]]; then
+    pnpx npm-upgrade
+    echo "::warning::upgrading npm packages"
+fi
 pnpm update
 pnpm audit fix
 pnpm install
@@ -86,6 +93,12 @@ cd $wasm_path/glsl2hlsl/
 cargo_up
 
 cd ./glsl2hlsl-wasm/
+cargo_up
+
+cd ./ts
+node_up src
+
+cd $wasm_path/adventofcode/
 cargo_up
 
 cd ./ts
