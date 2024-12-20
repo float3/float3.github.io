@@ -11,7 +11,7 @@ else
   echo "Invalid argument. Use 'dev' for development or 'prod' for production."                                                    exit 1
 fi
 
-rm -rf www pkg
+rm -rf pkg
 wasm-pack build --target bundler $ARGS
 
 cd ./ts

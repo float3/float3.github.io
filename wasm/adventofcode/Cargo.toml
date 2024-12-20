@@ -8,7 +8,18 @@ license = "AGPL-3.0"
 repository = "https://github.com/float3/float3.github.io"
 
 [workspace]
-members = ["aoc2024"]
+members = [
+    "aoc2015",
+    "aoc2016",
+    "aoc2017",
+    "aoc2018",
+    "aoc2019",
+    "aoc2020",
+    "aoc2021",
+    "aoc2022",
+    "aoc2023",
+    "aoc2024",
+]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -20,18 +31,19 @@ mini-alloc = ["dep:mini-alloc"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
-bpmf_py = "0.1.0"
-character_converter = "2.1.5"
-chinese-number = "0.7.7"
 console_error_panic_hook = { version = "0.1.7", optional = true }
-hanja = "0.1.1"
-japanese = "0.1.2"
-japanese_number_converter = "0.1.0"
 mini-alloc = { version = "0.6.0", optional = true }
-pinyin = "0.10.0"
-pinyin_zhuyin = "0.2.0"
-roman = "0.1.6"
 wasm-bindgen = { version = "0.2.99", optional = true }
+aoc2015 = { path = "aoc2015" }
+aoc2016 = { path = "aoc2016" }
+aoc2017 = { path = "aoc2017" }
+aoc2018 = { path = "aoc2018" }
+aoc2019 = { path = "aoc2019" }
+aoc2020 = { path = "aoc2020" }
+aoc2021 = { path = "aoc2021" }
+aoc2022 = { path = "aoc2022" }
+aoc2023 = { path = "aoc2023" }
+aoc2024 = { path = "aoc2024" }
 
 [profile.release]
 codegen-units = 1

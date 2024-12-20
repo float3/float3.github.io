@@ -11,7 +11,7 @@ pub enum RomanizationSystem {
 }
 
 /// These functions return the romanized form of a single initial or final consonant.
-fn revised_initial_consonant(c: char) -> &'static str {
+fn revised_initial_consonant(c: char) -> str {
     match c {
         'ㄱ' => "g",
         'ㄲ' => "kk",
@@ -36,7 +36,7 @@ fn revised_initial_consonant(c: char) -> &'static str {
     }
 }
 
-fn revised_final_consonant(c: char) -> &'static str {
+fn revised_final_consonant(c: char) -> str {
     match c {
         'ㄱ' => "k",
         'ㄲ' => "k",
@@ -69,7 +69,7 @@ fn revised_final_consonant(c: char) -> &'static str {
     }
 }
 
-fn revised_vowel(j: char) -> &'static str {
+fn revised_vowel(j: char) -> str {
     match j {
         'ㅏ' => "a",
         'ㅐ' => "ae",
@@ -108,7 +108,7 @@ fn map_components_to_revised(c: char, j: char, o: Option<char>) -> String {
     format!("{}{}{}", initial, mid, final_roman)
 }
 
-fn mc_cune_reischauer_initial_consonant(c: char) -> &'static str {
+fn mc_cune_reischauer_initial_consonant(c: char) -> str {
     match c {
         'ㄱ' => "k",
         'ㄲ' => "kk",
@@ -133,7 +133,7 @@ fn mc_cune_reischauer_initial_consonant(c: char) -> &'static str {
     }
 }
 
-fn mc_cune_reischauer_final_consonant(c: char) -> &'static str {
+fn mc_cune_reischauer_final_consonant(c: char) -> str {
     match c {
         'ㄱ' => "k",
         'ㄲ' => "k",
@@ -166,7 +166,7 @@ fn mc_cune_reischauer_final_consonant(c: char) -> &'static str {
     }
 }
 
-fn mc_cune_reischauer_vowel(j: char) -> &'static str {
+fn mc_cune_reischauer_vowel(j: char) -> str {
     match j {
         'ㅏ' => "a",
         'ㅐ' => "ae",

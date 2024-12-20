@@ -13,7 +13,7 @@ else
 fi
 
 cd ./glsl2hlsl-wasm
-rm -rf www pkg
+rm -rf pkg
 wasm-pack build --target bundler $ARGS
 
 cd ./ts

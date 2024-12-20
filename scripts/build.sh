@@ -19,20 +19,17 @@ rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl adventof
 
 cd $wasm_path/tuningplayground
 ./build.sh $ARGS
-rm ./www/*.bootstrap.js.LICENSE.txt | true
-mv ./www $root_path/content/tools/tuningplayground/
 
 cd $wasm_path/textprocessing
 ./build.sh $ARGS
-mv ./www $root_path/content/tools/textprocessing/
 
 cd $wasm_path/glsl2hlsl
 ./build.sh $ARGS
-mv ./glsl2hlsl-wasm/www $root_path/content/tools/glsl2hlsl/
 
 cd $wasm_path/adventofcode
 ./build.sh $ARGS
-mv ./www $root_path/content/tools/adventofcode/
+
+rm ./content/tools/*/*.bootstrap.js.LICENSE.txt | true
 
 cd $root_path/ts 
 pnpm install
