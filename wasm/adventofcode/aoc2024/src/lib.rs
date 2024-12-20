@@ -116,34 +116,3 @@ pub fn solve(input: &str, day: u32, problem: u8) -> Option<String> {
         _ => panic!("Day not found"),
     }
 }
-
-pub fn solve(input: &str, day: u32, problem: u8) -> Option<String> {
-    match day {
-        01 => day01::solve(input, problem),
-        02 => day02::solve(input, problem),
-        03 => day03::solve(input, problem),
-        04 => day04::solve(input, problem),
-        05 => day05::solve(input, problem),
-        06 => day06::solve(input, problem),
-        07 => day07::solve(input, problem),
-        08 => day08::solve(input, problem),
-        09 => day09::solve(input, problem),
-        10 => day10::solve(input, problem),
-        11 => day11::solve(input, problem),
-        12 => day12::solve(input, problem),
-        13 => day13::solve(input, problem),
-        14 => day14::solve(input, problem),
-        15 => day15::solve(input, problem),
-        16 => day16::solve(input, problem),
-        17 => day17::solve(input, problem),
-        18 => day18::solve(input, problem),
-        19 => day19::solve(input, problem),
-        20 => day20::solve(input, problem),
-        21 => day21::solve(input, problem),
-        22 => day22::solve(input, problem),
-        23 => day23::solve(input, problem),
-        24 => day24::solve(input, problem),
-        25 => day25::solve(input, problem),
-        _ => panic!("Day not found"),
-    }
-}
