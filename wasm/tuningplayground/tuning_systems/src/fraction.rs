@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::ops::{Div, DivAssign, Mul, MulAssign};
 // use wasm_bindgen::convert::{FromWasmAbi, WasmAbi};
-// #[cfg(feature = "wasm-bindgen")]
+// #[cfg(feature = "wasm")]
 // use wasm_bindgen::prelude::*;
 
 #[derive(Clone, Copy, Debug)]
@@ -151,7 +151,7 @@ impl PartialOrd for Fraction {
 }
 
 //if wasm-bindgen is enabled impl WasmDescribe for Fraction
-// #[cfg(feature = "wasm-bindgen")]
+// #[cfg(feature = "wasm")]
 // impl WasmAbi for Fraction {
 //     type Prim1;
 
@@ -174,7 +174,7 @@ impl PartialOrd for Fraction {
 //         todo!()
 //     }
 // }
-// #[cfg(feature = "wasm-bindgen")]
+// #[cfg(feature = "wasm")]
 // impl FromWasmAbi for Fraction {
 //     type Abi = (u32, u32, u32);
 

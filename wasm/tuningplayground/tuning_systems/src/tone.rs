@@ -1,4 +1,4 @@
-// #[cfg(feature = "wasm-bindgen")]
+// #[cfg(feature = "wasm")]
 // use wasm_bindgen::prelude::*;
 
 use crate::{equal_temperament, Fraction, TuningSystem, TypeAlias, CN1};
