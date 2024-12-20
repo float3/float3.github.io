@@ -17,7 +17,7 @@ pub fn retrieve_solution(problem: u8) -> String {
     }
 }
 
-pub fn solve(input: &str, problem: u8) -> Option<String> {
+pub fn solve(input: &str, problem: u8) -> String {
     match problem {
         1 => solution1::solve(input),
         2 => solution2::solve(input),
