@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, world!");
+    println!("place holder, run all the aoc days here");
 }
