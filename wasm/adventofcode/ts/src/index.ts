@@ -1,4 +1,4 @@
-import { createTabs, TabConfig } from "./ui.js"
+import { createTabs } from "./ui.js"
 
 let wasmModulePromise: Promise<typeof import("wasm")>
 
