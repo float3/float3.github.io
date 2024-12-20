@@ -8,11 +8,11 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   const tabsWrapper = document.createElement("div")
   tabsWrapper.className = "tabs"
 
-  for (let i = 1; i <= tabCount; i++) {
+  for (let i = 0; i <= tabCount; i++) {
     const tabButton = document.createElement("button")
     if (i === 1) tabButton.classList.add("active")
     tabButton.textContent = `${2015 + i}`
-    tabButton.dataset.tab = `day${i + 1}`
+    tabButton.dataset.tab = `tab${i}`
     tabsWrapper.appendChild(tabButton)
   }
 
@@ -28,7 +28,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     for (let j = 1; j <= subTabCount; j++) {
       const subtabButton = document.createElement("button")
       if (j === 1) subtabButton.classList.add("active")
-      subtabButton.textContent = `Subtab ${j}`
+      subtabButton.textContent = `day ${j}`
       subtabButton.dataset.subtab = `subtab${i}-${j}`
       subtabsWrapper.appendChild(subtabButton)
     }

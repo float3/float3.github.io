@@ -1,78 +1,78 @@
 body {
-    font-family: sans-serif;
-    margin: 0;
+  font-family: sans-serif;
+  margin: 0;
 }
 
 .tabs {
-    display: flex;
-    border-bottom: 1px solid #ccc;
+  display: flex;
+  border-bottom: 1px solid #ccc;
 }
 
 .tabs button {
-    background: none;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
 }
 
 .tabs button.active {
-    border-bottom: 2px solid #000;
-    font-weight: bold;
+  border-bottom: 2px solid #000;
+  font-weight: bold;
 }
 
 .subtabs {
-    display: flex;
-    border-bottom: 1px solid #ccc;
-    margin-top: 10px;
+  display: flex;
+  border-bottom: 1px solid #ccc;
+  margin-top: 10px;
 }
 
 .subtabs button {
-    background: none;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    font-size: 0.9em;
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.9em;
 }
 
 .subtabs button.active {
-    border-bottom: 2px solid #000;
-    font-weight: bold;
+  border-bottom: 2px solid #000;
+  font-weight: bold;
 }
 
 .tab-content {
-    display: none;
-    padding: 10px;
+  display: none;
+  padding: 10px;
 }
 
 .tab-content.active {
-    display: block;
+  display: block;
 }
 
 .subtab-content {
-    display: none;
+  display: none;
 }
 
 .subtab-content.active {
-    display: block;
+  display: block;
 }
 
 .fields {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 10px;
-    margin-top: 10px;
-    max-width: 400px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  margin-top: 10px;
+  max-width: 400px;
 }
 
 .fields .left-col,
 .fields .right-col {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .fields input[type="text"] {
-    width: 100%;
-    padding: 5px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
 }
