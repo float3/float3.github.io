@@ -24,4 +24,3 @@ pub fn solve(input: &str, problem: u8) -> Option<String> {
         _ => panic!("Solution not found"),
     }
 }
-
