@@ -76,7 +76,10 @@ node_up src
 cd $wasm_path/textprocessing/
 cargo_up
 
-cd ./ts
+cd ./hangeul_conversion
+cargo_up
+
+cd ../ts
 node_up src
 
 cd $wasm_path/glsl2hlsl/

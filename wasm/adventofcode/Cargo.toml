@@ -10,6 +10,9 @@ repository = "https://github.com/float3/float3.github.io"
 [workspace]
 members = ["hangeul_conversion"]
 
+[workspace]
+members = ["hangeul_conversion"]
+
 [lib]
 crate-type = ["cdylib", "rlib"]
 
