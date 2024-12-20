@@ -1,8 +1,8 @@
 import { DEFAULT_SHADER, DEFAULT_SHADER_SOURCE } from "./default_shader.js"
 
-export let wasm: typeof import("glsl2hlsl-wasm")
+export let wasm: typeof import("wasm")
 
-import("glsl2hlsl-wasm").then((module) => {
+import("wasm").then((module) => {
   wasm = module
   wasm.main()
 })
