@@ -4,108 +4,173 @@ export interface TabConfig {
   problems: number
 }
 
-export function createTabs(container: HTMLElement, config: TabConfig) {
-  const { years: tabCount, days: subTabCount, problems: subSubTabCount } = config
-  const tabsWrapper = document.createElement("div")
-  tabsWrapper.className = "tabs"
+export function createTabs(container: HTMLElement, config: TabConfig, wasm: typeof import("wasm")) {
+  const { years, days, problems } = config
 
-  for (let i = 1; i <= tabCount; i++) {
-    const tabButton = document.createElement("button")
-    if (i === 1) tabButton.classList.add("active")
-    tabButton.textContent = `${2014 + i}`
-    tabButton.dataset.tab = `tab${i}`
-    tabsWrapper.appendChild(tabButton)
-  }
+  let activeYear = 1
+  let activeDay = 1
+  let activeProblem = 1
 
-  container.appendChild(tabsWrapper)
+  const urlParams = new URLSearchParams(window.location.search)
 
-  for (let i = 1; i <= tabCount; i++) {
-    const tabContent = document.createElement("div")
-    tabContent.id = `tab${i}`
-    tabContent.className = i === 1 ? "tab-content active" : "tab-content"
+  const initialYearParam = urlParams.get("year")
+  const initialDayParam = urlParams.get("day")
+  const initialProblemParam = urlParams.get("problem")
 
-    const subtabsWrapper = document.createElement("div")
-    subtabsWrapper.className = "subtabs"
-    for (let j = 1; j <= subTabCount; j++) {
-      const subtabButton = document.createElement("button")
-      if (j === 1) subtabButton.classList.add("active")
-      subtabButton.textContent = `day ${j}`
-      subtabButton.dataset.subtab = `subtab${i}-${j}`
-      subtabsWrapper.appendChild(subtabButton)
-
-      const subSubtabsWrapper = document.createElement("div")
-      subSubtabsWrapper.className = "subsubtabs"
-
-      for (let k = 1; k <= subSubTabCount; k++) {
-        const subsubtabButton = document.createElement("button")
-        if (k === 1) subsubtabButton.classList.add("active")
-        subsubtabButton.textContent = `problem ${k}`
-        subsubtabButton.dataset.subtab = `subtab${i}-${j}-${k}`
-        subtabsWrapper.appendChild(subsubtabButton)
+  if (initialYearParam) {
+    const parsedYear = parseInt(initialYearParam, 10)
+    if (!isNaN(parsedYear)) {
+      const relativeY = parsedYear - 2014
+      if (relativeY >= 1 && relativeY <= years) {
+        activeYear = relativeY
       }
-
-      tabContent.appendChild(subtabsWrapper)
-
-      for (let j = 1; j <= subTabCount; j++) {
-        for (let k = 1; k <= subSubTabCount; k++) {
-          const subtabContent = document.createElement("div")
-          subtabContent.id = `subtab${i}-${j}`
-          subtabContent.className = j === 1 ? "subtab-content active" : "subtab-content"
-
-          const fields = document.createElement("div")
-          fields.className = "fields"
-
-          const leftCol = document.createElement("div")
-          leftCol.className = "left-col"
-          const leftInput = document.createElement("input")
-          leftInput.type = "text"
-          leftInput.placeholder = "Field 1"
-          leftCol.appendChild(leftInput)
-
-          const rightCol = document.createElement("div")
-          rightCol.className = "right-col"
-          for (let k = 2; k <= 3; k++) {
-            const rightInput = document.createElement("input")
-            rightInput.type = "text"
-            rightInput.placeholder = `Field ${k}`
-            rightCol.appendChild(rightInput)
-          }
-
-          fields.appendChild(leftCol)
-          fields.appendChild(rightCol)
-          subtabContent.appendChild(fields)
-          tabContent.appendChild(subtabContent)
-        }
-      }
-
-      container.appendChild(tabContent)
     }
   }
 
-  tabsWrapper.querySelectorAll("button").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      tabsWrapper.querySelectorAll("button").forEach((b) => b.classList.remove("active"))
-      btn.classList.add("active")
-      const target = btn.dataset.tab
-      container.querySelectorAll(".tab-content").forEach((tc) => {
-        tc.classList.remove("active")
-        if (tc.id === target) tc.classList.add("active")
-      })
-    })
-  })
+  if (initialDayParam) {
+    const parsedDay = parseInt(initialDayParam, 10)
+    if (!isNaN(parsedDay) && parsedDay >= 1 && parsedDay <= days) {
+      activeDay = parsedDay
+    }
+  }
 
-  container.querySelectorAll(".subtabs").forEach((stWrapper) => {
-    stWrapper.querySelectorAll("button").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        stWrapper.querySelectorAll("button").forEach((b) => b.classList.remove("active"))
-        btn.classList.add("active")
-        const parentContent = btn.closest(".tab-content") as HTMLElement
-        const target = btn.dataset.subtab
-        parentContent.querySelectorAll(".subtab-content").forEach((stc) => {
-          stc.classList.remove("active")
-          if (stc.id === target) stc.classList.add("active")
+  if (initialProblemParam) {
+    const parsedProblem = parseInt(initialProblemParam, 10)
+    if (!isNaN(parsedProblem) && parsedProblem >= 1 && parsedProblem <= problems) {
+      activeProblem = parsedProblem
+    }
+  }
+
+  const yearsWrapper = document.createElement("div")
+  yearsWrapper.className = "years tabs"
+
+  const daysWrapper = document.createElement("div")
+  daysWrapper.className = "days tabs"
+
+  const problemsWrapper = document.createElement("div")
+  problemsWrapper.className = "problems tabs"
+
+  const contentWrapper = document.createElement("div")
+  contentWrapper.className = "content"
+
+  const fieldsMap = new Map<string, HTMLDivElement>()
+
+  // Pre-create all fields sets
+  for (let y = 2015; y < years + 2015; y++) {
+    for (let d = 1; d <= days; d++) {
+      for (let p = 1; p <= problems; p++) {
+        const fields = document.createElement("div")
+        fields.className = "fields hidden"
+
+        const descriptionArea = document.createElement("textarea")
+        descriptionArea.className = "big-field"
+        descriptionArea.value = wasm.retrieve_problem(y, d, p)
+        descriptionArea.disabled = true
+
+        const codeArea = document.createElement("textarea")
+        codeArea.className = "big-field"
+        codeArea.value = wasm.retrieve_solution(y, d, p)
+        codeArea.disabled = true
+
+        const inputArea = document.createElement("textarea")
+        inputArea.className = "big-field"
+        inputArea.placeholder = "Input here..."
+
+        const outputArea = document.createElement("textarea")
+        outputArea.className = "small-field"
+        outputArea.disabled = true
+        outputArea.value = ""
+
+        const solveButton = document.createElement("button")
+        solveButton.textContent = "Solve"
+        solveButton.addEventListener("click", () => {
+          outputArea.value = wasm.solve(inputArea.value, y, d, p)
         })
-      })
+
+        fields.appendChild(descriptionArea)
+        fields.appendChild(codeArea)
+        fields.appendChild(inputArea)
+        fields.appendChild(outputArea)
+        fields.appendChild(solveButton)
+
+        const key = `${y}-${d}-${p}`
+        fieldsMap.set(key, fields)
+        contentWrapper.appendChild(fields)
+      }
+    }
+  }
+
+  // Create year tabs
+  for (let y = 1; y <= years; y++) {
+    const btn = document.createElement("button")
+    btn.textContent = (2014 + y).toString()
+    if (y === activeYear) btn.classList.add("active")
+    btn.addEventListener("click", () => {
+      activeYear = y
+      updateActiveTab(yearsWrapper, btn)
+      showCurrentFields()
+      updateURL()
     })
-  })
+    yearsWrapper.appendChild(btn)
+  }
+
+  // Create day tabs
+  for (let d = 1; d <= days; d++) {
+    const btn = document.createElement("button")
+    btn.textContent = `day ${d}`
+    if (d === activeDay) btn.classList.add("active")
+    btn.addEventListener("click", () => {
+      activeDay = d
+      updateActiveTab(daysWrapper, btn)
+      showCurrentFields()
+      updateURL()
+    })
+    daysWrapper.appendChild(btn)
+  }
+
+  // Create problem tabs
+  for (let p = 1; p <= problems; p++) {
+    const btn = document.createElement("button")
+    btn.textContent = `problem ${p}`
+    if (p === activeProblem) btn.classList.add("active")
+    btn.addEventListener("click", () => {
+      activeProblem = p
+      updateActiveTab(problemsWrapper, btn)
+      showCurrentFields()
+      updateURL()
+    })
+    problemsWrapper.appendChild(btn)
+  }
+
+  container.appendChild(yearsWrapper)
+  container.appendChild(daysWrapper)
+  container.appendChild(problemsWrapper)
+  container.appendChild(contentWrapper)
+
+  function updateActiveTab(wrapper: HTMLElement, activeButton: HTMLButtonElement) {
+    wrapper.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+    activeButton.classList.add("active")
+  }
+
+  function showCurrentFields() {
+    fieldsMap.forEach(fieldsDiv => fieldsDiv.classList.add("hidden"))
+    const actualYear = 2014 + activeYear
+    const key = `${actualYear}-${activeDay}-${activeProblem}`
+    const currentFields = fieldsMap.get(key)
+    if (currentFields) currentFields.classList.remove("hidden")
+  }
+
+  function updateURL() {
+    const actualYear = 2014 + activeYear
+    const url = new URL(window.location.href)
+    url.searchParams.set("year", actualYear.toString())
+    url.searchParams.set("day", activeDay.toString())
+    url.searchParams.set("problem", activeProblem.toString())
+    history.replaceState(null, '', url.toString())
+  }
+
+  // Initialize
+  showCurrentFields()
+  updateURL() // so initial load also sets URL parameters
 }
+

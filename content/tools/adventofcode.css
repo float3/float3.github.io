@@ -1,7 +1,9 @@
 body {
   margin: 0;
+  font-family: sans-serif;
 }
 
+/* Top-level (Years) tabs */
 .tabs {
   display: flex;
   border-bottom: 1px solid #ccc;
@@ -12,6 +14,11 @@ body {
   border: none;
   padding: 10px 20px;
   cursor: pointer;
+  font-size: 14px;
+}
+
+.tabs button:hover {
+  background: #ddd;
 }
 
 .tabs button.active {
@@ -19,19 +26,16 @@ body {
   font-weight: bold;
 }
 
-.tab-content {
-  display: none;
-  padding: 10px;
-}
-
-.tab-content.active {
-  display: block;
-}
-
+/* Middle-level (Days) tabs */
 .subtabs {
   display: flex;
   border-bottom: 1px solid #ccc;
+  background: #f9f9f9;
   margin-top: 10px;
+  overflow-x: auto;
+  /* allow horizontal scrolling */
+  white-space: nowrap;
+  /* prevent wrapping */
 }
 
 .subtabs button {
@@ -39,7 +43,13 @@ body {
   border: none;
   padding: 5px 10px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 13px;
+  display: inline-block;
+  /* ensure they line up horizontally */
+}
+
+.subtabs button:hover {
+  background: #ddd;
 }
 
 .subtabs button.active {
@@ -47,66 +57,92 @@ body {
   font-weight: bold;
 }
 
-.subtab-content {
-  display: none;
-  margin-top: 10px;
-}
-
-.subtab-content.active {
-  display: block;
-}
-
-.part-subtabs {
+/* Bottom-level (Problems) tabs */
+.subsubtabs {
   display: flex;
   border-bottom: 1px solid #ccc;
+  background: #fbfbfb;
   margin-top: 10px;
 }
 
-.part-subtabs button {
+.subsubtabs button {
   background: none;
   border: none;
   padding: 5px 10px;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 12px;
 }
 
-.part-subtabs button.active {
+.subsubtabs button:hover {
+  background: #ddd;
+}
+
+.subsubtabs button.active {
   border-bottom: 2px solid #000;
   font-weight: bold;
 }
 
-.part-subtab-content {
+/* Content areas */
+.tab-content,
+.subtab-content,
+.subsubtab-content {
   display: none;
-  margin-top: 10px;
+  padding: 10px;
 }
 
-.part-subtab-content.active {
+.tab-content.active,
+.subtab-content.active,
+.subsubtab-content.active {
   display: block;
 }
 
-.fields {
+/* Fields layout */
+.big-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
-.big-field {
-  width: 400px;
-  height: 200px;
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.left-col input[type="text"],
+.right-col input[type="text"] {
+  width: 100%;
+  padding: 8px;
   box-sizing: border-box;
-  resize: none;
-  overflow: auto;
-  font-family: monospace;
   font-size: 14px;
 }
 
-.small-field {
-  width: 200px;
-  height: 100px;
-  box-sizing: border-box;
-  resize: none;
-  overflow: auto;
-  font-family: monospace;
+/* Solve button */
+.solve-button {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 8px 15px;
+  border: 1px solid #ccc;
+  background: #eee;
+  cursor: pointer;
   font-size: 14px;
+}
+
+.solve-button:hover {
+  background: #ddd;
+}
+
+.days {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.days button {
+  display: inline-block;
+}
+
+.fields.hidden {
+  display: none !important;
 }

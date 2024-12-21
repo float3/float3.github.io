@@ -10,10 +10,6 @@ function loadWasm(): Promise<typeof import("wasm")> {
   return wasmModulePromise
 }
 
-export async function initWasm(): Promise<void> {
-  await loadWasm()
-}
-
 enum Side {
   LEFT,
   RIGHT,
