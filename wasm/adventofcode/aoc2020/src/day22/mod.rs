@@ -24,3 +24,7 @@ pub fn solve(input: &str, problem: u8) -> String {
         _ => panic!("Solution not found"),
     }
 }
+
+pub fn input() -> String {
+    include_str!("input.txt").to_string()
+}
