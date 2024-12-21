@@ -117,6 +117,7 @@ pub fn solve(input: &str, day: u32, problem: u8) -> String {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn input(day: u32) -> String {
     match day {
         1 => day01::input(),
@@ -146,4 +147,18 @@ pub fn input(day: u32) -> String {
         25 => day25::input(),
         _ => panic!("Day not found"),
     }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn solve_all() {
+    (1..=25)
+        .flat_map(|day| (1..=2).map(move |problem| (day, problem)))
+        .for_each(|(day, problem)| {
+            println!(
+                "Day {} Problem {}: {}",
+                day,
+                problem,
+                solve(&input(day), day, problem)
+            );
+        });
 }
