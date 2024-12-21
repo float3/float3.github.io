@@ -89,3 +89,17 @@ pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
         _ => panic!("Year not found: {}", year),
     }
 }
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn solve_all() {
+    aoc2024::solve_all();
+    aoc2023::solve_all();
+    aoc2022::solve_all();
+    aoc2021::solve_all();
+    aoc2020::solve_all();
+    aoc2019::solve_all();
+    aoc2018::solve_all();
+    aoc2017::solve_all();
+    aoc2016::solve_all();
+    aoc2015::solve_all();
+}
