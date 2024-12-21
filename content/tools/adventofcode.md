@@ -2,8 +2,7 @@
 title: advent of code
 date: 2024-12-09
 tags:
-  - text
-  - language
+  - programming
   - wasm
   - tools
   - rust
