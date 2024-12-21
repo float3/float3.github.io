@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const randomNum = String(randomNumber).padStart(2, '0')
 
-// Construct the file paths using the two-digit random number
 const mp4Src = `${trolleyPath}${randomNum}.${extensions[0]}`
 const jpgSrc = `${trolleyPath}${randomNum}.${extensions[1]}`
 
