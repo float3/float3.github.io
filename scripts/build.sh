@@ -29,7 +29,7 @@ cd $wasm_path/glsl2hlsl
 cd $wasm_path/adventofcode
 ./build.sh $ARGS
 
-rm ./content/tools/*/*.bootstrap.js.LICENSE.txt | true
+rm ./content/tools/*/*LICENSE.txt | true
 
 cd $root_path/ts 
 pnpm install

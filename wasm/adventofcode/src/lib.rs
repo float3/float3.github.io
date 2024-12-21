@@ -50,7 +50,7 @@ pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::retrieve_problem(day, problem),
         2023 => aoc2023::retrieve_problem(day, problem),
         2024 => aoc2024::retrieve_problem(day, problem),
-        _ => panic!("Year not found"),
+        _ => panic!("Year not found: {}", year),
     }
 }
 
@@ -68,7 +68,7 @@ pub fn retrieve_solution(year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::retrieve_solution(day, problem),
         2023 => aoc2023::retrieve_solution(day, problem),
         2024 => aoc2024::retrieve_solution(day, problem),
-        _ => panic!("Year not found"),
+        _ => panic!("Year not found: {}", year),
     }
 }
 
@@ -86,6 +86,6 @@ pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::solve(input, day, problem),
         2023 => aoc2023::solve(input, day, problem),
         2024 => aoc2024::solve(input, day, problem),
-        _ => panic!("Year not found"),
+        _ => panic!("Year not found: {}", year),
     }
 }
