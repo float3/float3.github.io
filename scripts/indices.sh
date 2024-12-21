@@ -33,3 +33,6 @@ EOF
 generate_index "media" "media"
 generate_index "blobs" "blobs"
 generate_index "plaintext" "plaintext"
+generate_index "trolley" "trolley"
+
+sed -i "1s/.*/const NUM = $(($(ls content/misc/trolley -1 | wc -l) - 2));/" ts/src/trolley.ts
