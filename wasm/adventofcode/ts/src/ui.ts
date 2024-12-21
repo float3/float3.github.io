@@ -63,7 +63,7 @@ export async function createTabs(
 
   const fieldsMap = new Map<string, HTMLDivElement>()
 
-  let complete: boolean[][][] = new Array(years)
+  const complete: boolean[][][] = new Array(years)
     .fill(false)
     .map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
 
@@ -81,7 +81,7 @@ export async function createTabs(
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        let code = wasm.retrieve_solution(y, d, p)
+        const code = wasm.retrieve_solution(y, d, p)
         complete[y - START_YEAR][d][p] = code.length > 53
         codeArea.innerHTML = await codeToHtml(code, { lang: "rust", theme: "vitesse-dark" })
 
