@@ -2,7 +2,7 @@ const NUM = 63
 document.addEventListener("DOMContentLoaded", async () => {
   const trolleyPath = "/misc/trolley/"
   const extensions = ["mp4", "jpg"]
-  const randomNum = Math.floor(Math.random() * NUM) + 1
+  const randomNumber = Math.floor(Math.random() * NUM) + 1
 
   const randomNum = String(randomNumber).padStart(2, "0")
 
