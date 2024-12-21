@@ -1,4 +1,4 @@
-const NUM = 63
+const NUM = 63;
 document.addEventListener("DOMContentLoaded", async () => {
   const trolleyPath = "/misc/trolley/"
   const extensions = ["mp4", "jpg"]
