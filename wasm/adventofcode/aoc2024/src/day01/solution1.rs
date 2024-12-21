@@ -12,7 +12,7 @@ pub fn solve(input: &str) -> String {
     right.sort();
 
     left.into_iter()
-        .zip(right.into_iter())
+        .zip(right)
         .map(|(x, y)| (x - y).abs())
         .sum::<i32>()
         .to_string()
