@@ -1,6 +1,5 @@
 body {
   margin: 0;
-  font-family: sans-serif;
 }
 
 /* Top-level (Years) tabs */
@@ -149,13 +148,8 @@ body {
 
 .big-field {
   font-size: 1.2em;
-  /* make text larger */
-  color: #333;
-  /* default text color */
   padding: 10px;
-  /* add some padding */
+  height: 350px;
   width: 100%;
-  /* occupy full width */
   box-sizing: border-box;
-  /* ensure padding doesn't overflow */
 }

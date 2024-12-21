@@ -1,3 +1,19 @@
-pub fn solve(_input: &str) -> String {
-    todo!()
+pub fn solve(input: &str) -> String {
+    let (mut left, mut right): (Vec<i32>, Vec<i32>) = input
+        .trim()
+        .lines()
+        .map(|line| {
+            let (x, y) = line.split_once("   ").unwrap();
+            (x.parse::<i32>().unwrap(), y.parse::<i32>().unwrap())
+        })
+        .unzip();
+
+    left.sort();
+    right.sort();
+
+    left.into_iter()
+        .zip(right.into_iter())
+        .map(|(x, y)| (x - y).abs())
+        .sum::<i32>()
+        .to_string()
 }
