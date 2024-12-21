@@ -1,10 +1,12 @@
+import { codeToHtml } from 'shiki'
+
 export interface TabConfig {
   years: number
   days: number
   problems: number
 }
 
-export function createTabs(container: HTMLElement, config: TabConfig, wasm: typeof import("wasm")) {
+export async function createTabs(container: HTMLElement, config: TabConfig, wasm: typeof import("wasm")) {
   const { years, days, problems } = config
 
   let activeYear = 10 // 2024
@@ -67,10 +69,9 @@ export function createTabs(container: HTMLElement, config: TabConfig, wasm: type
         descriptionArea.value = wasm.retrieve_problem(y, d, p)
         descriptionArea.disabled = true
 
-        const codeArea = document.createElement("textarea")
+        const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        codeArea.value = wasm.retrieve_solution(y, d, p)
-        codeArea.disabled = true
+        codeArea.innerHTML = await codeToHtml(wasm.retrieve_solution(y, d, p), { lang: "rust", theme: "vitesse-dark" })
 
         const inputArea = document.createElement("textarea")
         inputArea.id = "inputArea"
