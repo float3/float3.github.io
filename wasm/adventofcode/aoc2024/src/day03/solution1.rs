@@ -24,7 +24,7 @@ pub fn parse_instruction(input: &str, start: usize) -> Option<(Instruction, usiz
     }
 
     if input[start..].starts_with("mul(") {
-        parse_mul_at(input, start).map(|(instr, end)| (instr, end))
+        parse_mul_at(input, start)
     } else if input[start..].starts_with("do()") {
         Some((Instruction::Do, start + 4))
     } else if input[start..].starts_with("don't()") {
