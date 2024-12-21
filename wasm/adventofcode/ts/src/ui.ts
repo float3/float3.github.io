@@ -148,12 +148,12 @@ export function createTabs(container: HTMLElement, config: TabConfig, wasm: type
   container.appendChild(contentWrapper)
 
   function updateActiveTab(wrapper: HTMLElement, activeButton: HTMLButtonElement) {
-    wrapper.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+    wrapper.querySelectorAll("button").forEach((btn) => btn.classList.remove("active"))
     activeButton.classList.add("active")
   }
 
   function showCurrentFields() {
-    fieldsMap.forEach(fieldsDiv => fieldsDiv.classList.add("hidden"))
+    fieldsMap.forEach((fieldsDiv) => fieldsDiv.classList.add("hidden"))
     const actualYear = 2014 + activeYear
     const key = `${actualYear}-${activeDay}-${activeProblem}`
     const currentFields = fieldsMap.get(key)
@@ -166,11 +166,10 @@ export function createTabs(container: HTMLElement, config: TabConfig, wasm: type
     url.searchParams.set("year", actualYear.toString())
     url.searchParams.set("day", activeDay.toString())
     url.searchParams.set("problem", activeProblem.toString())
-    history.replaceState(null, '', url.toString())
+    history.replaceState(null, "", url.toString())
   }
 
   // Initialize
   showCurrentFields()
   updateURL() // so initial load also sets URL parameters
 }
-
