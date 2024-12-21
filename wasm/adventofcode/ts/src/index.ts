@@ -13,7 +13,7 @@ function loadWasm(): Promise<typeof import("wasm")> {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  let wasm = await loadWasm()
+  const wasm = await loadWasm()
 
   const container = document.getElementById("adventofcode") as HTMLElement
   createTabs(container, { years: 10, days: 25, problems: 2 }, wasm)
