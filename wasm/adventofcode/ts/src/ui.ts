@@ -1,4 +1,4 @@
-import { codeToHtml } from 'shiki'
+import { codeToHtml } from "shiki"
 
 const START_YEAR = 2015
 const STAR = "⭐"
@@ -9,7 +9,11 @@ export interface TabConfig {
   problems: number
 }
 
-export async function createTabs(container: HTMLElement, config: TabConfig, wasm: typeof import("wasm")) {
+export async function createTabs(
+  container: HTMLElement,
+  config: TabConfig,
+  wasm: typeof import("wasm"),
+) {
   const { years, days, problems } = config
 
   let activeYear = 2024
@@ -59,7 +63,9 @@ export async function createTabs(container: HTMLElement, config: TabConfig, wasm
 
   const fieldsMap = new Map<string, HTMLDivElement>()
 
-  let complete: boolean[][][] = new Array(years).fill(false).map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
+  let complete: boolean[][][] = new Array(years)
+    .fill(false)
+    .map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
 
   // Pre-create all fields sets
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
@@ -129,7 +135,7 @@ export async function createTabs(container: HTMLElement, config: TabConfig, wasm
       }
     }
     const percentage = Math.floor((completeCount / (days * problems)) * 100)
-    btn.textContent = (y).toString() + (percentage === 100 ? ` ${STAR}` : ` ${percentage}%`)
+    btn.textContent = y.toString() + (percentage === 100 ? ` ${STAR}` : ` ${percentage}%`)
     if (y === activeYear) btn.classList.add("active")
     btn.addEventListener("click", () => {
       activeYear = y
