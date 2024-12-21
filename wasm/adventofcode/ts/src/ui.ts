@@ -7,7 +7,7 @@ export interface TabConfig {
 export function createTabs(container: HTMLElement, config: TabConfig, wasm: typeof import("wasm")) {
   const { years, days, problems } = config
 
-  let activeYear = 1
+  let activeYear = 10 // 2024
   let activeDay = 1
   let activeProblem = 1
 
@@ -73,8 +73,20 @@ export function createTabs(container: HTMLElement, config: TabConfig, wasm: type
         codeArea.disabled = true
 
         const inputArea = document.createElement("textarea")
+        inputArea.id = "inputArea"
         inputArea.className = "big-field"
         inputArea.placeholder = "Input here..."
+
+        inputArea.oninput = () => {
+          console.log("inputArea.oninput")
+          const t = p === 1 ? 2 : 1
+          const key = `${y}-${d}-${t}`
+          const fields = fieldsMap.get(key)
+          if (fields) {
+            const otherInputArea = fields.querySelector("textarea#inputArea") as HTMLTextAreaElement
+            if (otherInputArea) otherInputArea.value = inputArea.value
+          }
+        }
 
         const outputArea = document.createElement("textarea")
         outputArea.className = "small-field"
