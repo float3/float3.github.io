@@ -146,3 +146,16 @@ body {
 .fields.hidden {
   display: none !important;
 }
+
+.big-field {
+  font-size: 1.2em;
+  /* make text larger */
+  color: #333;
+  /* default text color */
+  padding: 10px;
+  /* add some padding */
+  width: 100%;
+  /* occupy full width */
+  box-sizing: border-box;
+  /* ensure padding doesn't overflow */
+}
