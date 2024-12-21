@@ -28,4 +28,3 @@ pub fn solve(input: &str, problem: u8) -> String {
 pub fn input() -> String {
     include_str!("input.txt").to_string()
 }
-
