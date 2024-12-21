@@ -1,23 +1,25 @@
 pub fn solve(input: &str) -> String {
-    let safe_count = input
+    input
         .trim()
         .lines()
         .map(|line| {
-            let levels: Vec<i32> = line
-                .split_whitespace()
+            line.split_whitespace()
                 .filter_map(|token| token.parse::<i32>().ok())
-                .collect();
-
-            let diffs: Vec<i32> = levels.windows(2).map(|pair| pair[1] - pair[0]).collect();
-
-            let first_sign = diffs.iter().find(|&&d| d != 0).map_or(0, |&d| d.signum());
-
-            diffs
-                .iter()
-                .all(|&d| d.signum() == first_sign && (1..=3).contains(&d.abs()))
+                .collect::<Vec<i32>>()
         })
-        .filter(|&is_safe| is_safe)
-        .count();
+        .filter(|levels| is_safe(levels))
+        .count()
+        .to_string()
+}
 
-    safe_count.to_string()
+pub fn is_safe(levels: &[i32]) -> bool {
+    let diffs: Vec<_> = levels.windows(2).map(|w| w[1] - w[0]).collect();
+    if diffs.is_empty() {
+        true
+    } else {
+        let sign = diffs.iter().find(|&&d| d != 0).map_or(0, |&d| d.signum());
+        diffs
+            .iter()
+            .all(|&d| d.signum() == sign && (1..=3).contains(&d.abs()))
+    }
 }
