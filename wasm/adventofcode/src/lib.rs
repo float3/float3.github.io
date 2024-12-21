@@ -92,14 +92,24 @@ pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(not(target_arch = "wasm32"))]
 pub fn solve_all() {
+    println!("Year 2024:");
     aoc2024::solve_all();
+    println!("Year 2023:");
     aoc2023::solve_all();
+    println!("Year 2022:");
     aoc2022::solve_all();
+    println!("Year 2021:");
     aoc2021::solve_all();
+    println!("Year 2020:");
     aoc2020::solve_all();
+    println!("Year 2019:");
     aoc2019::solve_all();
+    println!("Year 2018:");
     aoc2018::solve_all();
+    println!("Year 2017:");
     aoc2017::solve_all();
+    println!("Year 2016:");
     aoc2016::solve_all();
+    println!("Year 2015:");
     aoc2015::solve_all();
 }

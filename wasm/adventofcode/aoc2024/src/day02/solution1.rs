@@ -8,17 +8,9 @@ pub fn solve(input: &str) -> String {
                 .filter_map(|token| token.parse::<i32>().ok())
                 .collect();
 
-            if levels.len() < 2 {
-                return false;
-            }
-
             let diffs: Vec<i32> = levels.windows(2).map(|pair| pair[1] - pair[0]).collect();
 
-            if diffs[0] == 0 {
-                return false;
-            }
-
-            let first_sign = diffs[0].signum();
+            let first_sign = diffs.iter().find(|&&d| d != 0).map_or(0, |&d| d.signum());
 
             diffs
                 .iter()
