@@ -1,3 +1,14 @@
+mod aoc2015;
+mod aoc2016;
+mod aoc2017;
+mod aoc2018;
+mod aoc2019;
+mod aoc2020;
+mod aoc2021;
+mod aoc2022;
+mod aoc2023;
+mod aoc2024;
+
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
@@ -56,18 +67,18 @@ pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn retrieve_solution(year: u32, day: u32, problem: u8) -> String {
+pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
     match year {
-        2015 => aoc2015::retrieve_solution(day, problem),
-        2016 => aoc2016::retrieve_solution(day, problem),
-        2017 => aoc2017::retrieve_solution(day, problem),
-        2018 => aoc2018::retrieve_solution(day, problem),
-        2019 => aoc2019::retrieve_solution(day, problem),
-        2020 => aoc2020::retrieve_solution(day, problem),
-        2021 => aoc2021::retrieve_solution(day, problem),
-        2022 => aoc2022::retrieve_solution(day, problem),
-        2023 => aoc2023::retrieve_solution(day, problem),
-        2024 => aoc2024::retrieve_solution(day, problem),
+        2015 => aoc2015::retrieve_code(day, problem),
+        2016 => aoc2016::retrieve_code(day, problem),
+        2017 => aoc2017::retrieve_code(day, problem),
+        2018 => aoc2018::retrieve_code(day, problem),
+        2019 => aoc2019::retrieve_code(day, problem),
+        2020 => aoc2020::retrieve_code(day, problem),
+        2021 => aoc2021::retrieve_code(day, problem),
+        2022 => aoc2022::retrieve_code(day, problem),
+        2023 => aoc2023::retrieve_code(day, problem),
+        2024 => aoc2024::retrieve_code(day, problem),
         _ => panic!("Year not found: {}", year),
     }
 }
