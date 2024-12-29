@@ -65,8 +65,7 @@ pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
     }
 }
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
+#[cfg(not(target_arch = "wasm32"))]
 pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::retrieve_code(day, problem),
@@ -97,6 +96,23 @@ pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::retrieve_html(day, problem),
         2023 => aoc2023::retrieve_html(day, problem),
         2024 => aoc2024::retrieve_html(day, problem),
+        _ => panic!("Year not found: {}", year),
+    }
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+pub fn input(year: u32, day: u32) -> String {
+    match year {
+        2015 => aoc2015::input(day),
+        2016 => aoc2016::input(day),
+        2017 => aoc2017::input(day),
+        2018 => aoc2018::input(day),
+        2019 => aoc2019::input(day),
+        2020 => aoc2020::input(day),
+        2021 => aoc2021::input(day),
+        2022 => aoc2022::input(day),
+        2023 => aoc2023::input(day),
+        2024 => aoc2024::input(day),
         _ => panic!("Year not found: {}", year),
     }
 }
