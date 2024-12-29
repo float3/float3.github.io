@@ -81,7 +81,7 @@ export async function createTabs(
         codeArea.className = "big-field"
         const code = wasm.retrieve_html(y, d, p)
         complete[y - START_YEAR][d][p] = code.length > 53
-        codeArea.innerHTML = code;
+        codeArea.innerHTML = code
 
         const inputArea = document.createElement("textarea")
         inputArea.id = "inputArea"
