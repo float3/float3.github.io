@@ -34,8 +34,9 @@ rpath = false
 split-debuginfo = "off"
 strip = "symbols"
 
-[dev-dependencies]
+[build-dependencies]
 syntect = "5.2.0"
+walkdir = "2.5.0"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-Os']

@@ -85,6 +85,24 @@ pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
+pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
+    match year {
+        2015 => aoc2015::retrieve_html(day, problem),
+        2016 => aoc2016::retrieve_html(day, problem),
+        2017 => aoc2017::retrieve_html(day, problem),
+        2018 => aoc2018::retrieve_html(day, problem),
+        2019 => aoc2019::retrieve_html(day, problem),
+        2020 => aoc2020::retrieve_html(day, problem),
+        2021 => aoc2021::retrieve_html(day, problem),
+        2022 => aoc2022::retrieve_html(day, problem),
+        2023 => aoc2023::retrieve_html(day, problem),
+        2024 => aoc2024::retrieve_html(day, problem),
+        _ => panic!("Year not found: {}", year),
+    }
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
 pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::solve(input, day, problem),
