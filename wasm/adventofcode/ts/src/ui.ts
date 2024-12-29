@@ -79,7 +79,7 @@ export async function createTabs(
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        const code = wasm.retrieve_code(y, d, p)
+        const code = wasm.retrieve_html(y, d, p)
         complete[y - START_YEAR][d][p] = code.length > 53
         codeArea.innerHTML = code;
 
