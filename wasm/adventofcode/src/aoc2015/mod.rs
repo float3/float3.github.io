@@ -55,6 +55,7 @@ pub fn retrieve_problem(day: u32, problem: u8) -> String {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn retrieve_code(day: u32, code: u8) -> String {
     match day {
         1 => day01::retrieve_code(code),
@@ -82,6 +83,37 @@ pub fn retrieve_code(day: u32, code: u8) -> String {
         23 => day23::retrieve_code(code),
         24 => day24::retrieve_code(code),
         25 => day25::retrieve_code(code),
+        _ => panic!("Day not found"),
+    }
+}
+
+pub fn retrieve_html(day: u32, code: u8) -> String {
+    match day {
+        1 => day01::retrieve_html(code),
+        2 => day02::retrieve_html(code),
+        3 => day03::retrieve_html(code),
+        4 => day04::retrieve_html(code),
+        5 => day05::retrieve_html(code),
+        6 => day06::retrieve_html(code),
+        7 => day07::retrieve_html(code),
+        8 => day08::retrieve_html(code),
+        9 => day09::retrieve_html(code),
+        10 => day10::retrieve_html(code),
+        11 => day11::retrieve_html(code),
+        12 => day12::retrieve_html(code),
+        13 => day13::retrieve_html(code),
+        14 => day14::retrieve_html(code),
+        15 => day15::retrieve_html(code),
+        16 => day16::retrieve_html(code),
+        17 => day17::retrieve_html(code),
+        18 => day18::retrieve_html(code),
+        19 => day19::retrieve_html(code),
+        20 => day20::retrieve_html(code),
+        21 => day21::retrieve_html(code),
+        22 => day22::retrieve_html(code),
+        23 => day23::retrieve_html(code),
+        24 => day24::retrieve_html(code),
+        25 => day25::retrieve_html(code),
         _ => panic!("Day not found"),
     }
 }

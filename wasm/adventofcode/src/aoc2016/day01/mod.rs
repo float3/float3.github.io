@@ -9,6 +9,7 @@ pub fn retrieve_problem(problem: u8) -> String {
     }
 }
 
+#[cfg(not(target_arch = "wasm32"))]
 pub fn retrieve_code(problem: u8) -> String {
     match problem {
         1 => include_str!("solution1.rs").to_string(),
@@ -17,13 +18,13 @@ pub fn retrieve_code(problem: u8) -> String {
     }
 }
 
-// pub fn retrieve_html(problem: u8) -> String {
-//     match problem {
-//         1 => include_str!("solution1.html").to_string(),
-//         2 => include_str!("solution2.html").to_string(),
-//         _ => panic!("Solution not found"),
-//     }
-// }
+pub fn retrieve_html(problem: u8) -> String {
+    match problem {
+        1 => include_str!("solution1.html").to_string(),
+        2 => include_str!("solution2.html").to_string(),
+        _ => panic!("Solution not found"),
+    }
+}
 
 pub fn solve(input: &str, problem: u8) -> String {
     match problem {
