@@ -23,7 +23,6 @@
   "homepage": "https://github.com/float3/float3.github.io#readme",
   "dependencies": {
     "abcjs": "^6.4.4",
-    "shiki": "^1.24.4",
     "wasm": "file:../pkg"
   },
   "devDependencies": {

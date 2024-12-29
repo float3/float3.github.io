@@ -1,5 +1,3 @@
-import { codeToHtml } from "shiki"
-
 const START_YEAR = 2015
 const STAR = "⭐"
 
@@ -83,7 +81,7 @@ export async function createTabs(
         codeArea.className = "big-field"
         const code = wasm.retrieve_code(y, d, p)
         complete[y - START_YEAR][d][p] = code.length > 53
-        codeArea.innerHTML = await codeToHtml(code, { lang: "rust", theme: "vitesse-dark" })
+        codeArea.innerHTML = code;
 
         const inputArea = document.createElement("textarea")
         inputArea.id = "inputArea"
