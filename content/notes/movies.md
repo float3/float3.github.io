@@ -388,8 +388,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Inception (2010) (2023-12-30)
 - [x] Druk (Another Round) (2020) (2023-12-31)
 - [x] Synecdoche, New York (2008) (2024-10-24)
-- [ ] Dune (2021)
-- [ ] Dune 2 (2023)
+- [x] The Whale (2022) (2024-12-26) 
+- [x] Hundreds of Beavers (2022) (2024-12-29)
 - [ ] Når Befrielsen kommer (2023)
 
 # Jonas:
