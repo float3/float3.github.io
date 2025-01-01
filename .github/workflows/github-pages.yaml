@@ -26,6 +26,11 @@ jobs:
         with:
           token: ${{ secrets.TOKEN }}
           submodules: recursive
+      
+      - name: python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
 
       - name: setup node
         uses: actions/setup-node@v4.1.0
@@ -39,6 +44,8 @@ jobs:
       - name: build
         run: |
           ./scripts/build.sh
+          cd public
+          ../scripts/report.py
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
