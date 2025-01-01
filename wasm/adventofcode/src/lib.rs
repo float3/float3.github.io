@@ -8,6 +8,7 @@ mod aoc2021;
 mod aoc2022;
 mod aoc2023;
 mod aoc2024;
+pub mod shared;
 
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
@@ -84,18 +85,18 @@ pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
+pub fn retrieve_html(year: u32, day: u32, problem: u8, dark: bool) -> String {
     match year {
-        2015 => aoc2015::retrieve_html(day, problem),
-        2016 => aoc2016::retrieve_html(day, problem),
-        2017 => aoc2017::retrieve_html(day, problem),
-        2018 => aoc2018::retrieve_html(day, problem),
-        2019 => aoc2019::retrieve_html(day, problem),
-        2020 => aoc2020::retrieve_html(day, problem),
-        2021 => aoc2021::retrieve_html(day, problem),
-        2022 => aoc2022::retrieve_html(day, problem),
-        2023 => aoc2023::retrieve_html(day, problem),
-        2024 => aoc2024::retrieve_html(day, problem),
+        2015 => aoc2015::retrieve_html(day, problem, dark),
+        2016 => aoc2016::retrieve_html(day, problem, dark),
+        2017 => aoc2017::retrieve_html(day, problem, dark),
+        2018 => aoc2018::retrieve_html(day, problem, dark),
+        2019 => aoc2019::retrieve_html(day, problem, dark),
+        2020 => aoc2020::retrieve_html(day, problem, dark),
+        2021 => aoc2021::retrieve_html(day, problem, dark),
+        2022 => aoc2022::retrieve_html(day, problem, dark),
+        2023 => aoc2023::retrieve_html(day, problem, dark),
+        2024 => aoc2024::retrieve_html(day, problem, dark),
         _ => panic!("Year not found: {}", year),
     }
 }
