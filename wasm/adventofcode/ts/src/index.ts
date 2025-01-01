@@ -16,5 +16,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   const wasm = await loadWasm()
 
   const container = document.getElementById("adventofcode") as HTMLElement
-  await createTabs(container, { year: 10, day: 25, problem: 2 }, wasm)
+  await createTabs(container, { years: 10, days: 25, problems: 2 }, wasm)
 })
