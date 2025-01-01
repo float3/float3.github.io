@@ -2,9 +2,9 @@ const START_YEAR = 2015
 const STAR = "⭐"
 
 export interface TabConfig {
-  years: number
-  days: number
-  problems: number
+  year: number
+  day: number
+  problem: number
 }
 
 export async function createTabs(
@@ -12,37 +12,30 @@ export async function createTabs(
   config: TabConfig,
   wasm: typeof import("wasm"),
 ) {
-  const { years, days, problems } = config
-
-  let activeYear = 2024
-  let activeDay = 1
-  let activeProblem = 1
+  let { year: activeYear, day: activeDay, problem: activeProblem } = config
 
   const urlParams = new URLSearchParams(window.location.search)
-
   const initialYearParam = urlParams.get("year")
   const initialDayParam = urlParams.get("day")
   const initialProblemParam = urlParams.get("problem")
 
   if (initialYearParam) {
     const parsedYear = parseInt(initialYearParam, 10)
-    if (!isNaN(parsedYear)) {
-      if (parsedYear >= 1 && parsedYear <= years) {
-        activeYear = parsedYear
-      }
+    if (!isNaN(parsedYear) && parsedYear >= 1 && parsedYear <= activeYear) {
+      activeYear = parsedYear
     }
   }
 
   if (initialDayParam) {
     const parsedDay = parseInt(initialDayParam, 10)
-    if (!isNaN(parsedDay) && parsedDay >= 1 && parsedDay <= days) {
+    if (!isNaN(parsedDay) && parsedDay >= 1 && parsedDay <= activeDay) {
       activeDay = parsedDay
     }
   }
 
   if (initialProblemParam) {
     const parsedProblem = parseInt(initialProblemParam, 10)
-    if (!isNaN(parsedProblem) && parsedProblem >= 1 && parsedProblem <= problems) {
+    if (!isNaN(parsedProblem) && parsedProblem >= 1 && parsedProblem <= activeProblem) {
       activeProblem = parsedProblem
     }
   }
@@ -61,14 +54,15 @@ export async function createTabs(
 
   const fieldsMap = new Map<string, HTMLDivElement>()
 
-  const complete: boolean[][][] = new Array(years)
+  const complete: boolean[][][] = new Array(activeYear)
     .fill(false)
-    .map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
+    .map(() => new Array(activeDay + 1).fill(false).map(() => new Array(activeProblem).fill(false)))
 
-  // Pre-create all fields sets
-  for (let y = START_YEAR; y < START_YEAR + years; y++) {
-    for (let d = 1; d <= days; d++) {
-      for (let p = 1; p <= problems; p++) {
+  const isDark = document.body.getAttribute("saved-theme") === "dark"
+
+  for (let y = START_YEAR; y < START_YEAR + activeYear; y++) {
+    for (let d = 1; d <= activeDay; d++) {
+      for (let p = 1; p <= activeProblem; p++) {
         const fields = document.createElement("div")
         fields.className = "fields hidden"
 
@@ -79,9 +73,8 @@ export async function createTabs(
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        const code: string = wasm.retrieve_html(y, d, p)
+        const code = wasm.retrieve_html(y, d, p, isDark)
         complete[y - START_YEAR][d][p] = !code.includes("todo!()")
-        console.log(code.length)
         codeArea.innerHTML = code
 
         const inputArea = document.createElement("textarea")
@@ -92,9 +85,9 @@ export async function createTabs(
         inputArea.oninput = () => {
           const t = p === 1 ? 2 : 1
           const key = `${y}-${d}-${t}`
-          const fields = fieldsMap.get(key)
-          if (fields) {
-            const otherInputArea = fields.querySelector("textarea#inputArea") as HTMLTextAreaElement
+          const f = fieldsMap.get(key)
+          if (f) {
+            const otherInputArea = f.querySelector("textarea#inputArea") as HTMLTextAreaElement
             if (otherInputArea) otherInputArea.value = inputArea.value
           }
         }
@@ -123,21 +116,21 @@ export async function createTabs(
     }
   }
 
-  // Create year tabs
-  for (let y = START_YEAR; y < START_YEAR + years; y++) {
+  for (let y = START_YEAR; y < START_YEAR + activeYear; y++) {
     const btn = document.createElement("button")
-    // check percentage of completion
     let completeCount = 0
-    for (let d = 1; d <= days; d++) {
-      for (let p = 1; p <= problems; p++) {
+    for (let d = 1; d <= activeDay; d++) {
+      for (let p = 1; p <= activeProblem; p++) {
         if (complete[y - START_YEAR][d][p]) completeCount++
       }
     }
-    const percentage = Math.floor((completeCount / (days * problems)) * 100)
+    const percentage = Math.floor((completeCount / (activeDay * activeProblem)) * 100)
     btn.textContent = y.toString() + (percentage === 100 ? ` ${STAR}` : ` ${percentage}%`)
     if (y === activeYear) btn.classList.add("active")
     btn.addEventListener("click", () => {
       activeYear = y
+      activeDay = 1
+      activeProblem = 1
       updateActiveTab(yearsWrapper, btn)
       updateDayTabs()
       updateProblemTabs()
@@ -147,13 +140,13 @@ export async function createTabs(
     yearsWrapper.appendChild(btn)
   }
 
-  // Create day tabs
-  for (let d = 1; d <= days; d++) {
+  for (let d = 1; d <= activeDay; d++) {
     const btn = document.createElement("button")
     btn.textContent = `day ${d}`
     if (d === activeDay) btn.classList.add("active")
     btn.addEventListener("click", () => {
       activeDay = d
+      activeProblem = 1
       updateActiveTab(daysWrapper, btn)
       updateProblemTabs()
       showCurrentFields()
@@ -162,8 +155,7 @@ export async function createTabs(
     daysWrapper.appendChild(btn)
   }
 
-  // Create problem tabs
-  for (let p = 1; p <= problems; p++) {
+  for (let p = 1; p <= activeProblem; p++) {
     const btn = document.createElement("button")
     btn.textContent = `problem ${p}`
     if (p === activeProblem) btn.classList.add("active")
@@ -203,31 +195,24 @@ export async function createTabs(
 
   function updateDayTabs() {
     const dayButtons = daysWrapper.querySelectorAll("button")
-
     dayButtons.forEach((btn, index) => {
       const d = index + 1
       let starCount = 0
-      for (let p = 1; p <= problems; p++) {
-        if (complete[activeYear - START_YEAR][d][p]) {
-          starCount++
-        }
+      for (let p = 1; p <= activeProblem; p++) {
+        if (complete[activeYear - START_YEAR][d][p]) starCount++
       }
-
-      // Show up to 2 stars depending on how many problems are solved
       let starString = ""
       if (starCount >= 2) {
         starString = STAR.repeat(2)
       } else if (starCount === 1) {
         starString = STAR
       }
-
       btn.textContent = `day ${d} ${starString}`
     })
   }
 
   function updateProblemTabs() {
     const problemButtons = problemsWrapper.querySelectorAll("button")
-
     problemButtons.forEach((btn, index) => {
       const p = index + 1
       if (complete[activeYear - START_YEAR][activeDay][p]) {
@@ -238,8 +223,40 @@ export async function createTabs(
     })
   }
 
+  function refreshAllCodes(isDarkMode: boolean) {
+    for (let y = START_YEAR; y < START_YEAR + activeYear; y++) {
+      for (let d = 1; d <= activeDay; d++) {
+        for (let p = 1; p <= activeProblem; p++) {
+          const key = `${y}-${d}-${p}`
+          const fieldsDiv = fieldsMap.get(key)
+          if (!fieldsDiv) continue
+          const codeArea = fieldsDiv.querySelector("div.big-field")
+          if (!codeArea) continue
+          const code = wasm.retrieve_html(y, d, p, isDarkMode)
+          complete[y - START_YEAR][d][p] = !code.includes("todo!()")
+          codeArea.innerHTML = code
+        }
+      }
+    }
+    updateDayTabs()
+    updateProblemTabs()
+  }
+
+  function setupThemeObserver() {
+    const body = document.querySelector("body")
+    if (!body) return
+    const observer = new MutationObserver(() => {
+      const dark = body.getAttribute("saved-theme") === "dark"
+      refreshAllCodes(dark)
+    })
+    observer.observe(body, {
+      attributes: true,
+      attributeFilter: ["saved-theme"],
+    })
+  }
+
+  setupThemeObserver()
   showCurrentFields()
-  updateURL()
   updateDayTabs()
   updateProblemTabs()
 }
