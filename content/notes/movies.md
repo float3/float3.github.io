@@ -388,9 +388,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Inception (2010) (2023-12-30)
 - [x] Druk (Another Round) (2020) (2023-12-31)
 - [x] Synecdoche, New York (2008) (2024-10-24)
-- [x] The Whale (2022) (2024-12-26) 
+- [x] The Whale (2022) (2024-12-26)
 - [x] Hundreds of Beavers (2022) (2024-12-29)
-- [x] Moonrise Kingdom (2012) (2024-12-30) 
+- [x] Moonrise Kingdom (2012) (2024-12-30)
 - [ ] Når Befrielsen kommer (2023)
 
 # Jonas:

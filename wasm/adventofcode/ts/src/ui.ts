@@ -14,9 +14,9 @@ export async function createTabs(
 ) {
   const { years, days, problems } = config
 
-  let activeYear = 2024
-  let activeDay = 1
-  let activeProblem = 1
+  let activeYear = START_YEAR + years - 1
+  let activeDay = 1,
+    activeProblem = 1
 
   const urlParams = new URLSearchParams(window.location.search)
 
@@ -26,10 +26,8 @@ export async function createTabs(
 
   if (initialYearParam) {
     const parsedYear = parseInt(initialYearParam, 10)
-    if (!isNaN(parsedYear)) {
-      if (parsedYear >= 1 && parsedYear <= years) {
-        activeYear = parsedYear
-      }
+    if (!isNaN(parsedYear) && parsedYear >= START_YEAR && parsedYear <= years) {
+      activeYear = parsedYear
     }
   }
 
@@ -65,7 +63,7 @@ export async function createTabs(
     .fill(false)
     .map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
 
-  const isDark = document.body.getAttribute("saved-theme") === "dark"
+  let isDark = document.body.getAttribute("saved-theme") === "dark"
 
   // Pre-create all fields sets
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
@@ -81,9 +79,8 @@ export async function createTabs(
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        const code: string = wasm.retrieve_html(y, d, p, isDark)
+        const code = wasm.retrieve_html(y, d, p, isDark)
         complete[y - START_YEAR][d][p] = !code.includes("todo!()")
-        console.log(code.length)
         codeArea.innerHTML = code
 
         const inputArea = document.createElement("textarea")
@@ -128,7 +125,6 @@ export async function createTabs(
   // Create year tabs
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     const btn = document.createElement("button")
-    // check percentage of completion
     let completeCount = 0
     for (let d = 1; d <= days; d++) {
       for (let p = 1; p <= problems; p++) {
@@ -208,7 +204,6 @@ export async function createTabs(
 
   function updateDayTabs() {
     const dayButtons = daysWrapper.querySelectorAll("button")
-
     dayButtons.forEach((btn, index) => {
       const d = index + 1
       let starCount = 0
@@ -217,22 +212,18 @@ export async function createTabs(
           starCount++
         }
       }
-
-      // Show up to 2 stars depending on how many problems are solved
       let starString = ""
       if (starCount >= 2) {
         starString = STAR.repeat(2)
       } else if (starCount === 1) {
         starString = STAR
       }
-
       btn.textContent = `day ${d} ${starString}`
     })
   }
 
   function updateProblemTabs() {
     const problemButtons = problemsWrapper.querySelectorAll("button")
-
     problemButtons.forEach((btn, index) => {
       const p = index + 1
       if (complete[activeYear - START_YEAR][activeDay][p]) {
@@ -242,6 +233,33 @@ export async function createTabs(
       }
     })
   }
+
+  function updateThemeForAllFields(newIsDark: boolean) {
+    fieldsMap.forEach((fieldsDiv, key) => {
+      const [yStr, dStr, pStr] = key.split("-")
+      const y = parseInt(yStr, 10)
+      const d = parseInt(dStr, 10)
+      const p = parseInt(pStr, 10)
+
+      const newCode = wasm.retrieve_html(y, d, p, newIsDark)
+      complete[y - START_YEAR][d][p] = !newCode.includes("todo!()")
+      const codeArea = fieldsDiv.querySelector("div.big-field") as HTMLDivElement
+      if (codeArea) codeArea.innerHTML = newCode
+    })
+    isDark = newIsDark
+  }
+
+  function setupThemeObserver() {
+    const observer = new MutationObserver(() => {
+      const newIsDark = document.body.getAttribute("saved-theme") === "dark"
+      if (newIsDark !== isDark) {
+        updateThemeForAllFields(newIsDark)
+      }
+    })
+    observer.observe(document.body, { attributes: true, attributeFilter: ["saved-theme"] })
+  }
+
+  setupThemeObserver()
 
   showCurrentFields()
   updateDayTabs()
