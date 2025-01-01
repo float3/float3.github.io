@@ -149,7 +149,8 @@ body {
 .big-field {
   font-size: 1.2em;
   padding: 10px;
-  height: 350px;
-  width: 100%;
   box-sizing: border-box;
+  width: 400px;
+  height: auto;
+  overflow: auto;
 }
