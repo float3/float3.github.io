@@ -29,6 +29,7 @@ cd $wasm_path/glsl2hlsl
 cd $wasm_path/adventofcode
 ./build.sh $ARGS
 
+cd $root_path
 rm ./content/tools/**/*LICENSE.txt | true
 
 cd $root_path/ts 
