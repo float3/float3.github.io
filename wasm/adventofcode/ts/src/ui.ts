@@ -60,9 +60,7 @@ export async function createTabs(
   const fieldsMap = new Map<string, HTMLDivElement>()
 
   const complete: boolean[][][] = Array.from({ length: years }, () =>
-    Array.from({ length: days }, () =>
-      Array.from({ length: problems }, () => false)
-    )
+    Array.from({ length: days }, () => Array.from({ length: problems }, () => false)),
   )
 
   let isDark = document.documentElement.getAttribute("saved-theme") === "dark"
@@ -263,7 +261,10 @@ export async function createTabs(
         updateThemeForAllFields(newIsDark)
       }
     })
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["saved-theme"] })
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["saved-theme"],
+    })
   }
 
   setupThemeObserver()
