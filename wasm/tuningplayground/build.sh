@@ -8,7 +8,8 @@ elif [ "$1" = "dev" ]; then
   WEBPACK_MODE="development"
   echo "::warning::Building in development mode."
 else
-  echo "Invalid argument. Use 'dev' for development or 'prod' for production."                                                    exit 1
+  echo "Invalid argument. Use 'dev' for development or 'prod' for production."                                                    
+  exit 1
 fi
 
 rm -rf pkg

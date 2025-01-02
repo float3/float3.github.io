@@ -59,11 +59,13 @@ export async function createTabs(
 
   const fieldsMap = new Map<string, HTMLDivElement>()
 
-  const complete: boolean[][][] = new Array(years)
-    .fill(false)
-    .map(() => new Array(days + 1).fill(false).map(() => new Array(problems).fill(false)))
+  const complete: boolean[][][] = Array.from({ length: years }, () =>
+    Array.from({ length: days }, () =>
+      Array.from({ length: problems }, () => false)
+    )
+  )
 
-  let isDark = document.body.getAttribute("saved-theme") === "dark"
+  let isDark = document.documentElement.getAttribute("saved-theme") === "dark"
 
   // Pre-create all fields sets
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
@@ -80,8 +82,11 @@ export async function createTabs(
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
         const code = wasm.retrieve_html(y, d, p, isDark)
-        complete[y - START_YEAR][d][p] = !code.includes("todo!()")
+        complete[y - START_YEAR][d - 1][p - 1] = !code.includes("todo!")
         codeArea.innerHTML = code
+        // {
+        //   (codeArea.firstChild as HTMLElement).style.margin = "0";
+        // }
 
         const inputArea = document.createElement("textarea")
         inputArea.id = "inputArea"
@@ -128,7 +133,7 @@ export async function createTabs(
     let completeCount = 0
     for (let d = 1; d <= days; d++) {
       for (let p = 1; p <= problems; p++) {
-        if (complete[y - START_YEAR][d][p]) completeCount++
+        if (complete[y - START_YEAR][d - 1][p - 1]) completeCount++
       }
     }
     const percentage = Math.floor((completeCount / (days * problems)) * 100)
@@ -139,6 +144,8 @@ export async function createTabs(
       activeDay = 1
       activeProblem = 1
       updateActiveTab(yearsWrapper, btn)
+      updateActiveTab(daysWrapper, daysWrapper.firstChild as HTMLButtonElement)
+      updateActiveTab(problemsWrapper, problemsWrapper.firstChild as HTMLButtonElement)
       updateDayTabs()
       updateProblemTabs()
       showCurrentFields()
@@ -156,6 +163,7 @@ export async function createTabs(
       activeDay = d
       activeProblem = 1
       updateActiveTab(daysWrapper, btn)
+      updateActiveTab(problemsWrapper, problemsWrapper.firstChild as HTMLButtonElement)
       updateProblemTabs()
       showCurrentFields()
       updateURL()
@@ -208,7 +216,7 @@ export async function createTabs(
       const d = index + 1
       let starCount = 0
       for (let p = 1; p <= problems; p++) {
-        if (complete[activeYear - START_YEAR][d][p]) {
+        if (complete[activeYear - START_YEAR][d - 1][p - 1]) {
           starCount++
         }
       }
@@ -226,7 +234,7 @@ export async function createTabs(
     const problemButtons = problemsWrapper.querySelectorAll("button")
     problemButtons.forEach((btn, index) => {
       const p = index + 1
-      if (complete[activeYear - START_YEAR][activeDay][p]) {
+      if (complete[activeYear - START_YEAR][activeDay - 1][p - 1]) {
         btn.textContent = `problem ${p} ${STAR}`
       } else {
         btn.textContent = `problem ${p}`
@@ -242,7 +250,6 @@ export async function createTabs(
       const p = parseInt(pStr, 10)
 
       const newCode = wasm.retrieve_html(y, d, p, newIsDark)
-      complete[y - START_YEAR][d][p] = !newCode.includes("todo!()")
       const codeArea = fieldsDiv.querySelector("div.big-field") as HTMLDivElement
       if (codeArea) codeArea.innerHTML = newCode
     })
@@ -251,12 +258,12 @@ export async function createTabs(
 
   function setupThemeObserver() {
     const observer = new MutationObserver(() => {
-      const newIsDark = document.body.getAttribute("saved-theme") === "dark"
+      const newIsDark = document.documentElement.getAttribute("saved-theme") === "dark"
       if (newIsDark !== isDark) {
         updateThemeForAllFields(newIsDark)
       }
     })
-    observer.observe(document.body, { attributes: true, attributeFilter: ["saved-theme"] })
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["saved-theme"] })
   }
 
   setupThemeObserver()

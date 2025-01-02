@@ -147,10 +147,9 @@ body {
 }
 
 .big-field {
-  /* font-size: 1.2em; */
-  padding: 10px;
-  box-sizing: border-box;
-  width: 400px;
+  font-size: 0.5em;
+  /* box-sizing: border-box; */
+  /* width: 400px; */
   height: auto;
   overflow: auto;
 }
