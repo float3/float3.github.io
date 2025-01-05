@@ -1,42 +1,43 @@
+use std::collections::BTreeSet;
 use std::env;
 use std::fs::File;
 use std::io::{BufReader, Read};
 
 fn main() {
-    let args = env::args().collect::<Vec<String>>();
-    let first = format!("({}-", args[1]);
-    let first = first.as_str();
+    let search_str = env::args()
+        .nth(1)
+        .map(|arg| format!("({}-", arg))
+        .expect("Usage: <program> <search_str>");
 
-    let current_dir = std::env::current_dir().expect("Failed to get current directory");
-    let file_path = current_dir.join("..").join("..").join("content").join("movies.md");
+    let file_path = env::current_dir()
+        .expect("Failed to get current directory")
+        .join("..")
+        .join("..")
+        .join("content")
+        .join("notes")
+        .join("movies.md");
 
-    
-    let file = File::open(file_path).unwrap();
-    let mut buf_reader = BufReader::new(file.try_clone().unwrap());
-    let mut contents = String::new();
-    buf_reader.read_to_string(&mut contents).unwrap();
-
-    let mut contents = contents
-        .split('\n')
-        .map(|mut x| {
-            if x.contains("- [x]") && x.contains(first) {
-                remove_after_first_open_paren_str(x)
-            } else {
-                x = "";
-                x
-            }
+    let contents = File::open(&file_path)
+        .and_then(|file| {
+            let mut buffer = String::new();
+            BufReader::new(file).read_to_string(&mut buffer)?;
+            Ok(buffer)
         })
-        .collect::<Vec<&str>>();
+        .expect("Failed to read file");
 
-    contents.sort();
-    contents.dedup();
-    println!("{}", contents.join("\n"));
+    let lines = contents
+        .lines()
+        .filter(|line| line.contains("- [x]") && line.contains(&search_str))
+        .map(remove_after_first_open_paren_str)
+        .map(ToOwned::to_owned)
+        .collect::<BTreeSet<_>>();
+
+    println!(
+        "{}",
+        lines.into_iter().collect::<Vec<_>>().join("\n").trim()
+    );
 }
 
 fn remove_after_first_open_paren_str(s: &str) -> &str {
-    if let Some(pos) = s.rfind('(') {
-        &s[..pos]
-    } else {
-        s
-    }
+    s.find('(').map(|pos| &s[..pos]).unwrap_or(s)
 }
