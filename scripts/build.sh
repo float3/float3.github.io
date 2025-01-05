@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+START_TIME=$(date +%s)
 
 if [ "$GITHUB_ACTIONS" == "true" ]; then
     ARGS="prod"
@@ -40,3 +41,8 @@ cd $root_path
 pnpm install
 
 npx quartz build $QUARTZ_ARGS
+
+END_TIME=$(date +%s)
+BUILD_TIME=$((END_TIME - START_TIME))
+cd ./public
+../scripts/report.py "$BUILD_TIME"
