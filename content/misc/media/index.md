@@ -1,5 +1,7 @@
 ---
 title: media
+date: 2024-12-13
+updated: 2024-12-21
 tags:
   - list
 ---

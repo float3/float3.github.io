@@ -1,6 +1,7 @@
 ---
 title: "about"
-updated: 1970-01-02
+date: 2024-03-19
+updated: 2024-12-07
 ---
 
 you can find me here

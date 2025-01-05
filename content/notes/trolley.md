@@ -1,6 +1,7 @@
 ---
 title: "trolley"
-date: 1970-01-02
+date: 2024-12-21
+updated: 2024-12-21
 tags:
   - trolley
 ---

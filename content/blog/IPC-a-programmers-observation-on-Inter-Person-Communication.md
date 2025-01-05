@@ -1,7 +1,7 @@
 ---
 title: "IPC - a programmers observations on Inter Person Communication"
-date: 2023-02-23
-updated: 2024-02-23
+date: 2024-02-23
+updated: 2024-12-07
 tags:
   - programming
 ---

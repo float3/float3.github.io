@@ -1,7 +1,7 @@
 ---
 title: Piracy at the British Museum
-date: 2023-05-14
-updated: 2023-05-23
+date: 2022-11-29
+updated: 2024-12-05
 tags:
   - art
 ---

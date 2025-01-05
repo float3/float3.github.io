@@ -1,6 +1,7 @@
 ---
 title: Japanese
-date: 2024-12-05
+date: 2024-11-29
+updated: 2024-12-14
 tags:
   - language
   - japanese

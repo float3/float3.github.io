@@ -1,7 +1,7 @@
 ---
 title: "Philosophies"
-date: 2023-03-03
-updated: 2024-03-03
+date: 2024-03-04
+updated: 2024-12-07
 tags:
   - writing
 ---

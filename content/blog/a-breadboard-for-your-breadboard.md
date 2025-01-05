@@ -1,7 +1,7 @@
 ---
 title: a Breadboard for your Fretboard
-date: 2023-06-01
-updated: 2023-06-15
+date: 2022-11-29
+updated: 2024-12-07
 tags:
   - music
   - electronics
