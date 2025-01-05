@@ -83,7 +83,10 @@ def main():
         try:
             build_time = int(sys.argv[1])
         except ValueError:
+            print("Invalid build time argument. Ignoring.")
             pass
+    else:
+        print("No build time provided")
 
     # ---- Gather version info ----
     time = get_command("date", ["+%x (%A) %X %z"])
@@ -99,7 +102,7 @@ def main():
     rustup_version = get_command("rustup").split("\n").pop(0)
     wasm_pack_version = get_command("wasm-pack")
     tsc_version = get_command("pnpm", ["exec", "tsc", "--version"])
-    os.chdir("./wasm/adventofcode/ts")
+    os.chdir("../wasm/adventofcode/ts")
     webpack_version = (
         get_command("pnpm", ["exec", "webpack", "--version"])
         .split("Packages:")[1]
@@ -140,6 +143,8 @@ div { margin-left: 40px; }
 
     # ---- Insert version info block ----
     html_output += f"<p><strong>Report generated at:</strong> {time}</p>\n"
+    if build_time > 0:
+        html_output += f"<p><strong>Build Time:</strong> {build_time} seconds</p>\n"
     html_output += f"<p><strong>Operating System:</strong> {os_version}</p>\n"
     html_output += f"<p><strong>Quartz:</strong> {quartz_version}</p>\n"
     html_output += f"<p><strong>Python:</strong> {python_version}</p>\n"
@@ -153,10 +158,6 @@ div { margin-left: 40px; }
     html_output += f"<p><strong>wasm-pack:</strong> {wasm_pack_version}</p>\n"
     html_output += f"<p><strong>tsc:</strong> {tsc_version}</p>\n"
     html_output += f"<p><strong>webpack:</strong> {webpack_version}</p>\n"
-
-    if build_time > 0:
-        # Convert to minutes/seconds or just show seconds
-        html_output += f"<p><strong>Build Time:</strong> {build_time} seconds</p>\n"
 
     # ---- If report_info is available, show directory/file counts ----
     if report_info is not None:
