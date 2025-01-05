@@ -4,6 +4,10 @@
 # and "updated" to the file's last commit date (ignoring commits
 # whose commit message contains the word "generate").
 
+if [ -n "$GITHUB_ACTIONS" ]; then
+  git fetch --unshallow
+fi
+
 for file in $(find . -type f -name "*.md"); do
   created_date="$(git log --diff-filter=A --follow --format=%aI -1 -- "$file" | cut -dT -f1)"
   # Skip any commits that have "generate" in the commit message
