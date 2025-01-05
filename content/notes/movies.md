@@ -1,6 +1,7 @@
 ---
 title: "movies"
-date: 1970-01-02
+date: 2024-03-19
+updated: 2025-01-05
 tags:
   - movies
   - list

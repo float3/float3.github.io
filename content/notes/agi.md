@@ -1,7 +1,7 @@
 ---
 title: "agi"
-date: 2023-10-03
-updated: 2023-10-03
+date: 2024-11-12
+updated: 2024-12-09
 tags:
   - ai
   - opinion

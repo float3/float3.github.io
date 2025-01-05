@@ -1,6 +1,7 @@
 ---
 title: Danish
 date: 2024-11-30
+updated: 2024-12-07
 tags:
   - language
   - danish

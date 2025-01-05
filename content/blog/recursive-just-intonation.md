@@ -1,7 +1,7 @@
 ---
 title: Recursive Just-Intonation
 date: 2022-11-29
-updated: 2024-01-31
+updated: 2024-12-09
 tags:
   - music
   - programming

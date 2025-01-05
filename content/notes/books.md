@@ -1,6 +1,7 @@
 ---
 title: "books"
-date: 1970-01-02
+date: 2022-11-29
+updated: 2024-12-09
 tags:
   - list
   - reading

@@ -1,7 +1,7 @@
 ---
 title: "food"
-updated: 1970-01-02
-date: 2024-11-20
+date: 2022-11-29
+updated: 2024-12-14
 tags:
   - list
 ---
