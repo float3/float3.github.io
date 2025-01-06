@@ -40,7 +40,7 @@ pnpm exec tsc
 cd $root_path
 pnpm install
 
-npx quartz build $QUARTZ_ARGS &
+npx quartz build $QUARTZ_ARGS
 
 END_TIME=$(date +%s)
 BUILD_TIME=$((END_TIME - START_TIME))
