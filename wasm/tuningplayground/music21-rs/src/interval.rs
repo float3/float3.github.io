@@ -1,9 +1,12 @@
+type F = fraction::Fraction;
+
 use lazy_static::lazy_static;
-use std::{collections::HashMap, sync::Mutex};
+use std::{
+    collections::HashMap,
+    sync::{Mutex, Weak},
+};
 
-use tuning_systems::Fraction;
-
-use crate::pitch::Pitch;
+use crate::{fraction::FractionPow, pitch::pitch::Pitch};
 
 #[derive(Debug, Clone, Copy)]
 enum IntervalQuality {
@@ -16,8 +19,8 @@ enum IntervalQuality {
 
 #[derive(Debug, Clone)]
 pub struct Interval {
-    pitch_start: Pitch,
-    pitch_end: Pitch,
+    pitch_start: Weak<Pitch>,
+    pitch_end: Weak<Pitch>,
     implicit_diatonic: bool,
     pub generic: GenericInterval,
     pub diatonic: DiatonicInterval,
@@ -49,8 +52,7 @@ pub enum IntervalType {
 }
 
 lazy_static! {
-    static ref PYTHAGOREAN_CACHE: Mutex<HashMap<String, (Pitch, Fraction)>> =
-        Mutex::new(HashMap::new());
+    static ref PYTHAGOREAN_CACHE: Mutex<HashMap<String, (Pitch, F)>> = Mutex::new(HashMap::new());
 }
 
 impl Interval {
@@ -60,8 +62,8 @@ impl Interval {
         let diatonic = intervals_to_diatonic(&generic, &chromatic);
 
         Some(Interval {
-            pitch_start,
-            pitch_end,
+            pitch_start: std::sync::Arc::downgrade(&std::sync::Arc::new(pitch_start)),
+            pitch_end: std::sync::Arc::downgrade(&std::sync::Arc::new(pitch_end)),
             implicit_diatonic: false,
             generic,
             diatonic,
@@ -75,13 +77,13 @@ impl Interval {
         todo!()
     }
 
-    pub(crate) fn interval_to_pythagorean_ratio(&self) -> Option<Fraction> {
+    pub(crate) fn interval_to_pythagorean_ratio(&self) -> Option<F> {
         let start_pitch = Pitch::new("C1".to_string());
-        let end_pitch_wanted = start_pitch.transpose(self);
+        let end_pitch_wanted = start_pitch.transpose(&self.clone());
 
         let mut cache = PYTHAGOREAN_CACHE.lock().unwrap();
 
-        let mut end_pitch_ratio: Option<(Pitch, Fraction)> = None;
+        let mut end_pitch_ratio: Option<(Pitch, F)> = None;
         if cache.contains_key(&end_pitch_wanted.name) {
             end_pitch_ratio = Some(cache.get(&end_pitch_wanted.name).unwrap().clone());
         } else {
@@ -89,10 +91,10 @@ impl Interval {
             let mut end_pitch_down = start_pitch.clone();
             for counter in 0..37 {
                 if end_pitch_up.name == end_pitch_wanted.name {
-                    end_pitch_ratio = Some((end_pitch_up, Fraction::new(3, 2).pow(counter)));
+                    end_pitch_ratio = Some((end_pitch_up, F::new(3u64, 2u64).pow(counter)));
                     break;
                 } else if end_pitch_down.name == end_pitch_wanted.name {
-                    end_pitch_ratio = Some((end_pitch_down, Fraction::new(2, 3).pow(counter)));
+                    end_pitch_ratio = Some((end_pitch_down, F::new(2u64, 3u64).pow(counter)));
                     break;
                 } else {
                     end_pitch_up = end_pitch_up.transpose(&Interval::new_from_name("P5").unwrap());
@@ -112,7 +114,7 @@ impl Interval {
         match end_pitch_ratio {
             Some((end_pitch, ratio)) => {
                 let octaves = (end_pitch_wanted.ps() - end_pitch.ps()) as i32 / 12;
-                Some(ratio * Fraction::new(2, 1).pow(octaves))
+                Some(ratio * F::new(2u64, 1u64).pow(octaves))
             }
             _ => None,
         }

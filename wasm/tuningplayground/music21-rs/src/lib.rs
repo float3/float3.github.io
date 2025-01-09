@@ -1,8 +1,13 @@
+pub mod base;
 pub mod chord;
-#[allow(dead_code)]
-mod interval;
-mod note;
-mod pitch;
-#[allow(unused_imports)]
-pub use chord::*;
+pub mod consts;
+pub mod defaults;
+pub mod fraction;
+pub mod interval;
+pub mod note;
+pub mod pitch;
+pub mod prebase;
+pub mod specifier;
+pub mod stepname;
+
 mod tests;

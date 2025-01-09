@@ -12,9 +12,9 @@ version = "0.0.1"
 default = []
 
 [dependencies]
+derivative = "2.2.0"
+fraction = "0.15.3"
 itertools = "0.14.0"
 lazy_static = "1.5.0"
-tuning_systems = { path = "../tuning_systems" }
-
-# [dev-dependencies]
-# pyo3 = { version = "0.15", features = ["extension-module"] }
+num = "0.4.3"
+num-traits = "0.2.19"

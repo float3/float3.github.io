@@ -1,53 +1,25 @@
-#!/usr/bin/env python3
+# test_profiler.py
+import sys
+import os
+
+from call_tree_profiler import CallTreeProfiler
+
+sys.path.append("./music21")
+from music21 import chord
+
+def main():
+    project_root = os.path.abspath(os.path.dirname(__file__))
+    profiler = CallTreeProfiler(project_root)
+    sys.setprofile(profiler.profile)
+    try:
+        c = chord.Chord("C E G")
+        print(f"Pitched Common Name: {c.pitchedCommonName}")
+    finally:
+        sys.setprofile(None)
+
+    profiler.save_json('full_call_tree.json')
+    profiler.save_tree('full_call_tree.txt')
+    print("Full call tree has been saved to 'full_call_tree.json' and 'full_call_tree.txt'.")
+
 if __name__ == "__main__":
-    import sys
-
-    sys.path.append("./music21")
-    from music21 import chord
-
-    chord_definitions = [
-        "E G# B",
-        "E Ab B",
-        "E Ab Cb",
-        "E G# Cb",
-        # "C G F E B",
-        # "E G F C B",
-        # "E C F G B",
-        # "G E F C B",
-        # "G C F E B",
-        # "C E G B",
-        # "C E G B D",
-        # "C E G B D F",
-        # "C E G B D F A",
-        # "F A C E",
-        # "G B D F",
-        # "A C E G",
-        # "D F A C",
-        # "E G# B D#",
-        # "A C# E G#",
-        # "B D# F# A#",
-        # "F# A# C# E# G#",
-        # "D F# A",
-        # "E G B",
-        # "A C# E",
-        # "B D# F#",
-        # "C# E# G#",
-        # "F# A# C#",
-        # "G# B# D#",
-        # "A# C## E#",
-        # "D G B",
-        # "E A C#",
-        # "F# B D#",
-        # "G# C# F",
-        # "A# D# G",
-        # "C F A",
-    ]
-
-    list = [0]
-
-    c = chord.Chord(list)
-    print(c.pitchedCommonName)
-
-    for definition in chord_definitions:
-        c = chord.Chord(definition)
-        print(f"{definition}: {c.pitchedCommonName}")
+    main()

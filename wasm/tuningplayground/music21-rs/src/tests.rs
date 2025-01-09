@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use crate::chord::Chord;
+    use crate::chord::chord::Chord;
 
     // #[test]
     //     fn pyton_test() {
@@ -29,7 +29,7 @@ mod tests {
     //         );
     //     }
 
-    // #[test]
+    #[test]
     fn c_e_g() {
         let chord = Chord::new("C E G").unwrap();
         assert_eq!(chord.pitched_common_name, "C Major Triad");

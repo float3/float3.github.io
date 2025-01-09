@@ -1,102 +1,65 @@
 use core::panic;
-use std::vec;
+use std::{sync::Weak, vec};
 
-use crate::{interval::Interval, note::Note};
+use crate::{
+    interval::Interval, note::note::Note, pitch::microtone, prebase::ProtoM21Object,
+    stepname::StepName,
+};
+use derivative::Derivative;
 use itertools::Itertools;
 
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-enum StepName {
-    C,
-    D,
-    E,
-    F,
-    G,
-    A,
-    B,
-}
+use super::{accidental::Accidental, microtone::Microtone, pitchexception::PitchException};
 
-type StepType = i32;
+const PITCH_SPACE_SIG_DIGITS: i32 = 6;
+const PITCH_CLASS_STRING: [char; 8] = ['a', 'A', 't', 'T', 'b', 'B', 'e', 'E'];
 
-impl StepName {
-    fn step_to_dnn_offset_reverse(n: StepType) -> Self {
-        match n {
-            0 => Self::C,
-            1 => Self::D,
-            2 => Self::E,
-            3 => Self::F,
-            4 => Self::G,
-            5 => Self::A,
-            6 => Self::B,
-            _ => panic!(),
-        }
-    }
+const STEP_REF: [(char, i32); 7] = [
+    ('C', 0),
+    ('D', 2),
+    ('E', 4),
+    ('F', 5),
+    ('G', 7),
+    ('A', 9),
+    ('B', 11),
+];
+const NATURAL_PCS: [i32; 7] = [0, 2, 4, 5, 7, 9, 11];
+const STEPREF_REVERSED: [(i32, char); 7] = [
+    (0, 'C'),
+    (2, 'D'),
+    (4, 'E'),
+    (5, 'F'),
+    (7, 'G'),
+    (9, 'A'),
+    (11, 'B'),
+];
+const STEPNAMES: [char; 7] = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+const STEP_TO_DNN_OFFSET: [(char, i32); 7] = [
+    ('C', 0),
+    ('D', 1),
+    ('E', 2),
+    ('F', 3),
+    ('G', 4),
+    ('A', 5),
+    ('B', 6),
+];
 
-    fn step_to_dnn_offset(&self) -> StepType {
-        match self {
-            StepName::C => 1,
-            StepName::D => 2,
-            StepName::E => 3,
-            StepName::F => 4,
-            StepName::G => 5,
-            StepName::A => 6,
-            StepName::B => 7,
-        }
-    }
-
-    fn step_ref(&self) -> StepType {
-        match self {
-            StepName::C => 0,
-            StepName::D => 2,
-            StepName::E => 4,
-            StepName::F => 5,
-            StepName::G => 7,
-            StepName::A => 9,
-            StepName::B => 11,
-        }
-    }
-
-    fn step_ref_reverse(n: StepType) -> Self {
-        match n {
-            0 => StepName::C,
-            2 => StepName::D,
-            4 => StepName::E,
-            5 => StepName::F,
-            7 => StepName::G,
-            9 => StepName::A,
-            11 => StepName::B,
-            _ => panic!(),
-        }
-    }
-}
-
-#[derive(Clone, PartialEq, Debug)]
+#[derive(Clone, Debug, Derivative)]
+#[derivative(PartialEq)]
 pub struct Pitch {
+    proto: ProtoM21Object,
     pub name: String,
+    pub overriden_freq440: Option<f64>,
     pub alter: f64,
     pub accidental: Option<Accidental>,
     pub octave: Option<i32>,
-    pub implicit_octave: i32,
+    #[derivative(PartialEq = "ignore")]
+    pub fundamental: Option<Weak<Pitch>>,
+    #[derivative(PartialEq = "ignore")]
+    pub client: Option<Weak<Note>>,
     spelling_is_inferred: bool,
     step: StepName,
     microtone: Option<Microtone>,
     // pub frequency: f64,
-}
-
-#[derive(Clone, PartialEq, Debug)]
-struct Microtone {
-    alter: f64,
-}
-
-#[derive(Clone, PartialEq, Debug)]
-struct Accidental {
-    name: String,
-    alter: f64,
-}
-
-impl Accidental {
-    fn new(arg: &str) -> Accidental {
-        todo!()
-    }
 }
 
 impl From<Note> for Pitch {
@@ -123,68 +86,41 @@ impl TranspositionIntervalDirection {
 type PitchReturn = Option<Pitch>;
 
 impl Pitch {
-    pub fn new(string: String) -> Pitch {
-        let mut tokens = string.chars().peekable();
+    pub fn new(name: String) -> Pitch {
+        println!("pitch.new()");
 
-        let name = tokens.next().expect("no name");
-        if !('A'..='G').contains(&name) {
-            panic!("Invalid note name");
-        }
-        let alter;
-        let accidental;
-        match tokens.peek() {
-            Some('b') => {
-                tokens.next();
-                if tokens.peek() == Some(&'b') {
-                    tokens.next();
-                    alter = -2.0;
-                    accidental = "bb".to_string();
-                } else {
-                    alter = -1.0;
-                    accidental = "b".to_string();
-                }
-            }
-            Some('#') => {
-                tokens.next();
-                if tokens.peek() == Some(&'#') {
-                    tokens.next();
-                    alter = 2.0;
-                    accidental = "##".to_string();
-                } else {
-                    alter = 1.0;
-                    accidental = "#".to_string();
-                }
-            }
-            _ => {
-                alter = 0.0;
-                accidental = "".to_string();
-            }
-        }
+        let step = crate::defaults::PITCH_STEP;
+        let overriden_freq440: Option<f64> = None;
 
-        let octave: Option<i32> = if tokens.peek().is_some() {
-            let x = tokens.collect::<String>();
-            Some(
-                x.parse::<i32>()
-                    .unwrap_or_else(|_| panic!("Invalid octave: {}", x)),
-            )
-        } else {
-            None
-        };
+        let mut microtone = None;
+        let mut accidental = None;
+        let mut octave = None;
 
-        let accidental = Some(Accidental {
-            name: accidental,
-            alter,
-        });
+        let spelling_is_inferred = false;
+        let fundamental = None;
+
+        let client = None;
+        let alter = todo!();
 
         Pitch {
             name: name.to_string(),
             alter,
             accidental,
+            fundamental,
             octave,
-            step: todo!(),
-            implicit_octave: todo!(),
-            microtone: todo!(),
-            spelling_is_inferred: todo!(),
+            step: step,
+            microtone,
+            spelling_is_inferred,
+            proto: ProtoM21Object::new(),
+            overriden_freq440,
+            client,
+        }
+    }
+
+    pub fn implicit_octave(&self) -> i32 {
+        match self.octave {
+            Some(octave) => octave,
+            None => crate::defaults::PITCH_OCTAVE,
         }
     }
 
@@ -204,14 +140,14 @@ impl Pitch {
         # setting step informs client
          */
         let value_out: f64 = convert_pitch_class_to_number(new_val);
-        let (step, accidental) = convert_ps_to_step(value_out);
+        let (step, accidental, _, _) = convert_ps_to_step(value_out).unwrap();
         self.step = step;
-        self.accidental = accidental;
+        self.accidental = Some(accidental);
         self.spelling_is_inferred = true;
     }
 
     pub fn diatonic_note_num(&self) -> i32 {
-        self.step.step_to_dnn_offset() + 1 + (7 * self.implicit_octave)
+        self.step.step_to_dnn_offset() + 1 + (7 * self.implicit_octave())
     }
 
     fn diatonic_note_num_setter(&mut self, new_num: i32) {
@@ -233,7 +169,7 @@ impl Pitch {
         return ps
          */
         let step = self.step;
-        let ps: f64 = ((self.implicit_octave + 1) * 12 + StepName::step_ref(&step)) as f64;
+        let ps: f64 = ((self.implicit_octave() + 1) * 12 + StepName::step_ref(&step)) as f64;
         match &self.accidental {
             Some(accidental) => ps + accidental.alter,
             None => ps + self.microtone().alter,
@@ -256,15 +192,15 @@ impl Pitch {
         todo!()
     }
 
-    fn get_all_common_enharmonics(&self, alter_limit: i32) -> Vec<Pitch> {
-        let mut post: Vec<Pitch> = vec![];
+    fn get_all_common_enharmonics(&self, alter_limit: i32) -> Vec<&Pitch> {
+        let mut post: Vec<&Pitch> = vec![];
         let c = self.simplify_enharmonic(false);
         if c.name != self.name {
-            post.push(c);
+            post.push(&c);
         }
         let c = self.clone();
 
-        let mut get_enharmonics = |c: Pitch, direction: TranspositionIntervalDirection| {
+        let mut get_enharmonics = |c: &Pitch, direction: TranspositionIntervalDirection| {
             let mut c = c;
             while let Some(pitch) = c.get_enharmonic_helper(direction.clone()) {
                 if let Some(ref accidental) = pitch.accidental {
@@ -272,12 +208,12 @@ impl Pitch {
                         break;
                     }
                 }
-                if !post.contains(&pitch.clone()) {
-                    post.push(pitch.clone());
+                if !post.contains(&&pitch) {
+                    post.push(&pitch.clone());
                 } else {
                     break;
                 }
-                c = pitch;
+                c = &pitch;
             }
         };
 
@@ -307,19 +243,19 @@ impl Pitch {
             match c.name.as_str() {
                 "D#" => {
                     c.name = "E".to_string();
-                    c.accidental = Some(Accidental::new("flat"));
+                    c.accidental = Some(Accidental::new_from_string("flat"));
                 }
                 "A#" => {
                     c.name = "B".to_string();
-                    c.accidental = Some(Accidental::new("flat"));
+                    c.accidental = Some(Accidental::new_from_string("flat"));
                 }
                 "G-" => {
                     c.name = "F".to_string();
-                    c.accidental = Some(Accidental::new("sharp"));
+                    c.accidental = Some(Accidental::new_from_string("sharp"));
                 }
                 "D-" => {
                     c.name = "C".to_string();
-                    c.accidental = Some(Accidental::new("sharp"));
+                    c.accidental = Some(Accidental::new_from_string("sharp"));
                 }
                 _ => {}
             }
@@ -378,25 +314,120 @@ impl Pitch {
     }
 }
 
-fn convert_ps_to_step(value_out: f64) -> (StepName, Option<Accidental>) {
-    todo!()
+pub fn convert_ps_to_step(
+    ps: f64,
+) -> Result<(StepName, Accidental, Microtone, i32), PitchException> {
+    let (pc, alter, micro, oct_shift) = if ps.fract() == 0.0 {
+        let pc = (ps as i32) % 12;
+        (pc, 0.0, 0.0, 0)
+    } else {
+        // Rounding is essential
+        let ps_rounded = (ps * 10f64.powi(PITCH_SPACE_SIG_DIGITS as i32)).round()
+            / 10f64.powi(PITCH_SPACE_SIG_DIGITS as i32);
+        let pc_real = ps_rounded % 12.0;
+        let pc_float = pc_real.floor();
+        let micro = pc_real - pc_float;
+        let pc = pc_float as i32;
+
+        // Determine alter and micro
+        let (alter, micro) = if (micro.round() - micro).abs() < 1e-3 {
+            // Close to a quarter tone
+            (0.5, micro - 0.5)
+        } else if micro > 0.25 && micro < 0.75 {
+            (0.5, micro - 0.5)
+        } else if micro >= 0.75 && micro < 1.0 {
+            (1.0, micro - 1.0)
+        } else if micro > 0.0 {
+            (0.0, micro)
+        } else {
+            (0.0, 0.0)
+        };
+
+        (pc, alter, micro, 0) // Octave shift to be determined later
+    };
+
+    // Initialize octave shift
+    let mut oct_shift = 0;
+
+    // Determine accidental and possibly adjust pitch class and octave shift
+    let mut oct_shift_adjustment = 0;
+    let (accidental, pc_name, mut oct_shift_adjustment) = if (alter == 1.0) && (pc == 4 || pc == 11)
+    {
+        // Enharmonic equivalents for E# or B#
+        let acc = Accidental::natural(); // Assuming Accidental::Natural corresponds to no alteration
+        let pc_name = (pc + 1) % 12;
+        if pc == 11 {
+            oct_shift_adjustment = 1;
+        }
+        (acc, pc_name, oct_shift_adjustment)
+    } else if NATURAL_PCS.contains(&pc) {
+        // Natural pitch class
+        let acc = if alter != 0.0 {
+            // Handle half-sharp or other alterations
+            // This example assumes only natural is allowed
+            // You may need to extend this based on `Accidental` definitions
+            match alter {
+                0.5 => Accidental::half_sharp(),
+                _ => Accidental::natural(),
+            }
+        } else {
+            Accidental::natural()
+        };
+        (acc, pc, 0)
+    } else if [0, 5, 7].contains(&(pc - 1)) && alter >= 1.0 {
+        // Possible double sharps
+        let acc = Accidental::double_sharp(); // Adjust based on `alter`
+        let pc_name = pc + 1;
+        (acc, pc_name, 0)
+    } else if [0, 5, 7].contains(&(pc - 1)) {
+        // Sharps
+        let acc = Accidental::sharp();
+        let pc_name = pc - 1;
+        (acc, pc_name, 0)
+    } else if [11, 4].contains(&(pc + 1)) && alter <= -1.0 {
+        // Double flats
+        let acc = Accidental::double_flat(); // Adjust based on `alter`
+        let pc_name = pc - 1;
+        (acc, pc_name, 0)
+    } else if [11, 4].contains(&(pc + 1)) {
+        // Flats
+        let acc = Accidental::flat();
+        let pc_name = pc + 1;
+        (acc, pc_name, 0)
+    } else {
+        return Err(PitchException::CannotMatchCondition { pc });
+    };
+
+    // Apply octave shift adjustment
+    oct_shift += oct_shift_adjustment;
+
+    // Retrieve StepName from STEPREF_REVERSED
+    let step = STEPREF_REVERSED[pc_name as usize];
+
+    // Create Microtone object
+    let microtone = if micro != 0.0 {
+        Microtone::new(micro * 100.0) // Convert to cents
+    } else {
+        Microtone::new(0.0)
+    };
+
+    Ok((step, accidental, microtone, oct_shift))
 }
 
 fn convert_pitch_class_to_number(new_val: i32) -> f64 {
     todo!()
 }
 
-pub(crate) fn simplify_multiple_enharmonics(pitches: Vec<Pitch>) -> Vec<Pitch> {
-    let old_pitches: Vec<Pitch> = pitches.clone();
-    if old_pitches.len() < 5 {
-        brute_force_enharmonics_search(old_pitches, |x| dissonance_score(x, true, true, true))
+pub(crate) fn simplify_multiple_enharmonics<'a>(mut pitches: Vec<Pitch>) -> Vec<Pitch> {
+    if pitches.len() < 5 {
+        brute_force_enharmonics_search(pitches, |x| dissonance_score(x, true, true, true))
     } else {
-        greedy_enharmonics_search(old_pitches, |x| dissonance_score(x, true, true, true))
+        greedy_enharmonics_search(pitches, |x| dissonance_score(x, true, true, true))
     }
 }
 
 fn dissonance_score(
-    pitches: &[Pitch],
+    pitches: &[&Pitch],
     small_pythagorean_ratio: bool,
     accidental_penalty: bool,
     triad_award: bool,
@@ -437,7 +468,9 @@ fn dissonance_score(
         if small_pythagorean_ratio {
             for interval in intervals.iter() {
                 match interval.interval_to_pythagorean_ratio() {
-                    Some(ratio) => score_ratio += (ratio.denominator as f64).ln() * 0.03792663444,
+                    Some(ratio) => {
+                        score_ratio += (*(ratio.denom().unwrap()) as f64).ln() * 0.03792663444
+                    }
                     None => return std::f64::INFINITY,
                 };
             }
@@ -465,17 +498,17 @@ fn dissonance_score(
 
 fn greedy_enharmonics_search(
     old_pitches: Vec<Pitch>,
-    score_func: fn(&[Pitch]) -> f64,
+    score_func: fn(&[&Pitch]) -> f64,
 ) -> Vec<Pitch> {
     let mut new_pitches = vec![old_pitches[0].clone()];
     for old_pitch in old_pitches.iter().skip(1) {
         let mut candidates = vec![old_pitch.clone()];
-        candidates.extend(old_pitch.get_all_common_enharmonics(2));
+        candidates.extend(old_pitch.get_all_common_enharmonics(2).into_iter().cloned());
         let new_pitch = candidates
             .iter()
-            .min_by(|_x, _y| {
-                dissonance_score(&new_pitches, true, true, true)
-                    .partial_cmp(&score_func(&new_pitches))
+            .min_by(|x, y| {
+                dissonance_score(&new_pitches.iter().collect::<Vec<_>>(), true, true, true)
+                    .partial_cmp(&score_func(&new_pitches.iter().collect::<Vec<_>>()))
                     .unwrap()
             })
             .unwrap();
@@ -485,14 +518,14 @@ fn greedy_enharmonics_search(
 }
 
 fn brute_force_enharmonics_search(
-    old_pitches: Vec<Pitch>,
-    score_func: fn(&[Pitch]) -> f64,
-) -> Vec<Pitch> {
-    let all_possible_pitches: Vec<Vec<Pitch>> = old_pitches[1..]
+    old_pitches: Vec<&Pitch>,
+    score_func: fn(&[&Pitch]) -> f64,
+) -> Vec<&Pitch> {
+    let all_possible_pitches: Vec<Vec<&Pitch>> = old_pitches[1..]
         .iter()
         .map(|p| {
             let mut enharmonics = p.get_all_common_enharmonics(2);
-            enharmonics.insert(0, p.clone());
+            enharmonics.insert(0, *p);
             enharmonics
         })
         .collect();
@@ -503,7 +536,7 @@ fn brute_force_enharmonics_search(
     let mut best_combination = Vec::new();
 
     for combination in all_pitch_combinations {
-        let mut pitches = old_pitches[0..1].to_vec();
+        let mut pitches = old_pitches[..1].to_vec(); // Use range syntax for clarity
         pitches.extend(combination);
         let score = score_func(&pitches);
         if score < min_score {
