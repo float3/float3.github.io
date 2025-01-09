@@ -1,11 +1,11 @@
-use crate::pitch::Pitch;
+use crate::pitch::pitch::Pitch;
 
-#[derive(Clone)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Note {
     pub pitch: Pitch,
 }
 
-impl Note {
+impl<'a, 'b> Note {
     pub(crate) fn new(string: String) -> Note {
         let pitch = Pitch::new(string);
         Note { pitch }
