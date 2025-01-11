@@ -22,6 +22,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Ding](#ding)
 - [Sofi](#sofi)
 - [me](#me)
+- [jp movie night](#jp-movie-night)
 - [Dropped Movies](#dropped-movies)
 
 # Red Mage:
@@ -159,7 +160,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2024-12-22)
 - [ ] BREAK (2024-12-29)
 - [x] 怪物 (Monster) (2025-01-05)
-- [ ] The Hateful Eight (2015) (2025-01-12)
+- [x] The Hateful Eight (2015) (2025-01-11)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -424,6 +425,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Hamilton (2020) (2024-04-14)
 - [x] Dancer in the Dark (2000) (2024-05-25)
 - [x] Mad Max: Furiosa (2024) (2024-05-30)
+- [x] El Camino: A Breaking Bad Movie (2019) (2025-01-08) 
 
 # Scruffy
 
@@ -516,6 +518,9 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Jodorowsky's Dune (2013)
 - [ ] Amadeus (1984)
 - [ ]
+
+# jp movie night
+- [x] ゲド戦記 (Tales from Earthsea) (2006) (2025-01-10)
 
 # Dropped Movies
 
