@@ -35,7 +35,7 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4.1.0
         with:
-          node-version: 22
+          node-version: 23
 
       - name: dependencies
         run: |
