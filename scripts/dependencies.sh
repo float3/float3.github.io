@@ -15,3 +15,4 @@ if [ "$GITHUB_JOB" == "Update"]; then
 fi
 
 npm install -g pnpm
+curl -fsSL https://bun.sh/install | bash
