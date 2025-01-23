@@ -1,0 +1,9 @@
+[install]
+peer = true
+
+[build]
+minify = true
+sourcemap = "external"
+target = "browser"
+entry = ["./src/index.ts"]
+outdir = "./dist"

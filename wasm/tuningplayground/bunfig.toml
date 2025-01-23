@@ -1,5 +1,0 @@
-[install]
-peer = true
-
-[install.scopes]
-wasm = "file:../pkg"

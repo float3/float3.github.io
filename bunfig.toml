@@ -1,0 +1,14 @@
+[install]
+peer = true
+production = false
+
+[install.scopes]
+"@workspace" = { peer = false }
+
+[test]
+preload = "./setup.ts"
+
+[build]
+minify = true
+sourcemap = "external"
+target = "browser"
