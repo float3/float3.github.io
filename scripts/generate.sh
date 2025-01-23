@@ -5,13 +5,12 @@
 
 CD=$(pwd)
 
-cd ./wasm/tuningplayground/music21-rs/
+cd ./wasm/tuningplayground/
 
 python -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r music21/requirements.txt
-pip install music21
 python -m generate_chords
 
 cd $CD/content
