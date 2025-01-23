@@ -73,15 +73,6 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/wasm/tuningplayground/music21-rs"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
     directory: "/wasm/tuningplayground/tuning_systems"
     schedule:
       interval: "weekly"

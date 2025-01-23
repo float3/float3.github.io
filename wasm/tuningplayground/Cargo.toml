@@ -8,7 +8,7 @@ repository = "https://github.com/float3/tuningplayground"
 version = "1.0.0"
 
 [workspace]
-members = ["tuning_systems", "music21-rs", "keymapping"]
+members = ["tuning_systems", "keymapping"]
 
 [lib]
 crate-type = ["cdylib", "rlib"]
