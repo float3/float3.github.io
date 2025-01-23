@@ -2,14 +2,13 @@
 
 node_up() {
     if [[ -z "$GITHUB_ACTIONS" ]]; then
-        pnpx npm-upgrade
+        bunx npm-upgrade
         echo "::warning::upgrading npm packages"
     fi
-    pnpm update
-    pnpm audit fix
-    pnpm install
-    pnpx prettier $1 --write
-    pnpx eslint $1 --fix
+    bun update
+    bun install
+    bunx prettier $1 --write
+    bunx eslint $1 --fix
 }
 
 cargo_up() {
@@ -55,12 +54,11 @@ wasm-pack build --target bundler $ARGS
 
 cd $root_path
 if [[ -z "$GITHUB_ACTIONS" ]]; then
-    pnpx npm-upgrade
+    bunx npm-upgrade
     echo "::warning::upgrading npm packages"
 fi
-pnpm update
-pnpm audit fix
-pnpm install
+bun update
+bun install
 
 cd ./ts
 node_up src

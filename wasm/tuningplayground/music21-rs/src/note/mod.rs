@@ -1,3 +1,3 @@
-pub mod generalnote;
-pub mod note;
-pub mod notrest;
+pub(crate) mod generalnote;
+pub(crate) mod note;
+pub(crate) mod notrest;

@@ -1,13 +1,33 @@
-use crate::base::Music21Object;
+use crate::{
+    base::{Music21Object, Music21ObjectTrait},
+    prebase::ProtoM21ObjectTrait,
+};
 
-pub struct GeneralNote {
-    music21: Music21Object,
+#[derive(Debug)]
+pub(crate) struct GeneralNote {
+    music21object: Music21Object,
 }
 
-impl GeneralNote {
-    pub fn new() -> Self {
+pub(crate) trait GeneralNoteTrait: Music21ObjectTrait {
+    fn new() -> Self;
+}
+
+impl GeneralNoteTrait for GeneralNote {
+    fn new() -> Self {
         GeneralNote {
-            music21: Music21Object::new(),
+            music21object: <Music21Object as Music21ObjectTrait>::new(),
         }
+    }
+}
+
+impl Music21ObjectTrait for GeneralNote {
+    fn new() -> Self {
+        <GeneralNote as GeneralNoteTrait>::new()
+    }
+}
+
+impl ProtoM21ObjectTrait for GeneralNote {
+    fn new() -> Self {
+        <GeneralNote as Music21ObjectTrait>::new()
     }
 }

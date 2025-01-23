@@ -1,21 +1,21 @@
-use std::{cell::RefCell, rc::Rc};
-
+use super::chordbase::ChordBase;
 use crate::{
+    defaults::IntegerType,
     note::note::Note,
     pitch::pitch::{simplify_multiple_enharmonics, Pitch},
 };
+use std::{cell::RefCell, rc::Rc};
 
-use super::chordbase::ChordBase;
-
-pub struct Chord {
+#[derive(Debug)]
+pub(crate) struct Chord {
     chord_base: ChordBase,
     notes: RefCell<Vec<Rc<Note>>>,
     common_name: String,
-    pub pitched_common_name: String,
+    pub(crate) pitched_common_name: String,
 }
 
 impl Chord {
-    pub fn new(notes: &str) -> Result<Chord, &'static str> {
+    pub(crate) fn new(notes: &str) -> Result<Chord, &'static str> {
         println!("chord.new()");
         // if let Some(notes) = &notes {
         //     if notes.iter().any(|n| {
@@ -61,7 +61,7 @@ impl Chord {
         Ok(chord)
     }
 
-    pub fn pitches(&self) -> Vec<Pitch> {
+    pub(crate) fn pitches(&self) -> Vec<Pitch> {
         self.notes
             .borrow()
             .iter()
@@ -110,7 +110,7 @@ impl Chord {
         }
     }
 
-    fn unordered_pitch_classes(&self) -> Vec<i32> {
+    fn unordered_pitch_classes(&self) -> Vec<IntegerType> {
         let mut vec = vec![];
         for p in self.pitches() {
             vec.push(p.pitch_class());

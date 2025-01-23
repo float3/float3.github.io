@@ -1,6 +1,6 @@
 #[derive(Clone, Debug)]
-pub enum Specifier {
-    Int(i32),
+pub(crate) enum Specifier {
+    Int(IntegerType),
     Str(String),
     Float(f64),
 }

@@ -17,6 +17,6 @@ rm -rf pkg
 wasm-pack build --target bundler $ARGS
 
 cd ./ts
-pnpm install
-pnpm exec tsc
-pnpm exec webpack --mode $WEBPACK_MODE
+bun install
+bun run tsc
+bun build ./src/index.ts --outdir ./dist --minify

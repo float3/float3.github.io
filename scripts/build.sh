@@ -34,13 +34,13 @@ cd $root_path
 rm ./content/tools/**/*LICENSE.txt | true
 
 cd $root_path/ts 
-pnpm install
-pnpm exec tsc
+bun install
+bun run tsc
 
 cd $root_path
-pnpm install
+bun install
 
-npx quartz build $QUARTZ_ARGS
+bunx quartz build $QUARTZ_ARGS
 
 END_TIME=$(date +%s)
 BUILD_TIME=$((END_TIME - START_TIME))

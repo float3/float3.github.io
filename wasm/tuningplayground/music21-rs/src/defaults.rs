@@ -1,4 +1,7 @@
 use crate::stepname::StepName;
 
-pub const PITCH_STEP: StepName = StepName::C;
-pub const PITCH_OCTAVE: i32 = 4;
+pub(crate) type IntegerType = i32;
+pub(crate) type FloatType = f64;
+
+pub(crate) const PITCH_STEP: StepName = StepName::C;
+pub(crate) const PITCH_OCTAVE: IntegerType = 4;

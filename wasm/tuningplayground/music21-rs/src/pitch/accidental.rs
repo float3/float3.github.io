@@ -8,7 +8,7 @@ use super::pitch::Pitch;
 
 #[derive(Clone, Debug, Derivative)]
 #[derivative(PartialEq)]
-pub struct Accidental {
+pub(crate) struct Accidental {
     proto: ProtoM21Object,
     display_type: String,
     display_status: Option<bool>,
@@ -19,11 +19,11 @@ pub struct Accidental {
     client: Option<Weak<Pitch>>,
     name: String,
     modifier: String,
-    pub alter: f64,
+    pub(crate) alter: f64,
 }
 
 impl Accidental {
-    pub fn new_from_string(name: &str) -> Accidental {
+    pub(crate) fn new_from_string(name: &str) -> Accidental {
         let specifier = match name {
             "natural" => Specifier::Str("natural".to_string()),
             "sharp" => Specifier::Str("sharp".to_string()),
@@ -37,7 +37,7 @@ impl Accidental {
         Accidental::new_from_specifier(Some(specifier))
     }
 
-    pub fn new_from_specifier(specifier: Option<Specifier>) -> Accidental {
+    pub(crate) fn new_from_specifier(specifier: Option<Specifier>) -> Accidental {
         let specifier = specifier.unwrap_or(Specifier::Str("natural".to_string()));
         let (name, alter) = match specifier {
             Specifier::Int(value) => match value {
@@ -69,39 +69,39 @@ impl Accidental {
         }
     }
 
-    pub fn natural() -> Accidental {
+    pub(crate) fn natural() -> Accidental {
         Accidental::new_from_string("natural")
     }
 
-    pub fn sharp() -> Accidental {
+    pub(crate) fn sharp() -> Accidental {
         Accidental::new_from_string("sharp")
     }
 
-    pub fn flat() -> Accidental {
+    pub(crate) fn flat() -> Accidental {
         Accidental::new_from_string("flat")
     }
 
-    pub fn double_sharp() -> Accidental {
+    pub(crate) fn double_sharp() -> Accidental {
         Accidental::new_from_string("double-sharp")
     }
 
-    pub fn double_flat() -> Accidental {
+    pub(crate) fn double_flat() -> Accidental {
         Accidental::new_from_string("double-flat")
     }
 
-    pub fn half_sharp() -> Accidental {
+    pub(crate) fn half_sharp() -> Accidental {
         Accidental::new_from_string("half-sharp")
     }
 
-    pub fn half_flat() -> Accidental {
+    pub(crate) fn half_flat() -> Accidental {
         Accidental::new_from_string("half-flat")
     }
 
-    pub fn set_display_type(&mut self, display_type: &str) {
+    pub(crate) fn set_display_type(&mut self, display_type: &str) {
         self.display_type = display_type.to_string();
     }
 
-    pub fn set_display_status(&mut self, status: Option<bool>) {
+    pub(crate) fn set_display_status(&mut self, status: Option<bool>) {
         self.display_status = status;
     }
 }

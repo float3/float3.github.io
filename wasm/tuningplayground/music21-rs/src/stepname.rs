@@ -1,5 +1,7 @@
+use crate::defaults::IntegerType;
+
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub enum StepName {
+pub(crate) enum StepName {
     C,
     D,
     E,
@@ -9,7 +11,7 @@ pub enum StepName {
     B,
 }
 
-pub(crate) type StepType = i32;
+pub(crate) type StepType = IntegerType;
 
 impl StepName {
     pub(crate) fn step_to_dnn_offset_reverse(n: StepType) -> Self {

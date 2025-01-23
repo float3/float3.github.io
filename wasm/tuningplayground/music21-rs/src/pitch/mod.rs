@@ -1,4 +1,3 @@
-pub mod accidental;
-pub mod microtone;
-pub mod pitch;
-pub mod pitchexception;
+pub(crate) mod accidental;
+pub(crate) mod microtone;
+pub(crate) mod pitch;

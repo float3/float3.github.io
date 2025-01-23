@@ -1,8 +1,8 @@
 use crate::pitch::pitch::Pitch;
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Note {
-    pub pitch: Pitch,
+pub(crate) struct Note {
+    pub(crate) pitch: Pitch,
 }
 
 impl<'a, 'b> Note {
@@ -13,7 +13,7 @@ impl<'a, 'b> Note {
 }
 
 // #[derive(Clone)]
-// pub enum Note {
+// pub(crate) enum Note {
 //     Specific(Pitch),
 //     General(Pitch),
 //     Chord(Vec<Note>),
@@ -24,7 +24,7 @@ impl<'a, 'b> Note {
 //         todo!()
 //     }
 
-//     pub fn pitches(&self) -> Vec<Pitch> {
+//     pub(crate) fn pitches(&self) -> Vec<Pitch> {
 //         match self {
 //             Note::Specific(pitch) => vec![pitch.clone()],
 //             Note::General(pitch) => vec![pitch.clone()],

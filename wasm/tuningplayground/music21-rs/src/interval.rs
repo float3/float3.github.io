@@ -6,7 +6,7 @@ use std::{
     sync::{Mutex, Weak},
 };
 
-use crate::{fraction::FractionPow, pitch::pitch::Pitch};
+use crate::{defaults::IntegerType, fraction::FractionPow, pitch::pitch::Pitch};
 
 #[derive(Debug, Clone, Copy)]
 enum IntervalQuality {
@@ -18,35 +18,35 @@ enum IntervalQuality {
 }
 
 #[derive(Debug, Clone)]
-pub struct Interval {
+pub(crate) struct Interval {
     pitch_start: Weak<Pitch>,
     pitch_end: Weak<Pitch>,
     implicit_diatonic: bool,
-    pub generic: GenericInterval,
-    pub diatonic: DiatonicInterval,
-    pub chromatic: ChromaticInterval,
+    pub(crate) generic: GenericInterval,
+    pub(crate) diatonic: DiatonicInterval,
+    pub(crate) chromatic: ChromaticInterval,
     interval_type: IntervalType,
     interval_quality: IntervalQuality,
 }
 
 #[derive(Clone, Debug)]
-pub struct DiatonicInterval {
+pub(crate) struct DiatonicInterval {
     specifier: String,
     generic: GenericInterval,
 }
 
 #[derive(Clone, Debug)]
-pub struct ChromaticInterval {
-    pub semitones: i32,
-    pub simple_directed: i32,
+pub(crate) struct ChromaticInterval {
+    pub(crate) semitones: IntegerType,
+    pub(crate) simple_directed: IntegerType,
 }
 #[derive(Clone, Debug)]
-pub struct GenericInterval {
-    pub simple_directed: i32,
+pub(crate) struct GenericInterval {
+    pub(crate) simple_directed: IntegerType,
 }
 
 #[derive(Clone, Debug)]
-pub enum IntervalType {
+pub(crate) enum IntervalType {
     Harmonic,
     Melodic,
 }
@@ -73,7 +73,7 @@ impl Interval {
         })
     }
 
-    pub fn new_from_name(name: &str) -> Option<Interval> {
+    pub(crate) fn new_from_name(name: &str) -> Option<Interval> {
         todo!()
     }
 
@@ -113,7 +113,7 @@ impl Interval {
         }
         match end_pitch_ratio {
             Some((end_pitch, ratio)) => {
-                let octaves = (end_pitch_wanted.ps() - end_pitch.ps()) as i32 / 12;
+                let octaves = (end_pitch_wanted.ps() - end_pitch.ps()) as IntegerType / 12;
                 Some(ratio * F::new(2u64, 1u64).pow(octaves))
             }
             _ => None,
@@ -122,7 +122,7 @@ impl Interval {
 }
 
 impl GenericInterval {
-    pub(crate) fn new(simple_directed: i32) -> GenericInterval {
+    pub(crate) fn new(simple_directed: IntegerType) -> GenericInterval {
         todo!("GenericInterval::new")
     }
 }
@@ -144,7 +144,7 @@ fn get_specifier_from_generic_chromatic(
 
 fn notes_to_chromatic(p1: &Pitch, p2: &Pitch) -> ChromaticInterval {
     ChromaticInterval {
-        semitones: (p2.ps() - p1.ps()) as i32,
+        semitones: (p2.ps() - p1.ps()) as IntegerType,
         simple_directed: p2.diatonic_note_num() - p1.diatonic_note_num(),
     }
 }
@@ -155,7 +155,7 @@ fn notes_to_generic(p1: &Pitch, p2: &Pitch) -> GenericInterval {
     GenericInterval::new(gen_dist)
 }
 
-fn convert_staff_distance_to_interval(staff_dist: i32) -> i32 {
+fn convert_staff_distance_to_interval(staff_dist: IntegerType) -> IntegerType {
     match staff_dist {
         0 => 1,
         dist if dist > 0 => dist + 1,
