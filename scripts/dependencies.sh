@@ -12,8 +12,7 @@ rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
 rustup update
 ./init.sh
 
-echo $GITHUB_JOB
-if [ $GITHUB_JOB == "Update" ]; then
+if [ $GITHUB_JOB == "update_and_lint" ]; then
     cargo install cargo-edit
 fi
 
