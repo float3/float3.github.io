@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 # This script sets "date" to the file's first commit date (creation)
 # and "updated" to the file's last commit date (ignoring commits
 # whose commit message contains the word "generate").

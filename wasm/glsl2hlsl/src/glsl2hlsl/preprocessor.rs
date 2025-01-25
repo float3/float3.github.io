@@ -406,7 +406,7 @@ fn remove_param(fdef: &mut FunctionDefinition, name: &str) {
     }
 
     fn remove_param_stmt_vec(stmts: &mut Vec<Statement>, name: &str) {
-        stmts.extract_if(.., |x| remove_param_stmt(x, name)).for_each(|_x| ());
+        stmts.retain_mut(|x| !remove_param_stmt(x, name));
     }
 
     remove_param_stmt_vec(&mut fdef.statement.statement_list, name);

@@ -31,7 +31,7 @@ mini-alloc = { version = "0.7.0", optional = true }
 pinyin = "0.10.0"
 pinyin_zhuyin = "0.2.0"
 roman = "0.1.6"
-wasm-bindgen = { version = "0.2.99", optional = true }
+wasm-bindgen = { version = "0.2.100", optional = true }
 
 [profile.release]
 codegen-units = 1

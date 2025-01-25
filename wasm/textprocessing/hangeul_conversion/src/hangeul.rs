@@ -6,6 +6,10 @@ const CHOSEONG_COUNT: u32 = 19;
 const JUNGSEONG_COUNT: u32 = 21;
 const JONGSEONG_COUNT: u32 = 28;
 
+pub(crate) enum Choseong {}
+pub(crate) enum Jungseong {}
+pub(crate) enum Jongseong {}
+
 // Lists of Choseong, Jungseong, Jongseong in order, as per the standard Korean Unicode block.
 const CHOSEONG_LIST: [char; 19] = [
     'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ',
@@ -49,7 +53,7 @@ const JONGSEONG_LIST_MR: [&str; 28] = [
 /// Decompose a single Hangeul syllable into (choseong, jungseong, jongseong)
 pub fn hangeul_to_components(ch: char) -> Option<(char, char, Option<char>)> {
     let code = ch as u32;
-    if code < HANGEUL_BASE || code > 0xD7A3 {
+    if !(HANGEUL_BASE..=0xD7A3).contains(&code) {
         return None;
     }
 
@@ -92,10 +96,7 @@ pub fn components_to_hangeul(
 
 /// Convert a full Hangeul string into a vector of components for each syllable
 pub fn from_hangeul(input: &str) -> Vec<(char, char, Option<char>)> {
-    input
-        .chars()
-        .filter_map(|ch| hangeul_to_components(ch))
-        .collect()
+    input.chars().filter_map(hangeul_to_components).collect()
 }
 
 /// Convert a vector of components into a Hangeul string

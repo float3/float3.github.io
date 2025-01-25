@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 generate_index() {
     local dir="$1"
     local title="$2"

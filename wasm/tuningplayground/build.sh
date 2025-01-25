@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 if [ "$1" = "prod" ] || [ "$GITHUB_ACTIONS" == "true" ]; then
   ARGS="--release"
   WEBPACK_MODE="production"

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 node_up() {
     if [[ -z "$GITHUB_ACTIONS" ]]; then
         pnpx npm-upgrade
