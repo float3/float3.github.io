@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 ./scripts/collect_links.sh
 ./scripts/indices.sh
 

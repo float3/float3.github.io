@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
 curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf -o init.sh
 chmod +x rustup.sh init.sh

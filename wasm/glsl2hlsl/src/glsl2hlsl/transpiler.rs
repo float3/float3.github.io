@@ -2012,8 +2012,7 @@ fn show_translation_unit<F>(
     );
 
     let m = buffers.iter()
-    .map( 
-        |(i, b)| format!("\n
+    .map(|(i, b)| format!("\n
         Pass 
             {{
                 Name \"{}\"
@@ -2361,8 +2360,7 @@ fn show_translation_unit_raymarch<F>(
 ",
     );
     let m = buffers.iter()
-    .map( 
-        |(i, b)| format!("\n
+    .map(|(i, b)| format!("\n
             Pass 
             {{
                 Name:{}

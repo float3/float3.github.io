@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 START_TIME=$(date +%s)
 
 if [ "$GITHUB_ACTIONS" == "true" ]; then

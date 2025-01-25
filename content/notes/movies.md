@@ -19,10 +19,10 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [Valentin](#valentin)
 - [J1](#j1)
 - [Scruffy](#scruffy)
+- [J](#j)
 - [Ding](#ding)
 - [Sofi](#sofi)
 - [me](#me)
-- [jp movie night](#jp-movie-night)
 - [Dropped Movies](#dropped-movies)
 
 # Red Mage:
@@ -161,6 +161,8 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] BREAK (2024-12-29)
 - [x] 怪物 (Monster) (2025-01-05)
 - [x] The Hateful Eight (2015) (2025-01-11)
+- [x] Tiger on Beat (1988) (2025-01-18)
+- [x] Strange Darling (2024) (2025-01-25) 
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -431,6 +433,11 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 
 - [x] Live Free or Die Hard (2007) (2022-01-11)
 
+# J
+
+- [x] ゲド戦記 (Tales from Earthsea) (2006) (2025-01-10)
+- [x] そして父になる (Like Father, Like Son) (2024-01-19)
+
 # Ding
 
 - [x] Evil Dead Rise (2023) (2024-01-05)
@@ -517,10 +524,6 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [ ] Jackie Chan - My Stunts
 - [ ] Jodorowsky's Dune (2013)
 - [ ] Amadeus (1984)
-- [ ]
-
-# jp movie night
-- [x] ゲド戦記 (Tales from Earthsea) (2006) (2025-01-10)
 
 # Dropped Movies
 
