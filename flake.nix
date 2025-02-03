@@ -24,12 +24,21 @@
         devShells.default = pkgs.mkShell rec {
           nativeBuildInputs = [pkgs.pkg-config];
           buildInputs = with pkgs; [
+            bun
+            cargo
+            cargo-edit
             clang
-            llvmPackages.bintools
-            rustup
+            corepack_23
             git
-            python3
-            python3Packages.virtualenv
+            gnugrep
+            llvmPackages.bintools
+            nodejs_23
+            pnpm_10
+            python314
+            rustup
+            typescript
+            virtualenv
+            wasm-pack
           ];
 
           RUSTC_VERSION = overrides.toolchain.channel;
