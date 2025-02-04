@@ -6,6 +6,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
 curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 curl -fsSL https://bun.sh/install | bash
 npm install -g pnpm
+source /home/runner/.bashrc
 
 chmod +x rustup.sh
 
