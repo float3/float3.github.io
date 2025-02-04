@@ -14,9 +14,6 @@ content/.obsidian/
 
 # these files are downloaded by the CI
 rustup.sh
-wasmpack.sh
-bun.sh
-pnpm.sh
 
 content/js
 content/tools/*/*.wasm
