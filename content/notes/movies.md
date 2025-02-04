@@ -163,6 +163,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] The Hateful Eight (2015) (2025-01-11)
 - [x] Tiger on Beat (1988) (2025-01-18)
 - [x] Strange Darling (2024) (2025-01-25)
+- [ ] BREAK (2025-02-01)
 - [ ] Metropolis (1927)
 - [ ] Im Westen nichts Neues (All Quiet on the Western Front) (1930)
 - [ ] Citizen Kane (1941)
@@ -428,6 +429,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Dancer in the Dark (2000) (2024-05-25)
 - [x] Mad Max: Furiosa (2024) (2024-05-30)
 - [x] El Camino: A Breaking Bad Movie (2019) (2025-01-08)
+- [X] Tick, Tick... Boom! (2021) (2025-01-30)
 
 # Scruffy
 
