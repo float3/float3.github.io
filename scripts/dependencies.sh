@@ -7,7 +7,7 @@ curl https://rustwasm.github.io/wasm-pack/installer/init.sh -ssf -o wasmpack.sh
 curl -fsSL https://bun.sh/install -o bun.sh
 curl -fsSL https://get.pnpm.io/install.sh -o pnpm.sh
 
-chmod +x rustup.sh init.sh
+chmod +x *.sh
 ./rustup.sh --default-toolchain nightly --profile minimal -y
 rustup component add rustfmt clippy --toolchain nightly
 source "$HOME/.cargo/env"
