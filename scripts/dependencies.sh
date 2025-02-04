@@ -3,25 +3,22 @@
 set -e
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -o rustup.sh
-curl -ssf https://rustwasm.github.io/wasm-pack/installer/init.sh -o wasmpack.sh
-curl -fsSL https://bun.sh/install -o bun.sh
-curl -fsSL https://get.pnpm.io/install.sh -o pnpm.sh
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+curl -fsSL https://bun.sh/install | bash
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 
-chmod +x rustup.sh wasmpack.sh bun.sh pnpm.sh
+chmod +x rustup.sh
 
-./rustup.sh --default-toolchain nightly --profile minimal -y
+bash ./rustup.sh --default-toolchain nightly --profile minimal -y
+
 rustup component add rustfmt clippy --toolchain nightly
+
 source "$HOME/.cargo/env"
 
 rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
 
 rustup update
 
-./wasmpack.sh
-
 if [ $GITHUB_JOB == "update_and_lint" ]; then
     cargo install cargo-edit
 fi
-
-./pnpm.sh
-./bun.sh
