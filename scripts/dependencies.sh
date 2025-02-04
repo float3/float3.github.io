@@ -13,7 +13,7 @@ rustup component add rustfmt clippy --toolchain nightly
 source "$HOME/.cargo/env"
 rm ~/.cargo/bin/rustfmt ~/.cargo/bin/rust-analyzer ~/.cargo/bin/cargo-fmt
 rustup update
-./wasm-pack.sh
+./wasmpack.sh
 
 if [ $GITHUB_JOB == "update_and_lint" ]; then
     cargo install cargo-edit
