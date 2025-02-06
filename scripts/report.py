@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-
 import html
 import json
 import os
+import re
 import subprocess
 import sys
+import urllib.request
 
 
 def compute_sizes(node, parent_path):
@@ -44,15 +45,10 @@ def build_html(node, parent_path):
 
 
 def get_os_version():
-    """
-    Attempt to extract OS version info from /etc/os-release (commonly found on many Linux distros).
-    Fallback if the file doesn't exist or doesn't contain expected info.
-    """
     try:
         with open("/etc/os-release", "r", encoding="utf-8") as f:
             for line in f:
                 if line.startswith("PRETTY_NAME="):
-                    # Example line: PRETTY_NAME="Ubuntu 20.04.2 LTS"
                     return line.split("=", 1)[1].strip().strip('"')
         return "Unknown OS"
     except FileNotFoundError:
@@ -60,10 +56,6 @@ def get_os_version():
 
 
 def get_command(command, args=["--version"]):
-    """
-    Returns the version output of a command.
-    If the command is not found, returns 'not installed'.
-    """
     try:
         result = subprocess.run(
             [command] + args,
@@ -76,6 +68,30 @@ def get_command(command, args=["--version"]):
         return "not installed"
 
 
+def extract_body(html_text):
+    start = html_text.find("<body>")
+    end = html_text.find("</body>")
+    if start != -1 and end != -1:
+        return html_text[start + len("<body>") : end]
+    return html_text
+
+
+def fetch_previous_report():
+    url = "https://hilll.dev/report"
+    try:
+        with urllib.request.urlopen(url) as response:
+            remote_html = response.read().decode("utf-8")
+    except Exception:
+        return None
+
+    pattern = re.compile(r"<!-- REPORT START -->(.*?)<!-- REPORT END -->", re.DOTALL)
+    reports = pattern.findall(remote_html)
+    if not reports:
+        body = extract_body(remote_html)
+        return body if body.strip() else None
+    return reports[-2] if len(reports) >= 2 else reports[-1]
+
+
 def main():
     # ---- Capture build time from CLI args (if provided) ----
     build_time = 0
@@ -84,12 +100,11 @@ def main():
             build_time = int(sys.argv[1])
         except ValueError:
             print("Invalid build time argument. Ignoring.")
-            pass
     else:
         print("No build time provided")
 
     # ---- Gather version info ----
-    time = get_command("date", ["+%x (%A) %X %z"])
+    time_str = get_command("date", ["+%x (%A) %X %z"])
     os_version = get_os_version()
     quartz_version = get_command("npx", ["quartz", "--version"]).split("\n").pop()
     python_version = get_command("python")
@@ -102,11 +117,14 @@ def main():
     rustup_version = get_command("rustup").split("\n").pop(0)
     wasm_pack_version = get_command("wasm-pack")
     tsc_version = get_command("pnpm", ["exec", "tsc", "--version"])
+    # Retrieve git commit hash
+    git_commit = get_command("git", ["rev-parse", "HEAD"])
     os.chdir("../wasm/adventofcode/ts")
+    webpack_full = get_command("pnpm", ["exec", "webpack", "--version"])
     webpack_version = (
-        get_command("pnpm", ["exec", "webpack", "--version"])
-        .split("Packages:")[1]
-        .replace("\n", "<br>")
+        webpack_full.split("Packages:")[1].replace("\n", "<br>")
+        if "Packages:" in webpack_full
+        else webpack_full
     )
     os.chdir("../../../public")
 
@@ -126,56 +144,79 @@ def main():
             compute_sizes(top_node, "")
             sort_by_size(top_node)
 
-    # ---- Build HTML output ----
-    html_output = """<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<title>Build Report</title>
-<style>
-details { margin-left: 20px; }
-div { margin-left: 40px; }
-</style>
-</head>
-<body>
-<h1>Build Report</h1>
-"""
-
-    # ---- Insert version info block ----
-    html_output += f"<p><strong>Report generated at:</strong> {time}</p>\n"
+    # ---- Build current report HTML with markers ----
+    current_body = []
+    current_body.append("<h1>Build Report</h1>")
+    current_body.append(f"<p><strong>Report generated at:</strong> {time_str}</p>")
     if build_time > 0:
-        html_output += f"<p><strong>Build Time:</strong> {build_time} seconds</p>\n"
-    html_output += f"<p><strong>Operating System:</strong> {os_version}</p>\n"
-    html_output += f"<p><strong>Quartz:</strong> {quartz_version}</p>\n"
-    html_output += f"<p><strong>Python:</strong> {python_version}</p>\n"
-    html_output += f"<p><strong>corepack:</strong> {core_pack}</p>\n"
-    html_output += f"<p><strong>Node.js:</strong> {node_version}</p>\n"
-    html_output += f"<p><strong>npm:</strong> {npm_version}</p>\n"
-    html_output += f"<p><strong>pnpm:</strong> {pnpm_version}</p>\n"
-    html_output += f"<p><strong>cargo:</strong> {cargo_version}</p>\n"
-    html_output += f"<p><strong>rustc:</strong> {rustc_version}</p>\n"
-    html_output += f"<p><strong>rustup:</strong> {rustup_version}</p>\n"
-    html_output += f"<p><strong>wasm-pack:</strong> {wasm_pack_version}</p>\n"
-    html_output += f"<p><strong>tsc:</strong> {tsc_version}</p>\n"
-    html_output += f"<p><strong>webpack:</strong> {webpack_version}</p>\n"
-
-    # ---- If report_info is available, show directory/file counts ----
+        current_body.append(f"<p><strong>Build Time:</strong> {build_time} seconds</p>")
+    current_body.append(f"<p><strong>Operating System:</strong> {os_version}</p>")
+    current_body.append(f"<p><strong>Quartz:</strong> {quartz_version}</p>")
+    current_body.append(f"<p><strong>Python:</strong> {python_version}</p>")
+    current_body.append(f"<p><strong>corepack:</strong> {core_pack}</p>")
+    current_body.append(f"<p><strong>Node.js:</strong> {node_version}</p>")
+    current_body.append(f"<p><strong>npm:</strong> {npm_version}</p>")
+    current_body.append(f"<p><strong>pnpm:</strong> {pnpm_version}</p>")
+    current_body.append(f"<p><strong>cargo:</strong> {cargo_version}</p>")
+    current_body.append(f"<p><strong>rustc:</strong> {rustc_version}</p>")
+    current_body.append(f"<p><strong>rustup:</strong> {rustup_version}</p>")
+    current_body.append(f"<p><strong>wasm-pack:</strong> {wasm_pack_version}</p>")
+    current_body.append(f"<p><strong>tsc:</strong> {tsc_version}</p>")
+    current_body.append(f"<p><strong>webpack:</strong> {webpack_version}</p>")
+    # Add git commit hash
+    current_body.append(f"<p><strong>Git Commit:</strong> {git_commit}</p>")
     if report_info is not None:
         directories = report_info.get("directories", 0)
         files = report_info.get("files", 0)
-        html_output += f"<h2>Tree Summary</h2><p>Total Directories: {directories}, Total Files: {files}</p>\n"
-
-    # ---- Build the tree structure HTML ----
-    html_output += "<h2>Folder Contents</h2>\n"
+        current_body.append(
+            f"<h2>Tree Summary</h2><p>Total Directories: {directories}, Total Files: {files}</p>"
+        )
+    current_body.append("<h2>Folder Contents</h2>")
     for top_node in data:
         if top_node["type"] != "report":
-            html_output += build_html(top_node, "")
+            current_body.append(build_html(top_node, ""))
+    current_report_body = "\n".join(current_body)
+    current_report = (
+        f"<!-- REPORT START -->\n{current_report_body}\n<!-- REPORT END -->"
+    )
 
-    html_output += "</body></html>"
+    # ---- Fetch previous report (if available) ----
+    previous_report = fetch_previous_report()
 
-    # ---- Write the report to 'report.html' ----
+    # ---- Build combined HTML with side-by-side columns ----
+    combined_html = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Build Report Comparison</title>
+  <style>
+    .container {{
+      display: flex;
+      flex-wrap: wrap;
+    }}
+    .report-column {{
+      flex: 1;
+      padding: 10px;
+      box-sizing: border-box;
+      min-width: 300px;
+      border: 1px solid #ccc;
+      margin: 5px;
+    }}
+  </style>
+</head>
+<body>
+  <h1>Build Report Comparison</h1>
+  <div class="container">
+    <div class="report-column"><h2>Current Report</h2>{current_report}</div>
+    {"<div class='report-column'><h2>Previous Report</h2>" + previous_report + "</div>" if previous_report else ""}
+  </div>
+</body>
+</html>
+"""
+
+    # ---- Write the combined report to 'report.html' ----
     with open("report.html", "w", encoding="utf-8") as f:
-        f.write(html_output)
+        f.write(combined_html)
 
 
 if __name__ == "__main__":
