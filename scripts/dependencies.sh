@@ -10,9 +10,9 @@ source /home/runner/.bashrc
 
 chmod +x rustup.sh
 
-bash ./rustup.sh --default-toolchain nightly --profile minimal -y
+bash ./rustup.sh --default-toolchain stable --profile minimal -y
 
-rustup component add rustfmt clippy --toolchain nightly
+rustup component add rustfmt clippy --toolchain stable
 
 source "$HOME/.cargo/env"
 
