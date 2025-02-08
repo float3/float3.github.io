@@ -30,6 +30,7 @@
             clang
             corepack_23
             git
+            gcc
             gnugrep
             llvmPackages.bintools
             nodejs_23
