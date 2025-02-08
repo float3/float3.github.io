@@ -13,10 +13,10 @@ tags:
 <noscript> hey this page needs javascript</noscript> use your computer keyboard, a midi device, or provide a midi file for example <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid"> this one </a> or <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irea.mid"> or this one in case the other site goes down </a>
 <div style="display: block">
   <input type="file" id="fileInput" accept=".midi,.mid" />
-  <!-- <input type="text" id="linkInput" value="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" placeholder="Enter MIDI file link"> -->
   <button id="playButton">Play</button>
   <button id="stopButton">Stop</button>
 </div>
+<div style="display: block">
 <p>
   <label for="tuningSelect">Select Tuning System:</label>
   <select id="tuningSelect" name="tuningSelect">
@@ -24,7 +24,6 @@ tags:
     <option value="JustIntonation24">Just Intonation 24</option>
     <option value="StepMethod">Just Intonated Step Method</option>
     <option value="EqualTemperament">Equal Temperament</option>
-    <!-- <option value="thai">thai</option><option value="Javanese">Javanese</option> -->
     <option value="WholeTone">WholeTone</option>
     <option value="QuarterTone">QuarterTone</option>
     <option value="PythagoreanTuning">Pythagorean Tuning</option>
@@ -34,7 +33,6 @@ tags:
     <option value="Indian">Indian</option>
     <option value="IndianAlt">Indian Alt</option>
     <option value="IndianFull">Indian Full</option>
-    <!-- <option value="meantone_temperament">Meantone Temperament</option><option value="well_temperament">Well Temperament</option> -->
     <option value="equal_temperament">Equal Temperament</option>
   </select>
 </p>
@@ -43,7 +41,6 @@ tags:
   <select id="soundMethod" name="soundMethod">
     <option value="sample">Sample</option>
     <option value="native">Native</option>
-    <!-- <option value="tone.js">tone.js</option> -->
   </select>
 </p>
 <p> Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
@@ -69,9 +66,7 @@ tags:
 </div>
 <div id="output" style="background-color: #00000000; color: white"></div>
 <div class="keyboard dark-mode-invert">
-  <!-- <div class="octave"><div class="white-key" data-note="0"></div><div class="black-key" data-note="1"></div><div class="white-key" data-note="2"></div><div class="black-key" data-note="3"></div><div class="white-key" data-note="4"></div><div class="white-key" data-note="5"></div><div class="black-key" data-note="6"></div><div class="white-key" data-note="7"></div><div class="black-key" data-note="8"></div><div class="white-key" data-note="9"></div><div class="black-key" data-note="10"></div><div class="white-key" data-note="11"></div></div> -->
   <div class="octave">
-    <!-- <div class="white-key" data-note="12"></div><div class="black-key" data-note="13"></div><div class="white-key" data-note="14"></div><div class="black-key" data-note="15"></div><div class="white-key" data-note="16"></div><div class="white-key" data-note="17"></div><div class="black-key" data-note="18"></div><div class="white-key" data-note="19"></div><div class="black-key" data-note="20"></div> -->
     <div class="white-key" data-note="21"></div>
     <div class="black-key" data-note="22"></div>
     <div class="white-key" data-note="23"></div>
@@ -181,3 +176,4 @@ tags:
 <div id="logContainer"></div>
 </div>
 <script src="./tuningplayground/bootstrap.js"></script>
+</div>
