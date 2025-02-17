@@ -6,7 +6,12 @@
   "type": "module",
   "scripts": {
     "serve_release": "webpack-dev-server --mode production",
-    "serve_dev": "webpack-dev-server --mode development"
+    "serve_dev": "webpack-dev-server --mode development",
+    "build:glsl2hlsl": "bun build dist/glsl.js --outfile=../../../content/tools/glsl2hlsl/glsl2hlsl.js --minify --drop=console",
+    "build:aoc": "bun build dist/aoc.js --outfile=../../../content/tools/aoc/aoc.js --minify --drop=console",
+    "build:tuningplayground": "bun build dist/tuningplayground.js --outfile=../../../content/tools/tuningplayground/tuningplayground.js --minify --drop=console",
+    "build:textprocessing": "bun build dist/textprocessing.js --outfile=../../../content/tools/textprocessing/textprocessing.js --minify --drop=console",
+    "build": "npm-run-all build:*"
   },
   "repository": {
     "type": "git",
@@ -41,6 +46,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "globals": "^15.15.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.5.1",
     "terser-webpack-plugin": "^5.3.11",
     "ts-node": "^10.9.2",

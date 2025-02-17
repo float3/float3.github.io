@@ -3,7 +3,7 @@ pub use glsl2hlsl_wasm::*;
 pub use textprocessing::*;
 pub use tuningplayground::*;
 
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::prelude::*;
 
 #[cfg(target_arch = "wasm32")]
 #[cfg(feature = "wasm")]

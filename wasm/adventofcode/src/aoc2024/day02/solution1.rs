@@ -12,7 +12,7 @@ pub fn solve(input: &str) -> String {
         .to_string()
 }
 
-pub fn is_safe(levels: &[i32]) -> bool {
+pub(super) fn is_safe(levels: &[i32]) -> bool {
     let diffs: Vec<_> = levels.windows(2).map(|w| w[1] - w[0]).collect();
     if diffs.is_empty() {
         true

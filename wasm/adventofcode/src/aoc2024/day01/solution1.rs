@@ -9,7 +9,7 @@ pub fn solve(input: &str) -> String {
         .to_string()
 }
 
-pub fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
+pub(super) fn parse_input(input: &str) -> (Vec<i32>, Vec<i32>) {
     input
         .trim()
         .lines()
