@@ -53,7 +53,7 @@ if [[ -z "$GITHUB_ACTIONS" ]]; then
 fi
 pnpm update
 pnpm audit fix
-pnpm install
+pnpm install --no-frozen-lockfile
 
 cd ./ts
 node_up src
@@ -73,12 +73,12 @@ cargo_up
 cd ./hangeul_conversion
 cargo_up
 
-
 cd $wasm_path/glsl2hlsl/
 cargo_up
 
 cd ./glsl2hlsl-wasm/
 cargo_up
+
 cd $wasm_path/adventofcode/
 cargo_up
 
