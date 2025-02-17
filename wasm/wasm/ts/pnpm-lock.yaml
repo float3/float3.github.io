@@ -4010,5 +4010,5 @@ packages:
 
   file:../pkg:
     resolution: {directory: ../pkg, type: directory}
-    name: bundle
+    name: wasm
     dev: false
