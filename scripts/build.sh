@@ -18,13 +18,13 @@ cd wasm
 wasm_path=$(pwd)
 
 cd $root_path/content/tools/
-rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl adventofcode
+rm -rf wasm 
 
-cd $wasm_path/bundle
+cd $wasm_path/wasm
 ./build.sh $ARGS
 
 cd $root_path
-rm ./content/tools/**/*LICENSE.txt | true
+rm ./content/tools/wasm/*LICENSE.txt | true
 
 cd $root_path/ts 
 pnpm install

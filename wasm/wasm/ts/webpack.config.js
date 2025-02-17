@@ -17,7 +17,7 @@ export default {
     textprocessing: "./dist/textprocessing.js",
   },
   output: {
-    path: path.resolve(path.dirname(""), "../../../content/tools/[name]"),
+    path: path.resolve(path.dirname(""), "../../../content/tools/wasm"),
     filename: "[name].js",
     // chunkFilename: "[name]/[id].chunk.js",
   },

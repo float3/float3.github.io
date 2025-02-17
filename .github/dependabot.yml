@@ -19,7 +19,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directory: "/wasm/bundle/ts"
+    directory: "/wasm/wasm/ts"
     schedule:
       interval: "weekly"
     groups:

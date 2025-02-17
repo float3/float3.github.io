@@ -1,7 +1,7 @@
 {
-  "name": "bundle",
+  "name": "wasm",
   "version": "1.0.0",
-  "description": "bundle",
+  "description": "wasm",
   "main": "./dist/index.js",
   "type": "module",
   "scripts": {
