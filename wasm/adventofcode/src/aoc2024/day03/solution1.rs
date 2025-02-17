@@ -1,6 +1,6 @@
 // this would have been easy with regex but i decided to do parsing since it's more fun
 #[derive(Debug)]
-pub enum Instruction {
+pub(super) enum Instruction {
     Mul(i32, i32),
     Do,
     Dont,
@@ -18,7 +18,7 @@ pub fn solve(input: &str) -> String {
         .to_string()
 }
 
-pub fn parse_instruction(input: &str, start: usize) -> Option<(Instruction, usize)> {
+pub(super) fn parse_instruction(input: &str, start: usize) -> Option<(Instruction, usize)> {
     if input.len().saturating_sub(start) < 2 {
         return None;
     }

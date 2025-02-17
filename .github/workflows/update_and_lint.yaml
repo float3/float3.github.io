@@ -59,6 +59,4 @@ jobs:
 
       - run: |
           nix flake update
-          nix develop
-          ./scripts/update_and_lint.sh
-          ./scripts/commit.sh
+          nix run .#update       
