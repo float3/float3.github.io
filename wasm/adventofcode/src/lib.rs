@@ -8,33 +8,8 @@ mod aoc2021;
 mod aoc2022;
 mod aoc2023;
 mod aoc2024;
-pub mod shared;
+pub(crate) mod shared;
 
-#[cfg(feature = "wasm")]
-use wasm_bindgen::prelude::*;
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
-extern "C" {
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn debug(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn error(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn warn(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn info(s: &str);
-}
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
 pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::retrieve_problem(day, problem),
@@ -68,8 +43,7 @@ pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
     }
 }
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
+#[cfg(target_arch = "wasm32")]
 pub fn retrieve_html(year: u32, day: u32, problem: u8, dark: bool) -> String {
     match year {
         2015 => aoc2015::retrieve_html(day, problem, dark),
@@ -103,8 +77,6 @@ pub fn input(year: u32, day: u32) -> String {
     }
 }
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
 pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::solve(input, day, problem),

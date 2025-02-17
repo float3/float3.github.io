@@ -82,16 +82,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/glsl2hlsl"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/glsl2hlsl/glsl2hlsl-wasm"
+    directory: "/wasm/glsl2hlsl"
     schedule:
       interval: "weekly"
     groups:

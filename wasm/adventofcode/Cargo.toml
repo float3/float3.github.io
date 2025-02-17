@@ -7,42 +7,6 @@ description = "adventofcode done in wasm"
 license = "AGPL-3.0"
 repository = "https://github.com/float3/float3.github.io"
 
-[lib]
-crate-type = ["cdylib", "rlib"]
-
-[features]
-default = ["mini-alloc", "wasm"]
-console_error_panic_hook = ["dep:console_error_panic_hook"]
-mini-alloc = ["dep:mini-alloc"]
-wasm = ["dep:wasm-bindgen"]
-
-[dependencies]
-console_error_panic_hook = { version = "0.1.7", optional = true }
-mini-alloc = { version = "0.8.1", optional = true }
-wasm-bindgen = { version = "0.2.100", optional = true }
-
-[profile.release]
-codegen-units = 1
-debug = false
-debug-assertions = false
-incremental = true
-lto = true
-opt-level = 's'
-overflow-checks = false
-panic = "unwind"
-rpath = false
-split-debuginfo = "off"
-strip = "symbols"
-
 [build-dependencies]
 syntect = "5.2.0"
 walkdir = "2.5.0"
-
-[package.metadata.wasm-pack.profile.release]
-wasm-opt = ['-Os']
-
-[package.metadata.wasm-pack.profile.release.wasm-bindgen]
-debug-js-glue = false
-demangle-name-section = false
-dwarf-debug-info = false
-omit-default-module-path = false

@@ -76,9 +76,6 @@ cargo_up
 cd $wasm_path/glsl2hlsl/
 cargo_up
 
-cd ./glsl2hlsl-wasm/
-cargo_up
-
 cd $wasm_path/adventofcode/
 cargo_up
 

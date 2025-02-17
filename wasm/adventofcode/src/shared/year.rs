@@ -27,7 +27,7 @@ macro_rules! define_year_mod {
         pub mod day24;
         pub mod day25;
 
-        pub fn retrieve_problem(day: u32, problem: u8) -> String {
+        pub(super) fn retrieve_problem(day: u32, problem: u8) -> String {
             match day {
                 1 => day01::retrieve_problem(problem),
                 2 => day02::retrieve_problem(problem),
@@ -59,7 +59,7 @@ macro_rules! define_year_mod {
         }
 
         #[cfg(not(target_arch = "wasm32"))]
-        pub fn retrieve_code(day: u32, code: u8) -> String {
+        pub(super) fn retrieve_code(day: u32, code: u8) -> String {
             match day {
                 1 => day01::retrieve_code(code),
                 2 => day02::retrieve_code(code),
@@ -90,7 +90,8 @@ macro_rules! define_year_mod {
             }
         }
 
-        pub fn retrieve_html(day: u32, code: u8, dark: bool) -> String {
+        #[cfg(target_arch = "wasm32")]
+        pub(super) fn retrieve_html(day: u32, code: u8, dark: bool) -> String {
             match day {
                 1 => day01::retrieve_html(code, dark),
                 2 => day02::retrieve_html(code, dark),
@@ -120,7 +121,8 @@ macro_rules! define_year_mod {
                 _ => panic!("Day not found"),
             }
         }
-        pub fn solve(input: &str, day: u32, problem: u8) -> String {
+
+        pub(super) fn solve(input: &str, day: u32, problem: u8) -> String {
             match day {
                 1 => day01::solve(input, problem),
                 2 => day02::solve(input, problem),
@@ -152,7 +154,7 @@ macro_rules! define_year_mod {
         }
 
         #[cfg(not(target_arch = "wasm32"))]
-        pub fn input(day: u32) -> String {
+        pub(super) fn input(day: u32) -> String {
             match day {
                 1 => day01::input(),
                 2 => day02::input(),
@@ -184,7 +186,7 @@ macro_rules! define_year_mod {
         }
 
         #[cfg(not(target_arch = "wasm32"))]
-        pub fn solve_all() {
+        pub(super) fn solve_all() {
             (1..=25).for_each(|x| {
                 println!("  Day {}", x);
                 (1..=2).for_each(|y| {
