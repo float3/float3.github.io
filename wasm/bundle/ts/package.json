@@ -31,16 +31,16 @@
   },
   "homepage": "https://github.com/float3/float3.github.io#readme",
   "dependencies": {
-    "wasm": "file:../pkg",
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.1.0",
-    "abcjs": "^6.4.4"
+    "abcjs": "^6.4.4",
+    "wasm": "file:../pkg"
   },
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@types/node": "^22.13.4",
-    "@typescript-eslint/eslint-plugin": "^8.24.0",
-    "@typescript-eslint/parser": "^8.24.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
     "copy-webpack-plugin": "^12.0.2",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
@@ -51,7 +51,7 @@
     "terser-webpack-plugin": "^5.3.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.0",
+    "typescript-eslint": "^8.24.1",
     "webpack": "^5.98.0",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
