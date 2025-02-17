@@ -1,7 +1,5 @@
-#[cfg(feature = "wasm")]
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::prelude::wasm_bindgen;
 
-#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 extern "C" {
     fn downloadFile(name: &str, contents: &str);
@@ -9,27 +7,6 @@ extern "C" {
     fn reset();
 }
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
-extern "C" {
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn debug(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn error(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn warn(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn info(s: &str);
-}
-
-#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn transpile(input: String, extract_props: bool, raymarch: bool) -> String {
     use glsl2hlsl::ShaderType;
@@ -42,7 +19,6 @@ pub fn transpile(input: String, extract_props: bool, raymarch: bool) -> String {
     )
 }
 
-#[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn download(json: String, extract_props: bool, raymarch: bool) {
     use glsl2hlsl::get_files;
