@@ -11,6 +11,6 @@ tags:
 
 made with love and rust (compiled to wasm)
 
-<script src="./adventofcode/bootstrap.js"></script>
+<script src="./wasm/adventofcode.js"></script>
 <link href="./adventofcode.css" rel="stylesheet" type="text/css">
 <div id="adventofcode"></div>

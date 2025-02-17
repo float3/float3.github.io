@@ -12,7 +12,7 @@ tags:
 
 made with love and rust (compiled to wasm)
 
-<script src="./textprocessing/bootstrap.js"></script>
+<script src="./wasm/textprocessing.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">
 <table>
   <tbody>

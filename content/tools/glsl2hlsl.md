@@ -52,4 +52,4 @@ glsl2hlsl is MIT Licensed
 <br>
 <br>
 <link href="./glsl2hlsl.css" rel="stylesheet" type="text/css">
-<script src="./glsl2hlsl/bootstrap.js"></script>
+<script src="./wasm/glsl2hlsl.js"></script>

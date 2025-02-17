@@ -1,5 +1,5 @@
 [package]
-name = "bundle"
+name = "wasm"
 version = "0.1.0"
 authors = ["hill"]
 edition = "2021"

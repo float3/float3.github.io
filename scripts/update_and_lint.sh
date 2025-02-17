@@ -42,7 +42,7 @@ git pull origin master
 
 # need to provide packages so that pnpm doesn't complain
 
-cd $wasm_path/bundle
+cd $wasm_path/wasm
 wasm-pack build --target bundler $ARGS
 
 
@@ -79,7 +79,7 @@ cargo_up
 cd $wasm_path/adventofcode/
 cargo_up
 
-cd $wasm_path/bundle/
+cd $wasm_path/wasm/
 cargo_up
 
 cd ./ts
