@@ -187,7 +187,7 @@ pub fn hangeul_to_roman(input: &str) -> Option<String> {
     for ch in input.chars() {
         let code = ch as u32;
         // Ensure the character is a complete Hangul syllable.
-        if code < 0xAC00 || code > 0xD7A3 {
+        if !(0xAC00..=0xD7A3).contains(&code) {
             return None;
         }
         let syllable_index = code - 0xAC00;
@@ -200,7 +200,7 @@ pub fn hangeul_to_roman(input: &str) -> Option<String> {
             return None;
         }
         // Our scheme only supports finals in the set {0, 1, ..., 8}.
-        if fi != 0 && (fi < 1 || fi > 8) {
+        if fi != 0 && !(1..=8).contains(&fi) {
             return None;
         }
 
@@ -307,7 +307,7 @@ mod tests {
     // 14. "kkyae" -> kk:1, yae:3, no final
     #[test]
     fn test_kkyae() {
-        let syllable = char::from_u32(0xAC00 + ((1 * 21 + 3) * 28)).unwrap();
+        let syllable = char::from_u32(0xAC00 + ((21 + 3) * 28)).unwrap();
         assert_eq!(roman_to_hangeul("kkyae"), Some(syllable.to_string()));
     }
 
@@ -440,7 +440,7 @@ mod tests {
     #[test]
     fn test_hangeul_to_roman_invalid_medial() {
         // Construct a syllable with initial 0 ("g"), medial index 10 (unsupported), no final.
-        let syllable = std::char::from_u32(0xAC00 + (0 * 21 + 10) * 28).unwrap();
+        let syllable = std::char::from_u32(0xAC00 + 10 * 28).unwrap();
         assert_eq!(hangeul_to_roman(&syllable.to_string()), None);
     }
 
@@ -448,7 +448,7 @@ mod tests {
     #[test]
     fn test_hangeul_to_roman_invalid_final() {
         // Construct a syllable with initial 0 ("g"), medial 0 ("a"), and final index 9 (unsupported)
-        let syllable = std::char::from_u32(0xAC00 + (0 * 21 + 0) * 28 + 9).unwrap();
+        let syllable = std::char::from_u32(0xAC00 + 9).unwrap();
         assert_eq!(hangeul_to_roman(&syllable.to_string()), None);
     }
 
