@@ -18,11 +18,11 @@ cargo_up() {
     cargo clean
     cargo upgrade
     cargo update --workspace
-    cargo clippy --fix --allow-dirty --allow-staged --all-targets --all-features --workspace -- -D warnings
-    cargo fix --allow-dirty --allow-staged --all-targets --all-features --workspace
+    cargo hack clippy --feature-powerset --fix --allow-dirty --allow-staged --all-targets --workspace -- -D warnings
+    cargo hack fix --feature-powerset --allow-dirty --allow-staged --all-targets --workspace
+    cargo hack check --feature-powerset --all-targets --workspace
+    cargo hack test --feature-powerset --release --verbose --all-targets --workspace --no-fail-fast --lib --bins --examples --tests --benches
     cargo fmt --all
-    cargo check --all-targets --all-features --workspace
-    cargo test --all-targets --all-features --workspace
 }
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
@@ -42,16 +42,7 @@ git pull origin master
 
 # need to provide packages so that pnpm doesn't complain
 
-cd $wasm_path/tuningplayground
-wasm-pack build --target bundler $ARGS
-
-cd $wasm_path/textprocessing
-wasm-pack build --target bundler $ARGS
-
-cd $wasm_path/glsl2hlsl/glsl2hlsl-wasm
-wasm-pack build --target bundler $ARGS
-
-cd $wasm_path/adventofcode
+cd $wasm_path/bundle
 wasm-pack build --target bundler $ARGS
 
 
@@ -76,28 +67,22 @@ cargo_up
 cd ../keymapping
 cargo_up
 
-cd ../ts
-node_up src
-
 cd $wasm_path/textprocessing/
 cargo_up
 
 cd ./hangeul_conversion
 cargo_up
 
-cd ../ts
-node_up src
 
 cd $wasm_path/glsl2hlsl/
 cargo_up
 
 cd ./glsl2hlsl-wasm/
 cargo_up
-
-cd ./ts
-node_up src
-
 cd $wasm_path/adventofcode/
+cargo_up
+
+cd $wasm_path/bundle/
 cargo_up
 
 cd ./ts

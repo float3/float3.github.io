@@ -7,7 +7,6 @@ mod tone;
 mod tuning_systems;
 
 pub(crate) use algorithms::*;
-pub use config::TypeAlias;
 pub(crate) use config::CN1;
 pub use fraction::Fraction;
 pub(crate) use luts::*;

@@ -1,21 +1,5 @@
-use glsl2hlsl::{get_files, get_image_files, make_shader, ShaderType};
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
-
-#[cfg(target_arch = "wasm32")]
-#[cfg(feature = "wasm")]
-#[cfg(feature = "mini-alloc")]
-#[global_allocator]
-static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen(start)]
-pub(crate) fn main() {
-    #[cfg(debug_assertions)]
-    log("main");
-    #[cfg(feature = "console_error_panic_hook")]
-    console_error_panic_hook::set_once();
-}
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
@@ -48,6 +32,8 @@ extern "C" {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn transpile(input: String, extract_props: bool, raymarch: bool) -> String {
+    use glsl2hlsl::ShaderType;
+
     glsl2hlsl::transpile(
         input,
         extract_props,
@@ -59,6 +45,10 @@ pub fn transpile(input: String, extract_props: bool, raymarch: bool) -> String {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn download(json: String, extract_props: bool, raymarch: bool) {
+    use glsl2hlsl::get_files;
+    use glsl2hlsl::get_image_files;
+    use glsl2hlsl::make_shader;
+
     let shader = make_shader(&json).unwrap();
     let files = get_files(&shader, extract_props, raymarch);
     let images = get_image_files(&shader);

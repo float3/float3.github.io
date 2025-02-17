@@ -96,6 +96,7 @@ body[data-slug="notes/craft"] {
 
   .darkmode {
     grid-area: 2 / 2 / 3 / 3;
+    align-self: center;
   }
 
   .toc {
@@ -157,7 +158,7 @@ audio::-webkit-media-controls-panel {
 }
 
 // fade-in elements
-#quartz-body {
+body.animation-ready #quartz-body {
   [saved-theme="dark"] & {
     --animation-name: fade2;
   }
@@ -170,7 +171,7 @@ audio::-webkit-media-controls-panel {
     @for $j from 1 through 8 {
       & > *:nth-child(#{$i}) > *:nth-child(#{$j}) {
         animation: var(--animation-name) 2s ease 1 normal backwards;
-        animation-delay: #{0.1 * $j + 0.1 * $i}s;
+        animation-delay: #{0.1 * $j + 0.4 * $i}s;
       }
     }
   }
@@ -261,8 +262,8 @@ audio::-webkit-media-controls-panel {
 
       &:nth-child(2) {
         --blur-amount: 12px;
-        --stop1: 40%;
-        --stop2: 80%;
+        --stop1: 30%;
+        --stop2: 60%;
       }
 
       &:nth-child(3) {

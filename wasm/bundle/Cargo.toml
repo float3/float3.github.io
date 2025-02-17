@@ -1,7 +1,7 @@
 [package]
-name = "glsl2hlsl-wasm"
+name = "bundle"
 version = "0.1.0"
-authors = ["Pema Malling <pemamalling@gmail.com>"]
+authors = ["hill"]
 edition = "2021"
 
 [lib]
@@ -15,9 +15,12 @@ wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
 wasm-bindgen = { version = "0.2.100", optional = true }
-glsl2hlsl = { path = "../" }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 mini-alloc = { version = "0.8.1", optional = true }
+glsl2hlsl-wasm = { path = "../glsl2hlsl/glsl2hlsl-wasm" }
+adventofcode = { path = "../adventofcode/" }
+textprocessing = { path = "../textprocessing/" }
+tuningplayground = { path = "../tuningplayground/" }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.50"

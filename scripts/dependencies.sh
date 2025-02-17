@@ -22,4 +22,5 @@ rustup update
 
 if [ $GITHUB_JOB == "update_and_lint" ]; then
     cargo install cargo-edit
+    cargo install cargo-hack
 fi
