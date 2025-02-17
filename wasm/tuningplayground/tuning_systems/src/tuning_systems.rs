@@ -1,13 +1,23 @@
-use crate::{
-    equal_temperament, get_ratio_from_step_algorithm, Fraction, TypeAlias, ELEVEN_LIMIT, FIVE_LIMIT, FORTYTHREE_TONE,
-    INDIAN_SCALE, INDIAN_SCALE_22, INDIA_SCALE_ALT, JUST_INTONATION, JUST_INTONATION_24, PYTHAGOREAN_TUNING, SHRUTIS, SWARAS,
-    TWELVE_TONE_NAMES,
-};
+use crate::equal_temperament;
+use crate::get_ratio_from_step_algorithm;
+use crate::Fraction;
+use crate::ELEVEN_LIMIT;
+use crate::FIVE_LIMIT;
+use crate::FORTYTHREE_TONE;
+use crate::INDIAN_SCALE;
+use crate::INDIAN_SCALE_22;
+use crate::INDIA_SCALE_ALT;
+use crate::JUST_INTONATION;
+use crate::JUST_INTONATION_24;
+use crate::PYTHAGOREAN_TUNING;
+use crate::SHRUTIS;
+use crate::SWARAS;
+use crate::TWELVE_TONE_NAMES;
 
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {
-    EqualTemperament { octave_size: TypeAlias },
-    StepMethod { octave_size: TypeAlias, step_size: TypeAlias },
+    EqualTemperament { octave_size: usize },
+    StepMethod { octave_size: usize, step_size: usize },
 
     // Javanese,
     // Thai,
@@ -30,7 +40,7 @@ pub enum TuningSystem {
 }
 
 impl TuningSystem {
-    pub fn get_fraction(&self, index: TypeAlias) -> Fraction {
+    pub fn get_fraction(&self, index: usize) -> Fraction {
         match &self {
             TuningSystem::StepMethod { octave_size, step_size } => get_ratio_from_step_algorithm(index, *octave_size, *step_size),
             TuningSystem::EqualTemperament { octave_size } => equal_temperament(index, *octave_size),
@@ -50,7 +60,7 @@ impl TuningSystem {
         }
     }
 
-    pub fn size(&self) -> TypeAlias {
+    pub fn size(&self) -> usize {
         match &self {
             TuningSystem::JustIntonation
             | TuningSystem::JustIntonation24
@@ -70,11 +80,11 @@ impl TuningSystem {
         }
     }
 
-    pub(crate) fn get_fraction_from_table(&self, index: TypeAlias) -> Fraction {
+    pub(crate) fn get_fraction_from_table(&self, index: usize) -> Fraction {
         let lut = self.get_lut_from_tuningsystem();
-        let len = lut.len() as TypeAlias;
+        let len = lut.len();
         let octave = index / len;
-        let index_mod: TypeAlias = (index % len) as TypeAlias;
+        let index_mod: usize = index % len;
         let mut fraction = lut[index_mod];
         // fraction.numerator += (2ToneIndex.pow(octave as ToneIndex) - 1) * fraction.denominator;
         fraction.numerator *= (2u32).pow(octave as u32);
@@ -105,7 +115,7 @@ impl TuningSystem {
         lut
     }
 
-    pub(crate) fn get_tone_name(&self, tone_index: TypeAlias) -> String {
+    pub(crate) fn get_tone_name(&self, tone_index: usize) -> String {
         // if indian or indianalt we want to use 7
         let name = match self {
             TuningSystem::EqualTemperament { octave_size } if *octave_size == 24 => {

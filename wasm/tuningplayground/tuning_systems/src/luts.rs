@@ -206,6 +206,6 @@ pub(crate) const INDIAN_SCALE_22: [Fraction; 22] = [
     Fraction::new(243, 128),
 ];
 
-pub(crate) const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];
-pub(crate) const SLENDRO_SHORT: [&str; 5] = ["ji", "ro", "lu", "ma", "nam"];
-pub(crate) const SLENDRO_TRAD: [&str; 5] = ["panunggal", "gulu", "dhadha", "lima", "nem"];
+// pub(crate) const SLENDRO: [&str; 5] = ["siji", "loro", "telu", "lima", "enam"];
+// pub(crate) const SLENDRO_SHORT: [&str; 5] = ["ji", "ro", "lu", "ma", "nam"];
+// pub(crate) const SLENDRO_TRAD: [&str; 5] = ["panunggal", "gulu", "dhadha", "lima", "nem"];

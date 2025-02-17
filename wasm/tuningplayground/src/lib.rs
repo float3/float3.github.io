@@ -1,31 +1,18 @@
-use keymapping::US_KEYMAP;
-
 use std::sync::Mutex;
 use std::sync::OnceLock;
-use tuning_systems::{Tone, TuningSystem, TypeAlias};
+#[cfg(feature = "wasm")]
+use tuning_systems::TuningSystem;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
-#[cfg(target_arch = "wasm32")]
 #[cfg(feature = "wasm")]
-#[cfg(feature = "mini-alloc")]
-#[global_allocator]
-static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
-
 static OCTAVE_SIZE: Mutex<usize> = Mutex::new(12);
+#[cfg(feature = "wasm")]
 static STEP_SIZE: Mutex<usize> = Mutex::new(7);
+#[cfg(feature = "wasm")]
 static TUNING_SYSTEM: Mutex<TuningSystem> =
     Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
 static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen(start)]
-pub(crate) fn main() {
-    #[cfg(debug_assertions)]
-    log("main");
-    #[cfg(feature = "console_error_panic_hook")]
-    console_error_panic_hook::set_once();
-}
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
@@ -58,6 +45,8 @@ extern "C" {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tone(index: usize) -> JsValue {
+    use tuning_systems::Tone;
+
     let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
 
     let tone: Tone = Tone::new(tun_sys, index);
@@ -73,13 +62,15 @@ pub fn get_tone(index: usize) -> JsValue {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn get_tuning_size() -> TypeAlias {
-    *OCTAVE_SIZE.lock().expect("couldn't lock") as TypeAlias
+pub fn get_tuning_size() -> usize {
+    *OCTAVE_SIZE.lock().expect("couldn't lock")
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn from_keymap(key: &str) -> i32 {
+    use keymapping::US_KEYMAP;
+
     *US_KEYMAP.get(key).unwrap_or(&-1)
 }
 
@@ -205,7 +196,7 @@ pub fn convert_notes(notes: Vec<String>) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn set_tuning_system(tuning_system: &str, octave_size: TypeAlias, step_size: TypeAlias) {
+pub fn set_tuning_system(tuning_system: &str, octave_size: usize, step_size: usize) {
     let tuning_system: Option<TuningSystem> = match tuning_system.to_lowercase().as_str() {
         "stepmethod" => Some(TuningSystem::StepMethod {
             octave_size,

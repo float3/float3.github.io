@@ -19,25 +19,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "npm"
-    directory: "/wasm/tuningplayground/ts"
-    schedule:
-      interval: "weekly"
-    groups:
-      production-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "npm"
-    directory: "/wasm/textprocessing/ts"
-    schedule:
-      interval: "weekly"
-    groups:
-      production-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "npm"
-    directory: "/wasm/glsl2hlsl/glsl2hlsl-wasm/ts"
+    directory: "/wasm/bundle/ts"
     schedule:
       interval: "weekly"
     groups:
@@ -110,6 +92,15 @@ updates:
           - "*"
   - package-ecosystem: "cargo"
     directory: "/wasm/glsl2hlsl/glsl2hlsl-wasm"
+    schedule:
+      interval: "weekly"
+    groups:
+      rust-dependencies:
+        applies-to: "version-updates"
+        patterns:
+          - "*"
+  - package-ecosystem: "cargo"
+    directory: "/wasm/bundle"
     schedule:
       interval: "weekly"
     groups:

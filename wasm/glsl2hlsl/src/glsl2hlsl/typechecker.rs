@@ -1,7 +1,8 @@
 use glsl::syntax::*;
 use std::collections::HashMap;
+use std::sync::{LazyLock, Mutex};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum TypeKind {
     Matrix(usize, usize),
     Vector(usize),
@@ -9,36 +10,35 @@ pub enum TypeKind {
     Struct(String),
 }
 
-// Symbol table
-static mut SYM_TABLE: Vec<HashMap<String, TypeKind>> = Vec::new();
+static SYM_TABLE: LazyLock<Mutex<Vec<HashMap<String, TypeKind>>>> = LazyLock::new(|| Mutex::new(Vec::new()));
+
 pub fn add_sym(name: String, ty: TypeKind) {
-    unsafe {
-        SYM_TABLE.last_mut().unwrap().insert(name, ty);
-    }
+    let mut table = SYM_TABLE.lock().unwrap();
+    table.last_mut().unwrap().insert(name, ty);
 }
+
 pub fn push_sym() {
-    unsafe {
-        SYM_TABLE.push(HashMap::new());
-    }
+    let mut table = SYM_TABLE.lock().unwrap();
+    table.push(HashMap::new());
 }
+
 pub fn pop_sym() {
-    unsafe {
-        SYM_TABLE.pop();
-    }
+    let mut table = SYM_TABLE.lock().unwrap();
+    table.pop();
 }
+
 pub fn clear_sym() {
-    unsafe {
-        SYM_TABLE.clear();
-    }
+    let mut table = SYM_TABLE.lock().unwrap();
+    table.clear();
 }
+
 pub fn lookup_sym(name: &str) -> Option<TypeKind> {
-    unsafe {
-        SYM_TABLE
-            .last()
-            .and_then(|x| x.get(name))
-            .or(SYM_TABLE.first().and_then(|x| x.get(name)))
-            .cloned()
-    }
+    let table = SYM_TABLE.lock().unwrap();
+    table
+        .last()
+        .and_then(|x| x.get(name))
+        .or_else(|| table.first().and_then(|x| x.get(name)))
+        .cloned()
 }
 
 // Expression typing
@@ -139,7 +139,6 @@ pub fn escape_invalid_glsl_id(s: &str) -> &str {
         "vertexfragment" => "vertexfragment_",
         "VertexShader" => "VertexShader_",
         "volatile" => "volatile_",
-
         a => a,
     }
 }
@@ -394,5 +393,72 @@ pub fn typespec_to_typekind(ty: &TypeSpecifierNonArray) -> Option<TypeKind> {
         TypeSpecifierNonArray::Struct(ref s) => s.name.as_ref().map(|id| TypeKind::Struct(id.0.clone())),
         TypeSpecifierNonArray::TypeName(ref tn) => Some(TypeKind::Struct(tn.0.clone())),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use glsl::syntax::{BinaryOp, Expr};
+
+    #[test]
+    fn test_symbol_table() {
+        clear_sym();
+        push_sym();
+        add_sym("a".to_string(), TypeKind::Scalar);
+        assert_eq!(lookup_sym("a"), Some(TypeKind::Scalar));
+        pop_sym();
+        assert_eq!(lookup_sym("a"), None);
+    }
+
+    #[test]
+    fn test_escape_invalid_glsl_id() {
+        assert_eq!(escape_invalid_glsl_id("line"), "line_");
+        assert_eq!(escape_invalid_glsl_id("good"), "good");
+    }
+
+    #[test]
+    fn test_translate_glsl_id() {
+        assert_eq!(translate_glsl_id("vec3"), "float3");
+        assert_eq!(translate_glsl_id("unknown"), "unknown");
+        assert_eq!(translate_glsl_id("mix"), "lerp");
+    }
+
+    #[test]
+    fn test_get_function_ret_type() {
+        assert_eq!(get_function_ret_type("texture", vec![]), Some(TypeKind::Vector(4)));
+        let arg = Some(TypeKind::Scalar);
+        assert_eq!(get_function_ret_type("mix", vec![arg.clone(), None, None]), arg);
+        let arg = Some(TypeKind::Matrix(2, 3));
+        assert_eq!(
+            get_function_ret_type("transpose", vec![arg]),
+            Some(TypeKind::Matrix(3, 2))
+        );
+    }
+
+    #[test]
+    fn test_get_expr_type_constants() {
+        let int_expr = Expr::IntConst(42);
+        assert_eq!(get_expr_type(&int_expr), Some(TypeKind::Scalar));
+        let float_expr = Expr::FloatConst(3.14);
+        assert_eq!(get_expr_type(&float_expr), Some(TypeKind::Scalar));
+    }
+
+    #[test]
+    fn test_get_expr_type_variable() {
+        clear_sym();
+        push_sym();
+        add_sym("x".to_string(), TypeKind::Vector(3));
+        let var_expr = Expr::Variable("x".into());
+        assert_eq!(get_expr_type(&var_expr), Some(TypeKind::Vector(3)));
+        pop_sym();
+    }
+
+    #[test]
+    fn test_get_expr_type_binary() {
+        let left = Expr::IntConst(1);
+        let right = Expr::FloatConst(2.0);
+        let bin_expr = Expr::Binary(BinaryOp::Add, Box::new(left), Box::new(right));
+        assert_eq!(get_expr_type(&bin_expr), Some(TypeKind::Scalar));
     }
 }

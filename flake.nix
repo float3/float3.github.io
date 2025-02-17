@@ -25,8 +25,10 @@
           nativeBuildInputs = [pkgs.pkg-config];
           buildInputs = with pkgs; [
             bun
+            trunk
             cargo
             cargo-edit
+            cargo-hack
             clang
             corepack_23
             git

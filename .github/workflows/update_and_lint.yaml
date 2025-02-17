@@ -25,19 +25,23 @@ jobs:
           token: ${{ secrets.TOKEN }}
           submodules: recursive
 
-      - name: setup node
-        uses: actions/setup-node@v4.2.0
+      - uses: cachix/install-nix-action@v30
         with:
-          node-version: 23
+          nix_path: nixpkgs=channel:nixos-unstable
 
-      - name: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
+      # - name: setup node
+      #   uses: actions/setup-node@v4.2.0
+      #   with:
+      #     node-version: 23
+      
+      # - name: python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: 3.13
 
-      - name: dependencies
-        run: |
-          ./scripts/dependencies.sh
+      # - name: dependencies
+      #   run: |
+      #     ./scripts/dependencies.sh
 
       - name: cache venv
         id: cache-venv
@@ -53,10 +57,8 @@ jobs:
           path: wasm/tuningplayground/__pycache__
           key: ${{ runner.os }}-pycache
 
-      - name: update and lint
-        run: |
+      - run: |
+          nix flake update
+          nix develop
           ./scripts/update_and_lint.sh
-
-      - name: commit
-        run: |
           ./scripts/commit.sh

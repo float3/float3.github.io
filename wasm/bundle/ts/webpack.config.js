@@ -10,10 +10,16 @@ export default {
       },
     ],
   },
-  entry: "./dist/bootstrap.js",
+  entry: {
+    glsl2hlsl: "./dist/glsl.js",
+    aoc: "./dist/aoc.js",
+    tuningplayground: "./dist/tuningplayground.js",
+    textprocessing: "./dist/textprocessing.js",
+  },
   output: {
-    path: path.resolve(path.dirname(""), "../../../content/tools/adventofcode"),
-    filename: "bootstrap.js",
+    path: path.resolve(path.dirname(""), "../../../content/tools/[name]"),
+    filename: "[name].js",
+    // chunkFilename: "[name]/[id].chunk.js",
   },
   target: "web",
   optimization: {

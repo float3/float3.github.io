@@ -1,5 +1,5 @@
-import("./index.js").catch((e) => console.error("Error importing `index.js`:", e))
-import { transformLeftToRight, transformRightToLeft } from "./index.js"
+import("./textprocessing/index.js").catch((e) => console.error("Error importing `index.js`:", e))
+import { transformLeftToRight, transformRightToLeft } from "./textprocessing/index.js"
 
 /**
  * Copies the content of the input field with the given ID to the clipboard.

@@ -20,16 +20,7 @@ wasm_path=$(pwd)
 cd $root_path/content/tools/
 rm -rf tuningplayground tuningplayground_debug textprocessing glsl2hlsl adventofcode
 
-cd $wasm_path/tuningplayground
-./build.sh $ARGS
-
-cd $wasm_path/textprocessing
-./build.sh $ARGS
-
-cd $wasm_path/glsl2hlsl
-./build.sh $ARGS
-
-cd $wasm_path/adventofcode
+cd $wasm_path/bundle
 ./build.sh $ARGS
 
 cd $root_path
