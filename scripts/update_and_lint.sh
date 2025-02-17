@@ -9,7 +9,7 @@ node_up() {
     fi
     pnpm update
     pnpm audit fix
-    pnpm install
+    pnpm install --no-frozen-lockfile
     pnpx prettier $1 --write
     pnpx eslint $1 --fix
 }
