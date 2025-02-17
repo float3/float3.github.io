@@ -69,3 +69,13 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
 
     readings.join(" ")
 }
+
+#[wasm_bindgen]
+pub fn roman_to_hangeul(input: &str) -> String {
+    hangeul_conversion::roman_to_hangeul(input).unwrap_or("".to_string())
+}
+
+#[wasm_bindgen]
+pub fn romanize_hangeul(input: &str) -> String {
+    hangeul_conversion::hangeul_to_roman(input).unwrap_or("".to_string())
+}

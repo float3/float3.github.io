@@ -207,6 +207,15 @@ async function transform(text: string, index: number, side: Side): Promise<strin
         default:
           return text
       }
+    case 19:
+      switch (side) {
+        case Side.LEFT:
+          return wasm.romanize_hangeul(text)
+        case Side.RIGHT:
+          return wasm.roman_to_hangeul(text)
+        default:
+          return text
+      }
     default:
       return text
   }

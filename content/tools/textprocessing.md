@@ -133,6 +133,18 @@ made with love and rust (compiled to wasm)
       </td>
     </tr>
     <tr>
+      <td>
+        Hangeul
+        <button onclick="copyToClipboard('left19')">Copy</button>
+        <input id="left19" oninput="transformLeftToRight(19)" value="재원한국">
+      </td>
+      <td>
+        Revised Romanization
+        <button onclick="copyToClipboard('right3')">Copy</button>
+        <input id="right19" oninput="transformRightToLeft(19)" value="jaewonhanguk">
+      </td>
+    </tr>
+    <tr>
       <td colespan="2">
         Numbers
       </td>
