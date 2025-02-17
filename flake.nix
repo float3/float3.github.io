@@ -17,6 +17,12 @@
         pkgs = nixpkgs.legacyPackages.${system};
         # Read the file relative to the flake's root
         overrides = builtins.fromTOML (builtins.readFile (self + "/rust-toolchain.toml"));
+        updateScript = pkgs.writeShellScriptBin "update" ''
+          #!/bin/sh
+          set -e
+          # Enter the devShell environment and execute the scripts
+          nix develop . --command sh -c "./scripts/update_and_lint.sh && ./scripts/commit.sh"
+        '';
       in {
         devShells.default = pkgs.mkShell rec {
           nativeBuildInputs = [pkgs.pkg-config];
@@ -49,7 +55,6 @@
           shellHook = ''
             export PATH=$PATH:''${CARGO_HOME:-~/.cargo}/bin
             export PATH=$PATH:''${RUSTUP_HOME:-~/.rustup}/toolchains/$RUSTC_VERSION-x86_64-unknown-linux-gnu/bin/
-            fish
           '';
 
           # Add precompiled library to rustc search path
@@ -74,15 +79,9 @@
             ];
         };
 
-        # Add an app to run update and lint scripts inside the nix environment
         apps.update = {
           type = "app";
-          program = ''
-            #!/bin/sh
-            set -e
-            # Enter the devShell environment and execute the scripts
-            nix develop . --command sh -c "./scripts/update_and_lint.sh && ./scripts/commit.sh"
-          '';
+          program = updateScript.outPath;
         };
       }
     );
