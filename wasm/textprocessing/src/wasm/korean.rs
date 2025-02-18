@@ -1,3 +1,4 @@
+use hangeul_conversion::Print;
 use std::collections::HashSet;
 use wasm_bindgen::prelude::*;
 
@@ -72,10 +73,67 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
 
 #[wasm_bindgen]
 pub fn roman_to_hangeul(input: &str) -> String {
-    hangeul_conversion::roman_to_hangeul(input).unwrap_or("".to_string())
+    hangeul_conversion::rr::parse(input)
+        .map(|blocks| blocks.iter().map(|b| b.hangeul()).collect())
+        .unwrap_or_else(|| {
+            panic!("Failed to parse input as Hangeul: {}", input);
+        })
 }
 
 #[wasm_bindgen]
 pub fn romanize_hangeul(input: &str) -> String {
-    hangeul_conversion::hangeul_to_roman(input).unwrap_or("".to_string())
+    hangeul_conversion::hangeul::parse(input)
+        .map(|blocks| blocks.iter().map(|b| b.revised_romanization()).collect())
+        .unwrap_or_else(|| {
+            panic!("Failed to parse input as Hangeul: {}", input);
+        })
+}
+
+#[wasm_bindgen]
+pub fn mccune_reischauer_romanization_to_hangeul(input: &str) -> String {
+    hangeul_conversion::mr::parse(input)
+        .map(|blocks| blocks.iter().map(|b| b.hangeul()).collect())
+        .unwrap_or_else(|| {
+            panic!("Failed to parse input as Hangeul: {}", input);
+        })
+}
+
+#[wasm_bindgen]
+pub fn hangeul_to_mccune_reischauer_romanization(input: &str) -> String {
+    hangeul_conversion::mr::parse(input)
+        .map(|blocks| {
+            blocks
+                .iter()
+                .map(|b| b.mccune_reischauer_romanization())
+                .collect()
+        })
+        .unwrap_or_else(|| {
+            panic!("Failed to parse input as Hangeul: {}", input);
+        })
+}
+
+#[wasm_bindgen]
+pub fn rr_to_mr(input: &str) -> String {
+    hangeul_conversion::rr::parse(input)
+        .map(|blocks| {
+            blocks
+                .iter()
+                .map(|b| b.mccune_reischauer_romanization())
+                .collect()
+        })
+        .unwrap_or_else(|| {
+            panic!("Failed to parse input as Revised Romanization: {}", input);
+        })
+}
+
+#[wasm_bindgen]
+pub fn mr_to_rr(input: &str) -> String {
+    hangeul_conversion::mr::parse(input)
+        .map(|blocks| blocks.iter().map(|b| b.revised_romanization()).collect())
+        .unwrap_or_else(|| {
+            panic!(
+                "Failed to parse input as McCune-Reischauer Romanization: {}",
+                input
+            );
+        })
 }
