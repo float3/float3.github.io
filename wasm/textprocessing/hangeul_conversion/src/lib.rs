@@ -1,460 +1,358 @@
-#[derive(Debug)]
-enum Choseong {
-    G,
-    Kk,
-    N,
-    D,
-    Tt,
-    R,
-    M,
-    B,
-    Pp,
-    S,
-    Ss,
-    Ieung,
-    J,
-    Jj,
-    Ch,
-    K,
-    T,
-    P,
-    H,
+use block::Block;
+
+mod block;
+mod consonant;
+pub mod hangeul;
+pub mod mr;
+pub mod rr;
+mod vowel;
+
+trait Index {
+    fn index(&self) -> usize;
 }
 
-impl Choseong {
-    /// Attempts to match a token to a Choseong variant and returns its index.
-    fn from_str(s: &str) -> Option<(Self, usize)> {
-        match s {
-            "g" => Some((Choseong::G, 0)),
-            "kk" => Some((Choseong::Kk, 1)),
-            "n" => Some((Choseong::N, 2)),
-            "d" => Some((Choseong::D, 3)),
-            "tt" => Some((Choseong::Tt, 4)),
-            "r" => Some((Choseong::R, 5)),
-            "m" => Some((Choseong::M, 6)),
-            "b" => Some((Choseong::B, 7)),
-            "pp" => Some((Choseong::Pp, 8)),
-            "s" => Some((Choseong::S, 9)),
-            "ss" => Some((Choseong::Ss, 10)),
-            "ieung" => Some((Choseong::Ieung, 11)),
-            "j" => Some((Choseong::J, 12)),
-            "jj" => Some((Choseong::Jj, 13)),
-            "ch" => Some((Choseong::Ch, 14)),
-            "k" => Some((Choseong::K, 15)),
-            "t" => Some((Choseong::T, 16)),
-            "p" => Some((Choseong::P, 17)),
-            "h" => Some((Choseong::H, 18)),
-            _ => None,
-        }
-    }
-}
-
-#[derive(Debug)]
-enum Jungseong {
-    A,
-    Ae,
-    Ya,
-    Yae,
-    Eo,
-    E,
-    O,
-    Yo,
-    U,
-    I,
-}
-
-impl Jungseong {
-    fn from_str(s: &str) -> Option<(Self, usize)> {
-        match s {
-            "yae" => Some((Jungseong::Yae, 3)),
-            "ya" => Some((Jungseong::Ya, 2)),
-            "ae" => Some((Jungseong::Ae, 1)),
-            "a" => Some((Jungseong::A, 0)),
-            "eo" => Some((Jungseong::Eo, 4)),
-            "e" => Some((Jungseong::E, 5)),
-            "o" => Some((Jungseong::O, 6)),
-            "yo" => Some((Jungseong::Yo, 7)),
-            "u" => Some((Jungseong::U, 8)),
-            "i" => Some((Jungseong::I, 9)),
-            _ => None,
-        }
-    }
-}
-
-#[derive(Debug)]
-enum Jongseong {
-    Ng,
-    Kk,
-    G,
-    N,
-    D,
-    R,
-    M,
-    B,
-}
-
-impl Jongseong {
-    /// Returns (variant, index). Index 0 means no final.
-    fn from_str(s: &str) -> Option<(Self, usize)> {
-        match s {
-            "ng" => Some((Jongseong::Ng, 1)),
-            "kk" => Some((Jongseong::Kk, 2)),
-            "g" => Some((Jongseong::G, 3)),
-            "n" => Some((Jongseong::N, 4)),
-            "d" => Some((Jongseong::D, 5)),
-            "r" => Some((Jongseong::R, 6)),
-            "m" => Some((Jongseong::M, 7)),
-            "b" => Some((Jongseong::B, 8)),
-            _ => None,
-        }
-    }
-}
-
-pub fn roman_to_hangeul(input: &str) -> Option<String> {
-    let mut output = String::new();
-    let mut s = input;
-
-    while !s.is_empty() {
-        // --- Parse Initial (Choseong) ---
-        let mut found_initial = None;
-        // Try tokens in order of descending length for greedy matching.
-        for token in [
-            "kk", "tt", "pp", "ss", "jj", "ch", "ieung", "g", "n", "d", "r", "m", "b", "s", "j",
-            "k", "t", "p", "h",
-        ]
-        .iter()
-        {
-            if s.starts_with(token) {
-                if let Some((_, idx)) = Choseong::from_str(token) {
-                    s = &s[token.len()..];
-                    found_initial = Some(idx);
-                    break;
-                }
-            }
-        }
-        let ci = found_initial?;
-
-        // --- Parse Medial (Jungseong) ---
-        let mut found_medial = None;
-        for token in ["yae", "ya", "ae", "eo", "e", "o", "yo", "u", "i", "a"].iter() {
-            if s.starts_with(token) {
-                if let Some((_, idx)) = Jungseong::from_str(token) {
-                    s = &s[token.len()..];
-                    found_medial = Some(idx);
-                    break;
-                }
-            }
-        }
-        let vi = found_medial?;
-
-        // --- Parse Optional Final (Jongseong) ---
-        let mut fi = 0; // 0 means no final.
-        for token in ["ng", "kk", "g", "n", "d", "r", "m", "b"].iter() {
-            if s.starts_with(token) {
-                if let Some((_, idx)) = Jongseong::from_str(token) {
-                    s = &s[token.len()..];
-                    fi = idx;
-                    break;
-                }
-            }
-        }
-
-        // Calculate the Unicode code point.
-        let syllable = 0xAC00 + ((ci * 21 + vi) * 28 + fi) as u32;
-        output.push(std::char::from_u32(syllable)?);
-    }
-    Some(output)
-}
-
-/// These constant arrays define the roman tokens for each component.
-/// (Their order must match the indices used above.)
-const CHOSEONG_ROMAN: [&str; 19] = [
-    "g", "kk", "n", "d", "tt", "r", "m", "b", "pp", "s", "ss", "ieung", "j", "jj", "ch", "k", "t",
-    "p", "h",
-];
-const JUNGSEONG_ROMAN: [&str; 10] = ["a", "ae", "ya", "yae", "eo", "e", "o", "yo", "u", "i"];
-/// For Jongseong, index 0 means “no final”.
-const JONGSEONG_ROMAN: [&str; 9] = ["", "ng", "kk", "g", "n", "d", "r", "m", "b"];
-
-/// Converts a Hangeul string back to its romanized representation.
-///
-/// The function decomposes each syllable (which must be in the U+AC00..U+D7A3 block)
-/// and uses the inverse mapping. It returns `None` if any syllable contains a medial or final
-/// value outside of the supported range (i.e. if it wasn’t generated by `roman_to_hangeul`).
-pub fn hangeul_to_roman(input: &str) -> Option<String> {
-    let mut output = String::new();
-
-    for ch in input.chars() {
-        let code = ch as u32;
-        // Ensure the character is a complete Hangul syllable.
-        if !(0xAC00..=0xD7A3).contains(&code) {
-            return None;
-        }
-        let syllable_index = code - 0xAC00;
-        let ci = (syllable_index / (21 * 28)) as usize;
-        let vi = ((syllable_index % (21 * 28)) / 28) as usize;
-        let fi = (syllable_index % 28) as usize;
-
-        // Check that the initial and medial are within our mapping.
-        if ci >= CHOSEONG_ROMAN.len() || vi >= JUNGSEONG_ROMAN.len() {
-            return None;
-        }
-        // Our scheme only supports finals in the set {0, 1, ..., 8}.
-        if fi != 0 && !(1..=8).contains(&fi) {
-            return None;
-        }
-
-        output.push_str(CHOSEONG_ROMAN[ci]);
-        output.push_str(JUNGSEONG_ROMAN[vi]);
-        if fi != 0 {
-            output.push_str(JONGSEONG_ROMAN[fi]);
-        }
-    }
-    Some(output)
+pub trait Print {
+    fn revised_romanization(&self) -> String;
+    fn mccune_reischauer_romanization(&self) -> String;
+    fn hangeul(&self) -> String;
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    // --- Tests for roman_to_hangeul (same as your original tests) ---
-
-    // 1. "ga" -> 가
-    #[test]
-    fn test_ga() {
-        assert_eq!(roman_to_hangeul("ga"), Some("\u{AC00}".to_string()));
-    }
-
-    // 2. "gag" -> 0xAC00 + 3 = "\u{AC03}"
-    #[test]
-    fn test_gag() {
-        assert_eq!(roman_to_hangeul("gag"), Some("\u{AC03}".to_string()));
-    }
-
-    // 3. "na" -> 나
-    #[test]
-    fn test_na() {
-        assert_eq!(roman_to_hangeul("na"), Some("\u{B098}".to_string()));
-    }
-
-    // 4. "ttae" -> 때
-    #[test]
-    fn test_ttae() {
-        assert_eq!(roman_to_hangeul("ttae"), Some("때".to_string()));
-    }
-
-    // 5. "ra" -> 라
-    #[test]
-    fn test_ra() {
-        let syllable = char::from_u32(0xAC00 + ((5 * 21) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ra"), Some(syllable.to_string()));
-    }
-
-    // 6. "mab" -> mab
-    #[test]
-    fn test_mab() {
-        let syllable = char::from_u32(0xAC00 + ((6 * 21) * 28 + 8)).unwrap();
-        assert_eq!(roman_to_hangeul("mab"), Some(syllable.to_string()));
-    }
-
-    // 7. "ssae" -> 싸에
-    #[test]
-    fn test_ssae() {
-        let syllable = char::from_u32(0xAC00 + ((10 * 21 + 1) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ssae"), Some(syllable.to_string()));
-    }
-
-    // 8. "ieungyo" -> 의요 (initial ieung, vowel yo)
-    #[test]
-    fn test_ieungyo() {
-        let syllable = char::from_u32(0xAC00 + ((11 * 21 + 7) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ieungyo"), Some(syllable.to_string()));
-    }
-
-    // 9. "jju" -> 주 (with initial jj and vowel u)
-    #[test]
-    fn test_jju() {
-        let syllable = char::from_u32(0xAC00 + ((13 * 21 + 8) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("jju"), Some(syllable.to_string()));
-    }
-
-    // 10. "chang" -> 창
-    #[test]
-    fn test_chang() {
-        let syllable = char::from_u32(0xAC00 + ((14 * 21) * 28 + 1)).unwrap();
-        assert_eq!(roman_to_hangeul("chang"), Some(syllable.to_string()));
-    }
-
-    // 11. "kt" -> invalid (no valid vowel after k)
-    #[test]
-    fn test_invalid_kt() {
-        assert_eq!(roman_to_hangeul("kt"), None);
-    }
-
-    // 12. "h" -> invalid (no vowel)
-    #[test]
-    fn test_invalid_h() {
-        assert_eq!(roman_to_hangeul("h"), None);
-    }
-
-    // 13. "gya" -> g:0, ya:2, no final
-    #[test]
-    fn test_gya() {
-        let syllable = char::from_u32(0xAC00 + (2 * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("gya"), Some(syllable.to_string()));
-    }
-
-    // 14. "kkyae" -> kk:1, yae:3, no final
-    #[test]
-    fn test_kkyae() {
-        let syllable = char::from_u32(0xAC00 + ((21 + 3) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("kkyae"), Some(syllable.to_string()));
-    }
-
-    // 15. "dyo" -> d:3, yo:7, no final
-    #[test]
-    fn test_dyo() {
-        let syllable = char::from_u32(0xAC00 + ((3 * 21 + 7) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("dyo"), Some(syllable.to_string()));
-    }
-
-    // 16. "tpi" -> invalid vowel ("p" is not a vowel)
-    #[test]
-    fn test_invalid_tpi() {
-        assert_eq!(roman_to_hangeul("tpi"), None);
-    }
-
-    // 17. "pue" -> invalid final ("e" is not a valid final)
-    #[test]
-    fn test_invalid_pue() {
-        assert_eq!(roman_to_hangeul("pue"), None);
-    }
-
-    // 18. "hye" -> invalid vowel ("ye" not defined)
-    #[test]
-    fn test_invalid_hye() {
-        assert_eq!(roman_to_hangeul("hye"), None);
-    }
-
-    // 19. "ka" -> k:15, a:0, no final
-    #[test]
-    fn test_ka() {
-        let syllable = char::from_u32(0xAC00 + ((15 * 21) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ka"), Some(syllable.to_string()));
-    }
-
-    // 20. "ta" -> t:16, a:0, no final
-    #[test]
-    fn test_ta() {
-        let syllable = char::from_u32(0xAC00 + ((16 * 21) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ta"), Some(syllable.to_string()));
-    }
-
-    // 21. "ppa" -> pp:8, a:0, no final
-    #[test]
-    fn test_ppa() {
-        let syllable = char::from_u32(0xAC00 + ((8 * 21) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("ppa"), Some(syllable.to_string()));
-    }
-
-    // 22. "sa" -> s:9, a:0, no final
-    #[test]
-    fn test_sa() {
-        let syllable = char::from_u32(0xAC00 + ((9 * 21) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("sa"), Some(syllable.to_string()));
-    }
-
-    // 23. "jjae" -> jj:13, ae:1, no final
-    #[test]
-    fn test_jjae() {
-        let syllable = char::from_u32(0xAC00 + ((13 * 21 + 1) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("jjae"), Some(syllable.to_string()));
-    }
-
-    // 24. "chae" -> ch:14, ae:1, no final
-    #[test]
-    fn test_chae() {
-        let syllable = char::from_u32(0xAC00 + ((14 * 21 + 1) * 28)).unwrap();
-        assert_eq!(roman_to_hangeul("chae"), Some(syllable.to_string()));
-    }
-
-    // 25. "gaja" -> two syllables: "ga" then "ja"
-    #[test]
-    fn test_gaja() {
-        let syllable1 = char::from_u32(0xAC00).unwrap(); // "ga"
-        let syllable2 = char::from_u32(0xAC00 + ((12 * 21) * 28)).unwrap(); // "ja"
-        let expected = format!("{}{}", syllable1, syllable2);
-        assert_eq!(roman_to_hangeul("gaja"), Some(expected));
-    }
-
-    // --- Tests for hangeul_to_roman (the reverse conversion) ---
+    use crate::block::Block;
+    use crate::consonant::Consonant;
+    use crate::mr;
+    use crate::rr;
+    use crate::vowel::Vowel;
 
     #[test]
-    fn test_hangeul_to_roman_ga() {
-        // "ga" -> 가
-        let hangul = "\u{AC00}";
-        assert_eq!(hangeul_to_roman(hangul), Some("ga".to_string()));
+    fn test_printing() {
+        // Example: 가 = ㄱ(initial) + ㅏ(medial)
+        let block = Block {
+            initial: Consonant::Giyeok(true),
+            medial: Vowel::A,
+            r#final: None,
+        };
+        assert_eq!(block.revised_romanization(), "ga");
+        assert_eq!(block.mccune_reischauer_romanization(), "ka");
+        assert_eq!(block.hangeul(), "가");
     }
 
     #[test]
-    fn test_hangeul_to_roman_gag() {
-        // "gag" -> 가 with final g (index 3)
-        let hangul = std::char::from_u32(0xAC00 + 3).unwrap();
-        assert_eq!(
-            hangeul_to_roman(&hangul.to_string()),
-            Some("gag".to_string())
-        );
+    fn test_rr_parsing() {
+        // "han" should parse as ㅎ+ㅏ+ㄴ.
+        let input = "han";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        assert_eq!(blocks.len(), 1);
+        let block = &blocks[0];
+        assert_eq!(block.revised_romanization(), "han");
+        assert_eq!(block.hangeul(), "한");
     }
 
     #[test]
-    fn test_hangeul_to_roman_na() {
-        let hangul = "\u{B098}"; // 나
-        assert_eq!(hangeul_to_roman(hangul), Some("na".to_string()));
+    fn test_mr_parsing() {
+        // MR: "han" should parse similarly.
+        let input = "han";
+        let blocks = mr::parse(input).expect("MR parse failed");
+        assert_eq!(blocks.len(), 1);
+        let block = &blocks[0];
+        assert_eq!(block.mccune_reischauer_romanization(), "han");
+        assert_eq!(block.hangeul(), "한");
     }
 
     #[test]
-    fn test_hangeul_to_roman_ttae() {
-        let hangul = roman_to_hangeul("ttae").unwrap();
-        assert_eq!(hangeul_to_roman(&hangul), Some("ttae".to_string()));
+    fn test_hangeul_parsing() {
+        // Parse a full syllable string.
+        let input = "한글";
+        let blocks = hangeul::parse(input).expect("Hangul parse failed");
+        assert_eq!(blocks.len(), 2);
+        let recomposed: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(recomposed, input);
     }
 
     #[test]
-    fn test_hangeul_to_roman_mab() {
-        let hangul = roman_to_hangeul("mab").unwrap();
-        assert_eq!(hangeul_to_roman(&hangul), Some("mab".to_string()));
+    fn test_multiple_blocks_rr() {
+        // "hanguk" -> 한(ㅎ+ㅏ+ㄴ) 국(ㄱ+ㅜ+ㄱ)
+        let input = "hanguk";
+        let blocks = rr::parse(input).expect("RR multiple block parse failed");
+        assert_eq!(blocks.len(), 2);
+        let recomposed: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(recomposed, "한국");
     }
 
     #[test]
-    fn test_hangeul_to_roman_chang() {
-        let hangul = roman_to_hangeul("chang").unwrap();
-        assert_eq!(hangeul_to_roman(&hangul), Some("chang".to_string()));
+    fn test_round_trip_rr() {
+        let input = "hanguk";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        let blocks2 = hangeul::parse(&hangul_str).expect("Hangul re-parse failed");
+        let rr_str: String = blocks2.iter().map(|b| b.revised_romanization()).collect();
+        assert_eq!(rr_str, "hanguk");
     }
 
     #[test]
-    fn test_hangeul_to_roman_gaja() {
-        let hangul = roman_to_hangeul("gaja").unwrap();
-        assert_eq!(hangeul_to_roman(&hangul), Some("gaja".to_string()));
+    fn test_round_trip_mr() {
+        let input = "hanguk";
+        let blocks = mr::parse(input).expect("MR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        let blocks2 = hangeul::parse(&hangul_str).expect("Hangul re-parse failed");
+        let mr_str: String = blocks2
+            .iter()
+            .map(|b| b.mccune_reischauer_romanization())
+            .collect();
+        assert_eq!(mr_str, "hankuk");
     }
 
-    // Test an invalid Hangul syllable (one with a medial index outside our supported range)
     #[test]
-    fn test_hangeul_to_roman_invalid_medial() {
-        // Construct a syllable with initial 0 ("g"), medial index 10 (unsupported), no final.
-        let syllable = std::char::from_u32(0xAC00 + 10 * 28).unwrap();
-        assert_eq!(hangeul_to_roman(&syllable.to_string()), None);
+    fn test_hangeul_round_trip() {
+        let input = "한국";
+        let blocks = hangeul::parse(input).expect("Hangul parse failed");
+        let recomposed: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(recomposed, input);
     }
 
-    // Test an invalid Hangul syllable (unsupported final)
     #[test]
-    fn test_hangeul_to_roman_invalid_final() {
-        // Construct a syllable with initial 0 ("g"), medial 0 ("a"), and final index 9 (unsupported)
-        let syllable = std::char::from_u32(0xAC00 + 9).unwrap();
-        assert_eq!(hangeul_to_roman(&syllable.to_string()), None);
+    fn test_hangeul_to_rr() {
+        let input = "한국";
+        let blocks = hangeul::parse(input).expect("Hangul parse failed");
+        let rr_str: String = blocks.iter().map(|b| b.revised_romanization()).collect();
+        assert_eq!(rr_str, "hanguk");
     }
 
-    // Test non-Hangeul input.
     #[test]
-    fn test_hangeul_to_roman_non_hangeul() {
-        assert_eq!(hangeul_to_roman("A"), None);
+    fn test_hangeul_to_mr() {
+        let input = "한국";
+        let blocks = hangeul::parse(input).expect("Hangul parse failed");
+        let mr_str: String = blocks
+            .iter()
+            .map(|b| b.mccune_reischauer_romanization())
+            .collect();
+        assert_eq!(mr_str, "hankuk");
+    }
+
+    #[test]
+    fn test_rr_with_spaces() {
+        let input = "han guk";
+        let blocks = rr::parse(input).expect("RR parse failed with spaces");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_str, "한국");
+    }
+
+    #[test]
+    fn test_mr_with_spaces() {
+        let input = "han guk";
+        let blocks = mr::parse(input).expect("MR parse failed with spaces");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_str, "한국");
+    }
+
+    #[test]
+    fn test_empty_input_rr() {
+        let input = "";
+        let blocks = rr::parse(input).unwrap();
+        assert_eq!(blocks.len(), 0);
+    }
+
+    #[test]
+    fn test_empty_input_mr() {
+        let input = "";
+        let blocks = mr::parse(input).unwrap();
+        assert_eq!(blocks.len(), 0);
+    }
+
+    #[test]
+    fn test_invalid_input_rr() {
+        let input = "123";
+        let blocks = rr::parse(input);
+        assert!(blocks.is_none());
+    }
+
+    #[test]
+    fn test_invalid_input_mr() {
+        let input = "abc123";
+        let blocks = mr::parse(input);
+        assert!(blocks.is_none());
+    }
+
+    #[test]
+    fn test_all_vowels() {
+        // For every vowel, create a block with default silent initial.
+        for &(_, vowel) in rr::VOWELS.iter() {
+            let block = Block {
+                initial: Consonant::Ieung(true),
+                medial: vowel,
+                r#final: None,
+            };
+            let ch = block.hangeul().chars().next().unwrap();
+            assert!((0xAC00..=0xD7A3).contains(&(ch as u32)));
+        }
+    }
+
+    #[test]
+    fn test_all_initials() {
+        // For every initial from the RR table.
+        for &(_, cons) in rr::INITIALS.iter() {
+            let block = Block {
+                initial: cons,
+                medial: Vowel::A,
+                r#final: None,
+            };
+            let ch = block.hangeul().chars().next().unwrap();
+            assert!((0xAC00..=0xD7A3).contains(&(ch as u32)));
+        }
+    }
+
+    #[test]
+    fn test_complex_sentence() {
+        // "hanguk saram" should produce blocks for "한국사람"
+        let input = "hanguk saram";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_str, "한국사람");
+    }
+
+    #[test]
+    fn test_ambiguous_final_dang() {
+        // "dang" should parse as ㄷ+ㅏ+ㅇ -> "당"
+        let input = "dang";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        assert_eq!(blocks.len(), 1);
+        assert_eq!(blocks[0].hangeul(), "당");
+        assert_eq!(blocks[0].revised_romanization(), "dang");
+    }
+
+    #[test]
+    fn test_rr_mr_consistency() {
+        // RR and MR should yield the same Hangul for the same input.
+        let input = "hanguk";
+        let blocks_rr = rr::parse(input).expect("RR parse failed");
+        let blocks_mr = mr::parse(input).expect("MR parse failed");
+        let hangul_rr: String = blocks_rr.iter().map(|b| b.hangeul()).collect();
+        let hangul_mr: String = blocks_mr.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_rr, hangul_mr);
+    }
+
+    #[test]
+    fn test_specific_syllable_chae() {
+        // "chae" should parse to 채
+        let input = "chae";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        assert_eq!(blocks.len(), 1);
+        assert_eq!(blocks[0].hangeul(), "채");
+        assert_eq!(blocks[0].revised_romanization(), "chae");
+    }
+
+    #[test]
+    fn test_double_initial_kkuk() {
+        // "kkuk" should yield 꿀: initial "kk", vowel "u", final "k"
+        let input = "kkul";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        assert_eq!(blocks.len(), 1);
+        assert_eq!(blocks[0].hangeul(), "꿀");
+        assert_eq!(blocks[0].revised_romanization(), "kkul");
+    }
+
+    #[test]
+    fn test_seoul_rr() {
+        // "seoul" in RR should yield 서울.
+        let input = "seoul";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_str, "서울");
+    }
+
+    #[test]
+    fn test_saram_mr() {
+        // "saram" in MR should yield 사람.
+        let input = "saram";
+        let blocks = mr::parse(input).expect("MR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_str, "사람");
+    }
+
+    #[test]
+    fn test_full_system_conversion() {
+        // Convert from RR to Hangul and then to MR.
+        let input_rr = "hanguk";
+        let blocks_rr = rr::parse(input_rr).expect("RR parse failed");
+        let hangul_str: String = blocks_rr.iter().map(|b| b.hangeul()).collect();
+        let blocks_mr = mr::parse(&hangul_str).expect("MR parse failed");
+        let mr_str: String = blocks_mr
+            .iter()
+            .map(|b| b.mccune_reischauer_romanization())
+            .collect();
+        assert_eq!(mr_str, "hankuk");
+    }
+
+    #[test]
+    fn mr_to_rr() {
+        let blocks: Vec<Block> = rr::parse("jaewonhanguk").unwrap();
+        let mccune: String = blocks
+            .iter()
+            .map(|b| b.mccune_reischauer_romanization())
+            .collect();
+        let hangeul: String = blocks.iter().map(|b| b.hangeul()).collect();
+
+        let mccuneblocks: Vec<Block> = mr::parse(&mccune).unwrap();
+        assert_eq!(blocks, mccuneblocks);
+        let hangeulblocks: Vec<Block> = hangeul::parse(&hangeul).unwrap();
+        assert_eq!(blocks, hangeulblocks);
+    }
+
+    #[test]
+    fn test_round_trip_between_all_methods() {
+        // Start with Hangul, convert to RR and MR, then back to Hangul.
+        let input = "사랑";
+        let blocks_hangeul = hangeul::parse(input).expect("Hangul parse failed");
+        let rr_str: String = blocks_hangeul
+            .iter()
+            .map(|b| b.revised_romanization())
+            .collect();
+        let blocks_rr = rr::parse(&rr_str).expect("RR parse failed");
+        let hangul_from_rr: String = blocks_rr.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_from_rr, input);
+        let mr_str: String = blocks_hangeul
+            .iter()
+            .map(|b| b.mccune_reischauer_romanization())
+            .collect();
+        println!("MR: {}", mr_str);
+        let blocks_mr = mr::parse(&mr_str).expect("MR parse failed");
+        let hangul_from_mr: String = blocks_mr.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(hangul_from_mr, input);
+    }
+
+    #[test]
+    fn test_consistency_of_printing() {
+        // For a given block, all printing methods must yield consistent outputs.
+        let block = Block {
+            initial: Consonant::Giyeok(true),
+            medial: Vowel::A,
+            r#final: Some(Consonant::Nieun(false)),
+        };
+        let hangul_char = block.hangeul();
+        assert!(!hangul_char.is_empty());
+        assert!(!block.revised_romanization().is_empty());
+        assert!(!block.mccune_reischauer_romanization().is_empty());
+    }
+
+    #[test]
+    fn test_parse_hangeul_compound() {
+        // Parse a compound Hangul string.
+        let input = "대한민국";
+        let blocks = hangeul::parse(input).expect("Hangul parse failed");
+        let recomposed: String = blocks.iter().map(|b| b.hangeul()).collect();
+        assert_eq!(recomposed, input);
+    }
+
+    #[test]
+    fn test_random_example() {
+        // A random RR input should round-trip.
+        let input = "sarang";
+        let blocks = rr::parse(input).expect("RR parse failed");
+        let hangul_str: String = blocks.iter().map(|b| b.hangeul()).collect();
+        let blocks2 = hangeul::parse(&hangul_str).expect("Hangul parse failed");
+        let rr_str: String = blocks2.iter().map(|b| b.revised_romanization()).collect();
+        assert_eq!(rr_str, input);
     }
 }
