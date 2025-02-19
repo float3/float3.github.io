@@ -9,6 +9,7 @@ tags:
   - graphics
   - unity
   - programming
+  - rust
 ---
 
 made with love and rust (compiled to wasm)
