@@ -15,11 +15,12 @@ export default {
     aoc: "./dist/aoc.js",
     tuningplayground: "./dist/tuningplayground.js",
     textprocessing: "./dist/textprocessing.js",
+    polyrhythm: "./dist/polyrhythm.js",
   },
   output: {
     path: path.resolve(path.dirname(""), "../../../content/tools/wasm"),
     filename: "[name].js",
-    // chunkFilename: "[name]/[id].chunk.js",
+    publicPath: "/tools/wasm/",
   },
   target: "web",
   optimization: {

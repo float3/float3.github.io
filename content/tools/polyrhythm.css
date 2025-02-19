@@ -1,0 +1,35 @@
+[saved-theme="dark"] canvas {
+  filter: invert(1);
+}
+
+/* Container for all controls */
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 320px;
+  /* adjust width as needed */
+}
+
+/* Each individual control group */
+.control {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Ensure labels do not wrap */
+.control label {
+  white-space: nowrap;
+  margin-right: 1em;
+}
+
+/* Inputs take the remaining space */
+.control input {
+  flex: 1;
+}
+
+/* Center the button */
+#start-button {
+  align-self: center;
+}

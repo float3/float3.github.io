@@ -258,9 +258,9 @@ export function addEvents(key: Element) {
   key.addEventListener("mousedown", (event) => {
     const mouseEvent = event as MouseEvent
     if (mouseEvent.shiftKey) {
-      markOrUnmarkKey(note)
+      markOrUnmarkKey(note - tranposeValue)
     } else {
-      noteOn(note)
+      noteOn(note - tranposeValue)
     }
   })
 
@@ -273,17 +273,17 @@ export function addEvents(key: Element) {
   //   }
   // });
 
-  addEvent("mouseup", () => noteOff(note))
+  addEvent("mouseup", () => noteOff(note - tranposeValue))
 
   key.addEventListener("mouseenter", (event) => {
     const mouseEvent = event as MouseEvent
     if (mouseEvent.ctrlKey) {
       return
     }
-    noteOn(note)
+    noteOn(note - tranposeValue)
   })
 
-  addEvent("mouseleave", () => noteOff(note))
-  addEvent("touchstart", () => noteOn(note))
-  addEvent("touchend", () => noteOff(note))
+  addEvent("mouseleave", () => noteOff(note - tranposeValue))
+  addEvent("touchstart", () => noteOn(note - tranposeValue))
+  addEvent("touchend", () => noteOff(note - tranposeValue))
 }

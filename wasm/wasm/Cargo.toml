@@ -13,13 +13,20 @@ console_error_panic_hook = ["dep:console_error_panic_hook"]
 mini-alloc = ["dep:mini-alloc"]
 
 [dependencies]
+tuningplayground = { path = "../tuningplayground/" }
+music21-rs = { git = "https://github.com/float3/music21-rs.git"}
 wasm-bindgen = { version = "0.2.100" }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 mini-alloc = { version = "0.8.1", optional = true }
 glsl2hlsl = { path = "../glsl2hlsl" }
 adventofcode = { path = "../adventofcode/" }
 textprocessing = { path = "../textprocessing/" }
-tuningplayground = { path = "../tuningplayground/" }
+web-sys = { version = "0.3.77", features = [
+    "Window",
+    "Document",
+    "CanvasRenderingContext2d",
+    "HtmlCanvasElement",
+] }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.50"

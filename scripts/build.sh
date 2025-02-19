@@ -18,7 +18,7 @@ cd wasm
 wasm_path=$(pwd)
 
 cd $root_path/content/tools/
-rm -rf wasm 
+rm -rf wasm | true  
 
 cd $wasm_path/wasm
 ./build.sh $ARGS
