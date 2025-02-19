@@ -17,6 +17,3 @@ rustup.sh
 
 content/js
 content/tools/wasm/
-content/tools/*.wasm
-content/tools/*.js
-content/tools/*.LICENSE.txt
