@@ -29,7 +29,7 @@ if __name__ == "__main__":
     with open("../../content/misc/plaintext/chords.json", "w") as outfile:
         json.dump(data, outfile, separators=(",", ":"))
 
-with open("../../content/misc/plaintext/chords_unpitched.txt", "w") as outfile:
+    with open("../../content/misc/plaintext/chords_unpitched.txt", "w") as outfile:
         for key, value in data2.items():
             outfile.write(f"{value};")
 
