@@ -15,7 +15,7 @@ extern "C" {
 
 // Global to track current animation frame id.
 thread_local! {
-    static CURRENT_ANIMATION: RefCell<Option<i32>> = RefCell::new(None);
+    static CURRENT_ANIMATION: RefCell<Option<i32>> = const { RefCell::new(None) };
 }
 
 // Helper: Compute vertices of a regular polygon.
@@ -69,9 +69,9 @@ pub fn start_with_settings(
     });
 
     // Parse subdivisions string; supports comma or colon separated values.
-    let subs: Vec<u64> = subdivisions
-        .split(|c| c == ',' || c == ':')
-        .filter_map(|s| s.trim().parse::<u64>().ok())
+    let subs: Vec<u32> = subdivisions
+        .split([',', ':'])
+        .filter_map(|s| s.trim().parse::<u32>().ok())
         .collect();
     if subs.is_empty() {
         return Err(JsValue::from_str("Invalid subdivisions"));
@@ -89,7 +89,7 @@ pub fn start_with_settings(
         .dyn_into::<CanvasRenderingContext2d>()?;
 
     // Create the polyrhythm.
-    let poly = Polyrhythm::new_with_time_signature(base.into(), tempo.into(), subs.as_slice())
+    let poly = Polyrhythm::new_with_time_signature(base, tempo, subs.as_slice())
         .expect("Failed to create Polyrhythm");
     let measure_duration = poly
         .measure_duration()
