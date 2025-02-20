@@ -1,12 +1,12 @@
 use music21_rs::polyrhythm::Polyrhythm;
 use std::cell::RefCell;
 use std::rc::Rc;
-use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
-use web_sys::js_sys;
-use web_sys::window;
+use wasm_bindgen::prelude::*;
 use web_sys::CanvasRenderingContext2d;
 use web_sys::HtmlCanvasElement;
+use web_sys::js_sys;
+use web_sys::window;
 
 #[wasm_bindgen]
 extern "C" {

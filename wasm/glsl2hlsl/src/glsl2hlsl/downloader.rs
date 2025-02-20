@@ -1,9 +1,9 @@
 use serde::Deserialize;
 
+use crate::BUFFER_NUM;
 use crate::add_buffer_num;
 use crate::reset_buffer_num;
 use crate::transpile;
-use crate::BUFFER_NUM;
 
 #[derive(Deserialize, Debug)]
 #[allow(non_snake_case)]

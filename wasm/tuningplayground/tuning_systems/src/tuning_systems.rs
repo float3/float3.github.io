@@ -1,18 +1,18 @@
-use crate::equal_temperament;
-use crate::get_ratio_from_step_algorithm;
-use crate::Fraction;
 use crate::ELEVEN_LIMIT;
 use crate::FIVE_LIMIT;
 use crate::FORTYTHREE_TONE;
+use crate::Fraction;
+use crate::INDIA_SCALE_ALT;
 use crate::INDIAN_SCALE;
 use crate::INDIAN_SCALE_22;
-use crate::INDIA_SCALE_ALT;
 use crate::JUST_INTONATION;
 use crate::JUST_INTONATION_24;
 use crate::PYTHAGOREAN_TUNING;
 use crate::SHRUTIS;
 use crate::SWARAS;
 use crate::TWELVE_TONE_NAMES;
+use crate::equal_temperament;
+use crate::get_ratio_from_step_algorithm;
 
 #[derive(Clone, Debug, PartialEq, Copy)]
 pub enum TuningSystem {

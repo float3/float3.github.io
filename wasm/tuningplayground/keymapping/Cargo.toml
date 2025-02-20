@@ -1,7 +1,7 @@
 [package]
 authors = ["hill <hill@hilll.dev>"]
 description = "a crate that provides DAW like keyboard maps for different keybaords"
-edition = "2021"
+edition = "2024"
 keywords = ["VMPK", "keyboard"]
 license = "AGPL-3.0"
 name = "keymapping"

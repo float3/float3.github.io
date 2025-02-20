@@ -1,5 +1,5 @@
 use crate::{
-    block::{greedy_match, Block},
+    block::{Block, greedy_match},
     consonant::Consonant,
     vowel::Vowel,
 };
