@@ -253,14 +253,14 @@ pub fn get_function_ret_type(s: &str, args: Vec<Option<TypeKind>>) -> Option<Typ
 
 pub fn get_expr_type(e: &Expr) -> Option<TypeKind> {
     match e {
-        Expr::Variable(ref i) => lookup_sym(i.as_str()),
-        Expr::IntConst(ref _x) => Some(TypeKind::Scalar),
-        Expr::UIntConst(ref _x) => Some(TypeKind::Scalar),
-        Expr::BoolConst(ref _x) => Some(TypeKind::Scalar),
-        Expr::FloatConst(ref _x) => Some(TypeKind::Scalar),
-        Expr::DoubleConst(ref _x) => Some(TypeKind::Scalar),
-        Expr::Unary(ref _op, ref e) => get_expr_type(e),
-        Expr::Binary(ref op, ref l, ref r) => {
+        Expr::Variable(i) => lookup_sym(i.as_str()),
+        Expr::IntConst(_x) => Some(TypeKind::Scalar),
+        Expr::UIntConst(_x) => Some(TypeKind::Scalar),
+        Expr::BoolConst(_x) => Some(TypeKind::Scalar),
+        Expr::FloatConst(_x) => Some(TypeKind::Scalar),
+        Expr::DoubleConst(_x) => Some(TypeKind::Scalar),
+        Expr::Unary(_op, e) => get_expr_type(e),
+        Expr::Binary(op, l, r) => {
             let (l, r) = (get_expr_type(l), get_expr_type(r));
             match (l.clone(), op, r.clone()) {
                 (Some(_), _, Some(TypeKind::Scalar)) => l, // anything op scalar = scalar
@@ -273,7 +273,7 @@ pub fn get_expr_type(e: &Expr) -> Option<TypeKind> {
                 _ => None,
             }
         }
-        Expr::Ternary(ref _c, ref s, ref e) => {
+        Expr::Ternary(_c, s, e) => {
             let (l, r) = (get_expr_type(s), get_expr_type(e));
             match (l.clone(), r.clone()) {
                 (_, Some(TypeKind::Scalar)) => l,
@@ -281,12 +281,12 @@ pub fn get_expr_type(e: &Expr) -> Option<TypeKind> {
                 _ => l,
             }
         }
-        Expr::Assignment(ref _v, ref _op, ref e) => get_expr_type(e),
-        Expr::Bracket(ref _e, ref _a) => None, // TODO: array ignored for now
-        Expr::FunCall(FunIdentifier::Identifier(ref id), ref args) => {
+        Expr::Assignment(_v, _op, e) => get_expr_type(e),
+        Expr::Bracket(_e, _a) => None, // TODO: array ignored for now
+        Expr::FunCall(FunIdentifier::Identifier(id), args) => {
             get_function_ret_type(id.0.as_str(), args.iter().map(get_expr_type).collect())
         } // TODO: this can't handle overloads
-        Expr::Dot(ref e, ref i) => {
+        Expr::Dot(e, i) => {
             match get_expr_type(e) {
                 Some(TypeKind::Scalar) | Some(TypeKind::Vector(_)) => {
                     // swizzling
@@ -301,9 +301,9 @@ pub fn get_expr_type(e: &Expr) -> Option<TypeKind> {
                 a => a,
             }
         }
-        Expr::PostInc(ref e) => get_expr_type(e),
-        Expr::PostDec(ref e) => get_expr_type(e),
-        Expr::Comma(ref _a, ref b) => get_expr_type(b),
+        Expr::PostInc(e) => get_expr_type(e),
+        Expr::PostDec(e) => get_expr_type(e),
+        Expr::Comma(_a, b) => get_expr_type(b),
         _ => None,
     }
 }
@@ -390,8 +390,8 @@ pub fn typespec_to_typekind(ty: &TypeSpecifierNonArray) -> Option<TypeKind> {
         TypeSpecifierNonArray::Mat34 | TypeSpecifierNonArray::DMat34 => Some(TypeKind::Matrix(3, 4)),
         TypeSpecifierNonArray::Mat42 | TypeSpecifierNonArray::DMat42 => Some(TypeKind::Matrix(4, 2)),
         TypeSpecifierNonArray::Mat43 | TypeSpecifierNonArray::DMat43 => Some(TypeKind::Matrix(4, 3)),
-        TypeSpecifierNonArray::Struct(ref s) => s.name.as_ref().map(|id| TypeKind::Struct(id.0.clone())),
-        TypeSpecifierNonArray::TypeName(ref tn) => Some(TypeKind::Struct(tn.0.clone())),
+        TypeSpecifierNonArray::Struct(s) => s.name.as_ref().map(|id| TypeKind::Struct(id.0.clone())),
+        TypeSpecifierNonArray::TypeName(tn) => Some(TypeKind::Struct(tn.0.clone())),
         _ => None,
     }
 }

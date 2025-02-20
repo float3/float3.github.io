@@ -1724,11 +1724,7 @@ where
                 _ => show_expr(&mut res, &expr),
             };
         }
-        if paren {
-            format!("({})", res)
-        } else {
-            res
-        }
+        if paren { format!("({})", res) } else { res }
     };
 
     match *pd {

@@ -1,6 +1,6 @@
 use itertools::Itertools;
 
-use crate::{consonant::Consonant, vowel::Vowel, Index, Print};
+use crate::{Index, Print, consonant::Consonant, vowel::Vowel};
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Block {

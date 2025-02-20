@@ -186,8 +186,8 @@ pub fn process_globals(tu: &mut TranslationUnit, extract_props: bool) -> Vec<Sha
     }
 
     if extract_props {
-        for decl in tu.0 .0.iter_mut() {
-            if let ExternalDeclaration::Declaration(Declaration::InitDeclaratorList(ref mut idl)) = decl {
+        for decl in tu.0.0.iter_mut() {
+            if let ExternalDeclaration::Declaration(Declaration::InitDeclaratorList(idl)) = decl {
                 if let (Some(name), Some(Initializer::Simple(init)), Some(qual)) =
                     (&idl.head.name, &idl.head.initializer, &mut idl.head.ty.qualifier)
                 {

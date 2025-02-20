@@ -1,7 +1,7 @@
 [package]
 name = "textprocessing"
 version = "1.0.0"
-edition = "2021"
+edition = "2024"
 authors = ["hill <hill@hilll.dev>"]
 description = "expose some text processing functions to wasm"
 license = "AGPL-3.0"
