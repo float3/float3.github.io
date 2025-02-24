@@ -51,7 +51,7 @@
     "globby": "^14.1.0",
     "gray-matter": "^4.0.3",
     "hast-util-to-html": "^9.0.5",
-    "hast-util-to-jsx-runtime": "^2.3.3",
+    "hast-util-to-jsx-runtime": "^2.3.4",
     "hast-util-to-string": "^3.0.1",
     "is-absolute-url": "^4.0.1",
     "js-yaml": "^4.1.0",
@@ -98,7 +98,7 @@
     "unist-util-visit": "^5.0.0",
     "vfile": "^6.0.3",
     "workerpool": "^9.2.0",
-    "ws": "^8.18.0",
+    "ws": "^8.18.1",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
