@@ -68,7 +68,7 @@ static BOPOMOFO: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     // const BOPOMOFO_EXT_END: char = '\u{31bf}';
     // const BOPOMOFO_EXT_START: char = '\u{31A0}';
 
-    let mut bopomofo: Vec<char> = (BOPOMOFO_START..=BOPOMOFO_END).collect();
+    let bopomofo: Vec<char> = (BOPOMOFO_START..=BOPOMOFO_END).collect();
     // bopomofo.extend(BOPOMOFO_EXT_START..=BOPOMOFO_EXT_END);
     Mutex::new(bopomofo)
 });
