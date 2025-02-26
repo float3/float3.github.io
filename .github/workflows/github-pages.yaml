@@ -47,7 +47,7 @@ jobs:
 
       - name: build
         run: |
-          nix develop . --command sh -c "./scripts/build.sh"
+          nix develop . --command sh -c "rustup update; ./scripts/build.sh"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
