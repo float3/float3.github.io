@@ -44,7 +44,7 @@ function loadFromHash() {
     if (key && value) {
       const elem = document.getElementById(key)
       if (elem) {
-        ; (elem as HTMLInputElement).value = decodeURIComponent(value)
+        ;(elem as HTMLInputElement).value = decodeURIComponent(value)
       }
     }
   })

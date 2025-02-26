@@ -1,5 +1,3 @@
-#[cfg(debug_assertions)]
-use crate::log;
 use music21_rs::polyrhythm::Polyrhythm;
 use std::cell::RefCell;
 use std::rc::Rc;

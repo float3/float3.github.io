@@ -22,5 +22,4 @@ import("wasm").then((module) => {
   stopButton.addEventListener("click", () => {
     wasm.stop()
   })
-
 })
