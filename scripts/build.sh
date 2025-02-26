@@ -17,18 +17,13 @@ root_path=$(pwd)
 cd wasm
 wasm_path=$(pwd)
 
-cd $root_path/content/tools/
-rm -rf wasm | true  
+rm -rf $root_path/content/js | true
 
 cd $wasm_path/wasm
 ./build.sh $ARGS
 
 cd $root_path
 rm ./content/tools/wasm/*LICENSE.txt | true
-
-cd $root_path/ts 
-pnpm install
-pnpm exec tsc
 
 cd $root_path
 pnpm install

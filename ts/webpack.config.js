@@ -16,11 +16,15 @@ export default {
     tuningplayground: "./dist/tuningplayground.js",
     textprocessing: "./dist/textprocessing.js",
     polyrhythm: "./dist/polyrhythm.js",
+    therenderingequation: "./dist/therenderingequation.js",
+    movies: "./dist/movies.js",
+    trolley: "./dist/trolley.js",
+    chars: "./dist/chars.js"
   },
   output: {
-    path: path.resolve(path.dirname(""), "../../../content/tools/wasm"),
+    path: path.resolve(path.dirname(""), "../content/js"),
     filename: "[name].js",
-    publicPath: "/tools/wasm/",
+    publicPath: "/js/",
   },
   target: "web",
   optimization: {

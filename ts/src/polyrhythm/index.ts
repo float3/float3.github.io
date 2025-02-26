@@ -17,4 +17,10 @@ import("wasm").then((module) => {
 
     wasm.start_with_settings(base, tempo, subdivisions, pitch)
   })
+
+  const stopButton = document.getElementById("stop-button") as HTMLButtonElement
+  stopButton.addEventListener("click", () => {
+    wasm.stop()
+  })
+
 })

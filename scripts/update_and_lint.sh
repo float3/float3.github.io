@@ -43,8 +43,9 @@ git pull origin master
 # need to provide packages so that pnpm doesn't complain
 
 cd $wasm_path/wasm
+export RUSTFLAGS='--cfg getrandom_backend="wasm_js"'
 wasm-pack build --target bundler $ARGS
-
+export RUSTFLAGS=''
 
 cd $root_path
 if [[ -z "$GITHUB_ACTIONS" ]]; then
@@ -81,6 +82,3 @@ cargo_up
 
 cd $wasm_path/wasm/
 cargo_up
-
-cd ./ts
-node_up src

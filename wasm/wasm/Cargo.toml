@@ -3,6 +3,9 @@ name = "wasm"
 version = "0.1.0"
 authors = ["hill"]
 edition = "2024"
+license = "agpl-3.0"
+description = "WebAssembly"
+repository = "https://github.com/float3/float3.github.io/tree/master/wasm/wasm"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -14,7 +17,7 @@ mini-alloc = ["dep:mini-alloc"]
 
 [dependencies]
 tuningplayground = { path = "../tuningplayground/" }
-music21-rs = { git = "https://github.com/float3/music21-rs.git"}
+music21-rs = { git = "https://github.com/float3/music21-rs.git" }
 wasm-bindgen = { version = "0.2.100" }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 mini-alloc = { version = "0.8.1", optional = true }
@@ -27,6 +30,7 @@ web-sys = { version = "0.3.77", features = [
     "CanvasRenderingContext2d",
     "HtmlCanvasElement",
 ] }
+getrandom = { version = "0.3.1", features = ["wasm_js"] }
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.50"

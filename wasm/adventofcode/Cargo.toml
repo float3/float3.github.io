@@ -10,3 +10,4 @@ repository = "https://github.com/float3/float3.github.io"
 [build-dependencies]
 syntect = "5.2.0"
 walkdir = "2.5.0"
+minify-html = "0.15.0"

@@ -44,13 +44,12 @@ function loadFromHash() {
     if (key && value) {
       const elem = document.getElementById(key)
       if (elem) {
-        ;(elem as HTMLInputElement).value = decodeURIComponent(value)
+        ; (elem as HTMLInputElement).value = decodeURIComponent(value)
       }
     }
   })
 }
 
-// Placeholder functions for starting/stopping polyrhythm
 function startPolyrhythm() {
   console.log("Polyrhythm started with settings:", {
     base: (document.getElementById("base") as HTMLInputElement)?.value || "",
@@ -58,20 +57,23 @@ function startPolyrhythm() {
     subdivisions: (document.getElementById("subdivisions") as HTMLInputElement)?.value,
     pitch: (document.getElementById("pitch") as HTMLInputElement)?.value,
   })
-  // Insert your polyrhythm start logic here
 }
 
 function stopPolyrhythm() {
   console.log("Polyrhythm stopped.")
-  // Insert your polyrhythm stop logic here
 }
 
 // Attach event listeners
 document.getElementById("start-button")?.addEventListener("click", () => {
-  updateHash()
   startPolyrhythm()
+  updateHash()
 })
-document.getElementById("stop-button")?.addEventListener("click", stopPolyrhythm)
+
+document.getElementById("stop-button")?.addEventListener("click", () => {
+  stopPolyrhythm()
+})
 
 // On page load, apply settings from the URL hash
 window.addEventListener("load", loadFromHash)
+
+console.log("test")

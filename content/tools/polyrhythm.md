@@ -32,7 +32,10 @@ tags:
     <button id="stop-button">Stop</button>
    </div>
 </div>
-  <canvas id="canvas" style="color: black" width="800" height="600" ></canvas>
-  <script type="module" src="./wasm/polyrhythm.js"></script>
+  <canvas id="canvas1" style="color: black" width="800" height="600" ></canvas>
+  <canvas id="canvas0" style="color: black" width="800" height="200" ></canvas>
+  <canvas id="canvas2" style="color: black" width="800" height="300" ></canvas>
+  <canvas id="canvas3" style="color: black" width="800" height="600" ></canvas>
+  <script type="module" src="/js/polyrhythm.js"></script>
   <link href="./polyrhythm.css" rel="stylesheet" type="text/css">
 </body>
