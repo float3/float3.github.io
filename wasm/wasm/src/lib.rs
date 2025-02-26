@@ -2,6 +2,7 @@ pub use textprocessing::*;
 pub use tuningplayground::*;
 
 pub mod aoc;
+pub mod chars;
 pub mod glsl;
 pub mod polyrhythm;
 
@@ -16,19 +17,19 @@ static ALLOC: mini_alloc::MiniAlloc = mini_alloc::MiniAlloc::INIT;
 extern "C" {
     #[cfg(debug_assertions)]
     #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
+    pub fn log(s: &str);
     #[cfg(debug_assertions)]
     #[wasm_bindgen(js_namespace = console)]
-    fn debug(s: &str);
+    pub fn debug(s: &str);
     #[cfg(debug_assertions)]
     #[wasm_bindgen(js_namespace = console)]
-    fn error(s: &str);
+    pub fn error(s: &str);
     #[cfg(debug_assertions)]
     #[wasm_bindgen(js_namespace = console)]
-    fn warn(s: &str);
+    pub fn warn(s: &str);
     #[cfg(debug_assertions)]
     #[wasm_bindgen(js_namespace = console)]
-    fn info(s: &str);
+    pub fn info(s: &str);
 }
 
 #[wasm_bindgen(start)]

@@ -27,9 +27,8 @@
         devShells.default = pkgs.mkShell rec {
           nativeBuildInputs = [pkgs.pkg-config];
           buildInputs = with pkgs; [
-            bun
-            trunk
-            cargo
+            # bun
+            # trunk
             cargo-edit
             cargo-hack
             clang

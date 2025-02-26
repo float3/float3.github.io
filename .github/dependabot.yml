@@ -18,15 +18,6 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
-  - package-ecosystem: "npm"
-    directory: "/wasm/wasm/ts"
-    schedule:
-      interval: "weekly"
-    groups:
-      production-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -91,7 +82,7 @@ updates:
         patterns:
           - "*"
   - package-ecosystem: "cargo"
-    directory: "/wasm/bundle"
+    directory: "/wasm/wasm"
     schedule:
       interval: "weekly"
     groups:

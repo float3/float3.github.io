@@ -1,3 +1,4 @@
+use minify_html::{Cfg, minify};
 use std::fs;
 use std::ops::ControlFlow;
 use syntect::highlighting::ThemeSet;
@@ -50,7 +51,6 @@ fn generate_file(
         path.file_stem().unwrap().to_string_lossy(),
         theme
     ));
-    let dark_out = path_buf;
     let html = match highlighted_html_for_file(path, ss, darktheme) {
         Ok(content) => content,
         Err(e) => {
@@ -58,7 +58,27 @@ fn generate_file(
             return ControlFlow::Break(());
         }
     };
-    fs::write(dark_out, html).unwrap();
+
+    let cfg = Cfg {
+        do_not_minify_doctype: false,
+        keep_closing_tags: false,
+        keep_comments: false,
+        minify_css: true,
+        minify_js: true,
+        remove_bangs: true,
+        remove_processing_instructions: true,
+        ensure_spec_compliant_unquoted_attribute_values: true,
+        keep_html_and_head_opening_tags: false,
+        keep_spaces_between_attributes: false,
+        keep_input_type_text_attr: false,
+        keep_ssi_comments: false,
+        preserve_brace_template_syntax: false,
+        preserve_chevron_percent_template_syntax: false,
+    };
+    let minified = minify(html.as_bytes(), &cfg);
+    let minified_html = String::from_utf8(minified).unwrap();
+
+    fs::write(path_buf, minified_html).unwrap();
 
     ControlFlow::Continue(())
 }

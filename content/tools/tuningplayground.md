@@ -175,5 +175,5 @@ tags:
 </div>
 <div id="logContainer"></div>
 </div>
-<script src="./wasm/tuningplayground.js"></script>
+<script src="/js/tuningplayground.js"></script>
 </div>

@@ -15,9 +15,11 @@ else
 fi
 
 rm -rf pkg
+export RUSTFLAGS='--cfg getrandom_backend="wasm_js"'
 wasm-pack build --target bundler $ARGS
+export RUSTFLAGS=''
 
-cd ./ts
+cd ../../ts
 pnpm install
 pnpm exec tsc
 pnpm exec webpack --mode $WEBPACK_MODE
