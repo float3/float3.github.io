@@ -1,5 +1,4 @@
 use std::sync::{LazyLock, Mutex};
-
 use wasm_bindgen::prelude::wasm_bindgen;
 
 static HIRAGANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
@@ -81,9 +80,7 @@ static HANGUL: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     const HANGUL_SYLLABLE_END: char = '\u{d7a3}';
 
     let mut hangul: Vec<char> = (HANGUL_JAMO_START..=HANGUL_JAMO_END).collect();
-
     hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
-
     Mutex::new(hangul)
 });
 
@@ -92,56 +89,87 @@ fn random_u32(max: u32) -> u32 {
     num % max
 }
 
-fn random_hiragana() -> char {
-    let idx = random_u32(HIRAGANA.lock().unwrap().len() as u32) as usize;
-    HIRAGANA.lock().unwrap().remove(idx)
+fn random_hiragana(remove: bool) -> char {
+    let mut v = HIRAGANA.lock().expect("failed to lock hiragana");
+    let idx = random_u32(v.len() as u32) as usize;
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
-fn random_katakana() -> char {
-    let idx = random_u32(KATAKANA.lock().unwrap().len() as u32) as usize;
-    KATAKANA.lock().unwrap().remove(idx)
+fn random_katakana(remove: bool) -> char {
+    let mut v = KATAKANA.lock().expect("failed to lock katakana");
+    let idx = random_u32(v.len() as u32) as usize;
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
-fn random_kanji() -> char {
-    let idx = random_u32(KANJI.lock().unwrap().len() as u32) as usize;
-    KANJI.lock().unwrap().remove(idx)
+fn random_kanji(remove: bool) -> char {
+    let mut v = KANJI.lock().expect("failed to lock kanji");
+    let idx = random_u32(v.len() as u32) as usize;
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
-fn random_bopomofo() -> char {
-    let idx = random_u32(BOPOMOFO.lock().unwrap().len() as u32) as usize;
-    BOPOMOFO.lock().unwrap().remove(idx)
+fn random_bopomofo(remove: bool) -> char {
+    let mut v = BOPOMOFO.lock().expect("failed to lock bopomofo");
+    let idx = random_u32(v.len() as u32) as usize;
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
-fn random_hangul() -> char {
-    let idx = random_u32(HANGUL.lock().unwrap().len() as u32) as usize;
-    HANGUL.lock().unwrap().remove(idx)
+fn random_hangul(remove: bool) -> char {
+    let mut v = HANGUL.lock().expect("failed to lock hangul");
+    let idx = random_u32(v.len() as u32) as usize;
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
 #[wasm_bindgen]
-struct Char;
+pub fn random_weighted_char(remove: bool) -> char {
+    let hiragana_len = HIRAGANA.lock().expect("failed to lock hiragana").len();
+    let katakana_len = KATAKANA.lock().expect("failed to lock katakana").len();
+    let kanji_len = KANJI.lock().expect("failed to lock kanji").len();
+    let bopomofo_len = BOPOMOFO.lock().expect("failed to lock bopomofo").len();
+    let hangul_len = HANGUL.lock().expect("failed to lock hangul").len();
 
-#[wasm_bindgen]
-impl Char {
-    pub fn new() -> Self {
-        Self
-    }
+    let total = hiragana_len + katakana_len + kanji_len + bopomofo_len + hangul_len;
+    assert!(total > 0, "All LUTs are empty");
 
-    pub fn next_char(&self) -> char {
-        match random_u32(5) {
-            0 => random_hiragana(),
-            1 => random_katakana(),
-            2 => random_kanji(),
-            3 => random_bopomofo(),
-            4 => random_hangul(),
-            _ => unreachable!(),
-        }
+    let rnd = random_u32(total as u32) as usize;
+    let mut offset = rnd;
+    if offset < hiragana_len {
+        return random_hiragana(remove);
     }
+    offset -= hiragana_len;
+    if offset < katakana_len {
+        return random_katakana(remove);
+    }
+    offset -= katakana_len;
+    if offset < kanji_len {
+        return random_kanji(remove);
+    }
+    offset -= kanji_len;
+    if offset < bopomofo_len {
+        return random_bopomofo(remove);
+    }
+    // Must fall within hangul range
+    random_hangul(remove)
 }
 
-impl Iterator for Char {
-    type Item = char;
+// #[wasm_bindgen]
+// pub struct Char;
 
-    fn next(&mut self) -> Option<Self::Item> {
-        Some(self.next_char())
-    }
-}
+// #[wasm_bindgen]
+// impl Char {
+//     #[wasm_bindgen(constructor)]
+//     pub fn new() -> Char {
+//         Char
+//     }
+
+//     pub fn next_char(&self) -> char {
+//         random_weighted_char(true)
+//     }
+// }
+
+// impl Iterator for Char {
+//     type Item = char;
+
+//     fn next(&mut self) -> Option<Self::Item> {
+//         Some(self.next_char())
+//     }
+// }
