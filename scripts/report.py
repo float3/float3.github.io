@@ -55,7 +55,7 @@ def get_os_version():
         return "Unknown OS"
 
 
-def get_command(command, args=["--version"]):
+def get_version(command, args=["--version"]):
     try:
         result = subprocess.run(
             [command] + args,
@@ -104,23 +104,24 @@ def main():
         print("No build time provided")
 
     # ---- Gather version info ----
-    time_str = get_command("date", ["+%x (%A) %X %z"])
+    time_str = get_version("date", ["+%x (%A) %X %z"])
     os_version = get_os_version()
-    quartz_version = get_command("npx", ["quartz", "--version"]).split("\n").pop()
-    python_version = get_command("python")
-    core_pack = get_command("corepack")
-    node_version = get_command("node")
-    npm_version = get_command("npm")
-    pnpm_version = get_command("pnpm")
-    cargo_version = get_command("cargo")
-    rustc_version = get_command("rustc")
-    rustup_version = get_command("rustup").split("\n").pop(0)
-    wasm_pack_version = get_command("wasm-pack")
-    tsc_version = get_command("pnpm", ["exec", "tsc", "--version"])
+    nix_version = get_version("nix")
+    quartz_version = get_version("npx", ["quartz", "--version"]).split("\n").pop()
+    python_version = get_version("python")
+    core_pack = get_version("corepack")
+    node_version = get_version("node")
+    npm_version = get_version("npm")
+    pnpm_version = get_version("pnpm")
+    cargo_version = get_version("cargo")
+    rustc_version = get_version("rustc")
+    rustup_version = get_version("rustup").split("\n").pop(0)
+    wasm_pack_version = get_version("wasm-pack")
+    tsc_version = get_version("pnpm", ["exec", "tsc", "--version"])
     # Retrieve git commit hash
-    git_commit = get_command("git", ["rev-parse", "HEAD"])
+    git_commit = get_version("git", ["rev-parse", "HEAD"])
     os.chdir("../ts")
-    webpack_full = get_command("pnpm", ["exec", "webpack", "--version"])
+    webpack_full = get_version("pnpm", ["exec", "webpack", "--version"])
     webpack_version = (
         webpack_full.split("Packages:")[1].replace("\n", "<br>")
         if "Packages:" in webpack_full
@@ -151,6 +152,7 @@ def main():
     if build_time > 0:
         current_body.append(f"<p><strong>Build Time:</strong> {build_time} seconds</p>")
     current_body.append(f"<p><strong>Operating System:</strong> {os_version}</p>")
+    current_body.append(f"<p><strong>Nix:</strong> {nix_version}</p>")
     current_body.append(f"<p><strong>Quartz:</strong> {quartz_version}</p>")
     current_body.append(f"<p><strong>Python:</strong> {python_version}</p>")
     current_body.append(f"<p><strong>corepack:</strong> {core_pack}</p>")
