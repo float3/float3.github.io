@@ -29,10 +29,10 @@ static KANJI: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     const CFK_EXTENSION_D_START: char = '\u{2b740}';
     const CFK_EXTENSION_D_END: char = '\u{2b81d}';
 
+    /*
     const CFK_EXTENSION_I_START: char = '\u{31640}';
     const CFK_EXTENSION_I_END: char = '\u{318f2}';
 
-    /*
     const CFK_EXTENSION_B_START: char = '\u{20000}';
     const CFK_EXTENSION_B_END: char = '\u{2a6d6}';
 
@@ -55,7 +55,7 @@ static KANJI: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     let mut kanji: Vec<char> = (KANJI_START..=KANJI_END).collect();
     kanji.extend(CFK_EXTENSION_A_START..=CFK_EXTENSION_A_END);
     kanji.extend(CFK_EXTENSION_D_START..=CFK_EXTENSION_D_END);
-    kanji.extend(CFK_EXTENSION_I_START..=CFK_EXTENSION_I_END);
+    // kanji.extend(CFK_EXTENSION_I_START..=CFK_EXTENSION_I_END);
 
     Mutex::new(kanji)
 });
@@ -73,14 +73,14 @@ static BOPOMOFO: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
 });
 
 static HANGUL: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    const HANGUL_JAMO_START: char = '\u{1100}';
-    const HANGUL_JAMO_END: char = '\u{11FF}';
+    // const HANGUL_JAMO_START: char = '\u{1100}';
+    // const HANGUL_JAMO_END: char = '\u{11FF}';
 
     const HANGUL_SYLLABLE_START: char = '\u{ac00}';
     const HANGUL_SYLLABLE_END: char = '\u{d7a3}';
 
-    let mut hangul: Vec<char> = (HANGUL_JAMO_START..=HANGUL_JAMO_END).collect();
-    hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
+    let mut hangul: Vec<char> = (HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END).collect();
+    // hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
     Mutex::new(hangul)
 });
 
