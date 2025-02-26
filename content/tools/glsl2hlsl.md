@@ -1,7 +1,7 @@
 ---
 title: glsl2hlsl
 date: 2024-12-12
-updated: 2025-02-19
+updated: 2025-02-26
 tags:
   - shaders
   - wasm
