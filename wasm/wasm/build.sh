@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = "prod" ] || [ "$GITHUB_ACTIONS" == "true" ]; then
-  ARGS="--release"
+  ARGS="--release --features console_error_panic_hook"
   WEBPACK_MODE="production"
 elif [ "$1" = "dev" ]; then
   ARGS="--dev --features console_error_panic_hook"
