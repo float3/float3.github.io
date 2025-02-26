@@ -2,13 +2,30 @@ use std::sync::{LazyLock, Mutex};
 use wasm_bindgen::prelude::wasm_bindgen;
 
 static HIRAGANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    let mut v: Vec<char> = ('\u{3041}'..='\u{3096}').collect();
+    let mut v: Vec<char> = ('\u{3041}'..='\u{3094}')
+        .filter(|&c| {
+            c != '\u{3041}'
+                && c != '\u{3043}'
+                && c != '\u{3045}'
+                && c != '\u{3047}'
+                && c != '\u{3049}'
+        })
+        .collect();
     v.push('\u{309f}');
     Mutex::new(v)
 });
 
 static KATAKANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    let mut v: Vec<char> = ('\u{30a1}'..='\u{30fa}').collect();
+    let mut v: Vec<char> = ('\u{30a1}'..='\u{30f4}')
+        .filter(|&c| {
+            c != '\u{30a1}'
+                && c != '\u{30a3}'
+                && c != '\u{30a5}'
+                && c != '\u{30a7}'
+                && c != '\u{30a9}'
+        })
+        .collect();
+    v.extend('\u{30f7}'..='\u{30fa}');
     v.push('\u{30ff}');
     Mutex::new(v)
 });
