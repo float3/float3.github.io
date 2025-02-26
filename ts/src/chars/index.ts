@@ -6,7 +6,7 @@ import("wasm").then((module) => {
 
   const output = document.getElementById("output")
   if (!output) return
-  (function appendChar() {
+  ;(function appendChar() {
     const char = wasm.random_weighted_char(true)
     output.textContent += char
     appendChar()

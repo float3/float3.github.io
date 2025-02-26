@@ -79,7 +79,7 @@ static HANGUL: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     const HANGUL_SYLLABLE_START: char = '\u{ac00}';
     const HANGUL_SYLLABLE_END: char = '\u{d7a3}';
 
-    let mut hangul: Vec<char> = (HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END).collect();
+    let hangul: Vec<char> = (HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END).collect();
     // hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
     Mutex::new(hangul)
 });
