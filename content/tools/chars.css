@@ -1,3 +1,5 @@
 #output {
     font-family: monospace;
+    width: 80ch;
+    white-space: pre;
 }

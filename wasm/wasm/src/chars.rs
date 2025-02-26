@@ -26,10 +26,10 @@ static KANJI: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     const CFK_EXTENSION_A_START: char = '\u{3400}';
     const CFK_EXTENSION_A_END: char = '\u{4dbf}';
 
+    /*
     const CFK_EXTENSION_D_START: char = '\u{2b740}';
     const CFK_EXTENSION_D_END: char = '\u{2b81d}';
 
-    /*
     const CFK_EXTENSION_I_START: char = '\u{31640}';
     const CFK_EXTENSION_I_END: char = '\u{318f2}';
 
@@ -54,7 +54,7 @@ static KANJI: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
 
     let mut kanji: Vec<char> = (KANJI_START..=KANJI_END).collect();
     kanji.extend(CFK_EXTENSION_A_START..=CFK_EXTENSION_A_END);
-    kanji.extend(CFK_EXTENSION_D_START..=CFK_EXTENSION_D_END);
+    // kanji.extend(CFK_EXTENSION_D_START..=CFK_EXTENSION_D_END);
     // kanji.extend(CFK_EXTENSION_I_START..=CFK_EXTENSION_I_END);
 
     Mutex::new(kanji)
