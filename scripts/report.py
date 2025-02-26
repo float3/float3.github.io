@@ -119,14 +119,14 @@ def main():
     tsc_version = get_command("pnpm", ["exec", "tsc", "--version"])
     # Retrieve git commit hash
     git_commit = get_command("git", ["rev-parse", "HEAD"])
-    os.chdir("../wasm/wasm/ts")
+    os.chdir("../ts")
     webpack_full = get_command("pnpm", ["exec", "webpack", "--version"])
     webpack_version = (
         webpack_full.split("Packages:")[1].replace("\n", "<br>")
         if "Packages:" in webpack_full
         else webpack_full
     )
-    os.chdir("../../../public")
+    os.chdir("../public")
 
     # ---- Run 'tree' command to gather folder structure info ----
     folder_to_scan = "."
