@@ -1,16 +1,17 @@
 const START_YEAR = 2015
 const STAR = "⭐"
 
+import { retrieve_html, retrieve_problem, solve } from "wasm"
+
 export interface TabConfig {
   years: number
   days: number
   problems: number
 }
 
-export async function createTabs(
+export function createTabs(
   container: HTMLElement,
   config: TabConfig,
-  wasm: typeof import("wasm"),
 ) {
   const { years, days, problems } = config
 
@@ -74,12 +75,12 @@ export async function createTabs(
 
         const descriptionArea = document.createElement("textarea")
         descriptionArea.className = "big-field"
-        descriptionArea.value = wasm.retrieve_problem(y, d, p)
+        descriptionArea.value = retrieve_problem(y, d, p)
         descriptionArea.disabled = true
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field"
-        const code = wasm.retrieve_html(y, d, p, isDark)
+        const code = retrieve_html(y, d, p, isDark)
         complete[y - START_YEAR][d - 1][p - 1] = !code.includes("todo!")
         codeArea.innerHTML = code
         // {
@@ -109,7 +110,7 @@ export async function createTabs(
         const solveButton = document.createElement("button")
         solveButton.textContent = "Solve"
         solveButton.addEventListener("click", () => {
-          outputArea.value = wasm.solve(inputArea.value, y, d, p)
+          outputArea.value = solve(inputArea.value, y, d, p)
         })
 
         fields.appendChild(descriptionArea)
@@ -247,7 +248,7 @@ export async function createTabs(
       const d = parseInt(dStr, 10)
       const p = parseInt(pStr, 10)
 
-      const newCode = wasm.retrieve_html(y, d, p, newIsDark)
+      const newCode = retrieve_html(y, d, p, newIsDark)
       const codeArea = fieldsDiv.querySelector("div.big-field") as HTMLDivElement
       if (codeArea) codeArea.innerHTML = newCode
     })

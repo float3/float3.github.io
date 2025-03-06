@@ -2,16 +2,20 @@ import { QuartzConfig } from "./quartz/cfg"
 import * as Plugin from "./quartz/plugins"
 
 /**
- * Quartz 4.0 Configuration
+ * Quartz 4 Configuration
  *
  * See https://quartz.jzhao.xyz/configuration for more information.
  */
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "hilll.dev",
+    pageTitleSuffix: "",
     enableSPA: false,
     enablePopovers: true,
     analytics: null,
+    // {
+    //  provider: "plausible",
+    // },
     locale: "en-US",
     baseUrl: "hilll.dev",
     ignorePatterns: ["private", "templates", ".obsidian"],
@@ -64,7 +68,7 @@ const config: QuartzConfig = {
           light: "github-light",
           dark: "github-dark",
         },
-        keepBackground: true,
+        keepBackground: false,
       }),
       Plugin.ObsidianFlavoredMarkdown({ enableInHtmlEmbed: true, parseTags: true }),
       Plugin.GitHubFlavoredMarkdown(),
