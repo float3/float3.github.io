@@ -1,4 +1,4 @@
-use krabby::{random_pokemon, Generations, PokemonOptions, RandomOptions};
+use krabby::{Generations, PokemonOptions, RandomOptions, random_pokemon};
 use std::collections::HashSet;
 use std::str::FromStr;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -84,6 +84,6 @@ mod tests {
     #[test]
     fn test_fun() {
         let x = random_n_pokemon(5, 3);
-        println!("{}", x);
+        println!("{:?}", x);
     }
 }
