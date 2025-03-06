@@ -23,7 +23,7 @@ cd $wasm_path/wasm
 ./build.sh $ARGS
 
 cd $root_path
-rm ./content/tools/wasm/*LICENSE.txt | true
+rm ./content/js/*LICENSE.txt | true
 
 cd $root_path
 pnpm install

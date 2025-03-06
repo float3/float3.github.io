@@ -440,7 +440,7 @@ mod tests {
     fn test_get_expr_type_constants() {
         let int_expr = Expr::IntConst(42);
         assert_eq!(get_expr_type(&int_expr), Some(TypeKind::Scalar));
-        let float_expr = Expr::FloatConst(3.14);
+        let float_expr = Expr::FloatConst(3.12);
         assert_eq!(get_expr_type(&float_expr), Some(TypeKind::Scalar));
     }
 

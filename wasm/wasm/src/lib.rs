@@ -4,6 +4,7 @@ pub use tuningplayground::*;
 pub mod aoc;
 pub mod chars;
 pub mod glsl;
+pub mod krabby;
 pub mod polyrhythm;
 
 use wasm_bindgen::prelude::*;

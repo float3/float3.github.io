@@ -189,7 +189,7 @@ ShaderImporter:
     }
 }
 
-pub fn get_mat_meta_file(name: &String, guid: &String) -> ShaderFile {
+pub fn get_mat_meta_file(name: &str, guid: &String) -> ShaderFile {
     let content = format!(
         "fileFormatVersion: 2
 guid: {}
@@ -205,7 +205,7 @@ ShaderImporter:
     );
 
     ShaderFile {
-        name: format!("{}.mat.meta", name.clone()),
+        name: format!("{}.mat.meta", name.to_owned()),
         contents: content,
     }
 }
