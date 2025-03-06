@@ -8,7 +8,7 @@ import("wasm").then((module) => {
 
   // Create a pre element to preserve all whitespace exactly.
   const pre = document.createElement("pre")
-  const header = document.createElement("header")
+  // const header = document.createElement("header")
   pre.style.fontFamily = '"Courier New", Courier, monospace'
   pre.style.letterSpacing = "0px"
   // pre.style.whiteSpace = "pre-wrap"
