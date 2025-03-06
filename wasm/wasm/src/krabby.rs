@@ -1,4 +1,4 @@
-use krabby::{Generations, PokemonOptions, RandomOptions, random_pokemon};
+use krabby::{random_pokemon, Generations, PokemonOptions, RandomOptions};
 use std::collections::HashSet;
 use std::str::FromStr;
 use wasm_bindgen::prelude::wasm_bindgen;
@@ -22,7 +22,7 @@ pub fn random_pokemon_wasm() -> String {
 }
 
 #[wasm_bindgen]
-pub fn random_n_pokemon(n: u8, padding: usize) -> String {
+pub fn random_n_pokemon(n: u8, padding: usize) -> Vec<String> {
     let options = RandomOptions {
         generations: Generations::from_str("1-4").unwrap(),
         no_mega: false,
@@ -75,8 +75,7 @@ pub fn random_n_pokemon(n: u8, padding: usize) -> String {
         }
     }
 
-    // join the lines into one string
-    output_lines.join("\n")
+    output_lines
 }
 
 #[cfg(test)]

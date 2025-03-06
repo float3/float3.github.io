@@ -53,8 +53,8 @@ devDependencies:
     specifier: ^3.5.3
     version: 3.5.3
   terser-webpack-plugin:
-    specifier: ^5.3.13
-    version: 5.3.13(webpack@5.98.0)
+    specifier: ^5.3.14
+    version: 5.3.14(webpack@5.98.0)
   ts-node:
     specifier: ^10.9.2
     version: 10.9.2(@types/node@22.13.9)(typescript@5.8.2)
@@ -3439,8 +3439,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /terser-webpack-plugin@5.3.13(webpack@5.98.0):
-    resolution: {integrity: sha512-JG3pBixF6kx2o0Yfz2K6pqh72DpwTI08nooHd06tcj5WyIt5SsSiUYqRT+kemrGUNSuSzVhwfZ28aO8gogajNQ==}
+  /terser-webpack-plugin@5.3.14(webpack@5.98.0):
+    resolution: {integrity: sha512-vkZjpUjb6OMS7dhV+tILUW6BhpDR7P2L/aQSAv+Uwk+m8KATX9EccViHTJR2qDtACKPIYndLGCyl3FMo+r2LMw==}
     engines: {node: '>= 10.13.0'}
     peerDependencies:
       '@swc/core': '*'
@@ -3864,7 +3864,7 @@ packages:
       neo-async: 2.6.2
       schema-utils: 4.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.13(webpack@5.98.0)
+      terser-webpack-plugin: 5.3.14(webpack@5.98.0)
       watchpack: 2.4.2
       webpack-cli: 6.0.1(webpack-dev-server@5.2.0)(webpack@5.98.0)
       webpack-sources: 3.2.3
