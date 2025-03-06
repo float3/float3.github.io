@@ -24,7 +24,7 @@ pub fn random_pokemon_wasm() -> String {
 #[wasm_bindgen]
 pub fn random_n_pokemon(n: u8, padding: usize) -> String {
     let options = RandomOptions {
-        generations: Generations::from_str("1").unwrap(),
+        generations: Generations::from_str("1-4").unwrap(),
         no_mega: false,
         no_gmax: false,
         no_regional: false,
