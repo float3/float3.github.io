@@ -1,11 +1,8 @@
 import { DEFAULT_SHADER, DEFAULT_SHADER_SOURCE } from "./default_shader.js"
 
-export let wasm: typeof import("wasm")
+import * as wasm from "wasm"
 
-import("wasm").then((module) => {
-  wasm = module
-  wasm.main()
-})
+wasm.main()
 
 const inp = document.getElementById("in") as HTMLTextAreaElement
 const outp = document.getElementById("out") as HTMLTextAreaElement

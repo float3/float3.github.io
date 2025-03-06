@@ -1,40 +1,31 @@
-let wasmModulePromise: Promise<typeof import("wasm")>
+import * as wasm from "wasm"
 
-function loadWasm(): Promise<typeof import("wasm")> {
-  if (!wasmModulePromise) {
-    wasmModulePromise = import("wasm").then(async (module) => {
-      await module.main()
-      return module
-    })
-  }
-  return wasmModulePromise
-}
+wasm.main()
 
 enum Side {
   LEFT,
   RIGHT,
 }
 
-export async function transformLeftToRight(index: number): Promise<void> {
+export function transformLeftToRight(index: number) {
   const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null
   const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null
   if (leftEl && rightEl) {
     const left = leftEl.value
-    rightEl.value = await transform(left, index, Side.LEFT)
+    rightEl.value = transform(left, index, Side.LEFT)
   }
 }
 
-export async function transformRightToLeft(index: number): Promise<void> {
+export function transformRightToLeft(index: number) {
   const rightEl = document.getElementById(`right${index}`) as HTMLInputElement | null
   const leftEl = document.getElementById(`left${index}`) as HTMLInputElement | null
   if (rightEl && leftEl) {
     const right = rightEl.value
-    leftEl.value = await transform(right, index, Side.RIGHT)
+    leftEl.value = transform(right, index, Side.RIGHT)
   }
 }
 
-async function transform(text: string, index: number, side: Side): Promise<string> {
-  const wasm = await loadWasm()
+function transform(text: string, index: number, side: Side): string {
   switch (index) {
     case 0:
       switch (side) {

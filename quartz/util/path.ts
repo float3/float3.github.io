@@ -86,12 +86,12 @@ export function simplifySlug(fp: FullSlug): SimpleSlug {
 }
 
 export function transformInternalLink(link: string): RelativeURL {
-  const [fplike, anchor] = splitAnchor(decodeURI(link))
+  let [fplike, anchor] = splitAnchor(decodeURI(link))
 
   const folderPath = isFolderPath(fplike)
-  const segments = fplike.split("/").filter((x) => x.length > 0)
-  const prefix = segments.filter(isRelativeSegment).join("/")
-  const fp = segments.filter((seg) => !isRelativeSegment(seg) && seg !== "").join("/")
+  let segments = fplike.split("/").filter((x) => x.length > 0)
+  let prefix = segments.filter(isRelativeSegment).join("/")
+  let fp = segments.filter((seg) => !isRelativeSegment(seg) && seg !== "").join("/")
 
   // manually add ext here as we want to not strip 'index' if it has an extension
   const simpleSlug = simplifySlug(slugifyFilePath(fp as FilePath))
@@ -108,10 +108,10 @@ const _rebaseHtmlElement = (el: Element, attr: string, newBase: string | URL) =>
   el.setAttribute(attr, rebased.pathname + rebased.hash)
 }
 export function normalizeRelativeURLs(el: Element | Document, destination: string | URL) {
-  el.querySelectorAll('[href^="./"], [href^="../"]').forEach((item) =>
+  el.querySelectorAll('[href=""], [href^="./"], [href^="../"]').forEach((item) =>
     _rebaseHtmlElement(item, "href", destination),
   )
-  el.querySelectorAll('[src^="./"], [src^="../"]').forEach((item) =>
+  el.querySelectorAll('[src=""], [src^="./"], [src^="../"]').forEach((item) =>
     _rebaseHtmlElement(item, "src", destination),
   )
 }
@@ -183,10 +183,26 @@ export function slugTag(tag: string) {
 }
 
 export function joinSegments(...args: string[]): string {
-  return args
-    .filter((segment) => segment !== "")
+  if (args.length === 0) {
+    return ""
+  }
+
+  let joined = args
+    .filter((segment) => segment !== "" && segment !== "/")
+    .map((segment) => stripSlashes(segment))
     .join("/")
-    .replace(/\/\/+/g, "/")
+
+  // if the first segment starts with a slash, add it back
+  if (args[0].startsWith("/")) {
+    joined = "/" + joined
+  }
+
+  // if the last segment is a folder, add a trailing slash
+  if (args[args.length - 1].endsWith("/")) {
+    joined = joined + "/"
+  }
+
+  return joined
 }
 
 export function getAllSegmentPrefixes(tags: string): string[] {
@@ -204,14 +220,14 @@ export interface TransformOptions {
 }
 
 export function transformLink(src: FullSlug, target: string, opts: TransformOptions): RelativeURL {
-  const targetSlug = transformInternalLink(target)
+  let targetSlug = transformInternalLink(target)
 
   if (opts.strategy === "relative") {
     return targetSlug as RelativeURL
   } else {
     const folderTail = isFolderPath(targetSlug) ? "/" : ""
     const canonicalSlug = stripSlashes(targetSlug.slice(".".length))
-    const [targetCanonical, targetAnchor] = splitAnchor(canonicalSlug)
+    let [targetCanonical, targetAnchor] = splitAnchor(canonicalSlug)
 
     if (opts.strategy === "shortest") {
       // if the file name is unique, then it's just the filename
