@@ -54,6 +54,12 @@ export function pageResources(
         moduleType: "module",
         contentType: "external",
       },
+      {
+        src: joinSegments(baseDir, "js/pokemon.js"),
+        loadTime: "beforeDOMReady",
+        moduleType: "module",
+        contentType: "external",
+      },
     ],
   }
 }

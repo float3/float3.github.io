@@ -50,6 +50,8 @@ fn compute_position_along_polygon(vertices: &[(f64, f64)], t: f64) -> (f64, f64)
     )
 }
 
+type MyType = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
+
 /// Starts the animation with user settings.
 /// If a previous instance is running, it is canceled.
 #[wasm_bindgen]
@@ -127,7 +129,7 @@ pub fn start_with_settings(
     let beat_tracker = Rc::new(RefCell::new(vec![None; poly_rc.components.len()]));
 
     // Create an Rc for the animation closure.
-    let f: Rc<RefCell<Option<Closure<dyn FnMut()>>>> = Rc::new(RefCell::new(None));
+    let f: MyType = Rc::new(RefCell::new(None));
     let f_clone = f.clone();
 
     let start_time = js_sys::Date::now();
@@ -185,7 +187,7 @@ pub fn start_with_settings(
             // --- Beat Counting Visualization ---
             let beat_disp = ((t_phase * sides as f64).floor() as u32) + 1;
             ctx0.set_font("20px sans-serif");
-            ctx0.set_fill_style(&"blue".into());
+            ctx0.set_fill_style_str("blue");
             ctx0.fill_text(
                 &beat_disp.to_string(),
                 center_x - 10.0,

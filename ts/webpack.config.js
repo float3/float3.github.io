@@ -19,7 +19,8 @@ export default {
     therenderingequation: "./dist/therenderingequation.js",
     movies: "./dist/movies.js",
     trolley: "./dist/trolley.js",
-    chars: "./dist/chars.js"
+    chars: "./dist/chars.js",
+    pokemon: "./dist/pokemon.js",
   },
   output: {
     path: path.resolve(path.dirname(""), "../content/js"),

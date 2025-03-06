@@ -18,6 +18,7 @@ mini-alloc = ["dep:mini-alloc"]
 [dependencies]
 tuningplayground = { path = "../tuningplayground/" }
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+# [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = { version = "0.2.100" }
 console_error_panic_hook = { version = "0.1.7", optional = true }
 mini-alloc = { version = "0.8.1", optional = true }
@@ -31,6 +32,11 @@ web-sys = { version = "0.3.77", features = [
     "HtmlCanvasElement",
 ] }
 getrandom = { version = "0.3.1", features = ["wasm_js"] }
+krabby = { git = "https://github.com/float3/krabby/", features = [
+    "debug-embed",
+    "html",
+] }
+unicode-width = "0.2.0"
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.50"

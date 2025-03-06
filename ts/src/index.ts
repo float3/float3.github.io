@@ -7,6 +7,7 @@ import "./therenderingequation.js"
 import "./trolley.js"
 import "./movies.js"
 import "./chars.js"
+import "./pokemon.js"
 
 import("./aoc.js").catch((e) => console.error("Error importing `.js`:", e))
 import("./glsl.js").catch((e) => console.error("Error importing `.js`:", e))
@@ -17,3 +18,4 @@ import("./therenderingequation.js").catch((e) => console.error("Error importing 
 import("./trolley.js").catch((e) => console.error("Error importing `.js`:", e))
 import("./movies.js").catch((e) => console.error("Error importing `.js`:", e))
 import("./chars.js").catch((e) => console.error("Error importing `.js`:", e))
+import("./pokemon.js").catch((e) => console.error("Error importing `.js`:", e))
