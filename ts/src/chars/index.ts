@@ -4,7 +4,7 @@ wasm.main()
 
 const output = document.getElementById("output")
 if (output) {
-  (function appendChar() {
+  ;(function appendChar() {
     output.textContent += wasm.random_weighted_char(true)
     setTimeout(appendChar, 1)
   })()
