@@ -9,10 +9,7 @@ export interface TabConfig {
   problems: number
 }
 
-export function createTabs(
-  container: HTMLElement,
-  config: TabConfig,
-) {
+export function createTabs(container: HTMLElement, config: TabConfig) {
   const { years, days, problems } = config
 
   let activeYear = START_YEAR + years - 1
