@@ -27,7 +27,7 @@ jobs:
           token: ${{ secrets.TOKEN }}
           submodules: recursive
 
-      - uses: cachix/install-nix-action@v30
+      - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
@@ -37,7 +37,7 @@ jobs:
           python-version: 3.13
 
       - name: setup node
-        uses: actions/setup-node@v4.2.0
+        uses: actions/setup-node@v4.3.0
         with:
           node-version: 23
 
