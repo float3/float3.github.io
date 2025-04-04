@@ -21,7 +21,7 @@ music21-rs = { git = "https://github.com/float3/music21-rs.git" }
 # [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = { version = "0.2.100" }
 console_error_panic_hook = { version = "0.1.7", optional = true }
-mini-alloc = { version = "0.8.1", optional = true }
+mini-alloc = { version = "0.8.3", optional = true }
 glsl2hlsl = { path = "../glsl2hlsl" }
 adventofcode = { path = "../adventofcode/" }
 textprocessing = { path = "../textprocessing/" }
@@ -31,7 +31,7 @@ web-sys = { version = "0.3.77", features = [
     "CanvasRenderingContext2d",
     "HtmlCanvasElement",
 ] }
-getrandom = { version = "0.3.1", features = ["wasm_js"] }
+getrandom = { version = "0.3.2", features = ["wasm_js"] }
 krabby = { git = "https://github.com/float3/krabby/", features = [
     "debug-embed",
     "html",
