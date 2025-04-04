@@ -438,6 +438,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Mad Max: Furiosa (2024) (2024-05-30)
 - [x] El Camino: A Breaking Bad Movie (2019) (2025-01-08)
 - [x] Tick, Tick... Boom! (2021) (2025-01-30)
+- [x] Mickey 17 (2025) (2025-03-19) 
 
 # Scruffy
 
@@ -502,7 +503,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Nathan for you movie () (2024-11-10)
 - [x] Legalize Everything (2020) (2024-11-17)
 - [x] The Crazies (2009) (2025-02-16)
-- [ ] BREAK (2025-02-23)
+- [x] Snowpiercer (2013) (2025-03-31)
 - [ ] A Good Day to Die Hard (2013)
 - [ ] The World of Suzie Wong (1960)
 - [ ] Sleeper (1973)
