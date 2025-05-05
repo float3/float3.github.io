@@ -13,11 +13,11 @@ dependencies:
     specifier: ^0.10.1
     version: 0.10.1
   '@floating-ui/dom':
-    specifier: ^1.6.13
-    version: 1.6.13
+    specifier: ^1.7.0
+    version: 1.7.0
   '@myriaddreamin/rehype-typst':
-    specifier: 0.5.4
-    version: 0.5.4
+    specifier: 0.6.0
+    version: 0.6.0
   '@napi-rs/simple-git':
     specifier: 0.1.19
     version: 0.1.19
@@ -94,8 +94,8 @@ dependencies:
     specifier: ^0.4.5
     version: 0.4.5
   pixi.js:
-    specifier: ^8.9.1
-    version: 8.9.1
+    specifier: ^8.9.2
+    version: 8.9.2
   pnpm:
     specifier: ^10.10.0
     version: 10.10.0
@@ -106,8 +106,8 @@ dependencies:
     specifier: ^6.5.13
     version: 6.5.13(preact@10.26.5)
   pretty-bytes:
-    specifier: ^6.1.1
-    version: 6.1.1
+    specifier: ^7.0.0
+    version: 7.0.0
   pretty-time:
     specifier: ^1.1.0
     version: 1.1.0
@@ -205,8 +205,8 @@ dependencies:
     specifier: ^9.2.0
     version: 9.2.0
   ws:
-    specifier: ^8.18.1
-    version: 8.18.1
+    specifier: ^8.18.2
+    version: 8.18.2
   yargs:
     specifier: ^17.7.2
     version: 17.7.2
@@ -249,8 +249,8 @@ devDependencies:
     specifier: ^3.5.3
     version: 3.5.3
   tsx:
-    specifier: ^4.19.3
-    version: 4.19.3
+    specifier: ^4.19.4
+    version: 4.19.4
   typescript:
     specifier: ^5.8.3
     version: 5.8.3
@@ -582,16 +582,16 @@ packages:
     requiresBuild: true
     optional: true
 
-  /@floating-ui/core@1.6.9:
-    resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
+  /@floating-ui/core@1.7.0:
+    resolution: {integrity: sha512-FRdBLykrPPA6P76GGGqlex/e7fbe0F1ykgxHYNXQsH/iTEtjMj/f9bpY5oQqbjt5VgZvgz/uKXbGuROijh3VLA==}
     dependencies:
       '@floating-ui/utils': 0.2.9
     dev: false
 
-  /@floating-ui/dom@1.6.13:
-    resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+  /@floating-ui/dom@1.7.0:
+    resolution: {integrity: sha512-lGTor4VlXcesUMh1cupTUTDoCxMb0V6bm3CnxHzQcw8Eaf1jQbgQX4i02fYgT0vJ82tb5MZ4CZk1LRGkktJCzg==}
     dependencies:
-      '@floating-ui/core': 1.6.9
+      '@floating-ui/core': 1.7.0
       '@floating-ui/utils': 0.2.9
     dev: false
 
@@ -824,10 +824,10 @@ packages:
       langium: 3.3.1
     dev: false
 
-  /@myriaddreamin/rehype-typst@0.5.4:
-    resolution: {integrity: sha512-6NJ0Ddom+X1jTTO1qlwB7ArLuZBg18m+fTqd3HWpkxAUhHAoemd2oF3ATwBIM0uF9gzG9d523D4o7b+jXCaBUQ==}
+  /@myriaddreamin/rehype-typst@0.6.0:
+    resolution: {integrity: sha512-WQpr2j7OYtyc2Q1WOqi1wzYrBaeuAWT1Cn1Ki6VPsKoWH7O86/+zKOqltdgMpYdkav1uXYs3RfO5Ir8h0WkZyQ==}
     dependencies:
-      '@myriaddreamin/typst-ts-node-compiler': 0.5.4
+      '@myriaddreamin/typst-ts-node-compiler': 0.6.0
       '@types/hast': 3.0.4
       '@types/katex': 0.16.7
       hast-util-from-html-isomorphic: 2.0.0
@@ -839,8 +839,8 @@ packages:
       - supports-color
     dev: false
 
-  /@myriaddreamin/typst-ts-node-compiler-android-arm-eabi@0.5.4:
-    resolution: {integrity: sha512-jptHQK/GN7RCDI4FkGKrec3x3YKFogIw1kpMFYYscoOEntEF4MGJs2FM3vR3bLXGSAR54WlPI6dXPKCYuzVSOg==}
+  /@myriaddreamin/typst-ts-node-compiler-android-arm-eabi@0.6.0:
+    resolution: {integrity: sha512-Gfrf9Fky5iYtutGWYwqRC4gvllK1p1q6YELCbycI47NCFptONI++3dfub4PixWRn9m8NrmaNFIBQSyLHWsvbLw==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [android]
@@ -848,8 +848,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-android-arm64@0.5.4:
-    resolution: {integrity: sha512-xOt+07nYDu3KiOWPnl62es+rThKYRdbOWQPY4hcFqqC5VRTfZZXUBRKdsG+W8qu0gJ513VLmW9HVlkv2PHTW0Q==}
+  /@myriaddreamin/typst-ts-node-compiler-android-arm64@0.6.0:
+    resolution: {integrity: sha512-EzO6W4xELC6at30hSkkOp5BveszwCmTWceu0PMh6lPxeQF1vnjxUK60MLFfJ40zb1TOXsj4l2pbdBoGqLznC1g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [android]
@@ -857,8 +857,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-darwin-arm64@0.5.4:
-    resolution: {integrity: sha512-mtuIjL4KptMhy+rJY0pUv8s8kzFFYKFDyhDQIndsi7P9jYtIUkjJqhg3rXmMUcbVJEEFlaUJ+I+wFQbDuddSlg==}
+  /@myriaddreamin/typst-ts-node-compiler-darwin-arm64@0.6.0:
+    resolution: {integrity: sha512-8tR1GqFr+q4rNZm8z0230eF7eRCVCSaUefDw1+Qw8EnDPIvwEP8bT0/u2YqHmxthfVfs1msV8hDpRKVeBa6E3g==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -866,8 +866,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-darwin-x64@0.5.4:
-    resolution: {integrity: sha512-rP8ghx3+vCE0vVat6POYNEkXsjXQn1iyy3pPfLTFtSgQRoJoPJJnDB+tkToCiTZQwvo9aFyrY0LOyH8mpm+BYQ==}
+  /@myriaddreamin/typst-ts-node-compiler-darwin-x64@0.6.0:
+    resolution: {integrity: sha512-eytv5ifNvhux9naqEb+4pu1Z4ghQBWiybP4lT/aB44I9H5xjmtYQxiKwNBz54am6RLiMcyLpw/xFdeB13bsdWA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -875,8 +875,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-linux-arm-gnueabihf@0.5.4:
-    resolution: {integrity: sha512-boM8bVPRL/Ekff51urc3HiY2oKVdL2x36MnHgurAown3iK4OMa0JPDGkxpnuRKbDQEZDXQB1xljVGLaAqqecCg==}
+  /@myriaddreamin/typst-ts-node-compiler-linux-arm-gnueabihf@0.6.0:
+    resolution: {integrity: sha512-b20do+PmbsYq07QlTW8uLU3MaoAm6DSCx1IrCEAlUpNH+/29x51Rvyq5JeRrYVOtkR6BxPzyhCM79r5jOkewbQ==}
     engines: {node: '>= 10'}
     cpu: [arm]
     os: [linux]
@@ -884,8 +884,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-linux-arm64-gnu@0.5.4:
-    resolution: {integrity: sha512-DIYH2WXyzeh+0sicGXICm8E/0P5ZAmbCIcGt9sgqXNe2YI/JjXoRDLLm1xN0Y5HD3fiCb/pRTRoeXFpp0u/Fjg==}
+  /@myriaddreamin/typst-ts-node-compiler-linux-arm64-gnu@0.6.0:
+    resolution: {integrity: sha512-AM92MVfEbISYvIA8NwPl2l78nOZIh5er5qQ/NZw2kx4YgTKgklJINEPHXm/aAk7PcpX7G10P45D/xGd5KpX9HQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -893,8 +893,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-linux-arm64-musl@0.5.4:
-    resolution: {integrity: sha512-KNjhfEgPaVaN+0hJ97UKY72jtpMFTA4dnP4iEoB6VX2dunVrbTJbCpjG8Sfml4HJYt0H4gYKsa4LqQzgqFJ6eQ==}
+  /@myriaddreamin/typst-ts-node-compiler-linux-arm64-musl@0.6.0:
+    resolution: {integrity: sha512-nSokVjKQR0ZH7Jub53q7he89+m72RSbL97exSedkB4OdZAi9tAxGFIgceGJuN5AC+DiNtMmqsPwlJiERUjgPhQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -902,8 +902,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-linux-x64-gnu@0.5.4:
-    resolution: {integrity: sha512-iqYx3UFrrN0E8bg+NuvTptP2FndJNtt7tlU6Dsh6vjaay5IaBLIAtn9Yf9dPzsqWzHE3nwTq0yjoLfLEtY4a3w==}
+  /@myriaddreamin/typst-ts-node-compiler-linux-x64-gnu@0.6.0:
+    resolution: {integrity: sha512-3Y2ORiYuCTzQkiHSCHWiGuzTBbNvHTB2lCr3DDsZdvTZ2LZMifPwwICN26X3tlnt6GyC3o/ejZBcMnfNqYbdCw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -911,8 +911,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-linux-x64-musl@0.5.4:
-    resolution: {integrity: sha512-ROleNG0SD50+FoYJQA/9sai0FzNMh94ZAUVbSJFz474olJHSYQ8xqdIiGlpFA6XXPG6TKBedzbDUVYVXWFI+NQ==}
+  /@myriaddreamin/typst-ts-node-compiler-linux-x64-musl@0.6.0:
+    resolution: {integrity: sha512-b+kTb4vI0sFTkPtIAUE+UqjhZ4kTiAkh4F/2QKnFitAsURlLcRwTcMc9NJm6SXwW1OM0nPj1IGTfUOFpqLOIPQ==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -920,8 +920,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-win32-arm64-msvc@0.5.4:
-    resolution: {integrity: sha512-Ihh40WW2cB0TUUMfJEOoH5MzQXmPSZc0OcAWMHj8A5Rr4pNNAr1gcJTeB6UHazoRQ8uQG5hg3CqCFydAIbXKfQ==}
+  /@myriaddreamin/typst-ts-node-compiler-win32-arm64-msvc@0.6.0:
+    resolution: {integrity: sha512-04omIPrXSsRKu4XDhj1WZ9uMjdcFcejBGzyOEV351HVDqg5kxgDB32iG3oLySLrzEcbi9WwI5Si46WrW0wh4mA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -929,8 +929,8 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler-win32-x64-msvc@0.5.4:
-    resolution: {integrity: sha512-umEuUW6mn68JTueWr4LHsIUN8Bxs1aGyJdHVMy4br1g7MPqkoR0e8rVreTNulKaDx1+4lFdceWa1Uu7Yu0g9Ag==}
+  /@myriaddreamin/typst-ts-node-compiler-win32-x64-msvc@0.6.0:
+    resolution: {integrity: sha512-w5UEmXSZ+Eg7Y04EzjgqeHUo7P8bNz9S1c4CUfLrbfZvbTmYNjA0WeqZJ3+tV03BSVxiPiVhrfo95sLqKISNrg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -938,21 +938,21 @@ packages:
     dev: false
     optional: true
 
-  /@myriaddreamin/typst-ts-node-compiler@0.5.4:
-    resolution: {integrity: sha512-WAOUjOD+S2S3X/2X33PxDYn0XJ4ydqboxluIdFWU8yOlzn3K8CwoRN/GAbMA13vJTbZQMzjX3VmhMavFWeRtVA==}
+  /@myriaddreamin/typst-ts-node-compiler@0.6.0:
+    resolution: {integrity: sha512-C40MzRKZ8pDWzrS7VOtTypGyFaHTuZFFx3o/uQ6ryS2GqZkK3vGox4lIpR7ct11UHiAjQNR3LFQ5WjQ7P3niBQ==}
     engines: {node: '>= 10'}
     optionalDependencies:
-      '@myriaddreamin/typst-ts-node-compiler-android-arm-eabi': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-android-arm64': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-darwin-arm64': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-darwin-x64': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-linux-arm-gnueabihf': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-linux-arm64-gnu': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-linux-arm64-musl': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-linux-x64-gnu': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-linux-x64-musl': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-win32-arm64-msvc': 0.5.4
-      '@myriaddreamin/typst-ts-node-compiler-win32-x64-msvc': 0.5.4
+      '@myriaddreamin/typst-ts-node-compiler-android-arm-eabi': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-android-arm64': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-darwin-arm64': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-darwin-x64': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-linux-arm-gnueabihf': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-linux-arm64-gnu': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-linux-arm64-musl': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-linux-x64-gnu': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-linux-x64-musl': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-win32-arm64-msvc': 0.6.0
+      '@myriaddreamin/typst-ts-node-compiler-win32-x64-msvc': 0.6.0
     dev: false
 
   /@napi-rs/simple-git-android-arm-eabi@0.1.19:
@@ -3816,8 +3816,8 @@ packages:
     requiresBuild: true
     dev: false
 
-  /pixi.js@8.9.1:
-    resolution: {integrity: sha512-2vF5Yu9WC/83ly2tCGkjb+ZGnrr+vlKtZezmD0AmJEQoYZO5nL94806l+PVcJBKW6qrF0YHtbh0ubb6CB7/8Rg==}
+  /pixi.js@8.9.2:
+    resolution: {integrity: sha512-oLFBkOOA/O6OpT5T8o05AxgZB9x9yWNzEQ+WTNZZFoCvfU2GdT4sFTjpVFuHQzgZPmAm/1IFhKdNiXVnlL8PRw==}
     dependencies:
       '@pixi/colord': 2.9.6
       '@types/css-font-loading-module': 0.0.12
@@ -3886,9 +3886,9 @@ packages:
     hasBin: true
     dev: true
 
-  /pretty-bytes@6.1.1:
-    resolution: {integrity: sha512-mQUvGU6aUFQ+rNvTIAcZuWGRT9a6f6Yrg9bHs4ImKF+HZCEK+plBvnAZYSIQztknZF2qnzNtr6F8s0+IuptdlQ==}
-    engines: {node: ^14.13.1 || >=16.0.0}
+  /pretty-bytes@7.0.0:
+    resolution: {integrity: sha512-U5otLYPR3L0SVjHGrkEUx5mf7MxV2ceXeE7VwWPk+hyzC5drNohsOGNPDZqxCqyX1lkbEN4kl1LiI8QFd7r0ZA==}
+    engines: {node: '>=20'}
     dev: false
 
   /pretty-time@1.1.0:
@@ -4776,8 +4776,8 @@ packages:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
     dev: false
 
-  /tsx@4.19.3:
-    resolution: {integrity: sha512-4H8vUNGNjQ4V2EOoGw005+c+dGuPSnhpPBPHBtsZdGZBk/iJb4kguGlPWaZTZ3q5nMtFOEsY0nRDlh9PJyd6SQ==}
+  /tsx@4.19.4:
+    resolution: {integrity: sha512-gK5GVzDkJK1SI1zwHf32Mqxf2tSJkNx+eYcNly5+nHvWqXUJYUkWBQtKauoESz3ymezAI++ZwT855x5p5eop+Q==}
     engines: {node: '>=18.0.0'}
     hasBin: true
     dependencies:
@@ -4995,8 +4995,8 @@ packages:
       strip-ansi: 7.1.0
     dev: false
 
-  /ws@8.18.1:
-    resolution: {integrity: sha512-RKW2aJZMXeMxVpnZ6bck+RswznaxmzdULiBr6KY7XkTnW8uvt0iT9H5DkHUChXrc+uurzwa0rVI16n/Xzjdz1w==}
+  /ws@8.18.2:
+    resolution: {integrity: sha512-DMricUmwGZUVr++AEAe2uiVM7UoO9MAVZMDu05UQOaUII0lp+zOzLLU4Xqh/JvTqklB1T4uELaaPBKyjE1r4fQ==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
