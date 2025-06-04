@@ -1,7 +1,5 @@
 ---
 title: trolley
-date: 2024-12-21
-updated: 2024-12-21
 tags:
   - list
 ---
