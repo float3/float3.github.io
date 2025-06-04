@@ -1,7 +1,7 @@
 ---
 title: Playing East
 date: 2024-09-06
-updated: 2024-12-07
+updated: 2025-06-04
 tags:
   - writing
   - korean
