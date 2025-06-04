@@ -23,6 +23,7 @@ I can wear second-hand leather. I don’t go to the zoo. I don’t have pets, an
 - Most people think raping an animal is immoral, but eating one is fine. That’s also inconsistent. You can argue that one correlates with sociopathy while the other doesn’t, but I’m not interested in reasons for why we should allow one but not the other, but instead in their moral value.
     - If you think both are acceptable, I respect your consistency even though we disagree.
     - If you think one is okay and the other isn't, I think you're being hypocritical.
+- also Health and Environment reasons, but I want to explore moral reasoning here
 
 ## The “animals eat animals, so why can’t I?” argument
 
