@@ -69,7 +69,7 @@ jobs have no inherent value, if they did we could just pay people to do things, 
 What do vegans value?
 
 - If it's _more life_, should I have as many children as possible?
-- If it's _less suffering_, should I give away all my possessions and devote my life to effective altruism?
+- If it's _less suffering_, should I give away all my possessions and devote my life to doing good?
 
 I haven’t figured these things out yet.
 
