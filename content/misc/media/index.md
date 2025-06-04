@@ -1,14 +1,11 @@
 ---
 title: media
-date: 2024-12-13
-updated: 2025-06-04
 tags:
   - list
 ---
 
 [2022-01-26_23-08-03-reencoded.mp4](/misc/media/2022-01-26_23-08-03-reencoded.mp4) \
 [2022-01-26_23-08-20-reencoded.mp4](/misc/media/2022-01-26_23-08-20-reencoded.mp4) \
-[PXL_20241016_102737105.RESTORED.jpg](/misc/media/PXL_20241016_102737105.RESTORED.jpg) \
 [a1.wav](/misc/media/a1.wav) \
 [banner-dark.png](/misc/media/banner-dark.png) \
 [banner-light.png](/misc/media/banner-light.png) \
@@ -28,6 +25,7 @@ tags:
 [katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
+[PXL_20241016_102737105.RESTORED.jpg](/misc/media/PXL_20241016_102737105.RESTORED.jpg) \
 [render.mp4](/misc/media/render.mp4) \
 [render.png](/misc/media/render.png) \
 [statue_with_child.mp4](/misc/media/statue_with_child.mp4) \
