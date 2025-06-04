@@ -1,4 +1,4 @@
-use minify_html::{Cfg, minify};
+use minify_html::{minify, Cfg};
 use std::fs;
 use std::ops::ControlFlow;
 use syntect::highlighting::ThemeSet;
@@ -60,20 +60,22 @@ fn generate_file(
     };
 
     let cfg = Cfg {
-        do_not_minify_doctype: false,
+        minify_doctype: true,
         keep_closing_tags: false,
         keep_comments: false,
         minify_css: true,
         minify_js: true,
         remove_bangs: true,
         remove_processing_instructions: true,
-        ensure_spec_compliant_unquoted_attribute_values: true,
+        allow_noncompliant_unquoted_attribute_values: true,
         keep_html_and_head_opening_tags: false,
-        keep_spaces_between_attributes: false,
+        // keep_spaces_between_attributes: false,
         keep_input_type_text_attr: false,
         keep_ssi_comments: false,
         preserve_brace_template_syntax: false,
         preserve_chevron_percent_template_syntax: false,
+        allow_optimal_entities: true,
+        allow_removing_spaces_between_attributes: true,
     };
     let minified = minify(html.as_bytes(), &cfg);
     let minified_html = String::from_utf8(minified).unwrap();
