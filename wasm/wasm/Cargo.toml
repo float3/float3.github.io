@@ -31,7 +31,7 @@ web-sys = { version = "0.3.77", features = [
     "CanvasRenderingContext2d",
     "HtmlCanvasElement",
 ] }
-getrandom = { version = "0.3.2", features = ["wasm_js"] }
+getrandom = { version = "0.3.3", features = ["wasm_js"] }
 krabby = { git = "https://github.com/float3/krabby/", features = [
     "debug-embed",
     "html",

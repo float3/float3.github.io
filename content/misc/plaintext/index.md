@@ -1,7 +1,5 @@
 ---
 title: plaintext
-date: 2024-12-13
-updated: 2024-12-13
 tags:
   - list
 ---

@@ -32,12 +32,12 @@
             cargo-edit
             cargo-hack
             clang
-            corepack_23
+            corepack_24
             git
             gcc
             gnugrep
             llvmPackages.bintools
-            nodejs_23
+            nodejs_24
             pnpm_10
             python314
             rustup
