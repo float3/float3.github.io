@@ -18,7 +18,7 @@ I can wear second-hand leather. I don’t go to the zoo. I don’t have pets, an
 ## Why I’m vegan
 
 - I’m more than 50% certain that animals deserve moral consideration.
-- I’m reasonably confident that future generations will look back on the animal industry like we now look back on the slave trade. Though I admit this is a weak argument, since future societies might be as alien to us as any distant culture.
+- I’m reasonably confident that future generations will look back on the animal industry like we now look back on the slave trade. Though I admit this is a weak argument, since future societies might be as well be aliens from our perspective.
 - I try to live morally consistently. Lots of people are disgusted by the idea of eating a dog or cat, yet think nothing of eating calves, pigs, or birds. That’s inconsistent.
 - Most people think raping an animal is immoral, but eating one is fine. That’s also inconsistent. You can argue that one correlates with sociopathy while the other doesn’t, but I’m not interested in reasons for why we should allow one but not the other, but instead in their moral value.
     - If you think both are acceptable, I respect your consistency even though we disagree.
