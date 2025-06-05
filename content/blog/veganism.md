@@ -1,7 +1,7 @@
 ---
 title: veganism
 date: 2025-06-04
-updated: 2025-06-04
+updated: 2025-06-05
 tags:
   - veganism
   - philosophy
