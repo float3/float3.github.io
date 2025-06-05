@@ -1,4 +1,4 @@
-use minify_html::{minify, Cfg};
+use minify_html::{Cfg, minify};
 use std::fs;
 use std::ops::ControlFlow;
 use syntect::highlighting::ThemeSet;
