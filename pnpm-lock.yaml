@@ -94,8 +94,8 @@ dependencies:
     specifier: ^0.4.5
     version: 0.4.5
   pixi.js:
-    specifier: ^8.10.0
-    version: 8.10.0
+    specifier: ^8.10.1
+    version: 8.10.1
   pnpm:
     specifier: ^10.11.1
     version: 10.11.1
@@ -228,8 +228,8 @@ devDependencies:
     specifier: ^1.16.4
     version: 1.16.4
   '@types/node':
-    specifier: ^22.15.29
-    version: 22.15.29
+    specifier: ^22.15.30
+    version: 22.15.30
   '@types/pretty-time':
     specifier: ^1.1.5
     version: 1.1.5
@@ -1348,7 +1348,7 @@ packages:
   /@types/cli-spinner@0.2.3:
     resolution: {integrity: sha512-TMO6mWltW0lCu1de8DMRq9+59OP/tEjghS+rs8ZEQ2EgYP5yV3bGw0tS14TMyJGqFaoVChNvhkVzv9RC1UgX+w==}
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
     dev: true
 
   /@types/css-font-loading-module@0.0.12:
@@ -1516,11 +1516,11 @@ packages:
   /@types/estree-jsx@1.0.5:
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
     dev: false
 
-  /@types/estree@1.0.7:
-    resolution: {integrity: sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==}
+  /@types/estree@1.0.8:
+    resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
     dev: false
 
   /@types/geojson@7946.0.16:
@@ -1563,8 +1563,8 @@ packages:
       '@types/unist': 3.0.3
     dev: false
 
-  /@types/node@22.15.29:
-    resolution: {integrity: sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==}
+  /@types/node@22.15.30:
+    resolution: {integrity: sha512-6Q7lr06bEHdlfplU6YRbgG1SFBdlsfNC4/lX+SkhiTs0cpJkOElmWls8PxDFv4yY/xKb8Y6SO0OmSX4wgqTZbA==}
     dependencies:
       undici-types: 6.21.0
     dev: true
@@ -1601,7 +1601,7 @@ packages:
   /@types/ws@8.18.1:
     resolution: {integrity: sha512-ThVF6DCVhA8kUGy+aazFQ4kXQ7E1Ty7A3ypFOe0IcJV8O/M511G99AW24irKrW56Wt44yG9+ij8FaqoBGkuBXg==}
     dependencies:
-      '@types/node': 22.15.29
+      '@types/node': 22.15.30
     dev: true
 
   /@types/yargs-parser@21.0.3:
@@ -2685,7 +2685,7 @@ packages:
   /hast-util-to-jsx-runtime@2.3.6:
     resolution: {integrity: sha512-zl6s8LwNyo1P9uw+XJGvZtdFF1GdAkOg8ujOw+4Pyb76874fLps4ueHXDhXWdk6YHQ6OgUtinliG7RsYvCbbBg==}
     dependencies:
-      '@types/estree': 1.0.7
+      '@types/estree': 1.0.8
       '@types/hast': 3.0.4
       '@types/unist': 3.0.3
       comma-separated-tokens: 2.0.3
@@ -3833,8 +3833,8 @@ packages:
     requiresBuild: true
     dev: false
 
-  /pixi.js@8.10.0:
-    resolution: {integrity: sha512-iDuJ9YpSTjXZZlJ6Dy87aS0kL2OPcpPcGyeTX1b5nM+nbqnksX37DPYrh7m3KGIrxUsMjnG1i4bh8NL2ToJydg==}
+  /pixi.js@8.10.1:
+    resolution: {integrity: sha512-wjKJXawhTUxuyKIuwE3jK05eBh5I4GKy+YrRVniURFRkK7pYEvRvnV41dEqz6owSXav/YMXdG5783YDJeamiow==}
     dependencies:
       '@pixi/colord': 2.9.6
       '@types/css-font-loading-module': 0.0.12
