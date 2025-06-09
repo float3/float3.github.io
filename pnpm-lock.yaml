@@ -46,8 +46,8 @@ dependencies:
     specifier: ^3.3.1
     version: 3.3.1(esbuild@0.25.5)(sass-embedded@1.89.1)
   flexsearch:
-    specifier: 0.8.204
-    version: 0.8.204
+    specifier: 0.8.205
+    version: 0.8.205
   github-slugger:
     specifier: ^2.0.0
     version: 2.0.0
@@ -97,8 +97,8 @@ dependencies:
     specifier: ^8.10.1
     version: 8.10.1
   pnpm:
-    specifier: ^10.11.1
-    version: 10.11.1
+    specifier: ^10.12.1
+    version: 10.12.1
   preact:
     specifier: ^10.26.8
     version: 10.26.8
@@ -172,8 +172,8 @@ dependencies:
     specifier: ^2.3.2
     version: 2.3.2
   satori:
-    specifier: ^0.13.2
-    version: 0.13.2
+    specifier: ^0.15.2
+    version: 0.15.2
   serve-handler:
     specifier: ^6.1.6
     version: 6.1.6
@@ -272,8 +272,8 @@ packages:
     resolution: {integrity: sha512-i1L7noDNxtFyL5DmZafWy1wRVhGehQmzZaz1HiN5e7iylJMSZR7ekOV7NsIqa5qBldlLrsKv4HbgFUVlQrz8Mw==}
     dev: false
 
-  /@bufbuild/protobuf@2.5.1:
-    resolution: {integrity: sha512-lut4UTvKL8tqtend0UDu7R79/n9jA7Jtxf77RNPbxtmWqfWI4qQ9bTjf7KCS4vfqLmpQbuHr1ciqJumAgJODdw==}
+  /@bufbuild/protobuf@2.5.2:
+    resolution: {integrity: sha512-foZ7qr0IsUBjzWIq+SuBLfdQCpJ1j8cTuNNT4owngTHoN5KsJb8L9t65fzz7SCeSWzescoOil/0ldqiL041ABg==}
     dev: false
 
   /@chevrotain/cst-dts-gen@11.0.3:
@@ -2471,8 +2471,8 @@ packages:
       to-regex-range: 5.0.1
     dev: false
 
-  /flexsearch@0.8.204:
-    resolution: {integrity: sha512-Vh+WUZfUHsVP6w4o5uAkYle8Gz/oEuztSWvpSY3h71AE8ox+goTQ2X5YG4x6VlKKfubkMwhewk8kBTOVKMObHA==}
+  /flexsearch@0.8.205:
+    resolution: {integrity: sha512-REFjMqy86DKkCTJ4gIE42c9MVm9t1vUWfEub/8taixYuhvyu4jd4XmFALk5VuKW4GH4VLav8A4BJboTsslHF1w==}
     dev: false
 
   /foreground-child@3.3.1:
@@ -3864,8 +3864,8 @@ packages:
       pathe: 2.0.3
     dev: false
 
-  /pnpm@10.11.1:
-    resolution: {integrity: sha512-5Rm592OYadyNXDxd/vc7PwkQlLCgBtcxc1PHKxJOgOGv1ClzLihwWta/oe6HnB/ORsEozOvTGSEB9D3WfGZ5Eg==}
+  /pnpm@10.12.1:
+    resolution: {integrity: sha512-8N2oWA8O6UgcXHmh2Se5Fk8sR46QmSrSaLuyRlpzaYQ5HWMz0sMnkTV4soBK8zR0ylVLopwEqLEwYKcXZ1rjrA==}
     engines: {node: '>=18.12'}
     hasBin: true
     dev: false
@@ -4406,7 +4406,7 @@ packages:
     engines: {node: '>=16.0.0'}
     hasBin: true
     dependencies:
-      '@bufbuild/protobuf': 2.5.1
+      '@bufbuild/protobuf': 2.5.2
       buffer-builder: 0.2.0
       colorjs.io: 0.5.2
       immutable: 5.1.2
@@ -4451,8 +4451,8 @@ packages:
       '@parcel/watcher': 2.5.1
     dev: false
 
-  /satori@0.13.2:
-    resolution: {integrity: sha512-BPoExgKlkZPY1j4I2vSovo9OJALOw5siU37cm1aNcq/XWCojpFM3FHXHxby9tQ2R5ajV2fRQgouWoonQ83z+Hg==}
+  /satori@0.15.2:
+    resolution: {integrity: sha512-vu/49vdc8MzV5jUchs3TIRDCOkOvMc1iJ11MrZvhg9tE4ziKIEIBjBZvies6a9sfM2vQ2gc3dXeu6rCK7AztHA==}
     engines: {node: '>=16'}
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
