@@ -32,7 +32,7 @@
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.1.0",
-    "abcjs": "^6.4.4",
+    "abcjs": "^6.5.0",
     "wasm": "file:../wasm/wasm/pkg"
   },
   "devDependencies": {
