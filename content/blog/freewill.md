@@ -6,11 +6,12 @@ tags:
   - philosophy
 ---
 
-People post images or videos of a uniquely decorated home-or some uncommon thing they've done-and caption it: *"This is what free will looks like."* This is strange. Why is the cultural default that we **have** free will? When I push on this-especially with theologians and apologists-the discussion often slides into hand‑waving. "Free will" is incomprehensible; I don't see how people get from lived decision‑making to metaphysical freedom.
+
+People who stray from the norms often claim to be using their free will. This is strange. Why is the philosophical idea that we **have** free will taken for granted by most of society? I find it incomprehensible and incompatible with reality.
 
 ## Where Do Our Choices Come From?
 
-Zoom in on a single decision: you reach for tea. Neurons fire; muscles move. Where did that firing pattern originate? Trace it back and you get a causal stack:
+Zoom in on a single decision: you reach for tea. Neurons fire; muscles move. Where did that firing pattern originate? Here's a causal stack:
 
 * **Genetics & developmental wiring**: Baseline neurotransmitter systems; temperament biases; neural architecture.
 * **Early environment**: Prenatal conditions, nutrition, attachment, language exposure.
@@ -22,7 +23,7 @@ Zoom in on a single decision: you reach for tea. Neurons fire; muscles move. Whe
 
 There's no "you" in this stack, there's no soul.
 
-Some argue that quantum indeterminacy rescues freedom. But randomness ≠ authorship. If a Geiger counter occasionally twitches my motor cortex, those twitches aren't *me choosing*.
+Some argue that quantum indeterminacy rescues freedom. But randomness ≠ authorship. If a you are randomly influenced by the laws of physics I would find it a difficult claim to say that that is you.
 
 ## A Quick Test
 
@@ -40,6 +41,6 @@ If you had deep, contra‑causal free will, you should be able to reconfigure yo
 2. Try-pure willpower-to become the kind of person who wants to run that marathon.
 3. Recheck the motivation. Still not there? Same problem.
 
-these tests fail. Higher‑order desires ("I wish I wanted X") do not automatically rewrite lower‑order motivational circuitry ("I actually want X"). Wanting‑to‑want is cheap; wanting is expensive and usually learned.
+These tests fail. Higher‑order desires ("I wish I wanted X") do not translate to lower‑order desires ("I actually want X").
 
-Yes, you *can* sometimes reshape tastes and motives-but via conditioning, repeated exposure, social incentives, dopaminergic updates, etc. That's more like running gradient descent on a brain than issuing a sovereign edict.
+Yes, you *can* sometimes reshape tastes and motives-but via conditioning, repeated exposure, social incentives, dopaminergic updates, etc.
