@@ -6,7 +6,7 @@ tags:
   - philosophy
 ---
 
-People post images or videos of a uniquely decorated home—or some uncommon thing they've done—and caption it: *"This is what free will looks like."* This is strange. Why is the cultural default that we **have** free will? When I push on this—especially with theologians and apologists—the discussion often slides into hand‑waving. "Free will" is incomprehensible; I don't see how people get from lived decision‑making to metaphysical freedom.
+People post images or videos of a uniquely decorated home-or some uncommon thing they've done-and caption it: *"This is what free will looks like."* This is strange. Why is the cultural default that we **have** free will? When I push on this—especially with theologians and apologists—the discussion often slides into hand‑waving. "Free will" is incomprehensible; I don't see how people get from lived decision‑making to metaphysical freedom.
 
 ## Where Do Our Choices Come From?
 
