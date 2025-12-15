@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v6.0.1
         with:
           token: ${{ secrets.TOKEN }}
           submodules: recursive
@@ -45,14 +45,14 @@ jobs:
 
       - name: cache venv
         id: cache-venv
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: wasm/tuningplayground/venv
           key: ${{ runner.os }}-venv
 
       - name: cache pycache
         id: cache-pycache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: wasm/tuningplayground/__pycache__
           key: ${{ runner.os }}-pycache
