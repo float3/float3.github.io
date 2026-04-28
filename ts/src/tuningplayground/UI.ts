@@ -64,7 +64,7 @@ let midiFilePromise: Promise<ArrayBuffer> | null = null
 
 function initOrGetMidiFile(): Promise<ArrayBuffer> {
   if (!midiFilePromise) {
-    midiFilePromise = fetch("/misc/plaintext/sample.mid")
+    midiFilePromise = fetch("/misc/blobs/jm_mozdi.mid")
       .then((response) => response.arrayBuffer())
       .then((buffer) => {
         midiFile = buffer

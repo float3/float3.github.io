@@ -109,63 +109,85 @@ fn random_u32(max: u32) -> u32 {
 fn random_hiragana(remove: bool) -> char {
     let mut v = HIRAGANA.lock().expect("failed to lock hiragana");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove { v.remove(idx) } else { v[idx] }
+    if remove {
+        v.remove(idx)
+    } else {
+        v[idx]
+    }
 }
 
 fn random_katakana(remove: bool) -> char {
     let mut v = KATAKANA.lock().expect("failed to lock katakana");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove { v.remove(idx) } else { v[idx] }
+    if remove {
+        v.remove(idx)
+    } else {
+        v[idx]
+    }
 }
 
 fn random_kanji(remove: bool) -> char {
     let mut v = KANJI.lock().expect("failed to lock kanji");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove { v.remove(idx) } else { v[idx] }
+    if remove {
+        v.remove(idx)
+    } else {
+        v[idx]
+    }
 }
 
 fn random_bopomofo(remove: bool) -> char {
     let mut v = BOPOMOFO.lock().expect("failed to lock bopomofo");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove { v.remove(idx) } else { v[idx] }
+    if remove {
+        v.remove(idx)
+    } else {
+        v[idx]
+    }
 }
 
 fn random_hangul(remove: bool) -> char {
     let mut v = HANGUL.lock().expect("failed to lock hangul");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove { v.remove(idx) } else { v[idx] }
+    if remove {
+        v.remove(idx)
+    } else {
+        v[idx]
+    }
 }
 
 #[wasm_bindgen]
 pub fn random_weighted_char(remove: bool) -> char {
-    let hiragana_len = HIRAGANA.lock().expect("failed to lock hiragana").len();
-    let katakana_len = KATAKANA.lock().expect("failed to lock katakana").len();
+    // let hiragana_len = HIRAGANA.lock().expect("failed to lock hiragana").len();
+    // let katakana_len = KATAKANA.lock().expect("failed to lock katakana").len();
     let kanji_len = KANJI.lock().expect("failed to lock kanji").len();
-    let bopomofo_len = BOPOMOFO.lock().expect("failed to lock bopomofo").len();
-    let hangul_len = HANGUL.lock().expect("failed to lock hangul").len();
+    // let bopomofo_len = BOPOMOFO.lock().expect("failed to lock bopomofo").len();
+    // let hangul_len = HANGUL.lock().expect("failed to lock hangul").len();
 
-    let total = hiragana_len + katakana_len + kanji_len + bopomofo_len + hangul_len;
+    // let total = hiragana_len + katakana_len + kanji_len + bopomofo_len + hangul_len;
+    let total = kanji_len;
     assert!(total > 0, "All LUTs are empty");
 
     let rnd = random_u32(total as u32) as usize;
     let mut offset = rnd;
-    if offset < hiragana_len {
-        return random_hiragana(remove);
-    }
-    offset -= hiragana_len;
-    if offset < katakana_len {
-        return random_katakana(remove);
-    }
-    offset -= katakana_len;
-    if offset < kanji_len {
-        return random_kanji(remove);
-    }
-    offset -= kanji_len;
-    if offset < bopomofo_len {
-        return random_bopomofo(remove);
-    }
+    random_kanji(remove)
+    // if offset < hiragana_len {
+    //     return random_hiragana(remove);
+    // }
+    // offset -= hiragana_len;
+    // if offset < katakana_len {
+    //     return random_katakana(remove);
+    // }
+    // offset -= katakana_len;
+    // if offset < kanji_len {
+    //     return random_kanji(remove);
+    // }
+    // offset -= kanji_len;
+    // if offset < bopomofo_len {
+    //     return random_bopomofo(remove);
+    // }
     // Must fall within hangul range
-    random_hangul(remove)
+    // random_hangul(remove)
 }
 
 // #[wasm_bindgen]
