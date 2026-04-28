@@ -9,11 +9,7 @@ CD=$(pwd)
 
 cd ./wasm/tuningplayground/
 
-python -m venv venv
-source venv/bin/activate
-pip install --upgrade pip
-pip install -r music21/requirements.txt
-python -m generate_chords
+cargo run -p chord_generator
 
 cd $CD/content
 ../scripts/dates.sh

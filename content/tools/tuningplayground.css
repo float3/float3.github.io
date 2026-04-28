@@ -88,6 +88,23 @@
   display: none;
 }
 
+#chordTools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+#chordInput {
+  min-width: 220px;
+}
+
+#chordNameOutput,
+#chordDetailsOutput {
+  flex-basis: 100%;
+}
+
 .keyboard {
   padding-top: 20px;
 }

@@ -9,7 +9,13 @@ import { QuartzConfig } from "../../cfg"
 
 const filesToCopy = async (argv: Argv, cfg: QuartzConfig) => {
   // glob all non MD files in content folder and copy it over
-  return await glob("**", argv.directory, ["**/*.md", ...cfg.configuration.ignorePatterns])
+  const contentFiles = await glob("**", argv.directory, [
+    "**/*.md",
+    ...cfg.configuration.ignorePatterns,
+  ])
+  const generatedJsFiles = await glob("js/**", argv.directory, ["**/*.md"], false)
+
+  return Array.from(new Set([...contentFiles, ...generatedJsFiles])) as FilePath[]
 }
 
 export const Assets: QuartzEmitterPlugin = () => {

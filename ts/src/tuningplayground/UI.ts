@@ -7,6 +7,7 @@ const octaveSize = document.getElementById("octaveSize") as HTMLInputElement
 const stepSize = document.getElementById("stepSize") as HTMLInputElement
 const fileInput = document.getElementById("fileInput") as HTMLInputElement
 export const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement
+const keymapSelect = document.getElementById("keymapSelect") as HTMLSelectElement
 // const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement
@@ -26,6 +27,11 @@ export const volumeSlider = document.getElementById("volumeSlider") as HTMLInput
 const transpose = document.getElementById("transpose") as HTMLInputElement
 
 export const output = document.getElementById("output") as HTMLElement
+const chordInput = document.getElementById("chordInput") as HTMLInputElement
+const nameChord = document.getElementById("nameChord") as HTMLButtonElement
+const clearChord = document.getElementById("clearChord") as HTMLButtonElement
+const chordNameOutput = document.getElementById("chordNameOutput") as HTMLDivElement
+const chordDetailsOutput = document.getElementById("chordDetailsOutput") as HTMLDivElement
 
 octaveSize.onchange = handleTuningSelectChange
 tuningSelect.onchange = handleTuningSelectChange
@@ -33,11 +39,15 @@ stepSize.onchange = handleTuningSelectChange
 fileInput.onchange = fileInputChange
 transpose.onchange = transposeChange
 volumeSlider.onchange = volumeChange
+keymapSelect.onchange = keymapChange
+chordInput.oninput = updateChordName
 // linkInput.onchange = linkInputChange;
 
 stopButton.onclick = stop
 playMarked.onclick = playMarkedKeys
 shareMarked.onclick = sharedMarkedKeys
+nameChord.onclick = updateChordName
+clearChord.onclick = clearChordInput
 
 export let tranposeValue = 0
 function transposeChange(): void {
@@ -113,7 +123,33 @@ export function play(): void {
 }
 
 export function DOMContentLoaded(): void {
+  if (!wasm) return
+
   handleTuningSelectChange()
+  keymapChange()
+  updateChordName()
+}
+
+function keymapChange(): void {
+  wasm.set_keymap(keymapSelect.value)
+  stopAllTones()
+}
+
+function updateChordName(): void {
+  const notes = chordInput.value.trim()
+  if (!notes) {
+    chordNameOutput.textContent = ""
+    chordDetailsOutput.textContent = ""
+    return
+  }
+
+  chordNameOutput.textContent = wasm.chordname(notes)
+  chordDetailsOutput.textContent = wasm.chord_details(notes)
+}
+
+function clearChordInput(): void {
+  chordInput.value = ""
+  updateChordName()
 }
 
 export function handleTuningSelectChange(): void {

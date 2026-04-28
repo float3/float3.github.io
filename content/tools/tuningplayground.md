@@ -1,7 +1,7 @@
 ---
 title: tuningplayground
 date: 2024-11-26
-updated: 2025-02-26
+updated: 2026-04-27
 tags:
   - music
   - wasm
@@ -43,6 +43,25 @@ tags:
     <option value="native">Native</option>
   </select>
 </p>
+<p>
+  <label for="keymapSelect">Keyboard Map:</label>
+  <select id="keymapSelect" name="keymapSelect">
+    <option value="us">US QWERTY</option>
+    <option value="us-extended">US QWERTY extended</option>
+    <option value="qwertz">QWERTZ</option>
+    <option value="german">German</option>
+    <option value="azerty">AZERTY</option>
+    <option value="linear">Linear chromatic</option>
+  </select>
+</p>
+<div id="chordTools">
+  <label for="chordInput">Chord:</label>
+  <input id="chordInput" placeholder="C E G or C Eb G Bb" />
+  <button id="nameChord">Name</button>
+  <button id="clearChord">Clear</button>
+  <div id="chordNameOutput"></div>
+  <div id="chordDetailsOutput"></div>
+</div>
 <p> Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
 </p>
 <p>Transpose: <input id="transpose" />

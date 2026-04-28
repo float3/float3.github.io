@@ -187,17 +187,14 @@ pub fn process_globals(tu: &mut TranslationUnit, extract_props: bool) -> Vec<Sha
 
     if extract_props {
         for decl in tu.0.0.iter_mut() {
-            if let ExternalDeclaration::Declaration(Declaration::InitDeclaratorList(idl)) = decl {
-                if let (Some(name), Some(Initializer::Simple(init)), Some(qual)) =
+            if let ExternalDeclaration::Declaration(Declaration::InitDeclaratorList(idl)) = decl
+                && let (Some(name), Some(Initializer::Simple(init)), Some(qual)) =
                     (&idl.head.name, &idl.head.initializer, &mut idl.head.ty.qualifier)
-                {
-                    if qual.qualifiers.0.iter().any(is_const) {
-                        if let Some(prop) = extract_prop(name.as_str(), init.as_ref()) {
-                            res.push(prop);
-                            idl.head.initializer = None;
-                        }
-                    }
-                }
+                && qual.qualifiers.0.iter().any(is_const)
+                && let Some(prop) = extract_prop(name.as_str(), init.as_ref())
+            {
+                res.push(prop);
+                idl.head.initializer = None;
             }
         }
     }
@@ -346,18 +343,16 @@ fn remove_param(fdef: &mut FunctionDefinition, name: &str) {
         match stmt {
             Statement::Simple(decl) => match **decl {
                 // Remove
-                SimpleStatement::Expression(Some(Expr::Assignment(ref l, ref op, ref _r))) => {
-                    if *op == AssignmentOp::Equal {
-                        match **l {
+                SimpleStatement::Expression(Some(Expr::Assignment(ref l, ref op, ref _r)))
+                    if *op == AssignmentOp::Equal =>
+                {
+                    match **l {
+                        Expr::Variable(ref id) => id.0.as_str() == name,
+                        Expr::Dot(ref e, _) | Expr::Bracket(ref e, _) => match **e {
                             Expr::Variable(ref id) => id.0.as_str() == name,
-                            Expr::Dot(ref e, _) | Expr::Bracket(ref e, _) => match **e {
-                                Expr::Variable(ref id) => id.0.as_str() == name,
-                                _ => false,
-                            },
                             _ => false,
-                        }
-                    } else {
-                        false
+                        },
+                        _ => false,
                     }
                 }
                 SimpleStatement::Switch(ref mut sw) => {
@@ -379,9 +374,9 @@ fn remove_param(fdef: &mut FunctionDefinition, name: &str) {
                             remove_param_stmt_vec(&mut cstmt.statement_list, name);
                         }
                         if remove_param_stmt(t, name) {
-                            *t = Box::new(Statement::parse("0xDEADBEEF;").unwrap())
+                            **t = Statement::parse("0xDEADBEEF;").unwrap()
                         } else if remove_param_stmt(f, name) {
-                            *f = Box::new(Statement::parse("0xDEADBEEF;").unwrap())
+                            **f = Statement::parse("0xDEADBEEF;").unwrap()
                         }
                         false
                     }
@@ -429,9 +424,9 @@ pub fn handle_raymarch_param(fdef: &mut FunctionDefinition, lut: Vec<&str>, rep:
         }
     };
 
-    if let Some((name, was_initialized)) = name {
-        if was_initialized {
-            remove_param(fdef, name.as_str())
-        }
+    if let Some((name, was_initialized)) = name
+        && was_initialized
+    {
+        remove_param(fdef, name.as_str())
     }
 }
