@@ -12,7 +12,35 @@ static STEP_SIZE: Mutex<usize> = Mutex::new(7);
 #[cfg(feature = "wasm")]
 static TUNING_SYSTEM: Mutex<TuningSystem> =
     Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
+#[cfg(feature = "wasm")]
+static KEYMAP: Mutex<KeyMap> = Mutex::new(KeyMap::Us);
 static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
+
+#[cfg(feature = "wasm")]
+#[derive(Clone, Copy)]
+enum KeyMap {
+    Us,
+    UsExtended,
+    Qwertz,
+    German,
+    Azerty,
+    Linear,
+}
+
+#[cfg(feature = "wasm")]
+impl KeyMap {
+    fn from_str(keymap: &str) -> Option<Self> {
+        match keymap.to_lowercase().as_str() {
+            "us" | "qwerty" => Some(Self::Us),
+            "us-extended" | "extended" | "qwerty-extended" => Some(Self::UsExtended),
+            "qwertz" => Some(Self::Qwertz),
+            "de" | "german" => Some(Self::German),
+            "azerty" | "fr" | "french" => Some(Self::Azerty),
+            "linear" | "chromatic" => Some(Self::Linear),
+            _ => None,
+        }
+    }
+}
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
@@ -69,9 +97,38 @@ pub fn get_tuning_size() -> usize {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn from_keymap(key: &str) -> i32 {
-    use keymapping::US_KEYMAP;
+    use keymapping::{
+        AZERTY_KEYMAP, GERMAN_KEYMAP, LINEAR_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP,
+    };
 
-    *US_KEYMAP.get(key).unwrap_or(&-1)
+    match *KEYMAP.lock().expect("couldn't lock") {
+        KeyMap::Us => *US_KEYMAP.get(key).unwrap_or(&-1),
+        KeyMap::UsExtended => *US_EXTENDED_KEYMAP.get(key).unwrap_or(&-1),
+        KeyMap::Qwertz => *QWERTZ_KEYMAP.get(key).unwrap_or(&-1),
+        KeyMap::German => *GERMAN_KEYMAP.get(key).unwrap_or(&-1),
+        KeyMap::Azerty => *AZERTY_KEYMAP.get(key).unwrap_or(&-1),
+        KeyMap::Linear => *LINEAR_KEYMAP.get(key).unwrap_or(&-1),
+    }
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn set_keymap(keymap: &str) {
+    match KeyMap::from_str(keymap) {
+        Some(keymap) => {
+            *KEYMAP.lock().expect("couldn't lock") = keymap;
+        }
+        None => {
+            #[cfg(debug_assertions)]
+            error("Invalid keymap");
+        }
+    }
+}
+
+#[derive(Debug)]
+struct ParsedNote {
+    abc: String,
+    pitch_class: usize,
 }
 
 type LUTType = Vec<String>;
@@ -81,111 +138,222 @@ static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
 fn static_data() -> &'static LUTType {
     CHORD_LUT.get_or_init(|| {
         include_str!("../../../content/misc/plaintext/chords.txt")
-            .split(";")
+            .split(';')
             .map(|s| s.to_string())
             .collect::<LUTType>()
     })
 }
 
-pub fn convert_notes_core(input: Vec<String>) -> String {
-    //return "L: 1/1 \n\"C\"[C E G]".to_string();
-    let mut bitmask = 0;
-    let mut notes = Vec::new();
-    let mut bass: String = "".to_string();
-    let first: bool = true;
+fn split_chord_input(input: &str) -> Vec<&str> {
+    input
+        .split(|c: char| c.is_whitespace() || c == ',' || c == ';')
+        .filter(|token| !token.trim().is_empty())
+        .collect()
+}
 
-    //if input contains "todo" return "todo"
-
-    for note_str in input.into_iter() {
-        let mut chars = note_str.chars().peekable();
-        let name = chars.next().expect("no name");
-
-        if !('A'..='G').contains(&name) {
-            return note_str;
+fn parse_octave(note: &str) -> Option<i32> {
+    let note = note.trim();
+    if let Some(index) = note.rfind('N') {
+        let suffix = &note[index + 1..];
+        if !suffix.is_empty() && suffix.chars().all(|c| c.is_ascii_digit()) {
+            return suffix.parse().ok();
         }
-
-        let accidental = match chars.peek() {
-            Some('b') => {
-                chars.next();
-                if chars.peek() == Some(&'b') {
-                    chars.next();
-                    "bb".to_string()
-                } else {
-                    "b".to_string()
-                }
-            }
-            Some('#') => {
-                chars.next();
-                if chars.peek() == Some(&'#') {
-                    chars.next();
-                    "##".to_string()
-                } else {
-                    "#".to_string()
-                }
-            }
-            _ => "".to_string(),
-        };
-
-        let full_name = name.to_string() + &accidental;
-
-        if first {
-            bass.clone_from(&full_name);
-        }
-
-        let index = match full_name.as_str() {
-            "B#" | "C" | "Dbb" => 0,
-            "B##" | "C#" | "Db" => 1,
-            "C##" | "D" | "Ebb" => 2,
-            "D#" | "Eb" | "Fbb" => 3,
-            "D##" | "E" | "Fb" => 4,
-            "E#" | "F" | "Gbb" => 5,
-            "E##" | "F#" | "Gb" => 6,
-            "F##" | "G" | "Abb" => 7,
-            "G#" | "Ab" => 8,
-            "G##" | "A" | "Bbb" => 9,
-            "A#" | "Bb" | "Cbb" => 10,
-            "A##" | "B" | "Cb" => 11,
-            _ => panic!("Invalid note"),
-        };
-
-        bitmask |= 1 << index;
-
-        let octave_modifier = note_str
-            .replace("N1", "-1")
-            .chars()
-            .last()
-            .unwrap_or('4')
-            .to_digit(10)
-            .unwrap_or(4) as isize
-            - 4;
-
-        let octave_str = if octave_modifier < 0 {
-            ",".repeat(octave_modifier.unsigned_abs())
-        } else {
-            "'".repeat(octave_modifier as usize)
-        };
-
-        notes.push(format!(
-            "{}{}{}",
-            accidental.replace('#', "^").replace('b', "_"),
-            name,
-            octave_str
-        ));
     }
 
-    let chord: String = static_data()[bitmask].clone();
+    let mut start = note.len();
+    for (index, ch) in note.char_indices().rev() {
+        if ch.is_ascii_digit() {
+            start = index;
+        } else {
+            break;
+        }
+    }
 
-    CHORD_NAME.lock().expect("couldn't lock").clone_from(&chord);
+    (start < note.len())
+        .then(|| note[start..].parse().ok())
+        .flatten()
+}
 
-    let notes = notes.join(" ");
+fn pitch_class(full_name: &str) -> Result<usize, String> {
+    match full_name {
+        "B#" | "C" | "Dbb" => Ok(0),
+        "B##" | "C#" | "Db" => Ok(1),
+        "C##" | "D" | "Ebb" => Ok(2),
+        "D#" | "Eb" | "Fbb" => Ok(3),
+        "D##" | "E" | "Fb" => Ok(4),
+        "E#" | "F" | "Gbb" => Ok(5),
+        "E##" | "F#" | "Gb" => Ok(6),
+        "F##" | "G" | "Abb" => Ok(7),
+        "G#" | "Ab" => Ok(8),
+        "G##" | "A" | "Bbb" => Ok(9),
+        "A#" | "Bb" | "Cbb" => Ok(10),
+        "A##" | "B" | "Cb" => Ok(11),
+        _ => Err(format!("Invalid note: {full_name}")),
+    }
+}
 
-    format!("X: 1\nL: 1/1\n|\"{}\"[{}]|", chord, notes)
+fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
+    let note = note.trim();
+    let mut chars = note.chars().peekable();
+    let name = chars
+        .next()
+        .ok_or_else(|| "Expected a note name".to_string())?
+        .to_ascii_uppercase();
+
+    if !('A'..='G').contains(&name) {
+        return Err(format!("Invalid note: {note}"));
+    }
+
+    let mut accidental = String::new();
+    while let Some(ch) = chars.peek() {
+        match ch {
+            '#' => {
+                accidental.push('#');
+                chars.next();
+            }
+            'b' | 'B' | '-' => {
+                accidental.push('b');
+                chars.next();
+            }
+            _ => break,
+        }
+    }
+
+    let full_name = format!("{name}{accidental}");
+    let pitch_class = pitch_class(&full_name)?;
+
+    let octave = parse_octave(note);
+    let abc_octave = octave.unwrap_or(4) - 4;
+    let octave_str = if abc_octave < 0 {
+        ",".repeat(abc_octave.unsigned_abs() as usize)
+    } else {
+        "'".repeat(abc_octave as usize)
+    };
+
+    let abc_accidental = accidental.replace('#', "^").replace('b', "_");
+
+    Ok(ParsedNote {
+        abc: format!("{abc_accidental}{name}{octave_str}"),
+        pitch_class,
+    })
+}
+
+fn chord_bitmask(input: &str) -> Result<usize, String> {
+    let notes = split_chord_input(input)
+        .into_iter()
+        .map(parse_note_token)
+        .collect::<Result<Vec<_>, _>>()?;
+
+    if notes.is_empty() {
+        return Err("Enter at least one note".to_string());
+    }
+
+    Ok(notes.into_iter().fold(0usize, |bitmask, note| {
+        bitmask | (1usize << note.pitch_class)
+    }))
+}
+
+pub fn chordname_core(input: &str) -> Result<String, String> {
+    let bitmask = chord_bitmask(input)?;
+    chordname_from_bitmask(bitmask).ok_or_else(|| format!("Unknown chord bitmask: {bitmask}"))
+}
+
+pub fn chord_details_core(input: &str) -> Result<String, String> {
+    let bitmask = chord_bitmask(input)?;
+    let chord = chordname_from_bitmask(bitmask)
+        .ok_or_else(|| format!("Unknown chord bitmask: {bitmask}"))?;
+    let pitch_classes = (0..12)
+        .filter(|pitch_class| bitmask & (1usize << pitch_class) != 0)
+        .map(|pitch_class| pitch_class.to_string())
+        .collect::<Vec<_>>()
+        .join(", ");
+
+    Ok(format!(
+        "Name: {chord} | Pitch classes: {pitch_classes} | Bitmask: {bitmask}"
+    ))
+}
+
+fn set_chord_name(chord: &str) {
+    let mut chord_name = CHORD_NAME.lock().expect("couldn't lock");
+    chord_name.clear();
+    chord_name.push_str(chord);
+}
+
+fn abc_label(label: &str) -> String {
+    label.replace('"', "'")
+}
+
+fn chordname_from_bitmask(bitmask: usize) -> Option<String> {
+    bitmask
+        .checked_sub(1)
+        .and_then(|index| static_data().get(index))
+        .filter(|name| !name.is_empty())
+        .cloned()
+}
+
+pub fn convert_notes_core(input: Vec<String>) -> String {
+    let mut notes = Vec::new();
+    let mut bitmask = 0usize;
+
+    for note_str in input.into_iter() {
+        match parse_note_token(&note_str) {
+            Ok(note) => {
+                notes.push(note.abc);
+                bitmask |= 1usize << note.pitch_class;
+            }
+            Err(err) => {
+                set_chord_name(&err);
+                return format!("X: 1\nL: 1/1\n|\"{}\"[]|", abc_label(&err));
+            }
+        }
+    }
+
+    let chord = chordname_from_bitmask(bitmask).unwrap_or_else(|| "Unknown chord".to_string());
+    set_chord_name(&chord);
+
+    format!(
+        "X: 1\nL: 1/1\n|\"{}\"[{}]|",
+        abc_label(&chord),
+        notes.join(" ")
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn names_common_chords_from_generated_lookup() {
+        assert_eq!(chordname_core("C E G").unwrap(), "C-major triad");
+        assert_eq!(
+            chordname_core("C Eb G Bb").unwrap(),
+            "C-minor seventh chord"
+        );
+    }
+
+    #[test]
+    fn generated_lookup_uses_bitmask_order() {
+        assert_eq!(chordname_from_bitmask(1).unwrap(), "C");
+        assert_eq!(chordname_from_bitmask(4095).unwrap(), "C-aggregate");
+    }
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_chord_name() -> String {
     CHORD_NAME.lock().expect("couldn't lock").clone()
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn chordname(notes: &str) -> String {
+    chordname_core(notes).unwrap_or_else(|err| err)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn chord_details(notes: &str) -> String {
+    chord_details_core(notes).unwrap_or_else(|err| err)
 }
 
 #[cfg(feature = "wasm")]

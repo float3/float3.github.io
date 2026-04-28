@@ -385,11 +385,11 @@ where
     add_indent();
     for field in &s.fields.0 {
         // Type struct fields
-        if let Some(ref name) = s.name {
-            if let Some(tk) = typespec_to_typekind(&field.ty.ty) {
-                for id in &field.identifiers {
-                    add_sym(format!("{}.{}", name.0, id.ident.0), tk.clone());
-                }
+        if let Some(ref name) = s.name
+            && let Some(tk) = typespec_to_typekind(&field.ty.ty)
+        {
+            for id in &field.identifiers {
+                add_sym(format!("{}.{}", name.0, id.ident.0), tk.clone());
             }
         }
 
@@ -901,10 +901,10 @@ where
                 }
 
                 // Transpose matrix constructors
-                if let Some(TypeKind::Matrix(_, _)) = get_function_ret_type(&id, vec![Some(TypeKind::Scalar)]) {
-                    if is_constructor(&id) {
-                        let _ = f.write_str("transpose(");
-                    }
+                if let Some(TypeKind::Matrix(_, _)) = get_function_ret_type(&id, vec![Some(TypeKind::Scalar)])
+                    && is_constructor(&id)
+                {
+                    let _ = f.write_str("transpose(");
                 }
 
                 // Normal handling
@@ -925,10 +925,10 @@ where
                 let _ = f.write_str(")");
 
                 // Tranpose matrix constructors
-                if let Some(TypeKind::Matrix(_, _)) = get_function_ret_type(&id, vec![Some(TypeKind::Scalar)]) {
-                    if is_constructor(&id) {
-                        let _ = f.write_str(")");
-                    }
+                if let Some(TypeKind::Matrix(_, _)) = get_function_ret_type(&id, vec![Some(TypeKind::Scalar)])
+                    && is_constructor(&id)
+                {
+                    let _ = f.write_str(")");
                 }
             }
         }
@@ -1426,10 +1426,10 @@ where
 
     // Add parameters to current context
     for param in &fd.prototype.parameters {
-        if let FunctionParameterDeclaration::Named(_, decl) = param {
-            if let Some(tk) = typespec_to_typekind(&decl.ty.ty) {
-                add_sym(decl.ident.ident.0.clone(), tk);
-            }
+        if let FunctionParameterDeclaration::Named(_, decl) = param
+            && let Some(tk) = typespec_to_typekind(&decl.ty.ty)
+        {
+            add_sym(decl.ident.ident.0.clone(), tk);
         }
     }
 
@@ -1702,12 +1702,11 @@ where
         let mut res = String::from(value);
         if let Ok(stmt) = Statement::parse(value) {
             res.clear();
-            if let Statement::Simple(s) = &stmt {
-                if let SimpleStatement::Expression(Some(ref e)) = **s {
-                    if let Some(ty) = get_expr_type(e) {
-                        add_sym(ident.0.clone(), ty);
-                    }
-                }
+            if let Statement::Simple(s) = &stmt
+                && let SimpleStatement::Expression(Some(ref e)) = **s
+                && let Some(ty) = get_expr_type(e)
+            {
+                add_sym(ident.0.clone(), ty);
             }
             show_statement(&mut res, &stmt, false);
         } else if let Ok(expr) = Expr::parse(value) {

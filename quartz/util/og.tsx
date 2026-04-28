@@ -3,6 +3,10 @@ import { GlobalConfiguration } from "../cfg"
 import { QuartzPluginData } from "../plugins/vfile"
 import { JSXInternal } from "preact/src/jsx"
 import { ThemeKey } from "./theme"
+import fs from "fs"
+
+const localIconUrl = new URL("../static/icon.png", import.meta.url)
+const localIconDataUrl = `data:image/png;base64,${fs.readFileSync(localIconUrl).toString("base64")}`
 
 /**
  * Get an array of `FontOptions` (for satori) given google font names
@@ -145,7 +149,6 @@ export const defaultImage: SocialImageOptions["imageStructure"] = (
 ) => {
   const fontBreakPoint = 22
   const useSmallerFont = title.length > fontBreakPoint
-  const iconPath = `https://${cfg.baseUrl}/static/icon.png`
 
   return (
     <div
@@ -170,7 +173,7 @@ export const defaultImage: SocialImageOptions["imageStructure"] = (
           gap: "2.5rem",
         }}
       >
-        <img src={iconPath} width={135} height={135} />
+        <img src={localIconDataUrl} width={135} height={135} />
         <div
           style={{
             display: "flex",

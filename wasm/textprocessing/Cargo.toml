@@ -13,12 +13,12 @@ repository = "https://github.com/float3/float3.github.io"
 [dependencies]
 bpmf_py = "0.1.0"
 character_converter = "2.1.5"
-chinese-number = "0.7.7"
+chinese-number = "0.7.8"
 hanja = "0.1.1"
 japanese = "0.1.2"
 japanese_number_converter = "0.1.0"
-pinyin = "0.10.0"
+pinyin = "0.11.0"
 pinyin_zhuyin = "0.2.0"
 roman = "0.1.6"
-wasm-bindgen = { version = "0.2.100" }
+wasm-bindgen = { version = "0.2.120" }
 hangeul_conversion = { path = "hangeul_conversion" }

@@ -8,13 +8,13 @@ repository = "https://github.com/float3/tuningplayground"
 version = "1.0.0"
 
 [workspace]
-members = ["tuning_systems", "keymapping"]
+members = ["tuning_systems", "keymapping", "chord_generator"]
 
 [features]
 default = ["wasm"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
-wasm-bindgen = { version = "0.2.100", optional = true }
+wasm-bindgen = { version = "0.2.120", optional = true }
 tuning_systems = { path = "./tuning_systems" }
 keymapping = { path = "./keymapping" }

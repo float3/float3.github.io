@@ -26,7 +26,7 @@ cargo_up() {
 }
 
 if [[ -z "$GITHUB_ACTIONS" ]]; then
-    git pull
+    git pull --recurse-submodules=no
     ARGS=""
     echo "::warning::Building in development mode."
 else
@@ -36,11 +36,6 @@ fi
 root_path=$(pwd)
 cd wasm
 wasm_path=$(pwd)
-
-cd $wasm_path/tuningplayground/music21
-git pull origin master
-
-# need to provide packages so that pnpm doesn't complain
 
 cd $wasm_path/wasm
 export RUSTFLAGS='--cfg getrandom_backend="wasm_js"'
@@ -66,6 +61,9 @@ cd ./tuning_systems/
 cargo_up
 
 cd ../keymapping
+cargo_up
+
+cd ../chord_generator
 cargo_up
 
 cd $wasm_path/textprocessing/

@@ -3,6 +3,7 @@ import("wasm")
   .then((module) => {
     wasm = module
     wasm.main()
+    DOMContentLoaded()
 
     //make sure do anything that can call wasm after wasm has finished importing
     requestMIDI()

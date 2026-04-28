@@ -27,10 +27,10 @@ pub fn hanja_to_hangeul(input: &str) -> String {
             // For demonstration, assume we have a known range of Hangeul
             // and attempt to find the corresponding character:
             for hangeul_candidate in '\u{AC00}'..='\u{D7A3}' {
-                if let Some(results) = hanja::get(hangeul_candidate) {
-                    if results.iter().any(|&(h, _)| h == c) {
-                        return hangeul_candidate;
-                    }
+                if let Some(results) = hanja::get(hangeul_candidate)
+                    && results.iter().any(|&(h, _)| h == c)
+                {
+                    return hangeul_candidate;
                 }
             }
             panic!("No Hangeul found for given Hanja character");
@@ -47,10 +47,10 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
 
         // Iterate over the known range of Hangeul syllables
         for hangeul_candidate in '\u{AC00}'..='\u{D7A3}' {
-            if let Some(results) = hanja::get(hangeul_candidate) {
-                if results.iter().any(|&(h, _)| h == hanja_char) {
-                    hangeul_candidates.insert(hangeul_candidate);
-                }
+            if let Some(results) = hanja::get(hangeul_candidate)
+                && results.iter().any(|&(h, _)| h == hanja_char)
+            {
+                hangeul_candidates.insert(hangeul_candidate);
             }
         }
 

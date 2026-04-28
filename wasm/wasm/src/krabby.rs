@@ -48,11 +48,7 @@ pub fn random_n_pokemon(n: u8, padding: usize) -> Vec<String> {
         }
     }
 
-    sprites.sort_by_key(|sprite| std::cmp::Reverse(sprite.len()));
-
-    let max_height = sprites.first().unwrap().len();
-
-    assert_eq!(max_height, sprites.iter().map(|s| s.len()).max().unwrap());
+    let max_height = sprites.iter().map(Vec::len).max().unwrap_or(0);
 
     // prepare output lines
     let mut output_lines = vec![String::new(); max_height];
