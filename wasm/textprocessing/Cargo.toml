@@ -17,7 +17,7 @@ chinese-number = "0.7.7"
 hanja = "0.1.1"
 japanese = "0.1.2"
 japanese_number_converter = "0.1.0"
-pinyin = "0.10.0"
+pinyin = "0.11.0"
 pinyin_zhuyin = "0.2.0"
 roman = "0.1.6"
 wasm-bindgen = { version = "0.2.100" }
