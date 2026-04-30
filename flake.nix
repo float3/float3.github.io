@@ -18,28 +18,23 @@
         # Read the file relative to the flake's root
         overrides = builtins.fromTOML (builtins.readFile (self + "/rust-toolchain.toml"));
         updateScript = pkgs.writeShellScriptBin "update" ''
-          #!/bin/sh
           set -e
-          # Enter the devShell environment and execute the scripts
-          nix develop . --command sh -c "./scripts/update_and_lint.sh && ./scripts/commit.sh"
+          nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- update
         '';
       in {
         devShells.default = pkgs.mkShell rec {
           nativeBuildInputs = [pkgs.pkg-config];
           buildInputs = with pkgs; [
-            # bun
-            # trunk
             cargo-edit
             cargo-hack
             clang
-            corepack_24
             git
             gcc
             gnugrep
             llvmPackages.bintools
-            nodejs_24
-            pnpm_10
-            python314
+            nodejs_20
+            pnpm_8
+            python313
             rustup
             typescript
             virtualenv
