@@ -1,58 +1,47 @@
 name: Deploy
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
 concurrency:
-  group: "github-pages"
+  group: pages-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   deploy:
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
         with:
-          token: ${{ secrets.TOKEN }}
           submodules: recursive
 
-      - uses: cachix/install-nix-action@v31
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-unstable
 
-      - name: python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
+      - name: Install Rust toolchain
+        run: nix develop . --command rustup toolchain install --profile minimal stable --target wasm32-unknown-unknown
 
-      - name: setup node
-        uses: actions/setup-node@v4.4.0
-        with:
-          node-version: 23
-
-      # - name: dependencies
-      #   run: |
-      #     ./scripts/dependencies.sh
-
-      - name: build
-        run: |
-          nix develop . --command sh -c "rustup update; ./scripts/build.sh"
+      - name: Build site
+        run: nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- build --prod
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
-          path: "public"
+          path: public
 
       - name: Deploy to GitHub Pages
         id: deployment
