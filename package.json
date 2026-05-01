@@ -122,7 +122,8 @@
   "pnpm": {
     "overrides": {
       "esbuild": ">=0.25.0",
-      "shiki": "2.5.0"
+      "shiki": "2.5.0",
+      "uuid": "^14.0.0"
     }
   }
 }
