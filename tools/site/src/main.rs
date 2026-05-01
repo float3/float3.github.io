@@ -69,11 +69,11 @@ impl Site {
 
         self.pnpm_install(&self.root, InstallMode::Locked)?;
 
-        let mut args = os_args(&["exec", "quartz", "build"]);
+        let mut args = os_args(&["--no-deprecation", "quartz/bootstrap-cli.mjs", "build"]);
         if mode == Mode::Dev {
             args.push("--serve".into());
         }
-        self.run(&self.root, "pnpm", &args)?;
+        self.run(&self.root, "node", &args)?;
 
         let public = self.root.join("public");
         let elapsed = started.elapsed().as_secs().to_string();
