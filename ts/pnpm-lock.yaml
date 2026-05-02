@@ -5,6 +5,7 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
+  serialize-javascript: ^7.0.5
   uuid: ^14.0.0
 
 dependencies:
