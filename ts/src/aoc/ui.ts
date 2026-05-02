@@ -12,6 +12,14 @@ export interface TabConfig {
 export function createTabs(container: HTMLElement, config: TabConfig) {
   const { years, days, problems } = config
 
+  function dayCountForYear(year: number) {
+    return year === 2025 ? 12 : days
+  }
+
+  function problemCountForDay(year: number, day: number) {
+    return year === 2025 || day === 25 ? 1 : problems
+  }
+
   let activeYear = START_YEAR + years - 1
   let activeDay = 1,
     activeProblem = 1
@@ -24,21 +32,25 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   if (initialYearParam) {
     const parsedYear = parseInt(initialYearParam, 10)
-    if (!isNaN(parsedYear) && parsedYear >= START_YEAR && parsedYear <= years) {
+    if (!isNaN(parsedYear) && parsedYear >= START_YEAR && parsedYear < START_YEAR + years) {
       activeYear = parsedYear
     }
   }
 
   if (initialDayParam) {
     const parsedDay = parseInt(initialDayParam, 10)
-    if (!isNaN(parsedDay) && parsedDay >= 1 && parsedDay <= days) {
+    if (!isNaN(parsedDay) && parsedDay >= 1 && parsedDay <= dayCountForYear(activeYear)) {
       activeDay = parsedDay
     }
   }
 
   if (initialProblemParam) {
     const parsedProblem = parseInt(initialProblemParam, 10)
-    if (!isNaN(parsedProblem) && parsedProblem >= 1 && parsedProblem <= problems) {
+    if (
+      !isNaN(parsedProblem) &&
+      parsedProblem >= 1 &&
+      parsedProblem <= problemCountForDay(activeYear, activeDay)
+    ) {
       activeProblem = parsedProblem
     }
   }
@@ -65,8 +77,8 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   // Pre-create all fields sets
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
-    for (let d = 1; d <= days; d++) {
-      for (let p = 1; p <= problems; p++) {
+    for (let d = 1; d <= dayCountForYear(y); d++) {
+      for (let p = 1; p <= problemCountForDay(y, d); p++) {
         const fields = document.createElement("div")
         fields.className = "fields hidden"
 
@@ -127,12 +139,15 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     const btn = document.createElement("button")
     let completeCount = 0
-    for (let d = 1; d <= days; d++) {
-      for (let p = 1; p <= problems; p++) {
+    let totalProblems = 0
+    for (let d = 1; d <= dayCountForYear(y); d++) {
+      const dayProblemCount = problemCountForDay(y, d)
+      totalProblems += dayProblemCount
+      for (let p = 1; p <= dayProblemCount; p++) {
         if (complete[y - START_YEAR][d - 1][p - 1]) completeCount++
       }
     }
-    const percentage = Math.floor((completeCount / (days * problems)) * 100)
+    const percentage = Math.floor((completeCount / totalProblems) * 100)
     btn.textContent = y.toString() + (percentage === 100 ? ` ${STAR}` : ` ${percentage}%`)
     if (y === activeYear) btn.classList.add("active")
     btn.addEventListener("click", () => {
@@ -210,8 +225,12 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     const dayButtons = daysWrapper.querySelectorAll("button")
     dayButtons.forEach((btn, index) => {
       const d = index + 1
+      const button = btn as HTMLButtonElement
+      button.hidden = d > dayCountForYear(activeYear)
+      if (button.hidden) return
+
       let starCount = 0
-      for (let p = 1; p <= problems; p++) {
+      for (let p = 1; p <= problemCountForDay(activeYear, d); p++) {
         if (complete[activeYear - START_YEAR][d - 1][p - 1]) {
           starCount++
         }
@@ -228,8 +247,13 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   function updateProblemTabs() {
     const problemButtons = problemsWrapper.querySelectorAll("button")
+    const activeProblemCount = problemCountForDay(activeYear, activeDay)
     problemButtons.forEach((btn, index) => {
       const p = index + 1
+      const button = btn as HTMLButtonElement
+      button.hidden = p > activeProblemCount
+      if (button.hidden) return
+
       if (complete[activeYear - START_YEAR][activeDay - 1][p - 1]) {
         btn.textContent = `problem ${p} ${STAR}`
       } else {
