@@ -6,6 +6,8 @@ target/
 tsconfig.tsbuildinfo
 .obsidian
 .quartz-cache
+.quartz/
+quartz/cli/tui/dist/
 private/
 .replit
 replit.nix

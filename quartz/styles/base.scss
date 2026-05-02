@@ -1,4 +1,5 @@
 @use "sass:map";
+
 @use "./variables.scss" as *;
 @use "./syntax.scss";
 @use "./callouts.scss";
@@ -8,10 +9,13 @@ html {
   text-size-adjust: none;
   overflow-x: hidden;
   width: 100vw;
+
+  @media all and ($mobile) {
+    scroll-padding-top: 4rem;
+  }
 }
 
-body,
-section {
+body {
   margin: 0;
   box-sizing: border-box;
   background-color: var(--light);
@@ -24,7 +28,6 @@ section {
   padding: 0 0.1rem;
   border-radius: 5px;
 }
-
 ::selection {
   background: color-mix(in srgb, var(--tertiary) 60%, rgba(255, 255, 255, 0));
   color: var(--darkgray);
@@ -40,31 +43,37 @@ li,
 ol,
 ul,
 .katex,
-.math {
+.math,
+.typst-doc,
+g[class~="typst-text"] {
   color: var(--darkgray);
   fill: var(--darkgray);
   overflow-wrap: break-word;
-  hyphens: auto;
+  text-wrap: pretty;
 }
 
-p,
-ul,
-text,
-a,
-li,
-ol,
-ul,
-.katex,
-.math {
-  overflow-wrap: anywhere;
-  /* tr and td removed from list of selectors for overflow-wrap, allowing them to use default 'normal' property value */
+path[class~="typst-shape"] {
+  stroke: var(--darkgray);
 }
 
 .math {
-  font-size: 1rem;
-
   &.math-display {
     text-align: center;
+  }
+}
+
+article {
+  > mjx-container.MathJax,
+  blockquote > div > mjx-container.MathJax {
+    display: flex;
+    > svg {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+  blockquote > div > mjx-container.MathJax > svg {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
   }
 }
 
@@ -79,7 +88,7 @@ a {
   color: var(--secondary);
 
   &:hover {
-    color: var(--tertiary) !important;
+    color: var(--tertiary);
   }
 
   &.internal {
@@ -89,12 +98,20 @@ a {
     border-radius: 5px;
     line-height: 1.4rem;
 
+    &.broken {
+      color: var(--secondary);
+      opacity: 0.5;
+      transition: opacity 0.2s ease;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+
     &:has(> img) {
       background-color: transparent;
       border-radius: 0;
       padding: 0;
     }
-
     &.tag-link {
       &::before {
         content: "#";
@@ -104,7 +121,7 @@ a {
 
   &.external .external-icon {
     height: 1ex;
-    margin: 0 0.2em;
+    margin: 0 0.15em;
 
     > path {
       fill: var(--dark);
@@ -112,26 +129,39 @@ a {
   }
 }
 
-.desktop-only {
-  display: initial;
+.flex-component {
+  display: flex;
+}
 
+.desktop-only {
+  display: contents;
+  &.flex-component {
+    display: flex;
+  }
   @media all and ($mobile) {
+    &.flex-component {
+      display: none;
+    }
     display: none;
   }
 }
 
 .mobile-only {
   display: none;
-
+  &.flex-component {
+    display: none;
+  }
   @media all and ($mobile) {
-    display: initial;
+    &.flex-component {
+      display: flex;
+    }
+    display: contents;
   }
 }
 
 .page {
   max-width: calc(#{map.get($breakpoints, desktop)} + 300px);
   margin: 0 auto;
-
   & article {
     & > h1 {
       font-size: 2rem;
@@ -143,7 +173,7 @@ a {
     }
 
     & li:has(> input[type="checkbox"]:checked) {
-      // text-decoration: line-through;
+      text-decoration: line-through;
       text-decoration-color: var(--gray);
       color: var(--gray);
     }
@@ -173,7 +203,6 @@ a {
       row-gap: #{map.get($tabletGrid, rowGap)};
       grid-template-areas: #{map.get($tabletGrid, templateAreas)};
     }
-
     @media all and ($mobile) {
       grid-template-columns: #{map.get($mobileGrid, templateColumns)};
       grid-template-rows: #{map.get($mobileGrid, templateRows)};
@@ -185,38 +214,30 @@ a {
     @media all and not ($desktop) {
       padding: 0 1rem;
     }
-
     @media all and ($mobile) {
       margin: 0 auto;
     }
 
     & .sidebar {
-      gap: 2rem;
+      gap: 1.2rem;
       top: 0;
       box-sizing: border-box;
       padding: $topSpacing 2rem 2rem 2rem;
       display: flex;
       height: 100vh;
-      max-height: 100vh;
-      overflow-y: auto;
-      overscroll-behavior: contain;
       position: sticky;
-      scrollbar-gutter: stable;
     }
 
     & .sidebar.left {
       z-index: 1;
       grid-area: grid-sidebar-left;
       flex-direction: column;
-
       @media all and ($mobile) {
         gap: 0;
         align-items: center;
         position: initial;
         display: flex;
         height: unset;
-        max-height: none;
-        overflow: visible;
         flex-direction: row;
         padding: 0;
         padding-top: 2rem;
@@ -227,31 +248,25 @@ a {
       grid-area: grid-sidebar-right;
       margin-right: 0;
       flex-direction: column;
-
       @media all and ($mobile) {
         margin-left: inherit;
         margin-right: inherit;
       }
-
       @media all and not ($desktop) {
         position: initial;
         height: unset;
-        max-height: none;
-        overflow: visible;
         width: 100%;
         flex-direction: row;
         padding: 0;
-
         & > * {
           flex: 1;
+          max-height: 24rem;
         }
-
         & > .toc {
           display: none;
         }
       }
     }
-
     & .page-header,
     & .page-footer {
       margin-top: 1rem;
@@ -260,7 +275,6 @@ a {
     & .page-header {
       grid-area: grid-header;
       margin: $topSpacing 0 0 0;
-
       @media all and ($mobile) {
         margin-top: 0;
         padding: 0;
@@ -281,20 +295,59 @@ a {
       min-width: 100%;
       margin-left: auto;
       margin-right: auto;
-
       @media all and ($tablet) {
         margin-right: 0;
       }
-
       @media all and ($mobile) {
         margin-right: 0;
         margin-left: 0;
       }
     }
-
     & footer {
       margin-left: 0;
     }
+  }
+}
+
+// ============================================================================
+// Page Frame Overrides
+// ============================================================================
+
+// Full-width frame: no sidebars, center content spans full width
+.page[data-frame="full-width"] > #quartz-body {
+  grid-template-columns: auto;
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "grid-header"
+    "grid-center"
+    "grid-footer";
+
+  @media all and ($tablet) {
+    grid-template-columns: auto;
+  }
+
+  & .center.full-width {
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+// Minimal frame: no sidebars, no header/footer chrome, body content only + footer
+.page[data-frame="minimal"] > #quartz-body {
+  grid-template-columns: auto;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    "grid-center"
+    "grid-footer";
+
+  @media all and ($tablet) {
+    grid-template-columns: auto;
+  }
+
+  & .center.minimal {
+    max-width: 100%;
+    min-width: 100%;
+    margin: 0;
   }
 }
 
@@ -377,6 +430,10 @@ h6 {
 
   &[id]:hover > a {
     opacity: 1;
+  }
+
+  &:not([id]) > a[role="anchor"] {
+    display: none;
   }
 }
 
@@ -533,7 +590,6 @@ td {
 
 tr {
   border-bottom: 1px solid var(--lightgray);
-
   &:last-child {
     border-bottom: none;
   }
@@ -566,40 +622,33 @@ video {
 }
 
 .spacer {
-  flex: 1 1 auto;
+  flex: 2 1 auto;
 }
 
 div:has(> .overflow) {
-  display: flex;
-  overflow-y: auto;
   max-height: 100%;
+  overflow-y: hidden;
 }
 
 ul.overflow,
 ol.overflow {
   max-height: 100%;
   overflow-y: auto;
+  width: 100%;
+  margin-bottom: 0;
 
   // clearfix
   content: "";
   clear: both;
 
-  & > li:last-of-type {
-    margin-bottom: 30px;
+  & > li.overflow-end {
+    height: 0.5rem;
+    margin: 0;
   }
 
-  /*&:after {
-    pointer-events: none;
-    content: "";
-    width: 100%;
-    height: 50px;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    opacity: 1;
-    transition: opacity 0.3s ease;
-    background: linear-gradient(transparent 0px, var(--light));
-  }*/
+  &.gradient-active {
+    mask-image: linear-gradient(to bottom, black calc(100% - 50px), transparent 100%);
+  }
 }
 
 .transclude {
@@ -609,6 +658,7 @@ ol.overflow {
 }
 
 .katex-display {
+  display: initial;
   overflow-x: auto;
   overflow-y: hidden;
 }

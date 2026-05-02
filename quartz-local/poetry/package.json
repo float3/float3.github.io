@@ -1,0 +1,16 @@
+{
+  "name": "@hill/quartz-poetry",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "quartz": {
+    "name": "poetry",
+    "displayName": "Poetry",
+    "description": "Render fenced poetry code blocks as poetry preformatted text.",
+    "version": "1.0.0",
+    "category": "transformer",
+    "defaultOrder": 25
+  }
+}

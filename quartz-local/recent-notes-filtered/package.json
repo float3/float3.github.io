@@ -1,0 +1,26 @@
+{
+  "name": "@hill/quartz-recent-notes-filtered",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components.ts"
+  },
+  "quartz": {
+    "name": "recent-notes-filtered",
+    "displayName": "Filtered Recent Notes",
+    "description": "Render filtered recent note lists for the hilll.dev index page.",
+    "version": "1.0.0",
+    "category": [
+      "component"
+    ],
+    "components": {
+      "RecentNotesFiltered": {
+        "name": "RecentNotesFiltered",
+        "displayName": "Filtered Recent Notes",
+        "description": "A recent notes list with prefix filtering.",
+        "version": "1.0.0"
+      }
+    }
+  }
+}
