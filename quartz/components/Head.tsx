@@ -4,7 +4,9 @@ import { CSSResourceToStyleElement, JSResourceToScriptElement } from "../util/re
 import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
-import { CustomOgImagesEmitterName } from "../../.quartz/plugins"
+
+const CustomOgImagesEmitterName = "CustomOgImages"
+
 export default (() => {
   const Head: QuartzComponent = ({
     cfg,
@@ -37,7 +39,8 @@ export default (() => {
       (e) => e.name === CustomOgImagesEmitterName,
     )
     const ogImageDefaultPath = `https://${cfg.baseUrl}/static/og-image.png`
-    const ogImageDefaultExtension = getFileExtension(ogImageDefaultPath)?.replace(/^\./, "") ?? "png"
+    const ogImageDefaultExtension =
+      getFileExtension(ogImageDefaultPath)?.replace(/^\./, "") ?? "png"
 
     return (
       <head>
