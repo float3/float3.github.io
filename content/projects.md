@@ -77,7 +77,8 @@ some toy programs for fun, learning and experimentation
 
 ## wasm tools
 
-[tools](/tools)
+[tools](/tools) \
+[music21-rs](https://hilll.dev/music21-rs/)
 
 ## tuning playground
 

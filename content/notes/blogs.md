@@ -27,6 +27,7 @@ https://www.wheresyoured.at/
 - <https://michaelmoroz.github.io/>
 - <https://dimmadome.net/>
 - <https://oimo.io/>
+- <https://www.scd31.com/>
 
 ## Graphics
 
