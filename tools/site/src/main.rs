@@ -69,7 +69,7 @@ impl Site {
 
         self.pnpm_install(&self.root, InstallMode::Locked)?;
 
-        let mut args = os_args(&["exec", "quartz", "build"]);
+        let mut args = os_args(&["quartz", "build"]);
         if mode == Mode::Dev {
             args.push("--serve".into());
         }
@@ -113,7 +113,14 @@ impl Site {
         self.run(
             &ts_dir,
             "pnpm",
-            &os_args(&["exec", "webpack", "--mode", mode.webpack()]),
+            &os_args(&[
+                "exec",
+                "webpack",
+                "--config",
+                "webpack.config.ts",
+                "--mode",
+                mode.webpack(),
+            ]),
         )
     }
 
@@ -744,7 +751,11 @@ fn find_repo_root() -> Result<PathBuf> {
     let mut current = env::current_dir()?;
 
     loop {
-        if current.join(".git").exists() && current.join("quartz.config.ts").exists() {
+        if current.join(".git").exists()
+            && (current.join("quartz.config.ts").exists()
+                || current.join("quartz.config.yaml").exists()
+                || current.join("quartz.ts").exists())
+        {
             return Ok(current);
         }
 
