@@ -1,12 +1,11 @@
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import TerserPlugin from "terser-webpack-plugin"
-import type { Configuration } from "webpack"
 
 const tsDir = fileURLToPath(new URL(".", import.meta.url))
 const contentJsDir = fileURLToPath(new URL("../content/js", import.meta.url))
 
-const config: Configuration = {
+const config = {
   context: tsDir,
   module: {
     rules: [
