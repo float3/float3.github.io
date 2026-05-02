@@ -3,10 +3,10 @@ import pluginJs from "@eslint/js"
 import tseslint from "typescript-eslint"
 import prettierPlugin from "eslint-plugin-prettier"
 import prettierConfig from "eslint-config-prettier"
+import type { Linter } from "eslint"
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
-  { files: ["**/*.{ts}"] },
+const config: Linter.Config[] = [
+  { files: ["**/*.ts"] },
   { languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
@@ -20,3 +20,5 @@ export default [
   },
   prettierConfig,
 ]
+
+export default config
