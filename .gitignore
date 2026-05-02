@@ -2,6 +2,7 @@
 node_modules
 public
 prof
+target/
 tsconfig.tsbuildinfo
 .obsidian
 .quartz-cache
@@ -11,9 +12,6 @@ replit.nix
 
 content/.trash/
 content/.obsidian/
-
-# these files are downloaded by the CI
-rustup.sh
 
 content/js
 content/tools/wasm/

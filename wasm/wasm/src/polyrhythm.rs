@@ -111,7 +111,7 @@ pub fn start_with_settings(
         .dyn_into::<CanvasRenderingContext2d>()?;
 
     // Create the polyrhythm.
-    let poly = Polyrhythm::new_with_time_signature(base, tempo, subs.as_slice())
+    let poly = Polyrhythm::from_time_signature(base, tempo, subs.as_slice())
         .expect("Failed to create Polyrhythm");
     let measure_duration = poly
         .measure_duration()
