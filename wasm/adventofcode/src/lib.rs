@@ -8,6 +8,7 @@ mod aoc2021;
 mod aoc2022;
 mod aoc2023;
 mod aoc2024;
+mod aoc2025;
 pub(crate) mod shared;
 
 pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
@@ -22,6 +23,7 @@ pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::retrieve_problem(day, problem),
         2023 => aoc2023::retrieve_problem(day, problem),
         2024 => aoc2024::retrieve_problem(day, problem),
+        2025 => aoc2025::retrieve_problem(day, problem),
         _ => panic!("Year not found: {}", year),
     }
 }
@@ -39,6 +41,7 @@ pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::retrieve_code(day, problem),
         2023 => aoc2023::retrieve_code(day, problem),
         2024 => aoc2024::retrieve_code(day, problem),
+        2025 => aoc2025::retrieve_code(day, problem),
         _ => panic!("Year not found: {}", year),
     }
 }
@@ -56,6 +59,7 @@ pub fn retrieve_html(year: u32, day: u32, problem: u8, dark: bool) -> String {
         2022 => aoc2022::retrieve_html(day, problem, dark),
         2023 => aoc2023::retrieve_html(day, problem, dark),
         2024 => aoc2024::retrieve_html(day, problem, dark),
+        2025 => aoc2025::retrieve_html(day, problem, dark),
         _ => panic!("Year not found: {}", year),
     }
 }
@@ -73,6 +77,7 @@ pub fn input(year: u32, day: u32) -> String {
         2022 => aoc2022::input(day),
         2023 => aoc2023::input(day),
         2024 => aoc2024::input(day),
+        2025 => aoc2025::input(day),
         _ => panic!("Year not found: {}", year),
     }
 }
@@ -89,12 +94,15 @@ pub fn solve(input: &str, year: u32, day: u32, problem: u8) -> String {
         2022 => aoc2022::solve(input, day, problem),
         2023 => aoc2023::solve(input, day, problem),
         2024 => aoc2024::solve(input, day, problem),
+        2025 => aoc2025::solve(input, day, problem),
         _ => panic!("Year not found: {}", year),
     }
 }
 
 #[cfg(not(target_arch = "wasm32"))]
 pub fn solve_all() {
+    println!("Year 2025:");
+    aoc2025::solve_all();
     println!("Year 2024:");
     aoc2024::solve_all();
     println!("Year 2023:");
