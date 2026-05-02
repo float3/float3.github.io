@@ -122,7 +122,7 @@ impl Site {
                 "exec",
                 "webpack",
                 "--config",
-                "webpack.config.ts",
+                "webpack.config.mjs",
                 "--mode",
                 mode.webpack(),
             ]),
@@ -245,26 +245,7 @@ impl Site {
 
     fn generate_chords(&self) -> Result<()> {
         let dir = self.root.join("wasm/tuningplayground");
-        let venv = dir.join("venv");
-        self.run(&dir, "python", &os_args(&["-m", "venv", "venv"]))?;
-
-        let python = if cfg!(windows) {
-            venv.join("Scripts/python.exe")
-        } else {
-            venv.join("bin/python")
-        };
-
-        self.run(
-            &dir,
-            &python,
-            &os_args(&["-m", "pip", "install", "--upgrade", "pip"]),
-        )?;
-        self.run(
-            &dir,
-            &python,
-            &os_args(&["-m", "pip", "install", "-r", "music21/requirements.txt"]),
-        )?;
-        self.run(&dir, &python, &os_args(&["-m", "generate_chords"]))
+        self.run(&dir, "cargo", &os_args(&["run", "-p", "chord_generator"]))
     }
 
     fn dates(&self, target: &str) -> Result<()> {
