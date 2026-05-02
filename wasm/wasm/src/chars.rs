@@ -1,34 +1,34 @@
 use std::sync::{LazyLock, Mutex};
 use wasm_bindgen::prelude::wasm_bindgen;
 
-static HIRAGANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    let mut v: Vec<char> = ('\u{3041}'..='\u{3094}')
-        .filter(|&c| {
-            c != '\u{3041}'
-                && c != '\u{3043}'
-                && c != '\u{3045}'
-                && c != '\u{3047}'
-                && c != '\u{3049}'
-        })
-        .collect();
-    v.push('\u{309f}');
-    Mutex::new(v)
-});
+// static HIRAGANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
+//     let mut v: Vec<char> = ('\u{3041}'..='\u{3094}')
+//         .filter(|&c| {
+//             c != '\u{3041}'
+//                 && c != '\u{3043}'
+//                 && c != '\u{3045}'
+//                 && c != '\u{3047}'
+//                 && c != '\u{3049}'
+//         })
+//         .collect();
+//     v.push('\u{309f}');
+//     Mutex::new(v)
+// });
 
-static KATAKANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    let mut v: Vec<char> = ('\u{30a1}'..='\u{30f4}')
-        .filter(|&c| {
-            c != '\u{30a1}'
-                && c != '\u{30a3}'
-                && c != '\u{30a5}'
-                && c != '\u{30a7}'
-                && c != '\u{30a9}'
-        })
-        .collect();
-    v.extend('\u{30f7}'..='\u{30fa}');
-    v.push('\u{30ff}');
-    Mutex::new(v)
-});
+// static KATAKANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
+//     let mut v: Vec<char> = ('\u{30a1}'..='\u{30f4}')
+//         .filter(|&c| {
+//             c != '\u{30a1}'
+//                 && c != '\u{30a3}'
+//                 && c != '\u{30a5}'
+//                 && c != '\u{30a7}'
+//                 && c != '\u{30a9}'
+//         })
+//         .collect();
+//     v.extend('\u{30f7}'..='\u{30fa}');
+//     v.push('\u{30ff}');
+//     Mutex::new(v)
+// });
 
 // static KANA: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
 //     let mut v: Vec<char> = ('\u{31F0}'..='\u{31FF}').collect();
@@ -77,54 +77,54 @@ static KANJI: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
     Mutex::new(kanji)
 });
 
-static BOPOMOFO: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    const BOPOMOFO_START: char = '\u{3105}';
-    const BOPOMOFO_END: char = '\u{312f}';
+// static BOPOMOFO: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
+//     const BOPOMOFO_START: char = '\u{3105}';
+//     const BOPOMOFO_END: char = '\u{312f}';
 
-    // const BOPOMOFO_EXT_END: char = '\u{31bf}';
-    // const BOPOMOFO_EXT_START: char = '\u{31A0}';
+//     // const BOPOMOFO_EXT_END: char = '\u{31bf}';
+//     // const BOPOMOFO_EXT_START: char = '\u{31A0}';
 
-    let bopomofo: Vec<char> = (BOPOMOFO_START..=BOPOMOFO_END).collect();
-    // bopomofo.extend(BOPOMOFO_EXT_START..=BOPOMOFO_EXT_END);
-    Mutex::new(bopomofo)
-});
+//     let bopomofo: Vec<char> = (BOPOMOFO_START..=BOPOMOFO_END).collect();
+//     // bopomofo.extend(BOPOMOFO_EXT_START..=BOPOMOFO_EXT_END);
+//     Mutex::new(bopomofo)
+// });
 
-static HANGUL: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
-    // const HANGUL_JAMO_START: char = '\u{1100}';
-    // const HANGUL_JAMO_END: char = '\u{11FF}';
+// static HANGUL: LazyLock<Mutex<Vec<char>>> = LazyLock::new(|| {
+//     // const HANGUL_JAMO_START: char = '\u{1100}';
+//     // const HANGUL_JAMO_END: char = '\u{11FF}';
 
-    const HANGUL_SYLLABLE_START: char = '\u{ac00}';
-    const HANGUL_SYLLABLE_END: char = '\u{d7a3}';
+//     const HANGUL_SYLLABLE_START: char = '\u{ac00}';
+//     const HANGUL_SYLLABLE_END: char = '\u{d7a3}';
 
-    let hangul: Vec<char> = (HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END).collect();
-    // hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
-    Mutex::new(hangul)
-});
+//     let hangul: Vec<char> = (HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END).collect();
+//     // hangul.extend(HANGUL_SYLLABLE_START..=HANGUL_SYLLABLE_END);
+//     Mutex::new(hangul)
+// });
 
 fn random_u32(max: u32) -> u32 {
     let num = getrandom::u32().expect("failed to get random");
     num % max
 }
 
-fn random_hiragana(remove: bool) -> char {
-    let mut v = HIRAGANA.lock().expect("failed to lock hiragana");
-    let idx = random_u32(v.len() as u32) as usize;
-    if remove {
-        v.remove(idx)
-    } else {
-        v[idx]
-    }
-}
+// fn random_hiragana(remove: bool) -> char {
+//     let mut v = HIRAGANA.lock().expect("failed to lock hiragana");
+//     let idx = random_u32(v.len() as u32) as usize;
+//     if remove {
+//         v.remove(idx)
+//     } else {
+//         v[idx]
+//     }
+// }
 
-fn random_katakana(remove: bool) -> char {
-    let mut v = KATAKANA.lock().expect("failed to lock katakana");
-    let idx = random_u32(v.len() as u32) as usize;
-    if remove {
-        v.remove(idx)
-    } else {
-        v[idx]
-    }
-}
+// fn random_katakana(remove: bool) -> char {
+//     let mut v = KATAKANA.lock().expect("failed to lock katakana");
+//     let idx = random_u32(v.len() as u32) as usize;
+//     if remove {
+//         v.remove(idx)
+//     } else {
+//         v[idx]
+//     }
+// }
 
 fn random_kanji(remove: bool) -> char {
     let mut v = KANJI.lock().expect("failed to lock kanji");
@@ -136,25 +136,25 @@ fn random_kanji(remove: bool) -> char {
     }
 }
 
-fn random_bopomofo(remove: bool) -> char {
-    let mut v = BOPOMOFO.lock().expect("failed to lock bopomofo");
-    let idx = random_u32(v.len() as u32) as usize;
-    if remove {
-        v.remove(idx)
-    } else {
-        v[idx]
-    }
-}
+// fn random_bopomofo(remove: bool) -> char {
+//     let mut v = BOPOMOFO.lock().expect("failed to lock bopomofo");
+//     let idx = random_u32(v.len() as u32) as usize;
+//     if remove {
+//         v.remove(idx)
+//     } else {
+//         v[idx]
+//     }
+// }
 
-fn random_hangul(remove: bool) -> char {
-    let mut v = HANGUL.lock().expect("failed to lock hangul");
-    let idx = random_u32(v.len() as u32) as usize;
-    if remove {
-        v.remove(idx)
-    } else {
-        v[idx]
-    }
-}
+// fn random_hangul(remove: bool) -> char {
+//     let mut v = HANGUL.lock().expect("failed to lock hangul");
+//     let idx = random_u32(v.len() as u32) as usize;
+//     if remove {
+//         v.remove(idx)
+//     } else {
+//         v[idx]
+//     }
+// }
 
 #[wasm_bindgen]
 pub fn random_weighted_char(remove: bool) -> char {
@@ -168,8 +168,8 @@ pub fn random_weighted_char(remove: bool) -> char {
     let total = kanji_len;
     assert!(total > 0, "All LUTs are empty");
 
-    let rnd = random_u32(total as u32) as usize;
-    let mut offset = rnd;
+    // let rnd = random_u32(total as u32) as usize;
+    // let mut offset = rnd;
     random_kanji(remove)
     // if offset < hiragana_len {
     //     return random_hiragana(remove);
