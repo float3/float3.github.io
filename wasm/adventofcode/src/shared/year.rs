@@ -59,6 +59,38 @@ macro_rules! define_year_mod {
         }
 
         #[cfg(not(target_arch = "wasm32"))]
+        pub(super) fn problem_count(day: u32) -> u8 {
+            match day {
+                1 => day01::problem_count(),
+                2 => day02::problem_count(),
+                3 => day03::problem_count(),
+                4 => day04::problem_count(),
+                5 => day05::problem_count(),
+                6 => day06::problem_count(),
+                7 => day07::problem_count(),
+                8 => day08::problem_count(),
+                9 => day09::problem_count(),
+                10 => day10::problem_count(),
+                11 => day11::problem_count(),
+                12 => day12::problem_count(),
+                13 => day13::problem_count(),
+                14 => day14::problem_count(),
+                15 => day15::problem_count(),
+                16 => day16::problem_count(),
+                17 => day17::problem_count(),
+                18 => day18::problem_count(),
+                19 => day19::problem_count(),
+                20 => day20::problem_count(),
+                21 => day21::problem_count(),
+                22 => day22::problem_count(),
+                23 => day23::problem_count(),
+                24 => day24::problem_count(),
+                25 => day25::problem_count(),
+                _ => panic!("Day not found"),
+            }
+        }
+
+        #[cfg(not(target_arch = "wasm32"))]
         pub(super) fn retrieve_code(day: u32, code: u8) -> String {
             match day {
                 1 => day01::retrieve_code(code),
@@ -189,7 +221,7 @@ macro_rules! define_year_mod {
         pub(super) fn solve_all() {
             (1..=25).for_each(|x| {
                 println!("  Day {}", x);
-                (1..=2).for_each(|y| {
+                (1..=problem_count(x)).for_each(|y| {
                     println!("    Problem {}: {}", y, solve(&input(x), x, y));
                 });
             });
