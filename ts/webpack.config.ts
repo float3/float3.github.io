@@ -1,7 +1,13 @@
-import TerserPlugin from "terser-webpack-plugin/dist/index.js"
-import path from "path"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+import TerserPlugin from "terser-webpack-plugin"
+import type { Configuration } from "webpack"
 
-export default {
+const tsDir = fileURLToPath(new URL(".", import.meta.url))
+const contentJsDir = fileURLToPath(new URL("../content/js", import.meta.url))
+
+const config: Configuration = {
+  context: tsDir,
   module: {
     rules: [
       {
@@ -12,7 +18,7 @@ export default {
   },
   entry: {
     glsl2hlsl: "./dist/glsl.js",
-    aoc: "./dist/aoc.js",
+    adventofcode: "./dist/aoc.js",
     tuningplayground: "./dist/tuningplayground.js",
     textprocessing: "./dist/textprocessing.js",
     polyrhythm: "./dist/polyrhythm.js",
@@ -23,7 +29,7 @@ export default {
     pokemon: "./dist/pokemon.js",
   },
   output: {
-    path: path.resolve(path.dirname(""), "../content/js"),
+    path: path.resolve(contentJsDir),
     filename: "[name].js",
     publicPath: "/js/",
   },
@@ -52,3 +58,5 @@ export default {
     asyncWebAssembly: true,
   },
 }
+
+export default config
