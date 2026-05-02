@@ -1,7 +1,7 @@
 ---
 title: "blogs"
 date: 2022-11-29
-updated: 2024-12-07
+updated: 2026-05-02
 tags:
   - list
   - graphics

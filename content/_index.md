@@ -1,7 +1,7 @@
 ---
 title: hilll.dev
 date: 2022-11-29
-updated: 2024-12-09
+updated: 2026-05-02
 ---
 
 <div style="text-align: center; padding: 20px;">
