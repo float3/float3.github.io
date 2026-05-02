@@ -1,3 +1,7 @@
+mod aoc;
+mod report;
+mod tables;
+
 use std::env;
 use std::error::Error;
 use std::ffi::{OsStr, OsString};
@@ -7,10 +11,16 @@ use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::time::Instant;
 
-type Result<T> = std::result::Result<T, Box<dyn Error>>;
+pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 #[derive(Debug)]
-struct SiteError(String);
+pub(crate) struct SiteError(String);
+
+impl SiteError {
+    pub(crate) fn new(message: impl Into<String>) -> Self {
+        Self(message.into())
+    }
+}
 
 impl fmt::Display for SiteError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -43,8 +53,8 @@ impl Mode {
     }
 }
 
-struct Site {
-    root: PathBuf,
+pub(crate) struct Site {
+    pub(crate) root: PathBuf,
     ci: bool,
 }
 
@@ -76,12 +86,7 @@ impl Site {
         self.run(&self.root, "pnpm", &args)?;
 
         let public = self.root.join("public");
-        let elapsed = started.elapsed().as_secs().to_string();
-        self.run(
-            &public,
-            "python",
-            &os_args(&["../scripts/report.py", elapsed.as_str()]),
-        )
+        report::write(self, &public, started.elapsed().as_secs())
     }
 
     fn wasm(&self, mode: Mode) -> Result<()> {
@@ -472,7 +477,7 @@ impl Site {
 
     fn commit(&self, message: Option<String>) -> Result<()> {
         if !self.ci {
-            return Err(Box::new(SiteError(
+            return Err(Box::new(SiteError::new(
                 "commit is CI-only; review and commit local changes with git".to_string(),
             )));
         }
@@ -596,7 +601,7 @@ impl Site {
         }
     }
 
-    fn output_optional<P>(
+    pub(crate) fn output_optional<P>(
         &self,
         cwd: &Path,
         program: P,
@@ -685,6 +690,18 @@ fn run_main() -> Result<()> {
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
+        "report" => {
+            let build_time = match args.get(1) {
+                Some(value) => value.parse::<u64>().map_err(|source| {
+                    SiteError::new(format!("invalid report build time {value:?}: {source}"))
+                })?,
+                None => 0,
+            };
+            report::write(&site, &site.root.join("public"), build_time)
+        }
+        "align-tables" => tables::align(&args[1..]),
+        "aoc-problems" | "download-aoc-problems" => aoc::download_problem_text(&site, &args[1..]),
+        "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
         "dates" => {
             let target = args.get(1).map_or("content", String::as_str);
             site.dates(target)
@@ -717,7 +734,7 @@ fn parse_mode(args: &[String], default: Mode) -> Result<Mode> {
         };
 
         if mode.replace(parsed).is_some() {
-            return Err(Box::new(SiteError(
+            return Err(Box::new(SiteError::new(
                 "mode can only be specified once".to_string(),
             )));
         }
@@ -740,6 +757,10 @@ Commands:
   generate                   regenerate link lists, indices, chords, and dates
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices and trolley count
+  report [seconds]           write public/report.html build report
+  align-tables LEFT RIGHT SEP merge matching lines from two files
+  aoc-problems [options]     download scaffolded AoC problem statements
+  aoc-inputs [options]       download scaffolded AoC puzzle inputs
   dates [path]               refresh markdown date metadata
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files
