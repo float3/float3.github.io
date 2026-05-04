@@ -18,6 +18,7 @@ Content
 - [notes](/notes/)
 - [projects](/projects.md)
 - [art](/art.md)
+- [photography](/photography.md)
 - [misc](/misc/)
 - [tools](/tools/)
 - [about](/about.md)
