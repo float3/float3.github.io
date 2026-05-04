@@ -7,7 +7,14 @@ type BayesEventLabels = {
   eventB: string
 }
 
-type BayesColorRole = "posterior" | "likelihood" | "prior" | "evidence" | "neutral"
+type BayesColorRole =
+  | "posterior"
+  | "likelihood"
+  | "prior"
+  | "evidence"
+  | "numerator"
+  | "neutral"
+type InlineContent = string | Node
 
 const percentFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 6,
@@ -60,22 +67,30 @@ function renderBayesSolver() {
   const fieldGrid = document.createElement("div")
   fieldGrid.className = "bayes-solver-fields"
 
-  const prior = createPercentField("P(A)", "the prior probability of event A", "1", "prior")
+  const prior = createPercentField(
+    [bayesTerm("P(A)", "prior")],
+    [bayesTerm("P(A)", "prior"), ", the prior probability of event A"],
+    "1",
+    "prior",
+  )
   const likelihood = createPercentField(
-    "P(B | A)",
-    "the likelihood of event B given event A",
+    [bayesTerm("P(B | A)", "likelihood")],
+    [bayesTerm("P(B | A)", "likelihood"), ", the likelihood of event B given event A"],
     "90",
     "likelihood",
   )
   const falsePositive = createPercentField(
-    "P(B | not A)",
-    "the probability of event B given event A did not occur",
+    [bayesTerm("P(B | not A)", "neutral")],
+    [
+      bayesTerm("P(B | not A)", "neutral"),
+      ", the probability of event B given event A did not occur",
+    ],
     "5",
-    "evidence",
+    "neutral",
   )
   const evidence = createPercentField(
-    "P(B)",
-    "the marginal probability of event B",
+    [bayesTerm("P(B)", "evidence")],
+    [bayesTerm("P(B)", "evidence"), ", the marginal probability of event B"],
     "5.85",
     "evidence",
   )
@@ -91,7 +106,13 @@ function renderBayesSolver() {
 
   const modeText = document.createElement("span")
   modeText.className = "bayes-solver-toggle-text"
-  modeText.textContent = "compute P(B) from P(B | not A)"
+  setInlineContent(
+    modeText,
+    "compute ",
+    bayesTerm("P(B)", "evidence"),
+    " from ",
+    bayesTerm("P(B | not A)", "neutral"),
+  )
   modeLabel.append(modeToggle, modeText)
 
   const output = document.createElement("div")
@@ -99,24 +120,37 @@ function renderBayesSolver() {
   output.setAttribute("aria-live", "polite")
 
   const posterior = createOutputItem(
-    "P(A | B)",
-    "the probability of event A occurring given event B has occurred",
+    [bayesTerm("P(A | B)", "posterior")],
+    [
+      bayesTerm("P(A | B)", "posterior"),
+      ", the probability of event A occurring given event B has occurred",
+    ],
     "posterior",
     "posterior",
   )
   const numerator = createOutputItem(
-    "P(B | A) * P(A)",
-    "the likelihood of event B given event A times the prior probability of event A",
+    [bayesTerm("P(B | A)", "likelihood"), " * ", bayesTerm("P(A)", "prior")],
+    [
+      bayesTerm("P(B | A)", "likelihood"),
+      " times ",
+      bayesTerm("P(A)", "prior"),
+      ", likelihood times prior",
+    ],
     "numerator",
-    "likelihood",
+    "numerator",
   )
   const evidenceOutput = createOutputItem(
-    "P(B)",
-    "the marginal probability of event B",
+    [bayesTerm("P(B)", "evidence")],
+    [bayesTerm("P(B)", "evidence"), ", the marginal probability of event B"],
     "evidence",
     "evidence",
   )
-  const odds = createOutputItem("odds", "posterior odds for event A", "odds", "posterior")
+  const odds = createOutputItem(
+    ["odds"],
+    ["posterior odds from ", bayesTerm("P(A | B)", "posterior")],
+    "odds",
+    "posterior",
+  )
 
   output.append(posterior.element, numerator.element, evidenceOutput.element, odds.element)
 
@@ -144,32 +178,90 @@ function renderBayesSolver() {
     const likelihoodPercent = percentInputText(likelihood.input)
     const falsePositivePercent = percentInputText(falsePositive.input)
 
-    definition.textContent =
-      `Example: ${priorPercent} is the prior probability that ${labels.eventA}; ` +
-      `${likelihoodPercent} is the likelihood that ${labels.eventB} given that ` +
-      `${labels.eventA}; and ${falsePositivePercent} is the probability that ` +
-      `${labels.eventB} given that ${notEventA}. The solver finds the probability that ` +
-      `${labels.eventA} after observing that ${labels.eventB}.`
+    setInlineContent(
+      definition,
+      "Example: ",
+      priorPercent,
+      " is ",
+      bayesTerm("P(A)", "prior"),
+      ", the prior probability that ",
+      labels.eventA,
+      "; ",
+      likelihoodPercent,
+      " is ",
+      bayesTerm("P(B | A)", "likelihood"),
+      ", the likelihood that ",
+      labels.eventB,
+      " given that ",
+      labels.eventA,
+      "; and ",
+      falsePositivePercent,
+      " is ",
+      bayesTerm("P(B | not A)", "neutral"),
+      ", the probability that ",
+      labels.eventB,
+      " given that ",
+      notEventA,
+      ". The solver finds ",
+      bayesTerm("P(A | B)", "posterior"),
+      ", the probability that ",
+      labels.eventA,
+      " after observing that ",
+      labels.eventB,
+      ".",
+    )
 
-    prior.setDefinition(`the prior probability that ${labels.eventA}`)
-    likelihood.setDefinition(`the likelihood that ${labels.eventB} given that ${labels.eventA}`)
-    falsePositive.setDefinition(`the probability that ${labels.eventB} given that ${notEventA}`)
-    evidence.setDefinition(`the marginal probability that ${labels.eventB}`)
+    prior.setDefinition(bayesTerm("P(A)", "prior"), ", the prior probability that ", labels.eventA)
+    likelihood.setDefinition(
+      bayesTerm("P(B | A)", "likelihood"),
+      ", the likelihood that ",
+      labels.eventB,
+      " given that ",
+      labels.eventA,
+    )
+    falsePositive.setDefinition(
+      bayesTerm("P(B | not A)", "neutral"),
+      ", the probability that ",
+      labels.eventB,
+      " given that ",
+      notEventA,
+    )
+    evidence.setDefinition(
+      bayesTerm("P(B)", "evidence"),
+      ", the marginal probability that ",
+      labels.eventB,
+    )
 
-    modeText.textContent =
-      getMode() === "computed-evidence"
-        ? `compute the marginal probability that ${labels.eventB} from the false positive rate`
-        : `use a known marginal probability that ${labels.eventB}`
+    if (getMode() === "computed-evidence") {
+      setInlineContent(
+        modeText,
+        "compute ",
+        bayesTerm("P(B)", "evidence"),
+        " from the false positive rate",
+      )
+    } else {
+      setInlineContent(modeText, "use a known marginal probability ", bayesTerm("P(B)", "evidence"))
+    }
 
     posterior.setDefinition(
-      `the probability that ${labels.eventA} given that ${labels.eventB}`,
+      bayesTerm("P(A | B)", "posterior"),
+      ", the probability that ",
+      labels.eventA,
+      " given that ",
+      labels.eventB,
     )
     numerator.setDefinition(
-      `the likelihood that ${labels.eventB} given that ${labels.eventA} times ` +
-        `the prior probability that ${labels.eventA}`,
+      bayesTerm("P(B | A)", "likelihood"),
+      " times ",
+      bayesTerm("P(A)", "prior"),
+      ", likelihood times prior",
     )
-    evidenceOutput.setDefinition(`the marginal probability that ${labels.eventB}`)
-    odds.setDefinition(`posterior odds that ${labels.eventA}`)
+    evidenceOutput.setDefinition(
+      bayesTerm("P(B)", "evidence"),
+      ", the marginal probability that ",
+      labels.eventB,
+    )
+    odds.setDefinition("posterior odds from ", bayesTerm("P(A | B)", "posterior"))
   }
 
   function update() {
@@ -241,6 +333,21 @@ function percentInputText(input: HTMLInputElement) {
   return Number.isFinite(value) ? `${percentFormatter.format(value)}%` : "an unknown percentage"
 }
 
+function setInlineContent(element: HTMLElement, ...content: InlineContent[]) {
+  element.textContent = ""
+  for (const item of content) {
+    element.append(item)
+  }
+}
+
+function bayesTerm(text: string, role: BayesColorRole) {
+  const term = document.createElement("span")
+  term.className = "bayes-term"
+  term.dataset.bayesRole = role
+  term.textContent = text
+  return term
+}
+
 function createEventField(
   symbol: string,
   labelText: string,
@@ -269,8 +376,8 @@ function createEventField(
 }
 
 function createPercentField(
-  symbol: string,
-  labelText: string,
+  symbol: InlineContent[],
+  labelContent: InlineContent[],
   value: string,
   role: BayesColorRole,
 ) {
@@ -283,11 +390,11 @@ function createPercentField(
 
   const notation = document.createElement("span")
   notation.className = "bayes-solver-symbol"
-  notation.textContent = symbol
+  setInlineContent(notation, ...symbol)
 
   const definition = document.createElement("span")
   definition.className = "bayes-solver-definition-text"
-  definition.textContent = labelText
+  setInlineContent(definition, ...labelContent)
 
   text.append(notation, definition)
 
@@ -311,15 +418,15 @@ function createPercentField(
   return {
     label,
     input,
-    setDefinition(value: string) {
-      definition.textContent = value
+    setDefinition(...value: InlineContent[]) {
+      setInlineContent(definition, ...value)
     },
   }
 }
 
 function createOutputItem(
-  symbol: string,
-  labelText: string,
+  symbol: InlineContent[],
+  labelContent: InlineContent[],
   title: string,
   role: BayesColorRole,
 ) {
@@ -332,11 +439,11 @@ function createOutputItem(
 
   const notation = document.createElement("span")
   notation.className = "bayes-solver-symbol"
-  notation.textContent = symbol
+  setInlineContent(notation, ...symbol)
 
   const definition = document.createElement("span")
   definition.className = "bayes-solver-definition-text"
-  definition.textContent = labelText
+  setInlineContent(definition, ...labelContent)
 
   const value = document.createElement("strong")
   value.title = title
@@ -346,8 +453,8 @@ function createOutputItem(
   return {
     element,
     value,
-    setDefinition(value: string) {
-      definition.textContent = value
+    setDefinition(...value: InlineContent[]) {
+      setInlineContent(definition, ...value)
     },
   }
 }
