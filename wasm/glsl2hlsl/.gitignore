@@ -1,6 +1,5 @@
 www/
 debug/
 target/
-Cargo.lock
 **/*.rs.bk
 *.pdb

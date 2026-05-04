@@ -9,6 +9,7 @@ tsconfig.tsbuildinfo
 .quartz/
 quartz/cli/tui/dist/
 private/
+private/photography/originals/
 .replit
 replit.nix
 

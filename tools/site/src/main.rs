@@ -1,14 +1,20 @@
 mod aoc;
+mod recursive_ji;
 mod report;
 mod tables;
 
+use image::codecs::jpeg::JpegEncoder;
+use image::{ImageReader, Rgb, RgbImage};
+use std::collections::HashMap;
 use std::env;
 use std::error::Error;
 use std::ffi::{OsStr, OsString};
 use std::fmt;
 use std::fs;
+use std::fs::File;
+use std::io::BufWriter;
 use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::process::{Child, Command, Stdio};
 use std::time::Instant;
 
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
@@ -36,6 +42,23 @@ enum Mode {
     Prod,
 }
 
+struct PhotoPoisonOptions {
+    input: PathBuf,
+    output: PathBuf,
+    manifest: PathBuf,
+    strength: u8,
+    quality: u8,
+    dry_run: bool,
+}
+
+struct GalleryEntry {
+    src: String,
+    title: String,
+    meta: String,
+    width: u32,
+    height: u32,
+}
+
 impl Mode {
     fn webpack(self) -> &'static str {
         match self {
@@ -56,6 +79,28 @@ impl Mode {
 pub(crate) struct Site {
     pub(crate) root: PathBuf,
     ci: bool,
+}
+
+struct ChildGuard {
+    child: Child,
+    label: String,
+}
+
+impl Drop for ChildGuard {
+    fn drop(&mut self) {
+        if matches!(self.child.try_wait(), Ok(Some(_))) {
+            return;
+        }
+
+        if let Err(error) = self.child.kill() {
+            eprintln!("warning: failed to stop {}: {error}", self.label);
+            return;
+        }
+
+        if let Err(error) = self.child.wait() {
+            eprintln!("warning: failed to wait for {}: {error}", self.label);
+        }
+    }
 }
 
 impl Site {
@@ -83,6 +128,12 @@ impl Site {
         if mode == Mode::Dev {
             args.push("--serve".into());
         }
+        let _typescript_watchers = if mode == Mode::Dev {
+            self.start_typescript_watchers()?
+        } else {
+            Vec::new()
+        };
+
         self.run(&self.root, "node", &args)?;
 
         let public = self.root.join("public");
@@ -115,7 +166,11 @@ impl Site {
         let ts_dir = self.root.join("ts");
         self.pnpm_install(&ts_dir, InstallMode::Locked)?;
         self.sync_wasm_package_dependency()?;
-        self.run(&ts_dir, "node", &os_args(&["node_modules/typescript/bin/tsc"]))?;
+        self.run(
+            &ts_dir,
+            "node",
+            &os_args(&["node_modules/typescript/bin/tsc"]),
+        )?;
         self.run(
             &ts_dir,
             "node",
@@ -127,6 +182,34 @@ impl Site {
                 mode.webpack(),
             ]),
         )
+    }
+
+    fn start_typescript_watchers(&self) -> Result<Vec<ChildGuard>> {
+        let ts_dir = self.root.join("ts");
+        self.warn("watching TypeScript and webpack output for Quartz reloads");
+        Ok(vec![
+            self.spawn(
+                &ts_dir,
+                "node",
+                &os_args(&[
+                    "node_modules/typescript/bin/tsc",
+                    "--watch",
+                    "--preserveWatchOutput",
+                ]),
+            )?,
+            self.spawn(
+                &ts_dir,
+                "node",
+                &os_args(&[
+                    "node_modules/webpack/bin/webpack.js",
+                    "--config",
+                    "webpack.config.mjs",
+                    "--mode",
+                    "development",
+                    "--watch",
+                ]),
+            )?,
+        ])
     }
 
     fn sync_wasm_package_dependency(&self) -> Result<()> {
@@ -276,6 +359,274 @@ impl Site {
         self.run(&dir, "cargo", &os_args(&["run", "-p", "chord_generator"]))
     }
 
+    fn check(&self) -> Result<()> {
+        self.run(
+            &self.root,
+            "cargo",
+            &os_args(&[
+                "check",
+                "--locked",
+                "--manifest-path",
+                "tools/site/Cargo.toml",
+            ]),
+        )?;
+        self.run(
+            &self.root,
+            "cargo",
+            &os_args(&[
+                "test",
+                "--locked",
+                "--manifest-path",
+                "tools/site/Cargo.toml",
+            ]),
+        )?;
+        self.wasm(Mode::Dev)?;
+        self.check_typescript()?;
+
+        for (manifest, target_name) in [
+            ("wasm/glsl2hlsl/Cargo.toml", "glsl2hlsl"),
+            ("wasm/textprocessing/Cargo.toml", "textprocessing"),
+            ("wasm/tuningplayground/Cargo.toml", "tuningplayground"),
+        ] {
+            self.cargo_check_manifest(manifest, target_name)?;
+        }
+
+        Ok(())
+    }
+
+    fn check_typescript(&self) -> Result<()> {
+        let dir = self.root.join("ts");
+        let local_tsc = dir.join("node_modules/typescript/bin/tsc");
+        let local_eslint = dir.join("node_modules/eslint/bin/eslint.js");
+
+        if local_tsc.is_file() && local_eslint.is_file() {
+            self.run(
+                &dir,
+                "node",
+                &os_args(&[
+                    "node_modules/typescript/bin/tsc",
+                    "--noEmit",
+                    "--incremental",
+                    "false",
+                ]),
+            )?;
+            return self.run(
+                &dir,
+                "node",
+                &os_args(&["node_modules/eslint/bin/eslint.js", "src"]),
+            );
+        }
+
+        self.pnpm_install(&dir, InstallMode::Locked)?;
+        self.run_pnpm(
+            &dir,
+            &os_args(&["exec", "tsc", "--noEmit", "--incremental", "false"]),
+        )?;
+        self.run_pnpm(&dir, &os_args(&["exec", "eslint", "src"]))
+    }
+
+    fn cargo_check_manifest(&self, manifest: &str, target_name: &str) -> Result<()> {
+        let target_dir = format!("target/check/{target_name}");
+        self.run(
+            &self.root,
+            "cargo",
+            &os_args(&[
+                "check",
+                "--locked",
+                "--manifest-path",
+                manifest,
+                "--target-dir",
+                target_dir.as_str(),
+            ]),
+        )
+    }
+
+    fn poison_photos(&self, args: &[String]) -> Result<()> {
+        if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+            print_photo_poison_help();
+            return Ok(());
+        }
+
+        let options = self.parse_photo_poison_options(args)?;
+        self.ensure_photo_input_is_private(&options.input)?;
+        fs::create_dir_all(&options.input)?;
+        fs::create_dir_all(&options.output)?;
+
+        let mut photos = Vec::new();
+        collect_photo_files(&options.input, &mut photos)?;
+        photos.sort();
+
+        if photos.is_empty() {
+            self.warn(&format!(
+                "no source photos found in {}; drop originals there and rerun poison-photos",
+                options.input.display()
+            ));
+            return Ok(());
+        }
+
+        let mut entries = Vec::new();
+        let mut names = HashMap::<String, usize>::new();
+
+        for photo in photos {
+            let relative = photo.strip_prefix(&options.input).unwrap_or(&photo);
+            let stem = photo
+                .file_stem()
+                .and_then(OsStr::to_str)
+                .map_or("photo", |value| value);
+            let base = sanitize_file_stem(stem);
+            let count = names.entry(base.clone()).or_insert(0);
+            *count += 1;
+            let file_name = if *count == 1 {
+                format!("{base}.jpg")
+            } else {
+                format!("{base}-{count}.jpg")
+            };
+            let target = options.output.join(&file_name);
+            let title = title_from_stem(stem);
+
+            println!(
+                "poison {} -> {}",
+                relative.display(),
+                target.strip_prefix(&self.root).unwrap_or(&target).display()
+            );
+
+            let (width, height) = if options.dry_run {
+                (0, 0)
+            } else {
+                poison_photo_file(
+                    &photo,
+                    &target,
+                    hash64(relative.to_string_lossy().as_bytes()),
+                    options.strength,
+                    options.quality,
+                )?
+            };
+
+            entries.push(GalleryEntry {
+                src: format!("/photography/gallery/{file_name}"),
+                title,
+                meta: format!(
+                    "protected export from {}",
+                    relative.to_string_lossy().replace('\\', "/")
+                ),
+                width,
+                height,
+            });
+        }
+
+        if !options.dry_run {
+            write_gallery_manifest(&options.manifest, &entries)?;
+        }
+
+        Ok(())
+    }
+
+    fn parse_photo_poison_options(&self, args: &[String]) -> Result<PhotoPoisonOptions> {
+        let mut positionals = Vec::new();
+        let mut strength = 4_u8;
+        let mut quality = 92_u8;
+        let mut manifest = self.root.join("content/photography/gallery.json");
+        let mut dry_run = false;
+        let mut index = 0;
+
+        while index < args.len() {
+            match args[index].as_str() {
+                "--strength" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--strength requires a value")) as Box<dyn Error>
+                    })?;
+                    strength = value.parse::<u8>().map_err(|source| {
+                        SiteError::new(format!("invalid strength {value:?}: {source}"))
+                    })?;
+                }
+                "--quality" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--quality requires a value")) as Box<dyn Error>
+                    })?;
+                    quality = value.parse::<u8>().map_err(|source| {
+                        SiteError::new(format!("invalid quality {value:?}: {source}"))
+                    })?;
+                }
+                "--manifest" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--manifest requires a path")) as Box<dyn Error>
+                    })?;
+                    manifest = self.resolve_path(value);
+                }
+                "--dry-run" => dry_run = true,
+                "--help" | "-h" => {
+                    print_photo_poison_help();
+                    return Err(Box::new(SiteError::new("help requested")));
+                }
+                value if value.starts_with('-') => {
+                    return Err(Box::new(SiteError::new(format!(
+                        "unknown poison-photos option: {value}"
+                    ))));
+                }
+                value => positionals.push(value.to_string()),
+            }
+            index += 1;
+        }
+
+        if !(1..=32).contains(&strength) {
+            return Err(Box::new(SiteError::new(
+                "strength must be between 1 and 32",
+            )));
+        }
+        if !(60..=100).contains(&quality) {
+            return Err(Box::new(SiteError::new(
+                "quality must be between 60 and 100",
+            )));
+        }
+        if positionals.len() > 2 {
+            return Err(Box::new(SiteError::new(
+                "poison-photos accepts at most INPUT and OUTPUT paths",
+            )));
+        }
+
+        Ok(PhotoPoisonOptions {
+            input: positionals.first().map_or_else(
+                || self.root.join("private/photography/originals"),
+                |path| self.resolve_path(path),
+            ),
+            output: positionals.get(1).map_or_else(
+                || self.root.join("content/photography/gallery"),
+                |path| self.resolve_path(path),
+            ),
+            manifest,
+            strength,
+            quality,
+            dry_run,
+        })
+    }
+
+    fn resolve_path(&self, path: &str) -> PathBuf {
+        let path = PathBuf::from(path);
+        if path.is_absolute() {
+            path
+        } else {
+            self.root.join(path)
+        }
+    }
+
+    fn ensure_photo_input_is_private(&self, path: &Path) -> Result<()> {
+        let normalized_root = normalize_path(&self.root)?;
+        let normalized_path = normalize_path(path)?;
+        let content_dir = normalized_root.join("content");
+
+        if normalized_path.starts_with(&content_dir) {
+            return Err(Box::new(SiteError::new(format!(
+                "photo originals must not live under {}; use private/photography/originals or another untracked directory",
+                content_dir.display()
+            ))));
+        }
+
+        Ok(())
+    }
+
     fn dates(&self, target: &str) -> Result<()> {
         if self.ci {
             let shallow = self.output_optional(
@@ -406,14 +757,8 @@ impl Site {
         self.run_pnpm(dir, &os_args(&["update"]))?;
         self.run_pnpm(dir, &os_args(&["audit", "fix"]))?;
         self.pnpm_install(dir, InstallMode::Unlocked)?;
-        self.run_pnpm(
-            dir,
-            &os_args(&["exec", "prettier", lint_target, "--write"]),
-        )?;
-        self.run_pnpm(
-            dir,
-            &os_args(&["exec", "eslint", lint_target, "--fix"]),
-        )
+        self.run_pnpm(dir, &os_args(&["exec", "prettier", lint_target, "--write"]))?;
+        self.run_pnpm(dir, &os_args(&["exec", "eslint", lint_target, "--fix"]))
     }
 
     fn cargo_update(&self, dir: &Path) -> Result<()> {
@@ -605,6 +950,30 @@ impl Site {
         self.run_with_env(cwd, program, args, &[])
     }
 
+    fn spawn<P>(&self, cwd: &Path, program: P, args: &[OsString]) -> Result<ChildGuard>
+    where
+        P: AsRef<OsStr>,
+    {
+        let program = program.as_ref();
+        self.print_command(cwd, program, args);
+
+        let child = Command::new(program)
+            .args(args)
+            .current_dir(cwd)
+            .spawn()
+            .map_err(|source| {
+                SiteError(format!(
+                    "failed to run {}: {source}",
+                    format_command(program, args)
+                ))
+            })?;
+
+        Ok(ChildGuard {
+            child,
+            label: format_command(program, args),
+        })
+    }
+
     fn run_with_env<P>(
         &self,
         cwd: &Path,
@@ -740,8 +1109,11 @@ fn run_main() -> Result<()> {
             report::write(&site, &site.root.join("public"), build_time)
         }
         "align-tables" => tables::align(&args[1..]),
+        "recursive-ji-music" | "rji-music" => recursive_ji::generate(&site, &args[1..]),
         "aoc-problems" | "download-aoc-problems" => aoc::download_problem_text(&site, &args[1..]),
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
+        "poison-photos" | "photo-poison" => site.poison_photos(&args[1..]),
+        "check" => site.check(),
         "dates" => {
             let target = args.get(1).map_or("content", String::as_str);
             site.dates(target)
@@ -793,17 +1165,44 @@ Usage:
 
 Commands:
   build [--dev|--prod]       build wasm assets and the Quartz site
+                             --dev also watches TypeScript bundles
   wasm [--dev|--prod]        build only the wasm and TypeScript bundle
   generate                   regenerate link lists, indices, chords, and dates
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices and trolley count
   report [seconds]           write public/report.html build report
   align-tables LEFT RIGHT SEP merge matching lines from two files
+  recursive-ji-music [OUTPUT]
+                             render recursive just-intonation examples
   aoc-problems [options]     download scaffolded AoC problem statements
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
+  poison-photos [INPUT] [OUTPUT]
+                             protect source photos and update gallery manifest
+  check                      run Rust, TypeScript, and lint checks
   dates [path]               refresh markdown date metadata
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files
+"
+    );
+}
+
+fn print_photo_poison_help() {
+    println!(
+        "\
+poison-photos
+
+Usage:
+  cargo run --manifest-path tools/site/Cargo.toml -- poison-photos [INPUT] [OUTPUT] [options]
+
+Defaults:
+  INPUT   private/photography/originals
+  OUTPUT  content/photography/gallery
+
+Options:
+  --strength N       perturbation strength, 1-32, default 4
+  --quality N        JPEG quality, 60-100, default 92
+  --manifest PATH    gallery JSON path, default content/photography/gallery.json
+  --dry-run          print planned work without writing images
 "
     );
 }
@@ -851,6 +1250,239 @@ fn remove_license_files(path: &Path) -> Result<()> {
     }
 
     Ok(())
+}
+
+fn normalize_path(path: &Path) -> Result<PathBuf> {
+    if path.exists() {
+        Ok(path.canonicalize()?)
+    } else if let Some(parent) = path.parent() {
+        let parent = normalize_path(parent)?;
+        Ok(parent.join(
+            path.file_name()
+                .ok_or_else(|| SiteError::new(format!("invalid path: {}", path.display())))?,
+        ))
+    } else {
+        Ok(path.to_path_buf())
+    }
+}
+
+fn collect_photo_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<()> {
+    if !dir.exists() {
+        return Ok(());
+    }
+
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            collect_photo_files(&path, files)?;
+        } else if is_photo_file(&path) {
+            files.push(path);
+        }
+    }
+
+    Ok(())
+}
+
+fn is_photo_file(path: &Path) -> bool {
+    let Some(extension) = path.extension().and_then(OsStr::to_str) else {
+        return false;
+    };
+
+    matches!(
+        extension.to_ascii_lowercase().as_str(),
+        "jpg" | "jpeg" | "png" | "webp"
+    )
+}
+
+fn poison_photo_file(
+    input: &Path,
+    output: &Path,
+    seed: u64,
+    strength: u8,
+    quality: u8,
+) -> Result<(u32, u32)> {
+    let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
+    let source = image.to_rgba8();
+    let (width, height) = source.dimensions();
+    let poisoned = poison_pixels(&source, seed, strength);
+
+    let file = File::create(output)?;
+    let writer = BufWriter::new(file);
+    let mut encoder = JpegEncoder::new_with_quality(writer, quality);
+    encoder.encode_image(&poisoned)?;
+
+    Ok((width, height))
+}
+
+fn poison_pixels(source: &image::RgbaImage, seed: u64, strength: u8) -> RgbImage {
+    let (width, height) = source.dimensions();
+    let mut rgb = Vec::with_capacity((width * height) as usize);
+    let mut luma = Vec::with_capacity((width * height) as usize);
+
+    for pixel in source.pixels() {
+        let alpha = f32::from(pixel[3]) / 255.0;
+        let color = [
+            f32::from(pixel[0]) * alpha + 255.0 * (1.0 - alpha),
+            f32::from(pixel[1]) * alpha + 255.0 * (1.0 - alpha),
+            f32::from(pixel[2]) * alpha + 255.0 * (1.0 - alpha),
+        ];
+        luma.push(color[0] * 0.2126 + color[1] * 0.7152 + color[2] * 0.0722);
+        rgb.push(color);
+    }
+
+    let mut output = RgbImage::new(width, height);
+    for y in 0..height {
+        for x in 0..width {
+            let index = (y * width + x) as usize;
+            let edge = local_edge_strength(&luma, width, height, x, y);
+            let amplitude = f32::from(strength) * (0.45 + edge * 0.75);
+            let mut color = [0_u8; 3];
+
+            for channel in 0..3 {
+                let channel_seed = seed
+                    ^ u64::from(x).wrapping_mul(0x9E37_79B1_85EB_CA87)
+                    ^ u64::from(y).wrapping_mul(0xC2B2_AE3D_27D4_EB4F)
+                    ^ (channel as u64).wrapping_mul(0x1656_67B1_9E37_79F9);
+                let noise = signed_noise(channel_seed);
+                let checker = if ((x ^ y ^ channel as u32) & 1) == 0 {
+                    1.0
+                } else {
+                    -1.0
+                };
+                let wave = ((x as f32 * 0.73
+                    + y as f32 * 1.37
+                    + channel as f32 * 2.11
+                    + (seed & 1023) as f32)
+                    .sin())
+                    * 0.35;
+                let delta = amplitude * (noise * 0.65 + checker * 0.18 + wave);
+                color[channel] = (rgb[index][channel] + delta).clamp(0.0, 255.0).round() as u8;
+            }
+
+            output.put_pixel(x, y, Rgb(color));
+        }
+    }
+
+    output
+}
+
+fn local_edge_strength(luma: &[f32], width: u32, height: u32, x: u32, y: u32) -> f32 {
+    let center = luma[(y * width + x) as usize];
+    let mut total = 0.0;
+    let mut count = 0.0;
+    let neighbors = [
+        (x.checked_sub(1), Some(y)),
+        (x.checked_add(1).filter(|value| *value < width), Some(y)),
+        (Some(x), y.checked_sub(1)),
+        (Some(x), y.checked_add(1).filter(|value| *value < height)),
+    ];
+
+    for (nx, ny) in neighbors {
+        if let (Some(nx), Some(ny)) = (nx, ny) {
+            total += (center - luma[(ny * width + nx) as usize]).abs();
+            count += 1.0;
+        }
+    }
+
+    if count == 0.0 {
+        0.0
+    } else {
+        (total / count / 255.0).clamp(0.0, 1.0)
+    }
+}
+
+fn signed_noise(seed: u64) -> f32 {
+    let value = splitmix64(seed);
+    let unit = (value >> 11) as f64 / ((1_u64 << 53) as f64);
+    (unit as f32) * 2.0 - 1.0
+}
+
+fn splitmix64(mut value: u64) -> u64 {
+    value = value.wrapping_add(0x9E37_79B9_7F4A_7C15);
+    value = (value ^ (value >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
+    value = (value ^ (value >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
+    value ^ (value >> 31)
+}
+
+fn hash64(bytes: &[u8]) -> u64 {
+    let mut hash = 0xCBF2_9CE4_8422_2325_u64;
+    for byte in bytes {
+        hash ^= u64::from(*byte);
+        hash = hash.wrapping_mul(0x0000_0100_0000_01B3);
+    }
+    hash
+}
+
+fn sanitize_file_stem(stem: &str) -> String {
+    let mut result = String::new();
+    for ch in stem.chars() {
+        if ch.is_ascii_alphanumeric() {
+            result.push(ch.to_ascii_lowercase());
+        } else if !result.ends_with('-') {
+            result.push('-');
+        }
+    }
+
+    let result = result.trim_matches('-');
+    if result.is_empty() {
+        "photo".to_string()
+    } else {
+        result.to_string()
+    }
+}
+
+fn title_from_stem(stem: &str) -> String {
+    let title = stem
+        .replace(['_', '-'], " ")
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    if title.is_empty() {
+        "untitled photo".to_string()
+    } else {
+        title
+    }
+}
+
+fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)?;
+    }
+
+    let mut body = String::from("[\n");
+    for (index, entry) in entries.iter().enumerate() {
+        let comma = if index + 1 == entries.len() { "" } else { "," };
+        body.push_str("  {\n");
+        body.push_str(&format!("    \"src\": {},\n", json_string(&entry.src)));
+        body.push_str(&format!("    \"title\": {},\n", json_string(&entry.title)));
+        body.push_str(&format!("    \"meta\": {},\n", json_string(&entry.meta)));
+        body.push_str(&format!("    \"width\": {},\n", entry.width));
+        body.push_str(&format!("    \"height\": {}\n", entry.height));
+        body.push_str(&format!("  }}{comma}\n"));
+    }
+    body.push_str("]\n");
+
+    fs::write(path, body)?;
+    Ok(())
+}
+
+fn json_string(value: &str) -> String {
+    let mut result = String::from("\"");
+    for ch in value.chars() {
+        match ch {
+            '"' => result.push_str("\\\""),
+            '\\' => result.push_str("\\\\"),
+            '\n' => result.push_str("\\n"),
+            '\r' => result.push_str("\\r"),
+            '\t' => result.push_str("\\t"),
+            ch if ch.is_control() => result.push_str(&format!("\\u{:04x}", ch as u32)),
+            ch => result.push(ch),
+        }
+    }
+    result.push('"');
+    result
 }
 
 fn existing_date_metadata(path: &Path) -> Result<Vec<String>> {
