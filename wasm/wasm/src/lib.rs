@@ -5,6 +5,7 @@ pub mod aoc;
 pub mod bayes;
 pub mod chars;
 pub mod glsl;
+pub mod graph;
 pub mod krabby;
 pub mod polyrhythm;
 
