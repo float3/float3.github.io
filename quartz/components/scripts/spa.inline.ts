@@ -56,6 +56,61 @@ function startLoading() {
   }, 100)
 }
 
+function cacheBustScriptUrl(src: string): string {
+  try {
+    const url = new URL(src, window.location.href)
+    url.searchParams.set("spa-reload", `${Date.now()}`)
+    return url.toString()
+  } catch {
+    return src
+  }
+}
+
+function reviveScript(script: HTMLScriptElement): Promise<void> {
+  const revived = document.createElement("script")
+  const src = script.src
+  const isModule = script.type.toLowerCase() === "module"
+
+  for (const { name, value } of Array.from(script.attributes)) {
+    if (name !== "src") {
+      revived.setAttribute(name, value)
+    }
+  }
+
+  revived.textContent = script.textContent
+
+  if (!src) {
+    script.replaceWith(revived)
+    return Promise.resolve()
+  }
+
+  revived.async = script.hasAttribute("async")
+  revived.src = isModule ? cacheBustScriptUrl(src) : src
+
+  return new Promise((resolve) => {
+    revived.addEventListener("load", () => resolve(), { once: true })
+    revived.addEventListener(
+      "error",
+      () => {
+        console.error(`Failed to load script ${revived.src}`)
+        resolve()
+      },
+      { once: true },
+    )
+    script.replaceWith(revived)
+  })
+}
+
+async function revivePageScripts() {
+  const scripts = [
+    ...document.querySelectorAll<HTMLScriptElement>("#quartz-root script:not([data-persist])"),
+  ]
+
+  for (const script of scripts) {
+    await reviveScript(script)
+  }
+}
+
 let isNavigating = false
 let p: DOMParser
 async function _navigate(url: URL, isBack: boolean = false) {
@@ -126,6 +181,7 @@ async function _navigate(url: URL, isBack: boolean = false) {
     history.pushState({}, "", url)
   }
 
+  await revivePageScripts()
   notifyNav(getFullSlug(window))
   delete announcer.dataset.persist
 }
