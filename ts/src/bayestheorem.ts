@@ -7,6 +7,8 @@ type BayesEventLabels = {
   eventB: string
 }
 
+type BayesColorRole = "posterior" | "likelihood" | "prior" | "evidence" | "neutral"
+
 const percentFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 6,
 })
@@ -58,14 +60,25 @@ function renderBayesSolver() {
   const fieldGrid = document.createElement("div")
   fieldGrid.className = "bayes-solver-fields"
 
-  const prior = createPercentField("P(A)", "the prior probability of event A", "1")
-  const likelihood = createPercentField("P(B | A)", "the likelihood of event B given event A", "90")
+  const prior = createPercentField("P(A)", "the prior probability of event A", "1", "prior")
+  const likelihood = createPercentField(
+    "P(B | A)",
+    "the likelihood of event B given event A",
+    "90",
+    "likelihood",
+  )
   const falsePositive = createPercentField(
     "P(B | not A)",
     "the probability of event B given event A did not occur",
     "5",
+    "evidence",
   )
-  const evidence = createPercentField("P(B)", "the marginal probability of event B", "5.85")
+  const evidence = createPercentField(
+    "P(B)",
+    "the marginal probability of event B",
+    "5.85",
+    "evidence",
+  )
 
   fieldGrid.append(prior.label, likelihood.label, falsePositive.label, evidence.label)
 
@@ -77,6 +90,7 @@ function renderBayesSolver() {
   modeToggle.checked = true
 
   const modeText = document.createElement("span")
+  modeText.className = "bayes-solver-toggle-text"
   modeText.textContent = "compute P(B) from P(B | not A)"
   modeLabel.append(modeToggle, modeText)
 
@@ -88,14 +102,21 @@ function renderBayesSolver() {
     "P(A | B)",
     "the probability of event A occurring given event B has occurred",
     "posterior",
+    "posterior",
   )
   const numerator = createOutputItem(
     "P(B | A) * P(A)",
     "the likelihood of event B given event A times the prior probability of event A",
     "numerator",
+    "likelihood",
   )
-  const evidenceOutput = createOutputItem("P(B)", "the marginal probability of event B", "evidence")
-  const odds = createOutputItem("odds", "posterior odds for event A", "odds")
+  const evidenceOutput = createOutputItem(
+    "P(B)",
+    "the marginal probability of event B",
+    "evidence",
+    "evidence",
+  )
+  const odds = createOutputItem("odds", "posterior odds for event A", "odds", "posterior")
 
   output.append(posterior.element, numerator.element, evidenceOutput.element, odds.element)
 
@@ -247,9 +268,15 @@ function createEventField(
   return { label, input }
 }
 
-function createPercentField(symbol: string, labelText: string, value: string) {
+function createPercentField(
+  symbol: string,
+  labelText: string,
+  value: string,
+  role: BayesColorRole,
+) {
   const label = document.createElement("label")
   label.className = "bayes-solver-field"
+  label.dataset.bayesRole = role
 
   const text = document.createElement("span")
   text.className = "bayes-solver-label"
@@ -290,9 +317,15 @@ function createPercentField(symbol: string, labelText: string, value: string) {
   }
 }
 
-function createOutputItem(symbol: string, labelText: string, title: string) {
+function createOutputItem(
+  symbol: string,
+  labelText: string,
+  title: string,
+  role: BayesColorRole,
+) {
   const element = document.createElement("article")
   element.className = "bayes-solver-result"
+  element.dataset.bayesRole = role
 
   const label = document.createElement("span")
   label.className = "bayes-solver-label"

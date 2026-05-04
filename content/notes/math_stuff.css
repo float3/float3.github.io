@@ -31,6 +31,13 @@
 }
 
 #bayes-solver {
+  --bayes-posterior: #0466e7;
+  --bayes-likelihood: #ffbc3f;
+  --bayes-prior: #fe7fb3;
+  --bayes-evidence: #dd6fff;
+  --bayes-card: color-mix(in srgb, var(--light) 94%, var(--dark) 6%);
+  --bayes-border: color-mix(in srgb, var(--lightgray) 74%, var(--darkgray));
+
   display: grid;
   gap: 0.75rem;
   margin-top: 2rem;
@@ -57,13 +64,48 @@
 .bayes-event-field,
 .bayes-solver-field,
 .bayes-solver-result {
-  border: 1px solid var(--lightgray);
+  background: var(--bayes-card);
+  border: 1px solid var(--bayes-border);
   border-radius: 4px;
   box-sizing: border-box;
   display: grid;
   gap: 0.45rem;
   min-width: 0;
   padding: 0.7rem;
+  position: relative;
+}
+
+.bayes-solver-field,
+.bayes-solver-result {
+  overflow: hidden;
+}
+
+.bayes-solver-field::before,
+.bayes-solver-result::before {
+  content: "";
+  inset: 0 auto 0 0;
+  position: absolute;
+  width: 4px;
+}
+
+.bayes-solver-field[data-bayes-role="posterior"]::before,
+.bayes-solver-result[data-bayes-role="posterior"]::before {
+  background: var(--bayes-posterior);
+}
+
+.bayes-solver-field[data-bayes-role="likelihood"]::before,
+.bayes-solver-result[data-bayes-role="likelihood"]::before {
+  background: var(--bayes-likelihood);
+}
+
+.bayes-solver-field[data-bayes-role="prior"]::before,
+.bayes-solver-result[data-bayes-role="prior"]::before {
+  background: var(--bayes-prior);
+}
+
+.bayes-solver-field[data-bayes-role="evidence"]::before,
+.bayes-solver-result[data-bayes-role="evidence"]::before {
+  background: var(--bayes-evidence);
 }
 
 .bayes-solver-label {
@@ -73,10 +115,33 @@
 }
 
 .bayes-solver-symbol {
-  color: var(--secondary);
   font-family: var(--codeFont);
   font-size: 0.9rem;
   font-weight: 700;
+}
+
+.bayes-solver-field[data-bayes-role="posterior"] .bayes-solver-symbol,
+.bayes-solver-result[data-bayes-role="posterior"] .bayes-solver-symbol {
+  color: var(--bayes-posterior);
+}
+
+.bayes-solver-field[data-bayes-role="likelihood"] .bayes-solver-symbol,
+.bayes-solver-result[data-bayes-role="likelihood"] .bayes-solver-symbol {
+  color: var(--bayes-likelihood);
+}
+
+.bayes-solver-field[data-bayes-role="prior"] .bayes-solver-symbol,
+.bayes-solver-result[data-bayes-role="prior"] .bayes-solver-symbol {
+  color: var(--bayes-prior);
+}
+
+.bayes-solver-field[data-bayes-role="evidence"] .bayes-solver-symbol,
+.bayes-solver-result[data-bayes-role="evidence"] .bayes-solver-symbol {
+  color: var(--bayes-evidence);
+}
+
+.bayes-event-field .bayes-solver-symbol {
+  color: #4d8dc3;
 }
 
 .bayes-solver-definition,
@@ -97,9 +162,9 @@
   grid-template-columns: minmax(0, 1fr) auto;
 }
 
-#bayes-solver input {
+#bayes-solver input:not([type="checkbox"]) {
   background: var(--light);
-  border: 1px solid var(--lightgray);
+  border: 1px solid var(--bayes-border);
   border-radius: 4px;
   box-sizing: border-box;
   color: var(--dark);
@@ -114,13 +179,26 @@
 
 .bayes-solver-toggle {
   align-items: flex-start;
+  background: color-mix(in srgb, var(--bayes-evidence) 9%, var(--bayes-card));
+  border: 1px solid color-mix(in srgb, var(--bayes-evidence) 48%, var(--bayes-border));
+  border-radius: 4px;
+  box-sizing: border-box;
   display: flex;
   gap: 0.55rem;
+  max-width: 40rem;
+  padding: 0.65rem 0.75rem;
 }
 
-.bayes-solver-toggle input {
+#bayes-solver .bayes-solver-toggle input[type="checkbox"] {
+  accent-color: var(--bayes-evidence);
+  flex: 0 0 auto;
   margin-top: 0.2rem;
-  width: auto;
+  min-width: 1rem;
+  width: 1rem;
+}
+
+.bayes-solver-toggle-text {
+  min-width: 0;
 }
 
 .bayes-solver-result strong {
