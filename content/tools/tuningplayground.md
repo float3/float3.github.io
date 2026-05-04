@@ -64,7 +64,7 @@ tags:
 </div>
 <p> Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
 </p>
-<p>Transpose: <input id="transpose" />
+<p>Transpose: <input id="transpose" value="24" />
 </p>
 <div id="stepSizeContainer" style="display: none">
   <label for="stepSize">Step Size (co-primes with 12):</label>

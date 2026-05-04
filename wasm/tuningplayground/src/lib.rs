@@ -151,6 +151,37 @@ fn split_chord_input(input: &str) -> Vec<&str> {
         .collect()
 }
 
+fn positive_integer_core(value: &str, fallback: usize) -> usize {
+    value
+        .parse::<usize>()
+        .ok()
+        .filter(|value| *value > 0)
+        .unwrap_or(fallback)
+}
+
+fn tuning_marked_hash_core(keys: &str) -> String {
+    let mut keys = keys
+        .split(',')
+        .filter_map(|key| key.trim().parse::<i32>().ok())
+        .collect::<Vec<_>>();
+
+    keys.sort_unstable();
+    keys.dedup();
+    keys.into_iter()
+        .map(|key| key.to_string())
+        .collect::<Vec<_>>()
+        .join(",")
+}
+
+fn tuning_hash_or_fallback_core(keys: &str, fallback_hash: &str) -> String {
+    let hash = tuning_marked_hash_core(keys);
+    if hash.is_empty() {
+        fallback_hash.trim_start_matches('#').to_string()
+    } else {
+        hash
+    }
+}
+
 fn parse_octave(note: &str) -> Option<i32> {
     let note = note.trim();
     if let Some(index) = note.rfind('N') {
@@ -336,6 +367,19 @@ mod tests {
         assert_eq!(chordname_from_bitmask(1).unwrap(), "C");
         assert_eq!(chordname_from_bitmask(4095).unwrap(), "C-aggregate");
     }
+
+    #[test]
+    fn parses_positive_integers_with_fallbacks() {
+        assert_eq!(positive_integer_core("24", 12), 24);
+        assert_eq!(positive_integer_core("0", 12), 12);
+        assert_eq!(positive_integer_core("nope", 12), 12);
+    }
+
+    #[test]
+    fn canonicalizes_marked_key_hashes() {
+        assert_eq!(tuning_marked_hash_core("5,3,5,-1"), "-1,3,5");
+        assert_eq!(tuning_hash_or_fallback_core("", "#12,14"), "12,14");
+    }
 }
 
 #[cfg(feature = "wasm")]
@@ -360,6 +404,24 @@ pub fn chord_details(notes: &str) -> String {
 #[wasm_bindgen]
 pub fn convert_notes(notes: Vec<String>) -> String {
     convert_notes_core(notes)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn tuning_positive_integer(value: &str, fallback: usize) -> usize {
+    positive_integer_core(value, fallback)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn tuning_marked_hash(keys: &str) -> String {
+    tuning_marked_hash_core(keys)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn tuning_hash_or_fallback(keys: &str, fallback_hash: &str) -> String {
+    tuning_hash_or_fallback_core(keys, fallback_hash)
 }
 
 #[cfg(feature = "wasm")]

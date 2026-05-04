@@ -1,3 +1,5 @@
+import { random_range } from "wasm"
+
 document.addEventListener("DOMContentLoaded", () => {
   const elements: NodeListOf<SVGPathElement | SVGRectElement> = document.querySelectorAll(
     "#interactiveSvg path, #interactiveSvg rect",
@@ -17,8 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
 
-    const frequency = Math.random() * 3 + 2 // 2-5 seconds duration
-    const amplitude = Math.random() * 5 + 8 // 5-10 pixels vertical movement
+    const frequency = random_range(2, 5)
+    const amplitude = random_range(8, 13)
 
     element.style.animation = `moveUpDown ${frequency}s ease-in-out infinite alternate`
     element.style.setProperty("--amplitude", `${amplitude}px`)

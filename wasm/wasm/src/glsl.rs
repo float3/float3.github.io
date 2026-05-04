@@ -20,6 +20,15 @@ pub fn transpile(input: String, extract_props: bool, raymarch: bool) -> String {
 }
 
 #[wasm_bindgen]
+pub fn shader_id_from_url(input: &str) -> String {
+    input
+        .rsplit('/')
+        .find(|part| !part.is_empty())
+        .unwrap_or_default()
+        .to_string()
+}
+
+#[wasm_bindgen]
 pub fn download(json: String, extract_props: bool, raymarch: bool) {
     use glsl2hlsl::get_files;
     use glsl2hlsl::get_image_files;
@@ -34,5 +43,24 @@ pub fn download(json: String, extract_props: bool, raymarch: bool) {
     }
     for f in images.iter() {
         downloadImage(&f.name, &f.contents);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn extracts_shader_id_from_url_or_raw_id() {
+        assert_eq!(
+            shader_id_from_url("https://www.shadertoy.com/view/Xd3GRf"),
+            "Xd3GRf"
+        );
+        assert_eq!(
+            shader_id_from_url("https://www.shadertoy.com/view/Xd3GRf/"),
+            "Xd3GRf"
+        );
+        assert_eq!(shader_id_from_url("Xd3GRf"), "Xd3GRf");
+        assert_eq!(shader_id_from_url(""), "");
     }
 }

@@ -25,6 +25,7 @@ export const tuningSelect = document.getElementById("tuningSelect") as HTMLSelec
 export const volumeSlider = document.getElementById("volumeSlider") as HTMLInputElement
 
 const transpose = document.getElementById("transpose") as HTMLInputElement
+const DEFAULT_TRANSPOSE = 24
 
 export const output = document.getElementById("output") as HTMLElement
 const chordInput = document.getElementById("chordInput") as HTMLInputElement
@@ -61,9 +62,15 @@ shareMarked.onclick = sharedMarkedKeys
 nameChord.onclick = updateChordName
 clearChord.onclick = clearChordInput
 
-export let tranposeValue = 0
+export let tranposeValue = readTransposeValue()
 function transposeChange(): void {
-  tranposeValue = parseInt(transpose.value)
+  tranposeValue = readTransposeValue()
+  transpose.value = tranposeValue.toString()
+}
+
+function readTransposeValue(): number {
+  const parsed = Number.parseInt(transpose.value, 10)
+  return Number.isFinite(parsed) ? parsed : DEFAULT_TRANSPOSE
 }
 
 export let volumeValue = 0.25
@@ -88,7 +95,10 @@ function initOrGetMidiFile(): Promise<ArrayBuffer> {
         return midiFile
       })
       .catch((error) => {
-        setTuningPlaygroundStatus(`Could not load default MIDI file: ${formatError(error)}`, "error")
+        setTuningPlaygroundStatus(
+          `Could not load default MIDI file: ${formatError(error)}`,
+          "error",
+        )
         throw error
       })
   }
@@ -250,8 +260,7 @@ function createAndCopyUrl(keys: number[]): () => void {
 }
 
 function generateHash(keys: number[]) {
-  const hash = keys.join(",")
-  return hash
+  return wasm.tuning_marked_hash(keys.join(","))
 }
 
 export function logToDiv(message: string, notes: number[]): void {
@@ -373,11 +382,11 @@ function applySharedTuningFromUrl(): void {
   }
 
   if (octave) {
-    octaveSize.value = positiveInteger(octave, 12).toString()
+    octaveSize.value = wasm.tuning_positive_integer(octave, 12).toString()
   }
 
   if (step) {
-    stepSize.value = positiveInteger(step, 7).toString()
+    stepSize.value = wasm.tuning_positive_integer(step, 7).toString()
   }
 }
 
@@ -386,15 +395,11 @@ function tuningOptionExists(value: string): boolean {
 }
 
 function positiveInteger(value: string, fallback: number): number {
-  const parsed = Number.parseInt(value, 10)
-  if (Number.isFinite(parsed) && parsed > 0) {
-    return parsed
-  }
-  return fallback
+  return wasm.tuning_positive_integer(value, fallback)
 }
 
 function currentMarkedHash(): string {
-  return markedKeys.length > 0 ? generateHash(markedKeys) : window.location.hash.substring(1)
+  return wasm.tuning_hash_or_fallback(markedKeys.join(","), window.location.hash)
 }
 
 function tuningUrl(hash = currentMarkedHash()): string {

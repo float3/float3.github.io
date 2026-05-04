@@ -1,3 +1,5 @@
+import { movie_candidate_is_visible, random_index } from "wasm"
+
 const timeout = 0.25
 
 function getRandomMovie(id: string, button: HTMLButtonElement): void {
@@ -23,7 +25,7 @@ function getRandomMovie(id: string, button: HTMLButtonElement): void {
   wheel.spin()
 
   setTimeout(() => {
-    const randomMovie = moviesToWatch[Math.floor(Math.random() * moviesToWatch.length)]
+    const randomMovie = moviesToWatch[random_index(moviesToWatch.length)]
     const result = document.createElement("h2")
     result.id = "result"
     result.textContent = "random movie: "
@@ -62,10 +64,7 @@ function collectMovies(id: string) {
   const headingContent: string = (heading.nextElementSibling?.nextElementSibling as HTMLElement)
     .innerText
 
-  const moviesToWatch = headingContent
-    .split("\n")
-    .filter((x) => !x.includes("BREAK"))
-    .filter((x) => !/\(\d{4}-\d{2}-\d{2}\)$/.test(x))
+  const moviesToWatch = headingContent.split("\n").filter((x) => movie_candidate_is_visible(x))
 
   return moviesToWatch
 }

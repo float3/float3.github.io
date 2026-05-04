@@ -110,7 +110,10 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
         descriptionArea.className = "big-field description-field"
         descriptionArea.value = retrieve_problem(y, d, p)
         descriptionArea.disabled = true
-        descriptionArea.setAttribute("aria-label", `Problem description for ${y} day ${d} part ${p}`)
+        descriptionArea.setAttribute(
+          "aria-label",
+          `Problem description for ${y} day ${d} part ${p}`,
+        )
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field code-field"
@@ -258,10 +261,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
       const percentage = aoc_completion_percentage(completeCount, totalProblems)
       btn.textContent = `${year} ${percentage === 100 ? STAR : `${percentage}%`}`
       btn.classList.toggle("active", year === activeYear)
-      btn.setAttribute(
-        "aria-label",
-        `${year}: ${completeCount} of ${totalProblems} stars complete`,
-      )
+      btn.setAttribute("aria-label", `${year}: ${completeCount} of ${totalProblems} stars complete`)
       btn.setAttribute("aria-pressed", String(year === activeYear))
     })
   }
@@ -289,7 +289,9 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
       if (meta) {
         meta.textContent =
-          completeCount === totalProblems ? STAR.repeat(totalProblems) : `${completeCount}/${totalProblems}`
+          completeCount === totalProblems
+            ? STAR.repeat(totalProblems)
+            : `${completeCount}/${totalProblems}`
       }
     })
 
@@ -314,10 +316,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
       const isComplete = complete[activeYear - START_YEAR][activeDay - 1][problem - 1]
       btn.textContent = `part ${problem}${isComplete ? ` ${STAR}` : ""}`
-      btn.setAttribute(
-        "aria-label",
-        `Part ${problem}${isComplete ? ", complete" : ", incomplete"}`,
-      )
+      btn.setAttribute("aria-label", `Part ${problem}${isComplete ? ", complete" : ", incomplete"}`)
       btn.setAttribute("aria-pressed", String(problem === activeProblem))
     })
   }

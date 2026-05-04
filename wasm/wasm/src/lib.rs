@@ -7,7 +7,11 @@ pub mod chars;
 pub mod glsl;
 pub mod graph;
 pub mod krabby;
+pub mod movies;
+pub mod photography;
 pub mod polyrhythm;
+pub mod random;
+pub mod trolley;
 
 use wasm_bindgen::prelude::*;
 

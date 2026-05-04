@@ -21,8 +21,6 @@ convertButton.addEventListener("click", () => {
 
 downloadButton.addEventListener("click", () => {
   if (shader && extract && raymarch) {
-    const arr = shader.value.split("/").filter((x) => x.length > 0)
-
     const xhttp = new XMLHttpRequest()
     xhttp.onload = function () {
       if (this.responseText) {
@@ -30,7 +28,7 @@ downloadButton.addEventListener("click", () => {
       }
     }
 
-    const shaderId = arr[arr.length - 1]
+    const shaderId = wasm.shader_id_from_url(shader.value)
     if (shaderId) {
       xhttp.open("GET", `https://www.shadertoy.com/api/v1/shaders/${shaderId}?key=NtHtMm`)
       xhttp.send()
@@ -112,7 +110,7 @@ shader.addEventListener("input", () => {
       inp.value = JSON.parse(this.responseText).Shader.renderpass[0].code
     }
   }
-  const shaderId = shader.value.split("/").pop()
+  const shaderId = wasm.shader_id_from_url(shader.value)
   xhttp.open("GET", `https://www.shadertoy.com/api/v1/shaders/${shaderId}?key=NtHtMm`)
   xhttp.send()
 })

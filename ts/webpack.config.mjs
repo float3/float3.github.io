@@ -27,6 +27,7 @@ const config = {
     chars: "./dist/chars.js",
     pokemon: "./dist/pokemon.js",
     bayestheorem: "./dist/bayestheorem.js",
+    photography: "./dist/photography.js",
   },
   output: {
     path: path.resolve(contentJsDir),
