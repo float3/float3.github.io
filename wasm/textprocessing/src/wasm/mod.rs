@@ -1,7 +1,9 @@
 pub mod chinese;
+pub mod encoding;
 pub mod japanese;
 pub mod korean;
 pub mod numbers;
+pub mod scripts;
 
 use wasm_bindgen::prelude::*;
 
@@ -34,6 +36,33 @@ pub fn transform_text(index: u32, left_to_right: bool, text: String) -> String {
         (18, true) => numbers::number_to_japanese(text),
         (19, true) => korean::romanize_hangeul(&text),
         (19, false) => korean::roman_to_hangeul(&text),
+        (20, true) => chinese::encode_pinyin_wasm(text),
+        (20, false) => chinese::decode_pinyin_wasm(text),
+        (21, true) => chinese::encode_zhuyin_wasm(text),
+        (21, false) => chinese::decode_zhuyin_wasm(text),
+        (22, true) => chinese::tokenize_wasm(text),
+        (23, true) => korean::hangeul_to_mccune_reischauer_romanization(&text),
+        (23, false) => korean::mccune_reischauer_romanization_to_hangeul(&text),
+        (24, true) => korean::rr_to_mr(&text),
+        (24, false) => korean::mr_to_rr(&text),
+        (25, true) => encoding::text_to_hex_bytes(text),
+        (25, false) => encoding::hex_bytes_to_text(text),
+        (26, true) => encoding::text_to_binary_bytes(text),
+        (26, false) => encoding::binary_bytes_to_text(text),
+        (27, true) => encoding::text_to_base64(text),
+        (27, false) => encoding::base64_to_text(text),
+        (28, true) => encoding::escape_html(text),
+        (28, false) => encoding::unescape_html(text),
+        (29, true) => encoding::text_to_code_points(text),
+        (29, false) => encoding::code_points_to_text(text),
+        (30, true) => encoding::integer_to_bytes(text, false),
+        (30, false) => encoding::bytes_to_integer(text, false),
+        (31, true) => encoding::integer_to_bytes(text, true),
+        (31, false) => encoding::bytes_to_integer(text, true),
+        (32, true) | (32, false) => encoding::reverse_byte_order(text),
+        (33, true) => japanese::kana_to_romaji(text),
+        (34, true) => scripts::transliterate_cyrillic(text),
+        (35, true) => scripts::transliterate_greek(text),
         _ => text,
     }
 }

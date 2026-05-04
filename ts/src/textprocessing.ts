@@ -1,4 +1,3 @@
-import("./textprocessing/index.js").catch((e) => console.error("Error importing `index.js`:", e))
 import { transformLeftToRight, transformRightToLeft } from "./textprocessing/index.js"
 
 /**

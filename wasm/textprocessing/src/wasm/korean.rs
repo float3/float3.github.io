@@ -7,9 +7,9 @@ pub fn hangeul_to_hanja(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            // For simplicity, we take the first available hanja variant.
-            // In practice, you might want to handle errors or multiple variants.
-            hanja::get(c).expect("No Hanja found for given Hangeul character")[0].0
+            hanja::get(c)
+                .and_then(|variants| variants.first().map(|(hanja, _)| *hanja))
+                .unwrap_or(c)
         })
         .collect()
 }
@@ -19,13 +19,6 @@ pub fn hanja_to_hangeul(input: &str) -> String {
     input
         .chars()
         .map(|c| {
-            // We must invert the lookup. Since the hanja::get function
-            // works from Hangeul to Hanja, we need to search all Hangeul
-            // characters that produce this Hanja. This is inefficient:
-            // a real implementation would likely use a precomputed map.
-
-            // For demonstration, assume we have a known range of Hangeul
-            // and attempt to find the corresponding character:
             for hangeul_candidate in '\u{AC00}'..='\u{D7A3}' {
                 if let Some(results) = hanja::get(hangeul_candidate)
                     && results.iter().any(|&(h, _)| h == c)
@@ -33,7 +26,7 @@ pub fn hanja_to_hangeul(input: &str) -> String {
                     return hangeul_candidate;
                 }
             }
-            panic!("No Hangeul found for given Hanja character");
+            c
         })
         .collect()
 }
@@ -55,17 +48,12 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
         }
 
         if hangeul_candidates.is_empty() {
-            panic!(
-                "No Hangeul readings found for Hanja character {}",
-                hanja_char
-            );
+            readings.push(hanja_char.to_string());
+        } else {
+            let mut candidate_list: Vec<char> = hangeul_candidates.into_iter().collect();
+            candidate_list.sort();
+            readings.push(candidate_list.into_iter().collect());
         }
-
-        // Convert the HashSet into a sorted String
-        let mut candidate_list: Vec<char> = hangeul_candidates.into_iter().collect();
-        candidate_list.sort(); // Optional: Sort to ensure consistent order
-
-        readings.push(candidate_list.into_iter().collect());
     }
 
     readings.join(" ")
@@ -75,41 +63,33 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
 pub fn roman_to_hangeul(input: &str) -> String {
     hangeul_conversion::rr::parse(input)
         .map(|blocks| blocks.iter().map(|b| b.hangeul()).collect())
-        .unwrap_or_else(|| {
-            panic!("Failed to parse input as Hangeul: {}", input);
-        })
+        .unwrap_or_else(|| input.to_string())
 }
 
 #[wasm_bindgen]
 pub fn romanize_hangeul(input: &str) -> String {
     hangeul_conversion::hangeul::parse(input)
         .map(|blocks| blocks.iter().map(|b| b.revised_romanization()).collect())
-        .unwrap_or_else(|| {
-            panic!("Failed to parse input as Hangeul: {}", input);
-        })
+        .unwrap_or_else(|| input.to_string())
 }
 
 #[wasm_bindgen]
 pub fn mccune_reischauer_romanization_to_hangeul(input: &str) -> String {
     hangeul_conversion::mr::parse(input)
         .map(|blocks| blocks.iter().map(|b| b.hangeul()).collect())
-        .unwrap_or_else(|| {
-            panic!("Failed to parse input as Hangeul: {}", input);
-        })
+        .unwrap_or_else(|| input.to_string())
 }
 
 #[wasm_bindgen]
 pub fn hangeul_to_mccune_reischauer_romanization(input: &str) -> String {
-    hangeul_conversion::mr::parse(input)
+    hangeul_conversion::hangeul::parse(input)
         .map(|blocks| {
             blocks
                 .iter()
                 .map(|b| b.mccune_reischauer_romanization())
                 .collect()
         })
-        .unwrap_or_else(|| {
-            panic!("Failed to parse input as Hangeul: {}", input);
-        })
+        .unwrap_or_else(|| input.to_string())
 }
 
 #[wasm_bindgen]
@@ -121,19 +101,24 @@ pub fn rr_to_mr(input: &str) -> String {
                 .map(|b| b.mccune_reischauer_romanization())
                 .collect()
         })
-        .unwrap_or_else(|| {
-            panic!("Failed to parse input as Revised Romanization: {}", input);
-        })
+        .unwrap_or_else(|| input.to_string())
 }
 
 #[wasm_bindgen]
 pub fn mr_to_rr(input: &str) -> String {
     hangeul_conversion::mr::parse(input)
         .map(|blocks| blocks.iter().map(|b| b.revised_romanization()).collect())
-        .unwrap_or_else(|| {
-            panic!(
-                "Failed to parse input as McCune-Reischauer Romanization: {}",
-                input
-            );
-        })
+        .unwrap_or_else(|| input.to_string())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn unknown_hanja_and_hangeul_are_preserved() {
+        assert_eq!(hanja_to_hangeul("?"), "?");
+        assert_eq!(hangeul_to_hanja("?"), "?");
+        assert_eq!(hanja_to_hangeul_all_variants("?"), "?");
+    }
 }

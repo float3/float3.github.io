@@ -3,9 +3,14 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub fn number_to_japanese(number: String) -> String {
-    japanese_number_converter::JapaneseNumber::convert(number.parse::<usize>().unwrap())
-        .kanji()
-        .to_string()
+    number
+        .parse::<usize>()
+        .map(|number| {
+            japanese_number_converter::JapaneseNumber::convert(number)
+                .kanji()
+                .to_string()
+        })
+        .unwrap_or_default()
 }
 
 #[wasm_bindgen]
@@ -46,7 +51,11 @@ pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i32)
 
 #[wasm_bindgen]
 pub fn arabic_to_roman(number: String) -> String {
-    roman::to(number.parse::<i32>().unwrap()).unwrap()
+    number
+        .parse::<i32>()
+        .ok()
+        .and_then(roman::to)
+        .unwrap_or_default()
 }
 
 #[wasm_bindgen]
@@ -54,5 +63,22 @@ pub fn roman_to_arabic(roman: String) -> String {
     match roman::from(&roman) {
         Some(num) => num.to_string(),
         None => String::from(""),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn invalid_numbers_do_not_panic() {
+        assert_eq!(number_to_japanese("nope".to_string()), "");
+        assert_eq!(arabic_to_roman("nope".to_string()), "");
+    }
+
+    #[test]
+    fn roman_numerals_round_trip() {
+        assert_eq!(arabic_to_roman("3339".to_string()), "MMMCCCXXXIX");
+        assert_eq!(roman_to_arabic("MMMCCCXXXIX".to_string()), "3339");
     }
 }
