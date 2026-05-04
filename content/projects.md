@@ -1,7 +1,7 @@
 ---
 title: "projects"
 date: 2024-04-15
-updated: 2026-05-02
+updated: 2026-05-04
 sort_by: "title"
 tags:
   - programming
@@ -11,6 +11,7 @@ tags:
   - [AudioLink](#audiolink)
   - [Poiyomi](#poiyomi)
   - [vkfetch-rs](#vkfetch-rs)
+  - [music21-rs](#music21-rs)
   - [PSDTranslate](#psdtranslate)
   - [GoogleTranslate](#googletranslate)
   - [VRCLauncher](#vrclauncher)
@@ -46,6 +47,12 @@ the Google Filament rendering engine to Unity
 [github](https://github.com/float3/vkfetch-rs) \
 [crates.io](https://crates.io/crates/vkfetch-rs) \
 a port of vkfetch to rust, a neofetch-esque utility to display information about your vulkan capable gpu(s)
+
+## music21-rs
+
+[github](https://github.com/float3/music21-rs) \
+[website](https://hilll.dev/music21-rs/) \
+a rust music theory library inspired by python's music21. I use it in my wasm tools for chord, tuning, and polyrhythm logic.
 
 ## PSDTranslate
 
