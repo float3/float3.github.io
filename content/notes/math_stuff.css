@@ -83,45 +83,50 @@
 
 .bayes-solver-field[data-bayes-role="posterior"],
 .bayes-solver-result[data-bayes-role="posterior"] {
-  background: color-mix(in srgb, var(--bayes-posterior) 18%, var(--bayes-card));
-  border-color: color-mix(in srgb, var(--bayes-posterior) 64%, var(--bayes-border));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bayes-posterior) 22%, transparent);
+  background: #0466e74d;
+  background: color-mix(in srgb, var(--bayes-posterior) 42%, var(--bayes-card));
+  border-color: var(--bayes-posterior);
+  box-shadow: inset 0 0 0 1px #0466e780;
 }
 
 .bayes-solver-field[data-bayes-role="likelihood"],
 .bayes-solver-result[data-bayes-role="likelihood"] {
-  background: color-mix(in srgb, var(--bayes-likelihood) 18%, var(--bayes-card));
-  border-color: color-mix(in srgb, var(--bayes-likelihood) 64%, var(--bayes-border));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bayes-likelihood) 22%, transparent);
+  background: #ffbc3f4d;
+  background: color-mix(in srgb, var(--bayes-likelihood) 42%, var(--bayes-card));
+  border-color: var(--bayes-likelihood);
+  box-shadow: inset 0 0 0 1px #ffbc3f80;
 }
 
 .bayes-solver-field[data-bayes-role="prior"],
 .bayes-solver-result[data-bayes-role="prior"] {
-  background: color-mix(in srgb, var(--bayes-prior) 18%, var(--bayes-card));
-  border-color: color-mix(in srgb, var(--bayes-prior) 64%, var(--bayes-border));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bayes-prior) 22%, transparent);
+  background: #fe7fb34d;
+  background: color-mix(in srgb, var(--bayes-prior) 42%, var(--bayes-card));
+  border-color: var(--bayes-prior);
+  box-shadow: inset 0 0 0 1px #fe7fb380;
 }
 
 .bayes-solver-field[data-bayes-role="evidence"],
 .bayes-solver-result[data-bayes-role="evidence"] {
-  background: color-mix(in srgb, var(--bayes-evidence) 18%, var(--bayes-card));
-  border-color: color-mix(in srgb, var(--bayes-evidence) 64%, var(--bayes-border));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bayes-evidence) 22%, transparent);
+  background: #dd6fff4d;
+  background: color-mix(in srgb, var(--bayes-evidence) 42%, var(--bayes-card));
+  border-color: var(--bayes-evidence);
+  box-shadow: inset 0 0 0 1px #dd6fff80;
 }
 
 .bayes-solver-field[data-bayes-role="neutral"] {
-  background: color-mix(in srgb, var(--bayes-neutral) 12%, var(--bayes-card));
-  border-color: color-mix(in srgb, var(--bayes-neutral) 52%, var(--bayes-border));
+  background: #4d8dc340;
+  background: color-mix(in srgb, var(--bayes-neutral) 34%, var(--bayes-card));
+  border-color: var(--bayes-neutral);
 }
 
 .bayes-solver-result[data-bayes-role="numerator"] {
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--bayes-likelihood) 20%, var(--bayes-card)) 0 50%,
-    color-mix(in srgb, var(--bayes-prior) 20%, var(--bayes-card)) 50% 100%
+    #ffbc3f52 0 50%,
+    #fe7fb352 50% 100%
   );
-  border-color: color-mix(in srgb, var(--bayes-likelihood) 55%, var(--bayes-prior));
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bayes-prior) 16%, transparent);
+  border-color: #ffc668;
+  box-shadow: inset 0 0 0 1px #fe7fb380;
 }
 
 .bayes-solver-field::before,
@@ -240,40 +245,45 @@
 
 .bayes-solver-field[data-bayes-role="posterior"] input:not([type="checkbox"]),
 .bayes-solver-result[data-bayes-role="posterior"] strong {
-  background: color-mix(in srgb, var(--bayes-posterior) 16%, var(--light));
-  border-color: color-mix(in srgb, var(--bayes-posterior) 58%, var(--bayes-border));
+  background: #0466e733;
+  background: color-mix(in srgb, var(--bayes-posterior) 30%, var(--light));
+  border-color: var(--bayes-posterior);
 }
 
 .bayes-solver-field[data-bayes-role="likelihood"] input:not([type="checkbox"]),
 .bayes-solver-result[data-bayes-role="likelihood"] strong {
-  background: color-mix(in srgb, var(--bayes-likelihood) 16%, var(--light));
-  border-color: color-mix(in srgb, var(--bayes-likelihood) 58%, var(--bayes-border));
+  background: #ffbc3f33;
+  background: color-mix(in srgb, var(--bayes-likelihood) 30%, var(--light));
+  border-color: var(--bayes-likelihood);
 }
 
 .bayes-solver-field[data-bayes-role="prior"] input:not([type="checkbox"]),
 .bayes-solver-result[data-bayes-role="prior"] strong {
-  background: color-mix(in srgb, var(--bayes-prior) 16%, var(--light));
-  border-color: color-mix(in srgb, var(--bayes-prior) 58%, var(--bayes-border));
+  background: #fe7fb333;
+  background: color-mix(in srgb, var(--bayes-prior) 30%, var(--light));
+  border-color: var(--bayes-prior);
 }
 
 .bayes-solver-field[data-bayes-role="evidence"] input:not([type="checkbox"]),
 .bayes-solver-result[data-bayes-role="evidence"] strong {
-  background: color-mix(in srgb, var(--bayes-evidence) 16%, var(--light));
-  border-color: color-mix(in srgb, var(--bayes-evidence) 58%, var(--bayes-border));
+  background: #dd6fff33;
+  background: color-mix(in srgb, var(--bayes-evidence) 30%, var(--light));
+  border-color: var(--bayes-evidence);
 }
 
 .bayes-solver-field[data-bayes-role="neutral"] input:not([type="checkbox"]) {
-  background: color-mix(in srgb, var(--bayes-neutral) 12%, var(--light));
-  border-color: color-mix(in srgb, var(--bayes-neutral) 48%, var(--bayes-border));
+  background: #4d8dc333;
+  background: color-mix(in srgb, var(--bayes-neutral) 24%, var(--light));
+  border-color: var(--bayes-neutral);
 }
 
 .bayes-solver-result[data-bayes-role="numerator"] strong {
   background: linear-gradient(
     135deg,
-    color-mix(in srgb, var(--bayes-likelihood) 16%, var(--light)) 0 50%,
-    color-mix(in srgb, var(--bayes-prior) 16%, var(--light)) 50% 100%
+    #ffbc3f33 0 50%,
+    #fe7fb333 50% 100%
   );
-  border-color: color-mix(in srgb, var(--bayes-likelihood) 52%, var(--bayes-prior));
+  border-color: #ffc668;
 }
 
 #bayes-solver input:disabled {
@@ -282,8 +292,9 @@
 
 .bayes-solver-toggle {
   align-items: flex-start;
-  background: color-mix(in srgb, var(--bayes-evidence) 18%, var(--bayes-card));
-  border: 1px solid color-mix(in srgb, var(--bayes-evidence) 64%, var(--bayes-border));
+  background: #dd6fff4d;
+  background: color-mix(in srgb, var(--bayes-evidence) 42%, var(--bayes-card));
+  border: 1px solid var(--bayes-evidence);
   border-radius: 4px;
   box-sizing: border-box;
   display: flex;
