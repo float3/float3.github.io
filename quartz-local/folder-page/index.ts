@@ -9,7 +9,7 @@ import type {
 } from "../../quartz/components/types"
 import type { QuartzPageTypePlugin, VirtualPage } from "../../quartz/plugins/types"
 import type { QuartzPluginData } from "../../quartz/plugins/vfile"
-import { type FullSlug, isFolderPath, joinSegments, resolveRelative } from "../../quartz/util/path"
+import { type FullSlug, isFolderPath, joinSegments, resolveRelative } from "../../quartz/util/path.ts"
 import type { Root } from "hast"
 
 type SortFn = (f1: PageEntry, f2: PageEntry) => number

@@ -79,11 +79,11 @@ impl Site {
 
         self.pnpm_install(&self.root, InstallMode::Locked)?;
 
-        let mut args = os_args(&["quartz", "build"]);
+        let mut args = os_args(&["quartz/bootstrap-cli.mjs", "build"]);
         if mode == Mode::Dev {
             args.push("--serve".into());
         }
-        self.run(&self.root, "pnpm", &args)?;
+        self.run(&self.root, "node", &args)?;
 
         let public = self.root.join("public");
         report::write(self, &public, started.elapsed().as_secs())
@@ -146,7 +146,12 @@ impl Site {
             let entry = entry?;
             let file_type = entry.file_type()?;
             if file_type.is_file() {
-                fs::copy(entry.path(), target.join(entry.file_name()))?;
+                let source_path = entry.path();
+                let target_path = target.join(entry.file_name());
+                if target_path.exists() {
+                    fs::remove_file(&target_path)?;
+                }
+                fs::copy(source_path, target_path)?;
             }
         }
 
