@@ -1,7 +1,7 @@
 ---
 title: textprocessing
 date: 2024-12-09
-updated: 2026-05-03
+updated: 2026-05-04
 tags:
   - text
   - language
