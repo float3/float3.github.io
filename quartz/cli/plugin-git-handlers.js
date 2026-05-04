@@ -127,11 +127,24 @@ function needsBuild(pluginDir) {
  *  2. All other peers → symlink to the host Quartz node_modules so plugins
  *     share a single copy of packages like unified, vfile, rehype-raw, etc.
  */
-function trySymlink(target, linkPath) {
+function tryDirectoryLink(target, linkPath) {
+  const absoluteTarget = path.isAbsolute(target)
+    ? target
+    : path.resolve(path.dirname(linkPath), target)
+
   try {
     fs.symlinkSync(target, linkPath, "dir")
   } catch (err) {
     if (err.code === "EEXIST") return
+    if (process.platform === "win32" && err.code === "EPERM") {
+      try {
+        fs.symlinkSync(absoluteTarget, linkPath, "junction")
+      } catch (junctionErr) {
+        if (junctionErr.code === "EEXIST") return
+        fs.cpSync(absoluteTarget, linkPath, { recursive: true, dereference: true })
+      }
+      return
+    }
     throw err
   }
 }
@@ -158,7 +171,7 @@ function linkPeerPlugins(pluginDir) {
       fs.mkdirSync(scopeDir, { recursive: true })
 
       const target = path.relative(scopeDir, siblingPlugin)
-      trySymlink(target, peerNodeModulesPath)
+      tryDirectoryLink(target, peerNodeModulesPath)
       continue
     }
 
@@ -174,7 +187,7 @@ function linkPeerPlugins(pluginDir) {
     }
 
     const target = path.relative(path.dirname(peerNodeModulesPath), hostPeerPath)
-    trySymlink(target, peerNodeModulesPath)
+    tryDirectoryLink(target, peerNodeModulesPath)
   }
 }
 
@@ -535,7 +548,7 @@ export async function handlePluginInstallUnified({
           }
           console.log(styleText("cyan", `→ Linking ${name} from ${resolvedPath}...`))
           fs.mkdirSync(path.dirname(pluginDir), { recursive: true })
-          fs.symlinkSync(resolvedPath, pluginDir, "dir")
+          tryDirectoryLink(resolvedPath, pluginDir)
           lockfile.plugins[name] = {
             source: entry.source,
             resolved: resolvedPath,
@@ -724,7 +737,7 @@ export async function handlePluginInstallUnified({
             continue
           }
           fs.mkdirSync(path.dirname(pluginDir), { recursive: true })
-          fs.symlinkSync(entry.resolved, pluginDir, "dir")
+          tryDirectoryLink(entry.resolved, pluginDir)
           console.log(styleText("green", `✓ ${name} restored (local symlink)`))
           restoredPlugins.push({ name, pluginDir })
           installed++
@@ -959,7 +972,7 @@ export async function handlePluginInstallUnified({
           continue
         }
         fs.mkdirSync(path.dirname(pluginDir), { recursive: true })
-        fs.symlinkSync(entry.resolved, pluginDir, "dir")
+        tryDirectoryLink(entry.resolved, pluginDir)
         console.log(styleText("green", `  ✓ ${name} (local) linked`))
         pluginsToBuild.push({ name, pluginDir })
         installed++
@@ -1136,7 +1149,7 @@ export async function handlePluginAdd(
         }
         console.log(styleText("cyan", `→ Adding ${name} from local path ${resolvedPath}...`))
         fs.mkdirSync(path.dirname(pluginDir), { recursive: true })
-        fs.symlinkSync(resolvedPath, pluginDir, "dir")
+        tryDirectoryLink(resolvedPath, pluginDir)
         lockfile.plugins[name] = {
           source,
           resolved: resolvedPath,

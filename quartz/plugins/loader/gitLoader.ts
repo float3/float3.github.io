@@ -306,11 +306,24 @@ function findPluginByPackageName(packageName: string): string | null {
  * share a single copy of packages like unified, vfile, preact, etc.
  * @quartz-community/* peers resolve to co-installed sibling plugins instead.
  */
-function trySymlink(target: string, linkPath: string): void {
+function tryDirectoryLink(target: string, linkPath: string): void {
+  const absoluteTarget = path.isAbsolute(target)
+    ? target
+    : path.resolve(path.dirname(linkPath), target)
+
   try {
     fs.symlinkSync(target, linkPath, "dir")
   } catch (err: unknown) {
     if ((err as NodeJS.ErrnoException).code === "EEXIST") return
+    if (process.platform === "win32" && (err as NodeJS.ErrnoException).code === "EPERM") {
+      try {
+        fs.symlinkSync(absoluteTarget, linkPath, "junction")
+      } catch (junctionErr: unknown) {
+        if ((junctionErr as NodeJS.ErrnoException).code === "EEXIST") return
+        fs.cpSync(absoluteTarget, linkPath, { recursive: true, dereference: true })
+      }
+      return
+    }
     throw err
   }
 }
@@ -337,7 +350,7 @@ function linkPeerDependencies(pluginDir: string): void {
       fs.mkdirSync(scopeDir, { recursive: true })
 
       const target = path.relative(scopeDir, siblingPlugin)
-      trySymlink(target, peerNodeModulesPath)
+      tryDirectoryLink(target, peerNodeModulesPath)
       continue
     }
 
@@ -353,7 +366,7 @@ function linkPeerDependencies(pluginDir: string): void {
     }
 
     const target = path.relative(path.dirname(peerNodeModulesPath), hostPeerPath)
-    trySymlink(target, peerNodeModulesPath)
+    tryDirectoryLink(target, peerNodeModulesPath)
   }
 }
 
@@ -459,7 +472,7 @@ export async function installPlugin(
       console.log(styleText("cyan", `→`), `Linking ${spec.name} from ${spec.repo}...`)
     }
 
-    fs.symlinkSync(spec.repo, pluginDir, "dir")
+    tryDirectoryLink(spec.repo, pluginDir)
 
     if (options.verbose) {
       console.log(styleText("green", `✓`), `Linked ${spec.name}`)
