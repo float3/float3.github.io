@@ -1,7 +1,15 @@
 const START_YEAR = 2015
-const STAR = "⭐"
+const STAR = "\u2B50"
 
-import { retrieve_html, retrieve_problem, solve } from "wasm"
+import {
+  aoc_completion_percentage,
+  aoc_day_count_for_year,
+  aoc_day_status,
+  aoc_problem_count_for_day,
+  retrieve_html,
+  retrieve_problem,
+  solve,
+} from "wasm"
 
 export interface TabConfig {
   years: number
@@ -9,20 +17,27 @@ export interface TabConfig {
   problems: number
 }
 
+type Progress = {
+  completeCount: number
+  totalProblems: number
+}
+
+type DayStatus = "complete" | "partial" | "todo"
+
 export function createTabs(container: HTMLElement, config: TabConfig) {
   const { years, days, problems } = config
 
   function dayCountForYear(year: number) {
-    return year === 2025 ? 12 : days
+    return aoc_day_count_for_year(year, days)
   }
 
   function problemCountForDay(year: number, day: number) {
-    return year === 2025 || day === 25 ? 1 : problems
+    return aoc_problem_count_for_day(year, day, problems)
   }
 
   let activeYear = START_YEAR + years - 1
-  let activeDay = 1,
-    activeProblem = 1
+  let activeDay = 1
+  let activeProblem = 1
 
   const urlParams = new URLSearchParams(window.location.search)
 
@@ -57,17 +72,27 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   const yearsWrapper = document.createElement("div")
   yearsWrapper.className = "years tabs"
+  yearsWrapper.setAttribute("aria-label", "Advent of Code year")
+
+  const progressSummary = document.createElement("div")
+  progressSummary.className = "aoc-progress-summary"
+  progressSummary.setAttribute("aria-live", "polite")
 
   const daysWrapper = document.createElement("div")
-  daysWrapper.className = "days tabs"
+  daysWrapper.className = "days aoc-calendar"
+  daysWrapper.setAttribute("aria-label", "Advent of Code calendar")
 
   const problemsWrapper = document.createElement("div")
   problemsWrapper.className = "problems tabs"
+  problemsWrapper.setAttribute("aria-label", "Advent of Code problem")
 
   const contentWrapper = document.createElement("div")
   contentWrapper.className = "content"
 
   const fieldsMap = new Map<string, HTMLDivElement>()
+  const yearButtons: HTMLButtonElement[] = []
+  const dayButtons: HTMLButtonElement[] = []
+  const problemButtons: HTMLButtonElement[] = []
 
   const complete: boolean[][][] = Array.from({ length: years }, () =>
     Array.from({ length: days }, () => Array.from({ length: problems }, () => false)),
@@ -75,7 +100,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   let isDark = document.documentElement.getAttribute("saved-theme") === "dark"
 
-  // Pre-create all fields sets
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     for (let d = 1; d <= dayCountForYear(y); d++) {
       for (let p = 1; p <= problemCountForDay(y, d); p++) {
@@ -83,40 +107,44 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
         fields.className = "fields hidden"
 
         const descriptionArea = document.createElement("textarea")
-        descriptionArea.className = "big-field"
+        descriptionArea.className = "big-field description-field"
         descriptionArea.value = retrieve_problem(y, d, p)
         descriptionArea.disabled = true
+        descriptionArea.setAttribute("aria-label", `Problem description for ${y} day ${d} part ${p}`)
 
         const codeArea = document.createElement("div")
-        codeArea.className = "big-field"
+        codeArea.className = "big-field code-field"
         const code = retrieve_html(y, d, p, isDark)
         complete[y - START_YEAR][d - 1][p - 1] = !code.includes("todo!")
         codeArea.innerHTML = code
-        // {
-        //   (codeArea.firstChild as HTMLElement).style.margin = "0";
-        // }
 
         const inputArea = document.createElement("textarea")
-        inputArea.id = "inputArea"
-        inputArea.className = "big-field"
+        inputArea.className = "big-field input-field"
         inputArea.placeholder = "Input here..."
+        inputArea.dataset.aocInput = "true"
+        inputArea.setAttribute("aria-label", `Puzzle input for ${y} day ${d} part ${p}`)
 
         inputArea.oninput = () => {
-          const t = p === 1 ? 2 : 1
-          const key = `${y}-${d}-${t}`
+          const otherProblem = p === 1 ? 2 : 1
+          const key = `${y}-${d}-${otherProblem}`
           const fields = fieldsMap.get(key)
-          if (fields) {
-            const otherInputArea = fields.querySelector("textarea#inputArea") as HTMLTextAreaElement
-            if (otherInputArea) otherInputArea.value = inputArea.value
-          }
+          if (!fields) return
+
+          const otherInputArea = fields.querySelector(
+            "textarea[data-aoc-input='true']",
+          ) as HTMLTextAreaElement | null
+          if (otherInputArea) otherInputArea.value = inputArea.value
         }
 
         const outputArea = document.createElement("textarea")
-        outputArea.className = "small-field"
+        outputArea.className = "small-field output-field"
         outputArea.disabled = true
         outputArea.value = ""
+        outputArea.setAttribute("aria-label", `Solution output for ${y} day ${d} part ${p}`)
 
         const solveButton = document.createElement("button")
+        solveButton.className = "solve-button"
+        solveButton.type = "button"
         solveButton.textContent = "Solve"
         solveButton.addEventListener("click", () => {
           outputArea.value = solve(inputArea.value, y, d, p)
@@ -135,75 +163,169 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     }
   }
 
-  // Create year tabs
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     const btn = document.createElement("button")
-    let completeCount = 0
-    let totalProblems = 0
-    for (let d = 1; d <= dayCountForYear(y); d++) {
-      const dayProblemCount = problemCountForDay(y, d)
-      totalProblems += dayProblemCount
-      for (let p = 1; p <= dayProblemCount; p++) {
-        if (complete[y - START_YEAR][d - 1][p - 1]) completeCount++
-      }
-    }
-    const percentage = Math.floor((completeCount / totalProblems) * 100)
-    btn.textContent = y.toString() + (percentage === 100 ? ` ${STAR}` : ` ${percentage}%`)
-    if (y === activeYear) btn.classList.add("active")
+    btn.type = "button"
     btn.addEventListener("click", () => {
       activeYear = y
       activeDay = 1
       activeProblem = 1
-      updateActiveTab(yearsWrapper, btn)
-      updateActiveTab(daysWrapper, daysWrapper.firstChild as HTMLButtonElement)
-      updateActiveTab(problemsWrapper, problemsWrapper.firstChild as HTMLButtonElement)
+      updateYearTabs()
       updateDayTabs()
       updateProblemTabs()
       showCurrentFields()
       updateURL()
     })
+    yearButtons.push(btn)
     yearsWrapper.appendChild(btn)
   }
 
-  // Create day tabs
   for (let d = 1; d <= days; d++) {
     const btn = document.createElement("button")
-    btn.textContent = `day ${d}`
-    if (d === activeDay) btn.classList.add("active")
+    btn.className = "aoc-day"
+    btn.type = "button"
+    btn.appendChild(createDayNumber(d))
+    btn.appendChild(createDayMeta())
     btn.addEventListener("click", () => {
+      if (d > dayCountForYear(activeYear)) return
+
       activeDay = d
       activeProblem = 1
-      updateActiveTab(daysWrapper, btn)
-      updateActiveTab(problemsWrapper, problemsWrapper.firstChild as HTMLButtonElement)
+      updateDayTabs()
       updateProblemTabs()
       showCurrentFields()
       updateURL()
     })
+    dayButtons.push(btn)
     daysWrapper.appendChild(btn)
   }
 
-  // Create problem tabs
   for (let p = 1; p <= problems; p++) {
     const btn = document.createElement("button")
-    btn.textContent = `problem ${p}`
-    if (p === activeProblem) btn.classList.add("active")
+    btn.type = "button"
     btn.addEventListener("click", () => {
       activeProblem = p
-      updateActiveTab(problemsWrapper, btn)
+      updateProblemTabs()
       showCurrentFields()
       updateURL()
     })
+    problemButtons.push(btn)
     problemsWrapper.appendChild(btn)
   }
 
   container.appendChild(yearsWrapper)
+  container.appendChild(progressSummary)
   container.appendChild(daysWrapper)
   container.appendChild(problemsWrapper)
   container.appendChild(contentWrapper)
 
-  function updateActiveTab(wrapper: HTMLElement, activeButton: HTMLButtonElement) {
-    wrapper.querySelectorAll("button").forEach((btn) => btn.classList.remove("active"))
-    activeButton.classList.add("active")
+  function getYearProgress(year: number): Progress {
+    let completeCount = 0
+    let totalProblems = 0
+
+    for (let d = 1; d <= dayCountForYear(year); d++) {
+      const dayProblemCount = problemCountForDay(year, d)
+      totalProblems += dayProblemCount
+
+      for (let p = 1; p <= dayProblemCount; p++) {
+        if (complete[year - START_YEAR][d - 1][p - 1]) completeCount++
+      }
+    }
+
+    return { completeCount, totalProblems }
+  }
+
+  function getDayProgress(year: number, day: number): Progress {
+    let completeCount = 0
+    const totalProblems = problemCountForDay(year, day)
+
+    for (let p = 1; p <= totalProblems; p++) {
+      if (complete[year - START_YEAR][day - 1][p - 1]) completeCount++
+    }
+
+    return { completeCount, totalProblems }
+  }
+
+  function getDayStatus(year: number, day: number): DayStatus {
+    const { completeCount, totalProblems } = getDayProgress(year, day)
+    return dayStatusName(aoc_day_status(completeCount, totalProblems))
+  }
+
+  function updateYearTabs() {
+    yearButtons.forEach((btn, index) => {
+      const year = START_YEAR + index
+      const { completeCount, totalProblems } = getYearProgress(year)
+      const percentage = aoc_completion_percentage(completeCount, totalProblems)
+      btn.textContent = `${year} ${percentage === 100 ? STAR : `${percentage}%`}`
+      btn.classList.toggle("active", year === activeYear)
+      btn.setAttribute(
+        "aria-label",
+        `${year}: ${completeCount} of ${totalProblems} stars complete`,
+      )
+      btn.setAttribute("aria-pressed", String(year === activeYear))
+    })
+  }
+
+  function updateDayTabs() {
+    dayButtons.forEach((btn, index) => {
+      const day = index + 1
+      const isAvailable = day <= dayCountForYear(activeYear)
+      btn.hidden = !isAvailable
+      btn.disabled = !isAvailable
+      btn.classList.toggle("active", isAvailable && day === activeDay)
+
+      if (!isAvailable) return
+
+      const { completeCount, totalProblems } = getDayProgress(activeYear, day)
+      const status = getDayStatus(activeYear, day)
+      const meta = btn.querySelector(".aoc-day-meta")
+      btn.dataset.status = status
+      btn.setAttribute(
+        "aria-label",
+        `Day ${day}: ${completeCount} of ${totalProblems} stars complete`,
+      )
+      btn.setAttribute("aria-pressed", String(day === activeDay))
+      btn.title = `Day ${day}: ${completeCount}/${totalProblems} complete`
+
+      if (meta) {
+        meta.textContent =
+          completeCount === totalProblems ? STAR.repeat(totalProblems) : `${completeCount}/${totalProblems}`
+      }
+    })
+
+    updateProgressSummary()
+  }
+
+  function updateProblemTabs() {
+    const activeProblemCount = problemCountForDay(activeYear, activeDay)
+
+    if (activeProblem > activeProblemCount) {
+      activeProblem = activeProblemCount
+    }
+
+    problemButtons.forEach((btn, index) => {
+      const problem = index + 1
+      const isAvailable = problem <= activeProblemCount
+      btn.hidden = !isAvailable
+      btn.disabled = !isAvailable
+      btn.classList.toggle("active", isAvailable && problem === activeProblem)
+
+      if (!isAvailable) return
+
+      const isComplete = complete[activeYear - START_YEAR][activeDay - 1][problem - 1]
+      btn.textContent = `part ${problem}${isComplete ? ` ${STAR}` : ""}`
+      btn.setAttribute(
+        "aria-label",
+        `Part ${problem}${isComplete ? ", complete" : ", incomplete"}`,
+      )
+      btn.setAttribute("aria-pressed", String(problem === activeProblem))
+    })
+  }
+
+  function updateProgressSummary() {
+    const yearProgress = getYearProgress(activeYear)
+    const dayProgress = getDayProgress(activeYear, activeDay)
+    progressSummary.textContent = `${activeYear}: ${yearProgress.completeCount}/${yearProgress.totalProblems} stars complete. Day ${activeDay}: ${dayProgress.completeCount}/${dayProgress.totalProblems}.`
   }
 
   function showCurrentFields() {
@@ -221,47 +343,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     history.replaceState(null, "", url.toString())
   }
 
-  function updateDayTabs() {
-    const dayButtons = daysWrapper.querySelectorAll("button")
-    dayButtons.forEach((btn, index) => {
-      const d = index + 1
-      const button = btn as HTMLButtonElement
-      button.hidden = d > dayCountForYear(activeYear)
-      if (button.hidden) return
-
-      let starCount = 0
-      for (let p = 1; p <= problemCountForDay(activeYear, d); p++) {
-        if (complete[activeYear - START_YEAR][d - 1][p - 1]) {
-          starCount++
-        }
-      }
-      let starString = ""
-      if (starCount >= 2) {
-        starString = STAR.repeat(2)
-      } else if (starCount === 1) {
-        starString = STAR
-      }
-      btn.textContent = `day ${d} ${starString}`
-    })
-  }
-
-  function updateProblemTabs() {
-    const problemButtons = problemsWrapper.querySelectorAll("button")
-    const activeProblemCount = problemCountForDay(activeYear, activeDay)
-    problemButtons.forEach((btn, index) => {
-      const p = index + 1
-      const button = btn as HTMLButtonElement
-      button.hidden = p > activeProblemCount
-      if (button.hidden) return
-
-      if (complete[activeYear - START_YEAR][activeDay - 1][p - 1]) {
-        btn.textContent = `problem ${p} ${STAR}`
-      } else {
-        btn.textContent = `problem ${p}`
-      }
-    })
-  }
-
   function updateThemeForAllFields(newIsDark: boolean) {
     fieldsMap.forEach((fieldsDiv, key) => {
       const [yStr, dStr, pStr] = key.split("-")
@@ -270,7 +351,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
       const p = parseInt(pStr, 10)
 
       const newCode = retrieve_html(y, d, p, newIsDark)
-      const codeArea = fieldsDiv.querySelector("div.big-field") as HTMLDivElement
+      const codeArea = fieldsDiv.querySelector(".code-field") as HTMLDivElement | null
       if (codeArea) codeArea.innerHTML = newCode
     })
     isDark = newIsDark
@@ -291,7 +372,28 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   setupThemeObserver()
 
-  showCurrentFields()
+  updateYearTabs()
   updateDayTabs()
   updateProblemTabs()
+  showCurrentFields()
+}
+
+function createDayNumber(day: number) {
+  const number = document.createElement("span")
+  number.className = "aoc-day-number"
+  number.textContent = day.toString()
+  return number
+}
+
+function createDayMeta() {
+  const meta = document.createElement("span")
+  meta.className = "aoc-day-meta"
+  meta.textContent = "0/2"
+  return meta
+}
+
+function dayStatusName(status: number): DayStatus {
+  if (status === 2) return "complete"
+  if (status === 1) return "partial"
+  return "todo"
 }
