@@ -83,6 +83,11 @@ pub fn solve_bayes_percent(
     }
 }
 
+#[wasm_bindgen]
+pub fn bayes_number(value: f64) -> String {
+    format_number(value)
+}
+
 fn percent_to_probability(value: f64) -> f64 {
     clamp_probability(value / 100.0)
 }
@@ -93,6 +98,26 @@ fn clamp_probability(value: f64) -> f64 {
     }
 
     value.clamp(0.0, 1.0)
+}
+
+fn format_number(value: f64) -> String {
+    if !value.is_finite() {
+        return "undefined".to_string();
+    }
+
+    let mut rounded = format!("{value:.6}");
+    while rounded.contains('.') && rounded.ends_with('0') {
+        rounded.pop();
+    }
+    if rounded.ends_with('.') {
+        rounded.pop();
+    }
+
+    if rounded == "-0" {
+        "0".to_string()
+    } else {
+        rounded
+    }
 }
 
 #[cfg(test)]
@@ -112,5 +137,12 @@ mod tests {
     fn reports_zero_evidence() {
         let result = solve_bayes_percent(1.0, 90.0, 5.0, 0.0, false);
         assert_eq!(result.error_code, 1);
+    }
+
+    #[test]
+    fn formats_numbers_like_the_browser_solver() {
+        assert_eq!(format_number(1.230000), "1.23");
+        assert_eq!(format_number(-0.0000001), "0");
+        assert_eq!(format_number(f64::NAN), "undefined");
     }
 }
