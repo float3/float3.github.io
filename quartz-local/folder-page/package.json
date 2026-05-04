@@ -1,0 +1,16 @@
+{
+  "name": "@hill/quartz-folder-page",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "quartz": {
+    "name": "folder-page",
+    "displayName": "Folder Page",
+    "description": "Render folder index pages without empty zero-count labels.",
+    "version": "1.0.0",
+    "category": "pageType",
+    "defaultOrder": 50
+  }
+}
