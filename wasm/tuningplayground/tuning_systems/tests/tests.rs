@@ -50,3 +50,23 @@ fn test_just_intonation() {
 fn construct_just_intonation_tone(arg: i32) -> Tone {
     Tone::new(TuningSystem::JustIntonation, arg as usize)
 }
+
+#[test]
+fn test_pythagorean_upper_chromatic_order() {
+    let ab = TuningSystem::PythagoreanTuning.get_fraction(8);
+    let a = TuningSystem::PythagoreanTuning.get_fraction(9);
+    let bb = TuningSystem::PythagoreanTuning.get_fraction(10);
+    let b = TuningSystem::PythagoreanTuning.get_fraction(11);
+
+    assert_eq!(ab.numerator, 128);
+    assert_eq!(ab.denominator, 81);
+    assert_eq!(a.numerator, 27);
+    assert_eq!(a.denominator, 16);
+    assert_eq!(bb.numerator, 16);
+    assert_eq!(bb.denominator, 9);
+    assert_eq!(b.numerator, 243);
+    assert_eq!(b.denominator, 128);
+    assert!(ab < a);
+    assert!(a < bb);
+    assert!(bb < b);
+}
