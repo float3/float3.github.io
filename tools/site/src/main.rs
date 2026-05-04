@@ -114,6 +114,7 @@ impl Site {
 
         let ts_dir = self.root.join("ts");
         self.pnpm_install(&ts_dir, InstallMode::Locked)?;
+        self.sync_wasm_package_dependency()?;
         self.run(&ts_dir, "pnpm", &os_args(&["exec", "tsc"]))?;
         self.run(
             &ts_dir,
@@ -127,6 +128,29 @@ impl Site {
                 mode.webpack(),
             ]),
         )
+    }
+
+    fn sync_wasm_package_dependency(&self) -> Result<()> {
+        let source = self.root.join("wasm/wasm/pkg");
+        let target = self.root.join("ts/node_modules/wasm");
+
+        if !target.exists() {
+            return Err(SiteError::new(format!(
+                "missing {}; run pnpm install in ts before bundling wasm",
+                target.display()
+            ))
+            .into());
+        }
+
+        for entry in fs::read_dir(&source)? {
+            let entry = entry?;
+            let file_type = entry.file_type()?;
+            if file_type.is_file() {
+                fs::copy(entry.path(), target.join(entry.file_name()))?;
+            }
+        }
+
+        Ok(())
     }
 
     fn generate(&self) -> Result<()> {
