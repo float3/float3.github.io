@@ -1,6 +1,7 @@
 import type { JSX } from "preact"
 import { jsx, jsxs } from "preact/jsx-runtime"
 import type { QuartzComponent, QuartzComponentProps } from "../../quartz/components/types"
+import { type FullSlug, resolveRelative } from "../../quartz/util/path.ts"
 
 type DateValue = Date | string | number
 
@@ -108,14 +109,16 @@ function normalizeSlug(slug: unknown): string {
   return String(slug ?? "")
 }
 
-function href(slug: unknown): string {
+function href(currentSlug: FullSlug, slug: unknown): string {
   const normalized = normalizeSlug(slug)
-  return normalized.length > 0 ? `./${normalized}` : "./"
+  return normalized.length > 0
+    ? resolveRelative(currentSlug, normalized as FullSlug)
+    : resolveRelative(currentSlug, "index" as FullSlug)
 }
 
-function tagHref(tag: string): string {
+function tagHref(currentSlug: FullSlug, tag: string): string {
   const normalized = tag.replace(/^#/, "").trim().toLowerCase().replace(/\s+/g, "-")
-  return href(`tags/${normalized}`)
+  return href(currentSlug, `tags/${normalized}`)
 }
 
 function titleFor(page: RecentNotePage): string {
@@ -179,6 +182,7 @@ function renderContent(
   pages: RecentNotePage[],
   opts: RecentNotesFilteredOptions,
   locale: string | undefined,
+  currentSlug: FullSlug,
 ): JSX.Element {
   const visible = pages.slice(0, opts.limit)
   const remaining = Math.max(0, pages.length - opts.limit)
@@ -202,7 +206,7 @@ function renderContent(
                     class: "desc",
                     children: jsx("h3", {
                       children: jsx("a", {
-                        href: href(page.slug),
+                        href: href(currentSlug, page.slug),
                         class: "internal",
                         children: titleFor(page),
                       }),
@@ -230,7 +234,7 @@ function renderContent(
                           {
                             children: jsx("a", {
                               class: "internal tag-link",
-                              href: tagHref(tag),
+                              href: tagHref(currentSlug, tag),
                               children: tag,
                             }),
                           },
@@ -249,7 +253,7 @@ function renderContent(
         remaining > 0 &&
         jsx("p", {
           children: jsx("a", {
-            href: href(opts.linkToMore),
+            href: href(currentSlug, opts.linkToMore),
             children: `See ${remaining} more`,
           }),
         }),
@@ -262,12 +266,14 @@ export const RecentNotesFiltered = (
 ): QuartzComponent => {
   const opts = { ...defaultOptions, ...userOpts }
 
-  const Component = ({ allFiles, displayClass, cfg }: QuartzComponentProps) => {
+  const Component = ({ allFiles, displayClass, cfg, fileData }: QuartzComponentProps) => {
+    if (!fileData.slug) return null
+
     const pages = allFiles
       .map((page) => page as RecentNotePage)
       .filter((page) => includePage(page, opts))
       .sort(sortRecent)
-    const content = renderContent(pages, opts, cfg.locale)
+    const content = renderContent(pages, opts, cfg.locale, fileData.slug)
 
     if (!opts.collapsible) {
       return jsxs("section", {
