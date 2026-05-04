@@ -1,7 +1,7 @@
 ---
 title: bayes theorem
 date: 2024-11-29
-updated: 2024-12-07
+updated: 2026-05-04
 tags:
   - math
   - statistics
@@ -9,6 +9,7 @@ tags:
 ---
 
 <link href="./math_stuff.css" rel="stylesheet" type="text/css">
+<script type="module" src="/js/bayestheorem.js"></script>
 <div class="container">
 
 $$
@@ -33,3 +34,5 @@ Note that
 <span style="color:#4d8dc3">
 1. <a href="https://en.wikipedia.org/wiki/Bayes%27_theorem">Bayes' theorem</a> <br>
 </span>
+
+<section id="bayes-solver" class="bayes-solver" aria-labelledby="bayes-solver-heading"></section>

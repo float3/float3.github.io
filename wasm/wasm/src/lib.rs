@@ -2,6 +2,7 @@ pub use textprocessing::*;
 pub use tuningplayground::*;
 
 pub mod aoc;
+pub mod bayes;
 pub mod chars;
 pub mod glsl;
 pub mod krabby;
