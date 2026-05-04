@@ -30,6 +30,111 @@
   overflow: hidden;
 }
 
+#bayes-solver {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  max-width: 56rem;
+}
+
+#bayes-solver h2 {
+  margin-bottom: 0;
+}
+
+.bayes-solver-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.bayes-event-fields,
+.bayes-solver-fields,
+.bayes-solver-output {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.bayes-event-field,
+.bayes-solver-field,
+.bayes-solver-result {
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.7rem;
+}
+
+.bayes-solver-label {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.bayes-solver-symbol {
+  color: var(--secondary);
+  font-family: var(--codeFont);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.bayes-solver-definition,
+.bayes-solver-definition-text,
+.bayes-solver-toggle {
+  color: var(--darkgray);
+  line-height: 1.35;
+}
+
+.bayes-solver-definition {
+  margin: 0;
+}
+
+.bayes-solver-control {
+  align-items: center;
+  display: grid;
+  gap: 0.4rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+#bayes-solver input {
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: var(--dark);
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
+  width: 100%;
+}
+
+#bayes-solver input:disabled {
+  opacity: 0.65;
+}
+
+.bayes-solver-toggle {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.bayes-solver-toggle input {
+  margin-top: 0.2rem;
+  width: auto;
+}
+
+.bayes-solver-result strong {
+  color: var(--dark);
+  font-family: var(--codeFont);
+  font-size: 1rem;
+}
+
+.bayes-solver-error {
+  color: #d94747;
+  margin: 0;
+  min-height: 1.35rem;
+}
+
 @keyframes moveUpDown {
   from {
     transform: translateY(0);
