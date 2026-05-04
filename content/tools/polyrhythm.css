@@ -1,35 +1,93 @@
-[saved-theme="dark"] canvas {
-  filter: invert(1);
+.polyrhythm-tool {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  max-width: 58rem;
 }
 
-/* Container for all controls */
-#controls {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  width: 320px;
-  /* adjust width as needed */
+.polyrhythm-tool h2 {
+  margin: 0;
 }
 
-/* Each individual control group */
+.polyrhythm-controls {
+  align-items: end;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
 .control {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
-/* Ensure labels do not wrap */
-.control label {
-  white-space: nowrap;
-  margin-right: 1em;
+.control span {
+  color: var(--darkgray);
+  font-size: 0.9rem;
 }
 
-/* Inputs take the remaining space */
 .control input {
-  flex: 1;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: var(--dark);
+  min-width: 0;
+  padding: 0.45rem 0.55rem;
+  width: 100%;
 }
 
-/* Center the button */
-#start-button {
-  align-self: center;
+.buttons,
+.polyrhythm-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.buttons button,
+.polyrhythm-presets button {
+  background: color-mix(in srgb, var(--secondary, #4f8cff) 18%, var(--light));
+  border: 1px solid color-mix(in srgb, var(--secondary, #4f8cff) 46%, var(--lightgray));
+  border-radius: 4px;
+  color: var(--dark);
+  cursor: pointer;
+  min-height: 2.2rem;
+  padding: 0.35rem 0.65rem;
+}
+
+.buttons button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.polyrhythm-status {
+  color: var(--darkgray);
+  grid-column: 1 / -1;
+  min-height: 1.35rem;
+  margin: 0;
+}
+
+.polyrhythm-canvases {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.polyrhythm-canvases canvas {
+  background:
+    linear-gradient(
+      color-mix(in srgb, var(--light) 92%, transparent),
+      color-mix(in srgb, var(--light) 92%, transparent)
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 24px,
+      color-mix(in srgb, var(--lightgray) 28%, transparent) 24px 25px
+    );
+  border: 1px solid var(--lightgray);
+  border-radius: 4px;
+  box-sizing: border-box;
+  height: auto;
+  max-width: 100%;
+  width: 100%;
 }
