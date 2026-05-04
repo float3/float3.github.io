@@ -115,13 +115,12 @@ impl Site {
         let ts_dir = self.root.join("ts");
         self.pnpm_install(&ts_dir, InstallMode::Locked)?;
         self.sync_wasm_package_dependency()?;
-        self.run(&ts_dir, "pnpm", &os_args(&["exec", "tsc"]))?;
+        self.run(&ts_dir, "node", &os_args(&["node_modules/typescript/bin/tsc"]))?;
         self.run(
             &ts_dir,
-            "pnpm",
+            "node",
             &os_args(&[
-                "exec",
-                "webpack",
+                "node_modules/webpack/bin/webpack.js",
                 "--config",
                 "webpack.config.mjs",
                 "--mode",
@@ -381,8 +380,8 @@ impl Site {
             &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
         )?;
 
-        self.run(&self.root, "pnpm", &os_args(&["update"]))?;
-        self.run(&self.root, "pnpm", &os_args(&["audit", "fix"]))?;
+        self.run_pnpm(&self.root, &os_args(&["update"]))?;
+        self.run_pnpm(&self.root, &os_args(&["audit", "fix"]))?;
         self.pnpm_install(&self.root, InstallMode::Unlocked)?;
 
         self.node_update(&self.root.join("ts"), "src")?;
@@ -404,17 +403,15 @@ impl Site {
     }
 
     fn node_update(&self, dir: &Path, lint_target: &str) -> Result<()> {
-        self.run(dir, "pnpm", &os_args(&["update"]))?;
-        self.run(dir, "pnpm", &os_args(&["audit", "fix"]))?;
+        self.run_pnpm(dir, &os_args(&["update"]))?;
+        self.run_pnpm(dir, &os_args(&["audit", "fix"]))?;
         self.pnpm_install(dir, InstallMode::Unlocked)?;
-        self.run(
+        self.run_pnpm(
             dir,
-            "pnpm",
             &os_args(&["exec", "prettier", lint_target, "--write"]),
         )?;
-        self.run(
+        self.run_pnpm(
             dir,
-            "pnpm",
             &os_args(&["exec", "eslint", lint_target, "--fix"]),
         )
     }
@@ -538,7 +535,40 @@ impl Site {
             InstallMode::Unlocked => os_args(&["install", "--no-frozen-lockfile"]),
         };
 
-        self.run(dir, "pnpm", &args)
+        if !pnpm_available() && dir.join("node_modules").is_dir() {
+            self.warn(&format!(
+                "pnpm was not found; reusing existing dependencies in {}",
+                dir.display()
+            ));
+            return Ok(());
+        }
+
+        self.run_pnpm(dir, &args)
+    }
+
+    fn run_pnpm(&self, cwd: &Path, args: &[OsString]) -> Result<()> {
+        if command_succeeds("pnpm", &["--version"]) {
+            return self.run(cwd, "pnpm", args);
+        }
+
+        if !corepack_pnpm_available() {
+            return Err(Box::new(SiteError::new(
+                "could not find pnpm; enable Corepack or run pnpm install before building",
+            )));
+        }
+
+        let mut fallback_args = if cfg!(windows) {
+            os_args(&["/C", "corepack", "pnpm"])
+        } else {
+            os_args(&["pnpm"])
+        };
+        fallback_args.extend(args.iter().cloned());
+
+        if cfg!(windows) {
+            self.run(cwd, "cmd", &fallback_args)
+        } else {
+            self.run(cwd, "corepack", &fallback_args)
+        }
     }
 
     fn git_iso_date(&self, args: &[OsString]) -> Result<Option<String>> {
@@ -896,6 +926,27 @@ fn is_url_delimiter(ch: char) -> bool {
 
 fn os_args(args: &[&str]) -> Vec<OsString> {
     args.iter().map(OsString::from).collect()
+}
+
+fn command_succeeds(program: &str, args: &[&str]) -> bool {
+    Command::new(program)
+        .args(args)
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        .is_ok_and(|status| status.success())
+}
+
+fn pnpm_available() -> bool {
+    command_succeeds("pnpm", &["--version"]) || corepack_pnpm_available()
+}
+
+fn corepack_pnpm_available() -> bool {
+    if cfg!(windows) {
+        command_succeeds("cmd", &["/C", "corepack", "pnpm", "--version"])
+    } else {
+        command_succeeds("corepack", &["pnpm", "--version"])
+    }
 }
 
 fn format_command(program: &OsStr, args: &[OsString]) -> String {
