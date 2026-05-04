@@ -15,9 +15,15 @@ import("wasm")
     })
     onload()
     playingTonesChanged()
+    setTuningPlaygroundStatus("", "ready")
     // linkInputChange();
   })
-  .catch(console.error)
+  .catch((error: unknown) => {
+    setTuningPlaygroundStatus(`Could not start tuning playground: ${formatError(error)}`, "error")
+    window.setTimeout(() => {
+      throw error
+    }, 0)
+  })
 
 import { Tone, createTone } from "./Tone.js"
 import { requestMIDI } from "./MIDI.js"
@@ -26,6 +32,7 @@ import {
   playingTonesChanged,
   keyActive,
   DOMContentLoaded,
+  setTuningPlaygroundStatus,
   addEvents,
   playButton,
   play,
@@ -45,6 +52,13 @@ export const playingTones: Record<number, Tone> = []
 export const heldKeys: Record<string, boolean> = {}
 export const markedKeys: number[] = []
 // let recording: boolean;
+
+function formatError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message
+  }
+  return String(error)
+}
 
 export function stopAllTones(): void {
   Object.keys(playingTones).forEach((key) => {
@@ -84,10 +98,13 @@ export function _noteOn(tone_index: number, velocity?: number, cancel?: boolean)
   // }
   switch (soundMethod.value) {
     case "native":
-      playFrequencyNative(tone, volume).catch(console.error)
+      playFrequencyNative(tone, volume).catch(reportAudioError)
       break
     case "sample":
-      playFrequencySample(tone, volume, cancel).catch(console.error)
+      playFrequencySample(tone, volume, cancel).catch((error: unknown) => {
+        reportSampleFallback(error)
+        playFrequencyNative(tone, volume).catch(reportAudioError)
+      })
       break
   }
   keyActive(tone_index, true)
@@ -110,24 +127,26 @@ export function noteOff(tone_index: number): void {
 }
 
 let audioContext: AudioContext | null = null
-function initOrGetAudioContext(): Promise<AudioContext> {
-  return new Promise((resolve, reject) => {
-    try {
-      if (!audioContext) {
-        audioContext = new window.AudioContext()
-      }
-      resolve(audioContext)
-    } catch (error) {
-      reject(error)
-    }
-  })
+async function initOrGetAudioContext(): Promise<AudioContext> {
+  if (!audioContext) {
+    audioContext = new window.AudioContext()
+  }
+  if (audioContext.state === "suspended") {
+    await audioContext.resume()
+  }
+  return audioContext
 }
 
 let audioBuffer: AudioBuffer | null = null
 function initOrGetAudioBuffer(): Promise<AudioBuffer> {
   if (!audioBuffer) {
     return fetch("/misc/media/a1.wav")
-      .then((response) => response.arrayBuffer())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Could not load sample audio: ${response.status}`)
+        }
+        return response.arrayBuffer()
+      })
       .then((arrayBuffer) =>
         initOrGetAudioContext().then((context) => context.decodeAudioData(arrayBuffer)),
       )
@@ -174,4 +193,15 @@ async function playFrequencyNative(tone: Tone, volume: number): Promise<void> {
   if (tone.index in playingTones) playingTones[tone.index].node.stop()
   playingTones[tone.index] = tone
   playingTonesChanged()
+}
+
+function reportAudioError(error: unknown): void {
+  setTuningPlaygroundStatus(`Audio playback failed: ${formatError(error)}`, "error")
+}
+
+function reportSampleFallback(error: unknown): void {
+  setTuningPlaygroundStatus(
+    `Sample playback failed; using native oscillator: ${formatError(error)}`,
+    "error",
+  )
 }

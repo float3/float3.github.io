@@ -53,10 +53,10 @@ pub(crate) const PYTHAGOREAN_TUNING: [Fraction; 12] = [
     Fraction::new(4, 3),
     Fraction::new(729, 512),
     Fraction::new(3, 2),
+    Fraction::new(128, 81),
     Fraction::new(27, 16),
     Fraction::new(16, 9),
     Fraction::new(243, 128),
-    Fraction::new(15, 8),
 ];
 
 pub(crate) const FIVE_LIMIT: [Fraction; 12] = [

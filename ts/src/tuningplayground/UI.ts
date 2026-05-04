@@ -33,6 +33,18 @@ const clearChord = document.getElementById("clearChord") as HTMLButtonElement
 const chordNameOutput = document.getElementById("chordNameOutput") as HTMLDivElement
 const chordDetailsOutput = document.getElementById("chordDetailsOutput") as HTMLDivElement
 
+type TuningPlaygroundStatusState = "loading" | "ready" | "error"
+
+export function setTuningPlaygroundStatus(
+  message: string,
+  state: TuningPlaygroundStatusState = "loading",
+): void {
+  const status = document.getElementById("tuningPlaygroundStatus")
+  if (!status) return
+  status.dataset.state = state
+  status.textContent = message
+}
+
 octaveSize.onchange = handleTuningSelectChange
 tuningSelect.onchange = handleTuningSelectChange
 stepSize.onchange = handleTuningSelectChange
@@ -65,13 +77,18 @@ let midiFilePromise: Promise<ArrayBuffer> | null = null
 function initOrGetMidiFile(): Promise<ArrayBuffer> {
   if (!midiFilePromise) {
     midiFilePromise = fetch("/misc/blobs/jm_mozdi.mid")
-      .then((response) => response.arrayBuffer())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Could not load default MIDI file: ${response.status}`)
+        }
+        return response.arrayBuffer()
+      })
       .then((buffer) => {
         midiFile = buffer
         return midiFile
       })
       .catch((error) => {
-        console.error(error)
+        setTuningPlaygroundStatus(`Could not load default MIDI file: ${formatError(error)}`, "error")
         throw error
       })
   }
@@ -119,12 +136,17 @@ function stop(): void {
 }
 
 export function play(): void {
-  initOrGetMidiFile().then(playMIDIFile).catch(console.error)
+  initOrGetMidiFile()
+    .then(playMIDIFile)
+    .catch((error: unknown) => {
+      setTuningPlaygroundStatus(`Could not play MIDI file: ${formatError(error)}`, "error")
+    })
 }
 
 export function DOMContentLoaded(): void {
   if (!wasm) return
 
+  applySharedTuningFromUrl()
   handleTuningSelectChange()
   keymapChange()
   updateChordName()
@@ -153,29 +175,38 @@ function clearChordInput(): void {
 }
 
 export function handleTuningSelectChange(): void {
+  const octave = positiveInteger(octaveSize.value, 12)
+  const step = positiveInteger(stepSize.value, 7)
+  octaveSize.value = octave.toString()
+  stepSize.value = step.toString()
+
   switch (tuningSelect.value) {
     case "StepMethod":
       stepSizeParent.hidden = false
+      stepSize.hidden = false
       stepSize.readOnly = false
       octaveSize.readOnly = false
       break
     case "EqualTemperament":
       stepSizeParent.hidden = true
+      stepSize.hidden = false
       stepSize.readOnly = true
       octaveSize.readOnly = false
       break
     default:
-      wasm.set_tuning_system(
-        tuningSelect.value,
-        parseInt(octaveSize.value),
-        parseInt(stepSize.value),
-      )
-      octaveSize.value = wasm.get_tuning_size().toString()
+      stepSizeParent.hidden = true
       octaveSize.readOnly = true
-      stepSize.hidden = true
+      stepSize.hidden = false
       stepSize.readOnly = true
       break
   }
+
+  wasm.set_tuning_system(tuningSelect.value, octave, step)
+
+  if (tuningSelect.value !== "StepMethod" && tuningSelect.value !== "EqualTemperament") {
+    octaveSize.value = wasm.get_tuning_size().toString()
+  }
+
   stopAllTones()
 }
 
@@ -210,9 +241,11 @@ export function playingTonesChanged(): void {
 
 function createAndCopyUrl(keys: number[]): () => void {
   const hash = generateHash(keys)
-  const url = `${window.location.origin + window.location.pathname}#${hash}`
+  const url = tuningUrl(hash)
   return function () {
-    navigator.clipboard.writeText(url).catch(console.error)
+    copyUrl(url).catch((error: unknown) => {
+      setTuningPlaygroundStatus(`Could not copy link: ${formatError(error)}`, "error")
+    })
   }
 }
 
@@ -322,4 +355,77 @@ export function addEvents(key: Element) {
   addEvent("mouseleave", () => noteOff(note - tranposeValue))
   addEvent("touchstart", () => noteOn(note - tranposeValue))
   addEvent("touchend", () => noteOff(note - tranposeValue))
+}
+
+let sharedTuningApplied = false
+
+function applySharedTuningFromUrl(): void {
+  if (sharedTuningApplied) return
+  sharedTuningApplied = true
+
+  const params = new URLSearchParams(window.location.search)
+  const tuning = params.get("tuning")
+  const octave = params.get("octaveSize")
+  const step = params.get("stepSize")
+
+  if (tuning && tuningOptionExists(tuning)) {
+    tuningSelect.value = tuning
+  }
+
+  if (octave) {
+    octaveSize.value = positiveInteger(octave, 12).toString()
+  }
+
+  if (step) {
+    stepSize.value = positiveInteger(step, 7).toString()
+  }
+}
+
+function tuningOptionExists(value: string): boolean {
+  return Array.from(tuningSelect.options).some((option) => option.value === value)
+}
+
+function positiveInteger(value: string, fallback: number): number {
+  const parsed = Number.parseInt(value, 10)
+  if (Number.isFinite(parsed) && parsed > 0) {
+    return parsed
+  }
+  return fallback
+}
+
+function currentMarkedHash(): string {
+  return markedKeys.length > 0 ? generateHash(markedKeys) : window.location.hash.substring(1)
+}
+
+function tuningUrl(hash = currentMarkedHash()): string {
+  const url = new URL(window.location.href)
+  url.search = ""
+  url.searchParams.set("tuning", tuningSelect.value)
+  url.searchParams.set("octaveSize", octaveSize.value)
+  url.searchParams.set("stepSize", stepSize.value)
+  url.hash = hash
+  return url.toString()
+}
+
+async function copyUrl(url: string): Promise<void> {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(url)
+    return
+  }
+
+  const textarea = document.createElement("textarea")
+  textarea.value = url
+  textarea.style.position = "fixed"
+  textarea.style.left = "-9999px"
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  textarea.remove()
+}
+
+function formatError(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message
+  }
+  return String(error)
 }

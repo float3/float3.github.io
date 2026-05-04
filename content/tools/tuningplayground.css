@@ -88,6 +88,18 @@
   display: none;
 }
 
+#tuningPlaygroundStatus {
+  margin: 8px 0;
+}
+
+#tuningPlaygroundStatus[data-state="ready"] {
+  display: none;
+}
+
+#tuningPlaygroundStatus[data-state="error"] {
+  color: #b00020;
+}
+
 #chordTools {
   display: flex;
   flex-wrap: wrap;
