@@ -128,12 +128,20 @@ plugins:
     enabled: true
   - source: github:quartz-community/content-page
     enabled: true
-  - source: github:quartz-community/folder-page
+  - source: ./quartz-local/folder-page
     enabled: true
   - source: github:quartz-community/tag-page
     enabled: true
   - source: github:quartz-community/explorer
     enabled: true
+    options:
+      mapFn: |
+        (node) => {
+          if (node.isFolder && node.data && node.children.length === 0) {
+            node.isFolder = false;
+          }
+          return node;
+        }
     layout:
       position: left
       priority: 80
@@ -227,7 +235,7 @@ plugins:
       position: left
       priority: 25
       display: mobile-only
-  - source: github:quartz-community/footer
+  - source: ./quartz-local/footer
     enabled: true
     options:
       links: {}

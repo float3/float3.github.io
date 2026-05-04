@@ -1,0 +1,26 @@
+{
+  "name": "@hill/quartz-footer",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components.ts"
+  },
+  "quartz": {
+    "name": "footer",
+    "displayName": "Footer",
+    "description": "Render hilll.dev footer links without Quartz branding.",
+    "version": "1.0.0",
+    "category": "component",
+    "components": {
+      "Footer": {
+        "name": "Footer",
+        "displayName": "Footer",
+        "description": "A footer that only renders configured links.",
+        "version": "1.0.0",
+        "defaultPosition": "footer",
+        "defaultPriority": 50
+      }
+    }
+  }
+}

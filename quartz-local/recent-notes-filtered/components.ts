@@ -262,9 +262,7 @@ export const RecentNotesFiltered = (
 ): QuartzComponent => {
   const opts = { ...defaultOptions, ...userOpts }
 
-  const Component = ({ allFiles, fileData, displayClass, cfg }: QuartzComponentProps) => {
-    if (normalizeSlug(fileData.slug) !== "index") return null
-
+  const Component = ({ allFiles, displayClass, cfg }: QuartzComponentProps) => {
     const pages = allFiles
       .map((page) => page as RecentNotePage)
       .filter((page) => includePage(page, opts))
