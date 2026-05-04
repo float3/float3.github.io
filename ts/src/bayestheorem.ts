@@ -15,10 +15,24 @@ type BayesColorRole =
   | "numerator"
   | "neutral"
 type InlineContent = string | Node
+type BayesFormulaValues = {
+  prior: number
+  likelihood: number
+  evidence: number
+  numerator: number
+}
+
+const bayesColors = {
+  posterior: "#0466e7",
+  likelihood: "#ffbc3f",
+  prior: "#fe7fb3",
+  evidence: "#dd6fff",
+} as const
 
 const percentFormatter = new Intl.NumberFormat(undefined, {
   maximumFractionDigits: 6,
 })
+const mathMlNamespace = "http://www.w3.org/1998/Math/MathML"
 
 function probabilityToPercent(value: number): string {
   return percentFormatter.format(value * 100)
@@ -153,12 +167,13 @@ function renderBayesSolver() {
   )
 
   output.append(posterior.element, numerator.element, evidenceOutput.element, odds.element)
+  const latex = createLatexOutput()
 
   const error = document.createElement("p")
   error.className = "bayes-solver-error"
   error.setAttribute("role", "status")
 
-  form.append(eventGrid, definition, fieldGrid, modeLabel, output, error)
+  form.append(eventGrid, definition, fieldGrid, modeLabel, output, latex.element, error)
   solverRoot.append(heading, form)
 
   function getMode(): BayesMode {
@@ -292,6 +307,16 @@ function renderBayesSolver() {
 
     setResult(numerator.value, numeratorValue)
     setResult(evidenceOutput.value, evidenceValue)
+    const formulaValues = {
+      prior: clampProbability(Number.parseFloat(prior.input.value) / 100),
+      likelihood: clampProbability(Number.parseFloat(likelihood.input.value) / 100),
+      evidence: evidenceValue,
+      numerator: numeratorValue,
+    }
+    const latexEquation = buildBayesLatex(formulaValues)
+    latex.output.value = latexEquation.source
+    latex.rendered.replaceChildren(createBayesMath(formulaValues))
+    latex.status.textContent = ""
 
     if (errorCode === 1) {
       posterior.value.textContent = "-"
@@ -320,6 +345,14 @@ function renderBayesSolver() {
   form.addEventListener("input", update)
   form.addEventListener("submit", (event) => event.preventDefault())
   modeToggle.addEventListener("change", update)
+  latex.copyButton.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(latex.output.value)
+      latex.status.textContent = "copied"
+    } catch {
+      latex.status.textContent = "copy failed"
+    }
+  })
   update()
 }
 
@@ -331,6 +364,189 @@ function eventName(value: string, fallback: string) {
 function percentInputText(input: HTMLInputElement) {
   const value = Number.parseFloat(input.value)
   return Number.isFinite(value) ? `${percentFormatter.format(value)}%` : "an unknown percentage"
+}
+
+function clampProbability(value: number) {
+  if (!Number.isFinite(value)) return 0
+  return Math.min(1, Math.max(0, value))
+}
+
+function latexColor(role: keyof typeof bayesColors, value: string) {
+  return `\\textcolor{${bayesColors[role]}}{${value}}`
+}
+
+function latexNumber(value: number) {
+  if (!Number.isFinite(value)) return "\\text{undefined}"
+  const rounded = value.toFixed(6).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "")
+  return rounded === "-0" ? "0" : rounded
+}
+
+function buildBayesLatex(values: BayesFormulaValues) {
+  const posterior = values.evidence > 0 ? values.numerator / values.evidence : Number.NaN
+  const body = [
+    "\\begin{aligned}",
+    `${latexColor("posterior", "P(A \\mid B)")}`,
+    `&= \\frac{${latexColor("likelihood", "P(B \\mid A)")}\\,${latexColor("prior", "P(A)")}}{${latexColor("evidence", "P(B)")}} \\\\`,
+    `&= \\frac{${latexColor("likelihood", latexNumber(values.likelihood))}\\cdot` +
+      `${latexColor("prior", latexNumber(values.prior))}}` +
+      `{${latexColor("evidence", latexNumber(values.evidence))}} \\\\`,
+    `&= ${latexColor("posterior", latexNumber(posterior))}`,
+    "\\end{aligned}",
+  ].join("\n")
+
+  const source = [
+    "\\[",
+    body,
+    "\\]",
+  ].join("\n")
+
+  return { body, source }
+}
+
+function createBayesMath(values: BayesFormulaValues) {
+  const posterior = values.evidence > 0 ? values.numerator / values.evidence : Number.NaN
+  return mathElement(
+    "math",
+    { class: "bayes-rendered-math", display: "block" },
+    mathElement(
+      "mtable",
+      {},
+      mathRow(
+        probabilityAGivenB(),
+        fraction(multiply(probabilityBGivenA(), probabilityA()), probabilityB()),
+      ),
+      mathRow(
+        null,
+        fraction(
+          multiply(mathNumber(values.likelihood, "likelihood"), mathNumber(values.prior, "prior")),
+          mathNumber(values.evidence, "evidence"),
+        ),
+      ),
+      mathRow(null, mathNumber(posterior, "posterior")),
+    ),
+  )
+}
+
+function mathRow(left: Element | null, right: Element) {
+  return mathElement(
+    "mtr",
+    {},
+    mathElement("mtd", {}, left ?? mathElement("mrow")),
+    mathElement("mtd", {}, mathElement("mo", {}, "=")),
+    mathElement("mtd", {}, right),
+  )
+}
+
+function fraction(numerator: Element, denominator: Element) {
+  return mathElement("mfrac", {}, numerator, denominator)
+}
+
+function multiply(left: Element, right: Element) {
+  return mathElement("mrow", {}, left, mathElement("mo", {}, "\u00b7"), right)
+}
+
+function probabilityAGivenB() {
+  return coloredMath(
+    "posterior",
+    mathElement("mi", {}, "P"),
+    mathElement("mo", {}, "("),
+    mathElement("mi", {}, "A"),
+    mathElement("mo", {}, "\u2223"),
+    mathElement("mi", {}, "B"),
+    mathElement("mo", {}, ")"),
+  )
+}
+
+function probabilityBGivenA() {
+  return coloredMath(
+    "likelihood",
+    mathElement("mi", {}, "P"),
+    mathElement("mo", {}, "("),
+    mathElement("mi", {}, "B"),
+    mathElement("mo", {}, "\u2223"),
+    mathElement("mi", {}, "A"),
+    mathElement("mo", {}, ")"),
+  )
+}
+
+function probabilityA() {
+  return coloredMath(
+    "prior",
+    mathElement("mi", {}, "P"),
+    mathElement("mo", {}, "("),
+    mathElement("mi", {}, "A"),
+    mathElement("mo", {}, ")"),
+  )
+}
+
+function probabilityB() {
+  return coloredMath(
+    "evidence",
+    mathElement("mi", {}, "P"),
+    mathElement("mo", {}, "("),
+    mathElement("mi", {}, "B"),
+    mathElement("mo", {}, ")"),
+  )
+}
+
+function mathNumber(value: number, role: keyof typeof bayesColors) {
+  return coloredMath(role, mathElement(Number.isFinite(value) ? "mn" : "mtext", {}, latexNumber(value)))
+}
+
+function coloredMath(role: keyof typeof bayesColors, ...children: Array<Element | string>) {
+  const element = mathElement("mrow", { mathcolor: bayesColors[role] }, ...children)
+  ;(element as HTMLElement).style.color = bayesColors[role]
+  return element
+}
+
+function mathElement(
+  tag: string,
+  attrs: Record<string, string> = {},
+  ...children: Array<Element | string>
+) {
+  const element = document.createElementNS(mathMlNamespace, tag)
+  for (const [key, value] of Object.entries(attrs)) {
+    element.setAttribute(key, value)
+  }
+  for (const child of children) {
+    element.append(child)
+  }
+  return element
+}
+
+function createLatexOutput() {
+  const element = document.createElement("section")
+  element.className = "bayes-latex"
+
+  const heading = document.createElement("div")
+  heading.className = "bayes-latex-heading"
+
+  const label = document.createElement("span")
+  label.textContent = "LaTeX"
+
+  const copyButton = document.createElement("button")
+  copyButton.type = "button"
+  copyButton.textContent = "Copy LaTeX"
+
+  const status = document.createElement("span")
+  status.className = "bayes-latex-status"
+  status.setAttribute("aria-live", "polite")
+
+  heading.append(label, copyButton, status)
+
+  const rendered = document.createElement("div")
+  rendered.className = "bayes-latex-rendered"
+  rendered.setAttribute("aria-label", "Rendered Bayes theorem equation with current numbers")
+
+  const output = document.createElement("textarea")
+  output.className = "bayes-latex-output"
+  output.readOnly = true
+  output.rows = 8
+  output.spellcheck = false
+  output.setAttribute("aria-label", "Bayes theorem LaTeX with current numbers")
+
+  element.append(heading, rendered, output)
+  return { element, rendered, output, copyButton, status }
 }
 
 function setInlineContent(element: HTMLElement, ...content: InlineContent[]) {

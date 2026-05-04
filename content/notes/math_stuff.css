@@ -325,6 +325,69 @@
   width: fit-content;
 }
 
+.bayes-latex {
+  background: color-mix(in srgb, var(--bayes-posterior) 18%, var(--bayes-card));
+  border: 1px solid var(--bayes-posterior);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px #0466e780;
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.7rem;
+}
+
+.bayes-latex-heading {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.bayes-latex-heading span:first-child {
+  color: var(--bayes-posterior);
+  font-family: var(--codeFont);
+  font-weight: 700;
+}
+
+.bayes-latex-heading button {
+  background: color-mix(in srgb, var(--bayes-posterior) 30%, var(--light));
+  border: 1px solid var(--bayes-posterior);
+  border-radius: 4px;
+  color: var(--dark);
+  cursor: pointer;
+  font: inherit;
+  min-height: 2rem;
+  padding: 0.25rem 0.6rem;
+}
+
+.bayes-latex-rendered {
+  overflow-x: auto;
+  padding: 0.4rem 0;
+}
+
+.bayes-latex-rendered .katex-display {
+  margin: 0;
+}
+
+.bayes-latex-output {
+  background: color-mix(in srgb, var(--bayes-posterior) 18%, var(--light));
+  border: 1px solid var(--bayes-posterior);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: var(--dark);
+  font-family: var(--codeFont);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  min-height: 10rem;
+  padding: 0.6rem;
+  resize: vertical;
+  width: 100%;
+}
+
+.bayes-latex-status {
+  color: #4d8dc3;
+  min-height: 1.25rem;
+}
+
 .bayes-solver-error {
   color: #d94747;
   margin: 0;
