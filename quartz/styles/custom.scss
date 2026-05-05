@@ -375,10 +375,6 @@ body.animation-ready #quartz-body {
   --bounce-light: #f5d7a6;
   --timing-fn: cubic-bezier(0.455, 0.19, 0, 0.985);
 
-  @media all and ($mobile) {
-    display: none;
-  }
-
   body.animation-ready & {
     animation-play-state: running;
     animation-duration: 1s;
@@ -539,6 +535,79 @@ body.animation-ready #quartz-body {
       & > .bar {
         width: 12px;
         height: 100%;
+      }
+    }
+  }
+
+  @media all and ($mobile) {
+    height: 100vh;
+    height: 100svh;
+    overflow: hidden;
+    contain: layout paint style;
+    opacity: 0.7;
+
+    & > #progressive-blur {
+      display: none;
+    }
+
+    #glow {
+      animation: none;
+      filter: none;
+      opacity: 0.24;
+    }
+
+    #glow-bounce {
+      animation: none;
+      filter: none;
+      opacity: 0.18;
+    }
+
+    & > .perspective {
+      top: -16vh;
+      right: -24vw;
+      width: 105vw;
+      height: 115svh;
+      opacity: 0.04;
+
+      [saved-theme="dark"] & {
+        opacity: 0.12;
+      }
+    }
+
+    #leaves {
+      animation: none;
+      filter: none;
+      bottom: 0;
+      right: -42vw;
+      width: 128vw;
+      max-width: 560px;
+      height: 82svh;
+      max-height: 620px;
+      opacity: 0.42;
+      background-size: contain;
+      background-position: bottom right;
+      transform: none;
+    }
+
+    #blinds {
+      & .shutter {
+        height: 28px;
+
+        [saved-theme="dark"] & {
+          height: 44px;
+        }
+      }
+
+      & .shutters {
+        gap: 42px;
+
+        [saved-theme="dark"] & {
+          gap: 24px;
+        }
+      }
+
+      & > .vertical > .bar {
+        width: 8px;
       }
     }
   }
