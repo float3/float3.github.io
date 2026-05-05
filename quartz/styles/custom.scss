@@ -576,7 +576,7 @@ body.animation-ready #quartz-body {
 
 @keyframes sunset {
   0% {
-    background-color: var(--day);
+    background-color: color-mix(in srgb, var(--day) 72%, var(--evening));
   }
 
   30% {
