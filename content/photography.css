@@ -1,0 +1,228 @@
+.photo-page {
+  --photo-border: color-mix(in srgb, var(--gray) 32%, transparent);
+  --photo-surface: color-mix(in srgb, var(--light) 92%, var(--lightgray));
+  --photo-surface-strong: color-mix(in srgb, var(--light) 84%, var(--lightgray));
+  --photo-muted: var(--gray);
+
+  display: grid;
+  gap: 1.25rem;
+}
+
+.photo-page h2 {
+  margin-block: 0 0.65rem;
+  font-size: 1.15rem;
+}
+
+.photo-gear-sections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 0.85rem;
+}
+
+.photo-gear-group {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+}
+
+.photo-gear-group-wide {
+  grid-column: 1 / -1;
+}
+
+.photo-gear-group h3,
+.photo-gear-group h4 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+.photo-gear-group h3 {
+  font-size: 0.98rem;
+}
+
+.photo-gear-group h4 {
+  color: var(--photo-muted);
+  font-size: 0.83rem;
+  font-weight: 650;
+  text-transform: uppercase;
+}
+
+.photo-lens-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(min(100%, 16rem), 1fr);
+  gap: 0.85rem;
+}
+
+.photo-lens-columns > section {
+  display: grid;
+  align-content: start;
+  gap: 0.5rem;
+}
+
+.photo-gear-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.photo-gear-item {
+  display: grid;
+  gap: 0.12rem;
+  border: 1px solid var(--photo-border);
+  border-radius: 8px;
+  padding: 0.68rem 0.75rem;
+  background: var(--photo-surface);
+}
+
+.photo-gear-item strong {
+  font-size: 0.93rem;
+  line-height: 1.25;
+}
+
+.photo-gear-item p {
+  margin: 0;
+  color: var(--darkgray);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.photo-workflow li {
+  color: var(--darkgray);
+}
+
+.photo-workflow {
+  border-block: 1px solid var(--photo-border);
+  padding-block: 1rem;
+}
+
+.photo-workflow ol {
+  margin-block: 0;
+  padding-left: 1.25rem;
+}
+
+.photo-workflow li + li {
+  margin-top: 0.35rem;
+}
+
+.photo-gallery-header {
+  display: flex;
+  gap: 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+#photo-gallery-count {
+  margin: 0;
+  color: var(--photo-muted);
+  font-size: 0.9rem;
+}
+
+.photo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: 0.85rem;
+}
+
+.photo-card {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--photo-border);
+  border-radius: 8px;
+  background: var(--photo-surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.photo-card img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--photo-surface-strong);
+}
+
+.photo-card span {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem 0.75rem 0.75rem;
+}
+
+.photo-card strong {
+  font-size: 0.95rem;
+}
+
+.photo-card small {
+  color: var(--photo-muted);
+}
+
+.photo-lightbox {
+  width: min(92vw, 68rem);
+  border: 1px solid var(--photo-border);
+  border-radius: 8px;
+  padding: 0;
+  background: var(--photo-surface);
+  color: var(--dark);
+}
+
+.photo-lightbox::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.photo-lightbox[open] {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.photo-lightbox figure {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0.75rem 0;
+}
+
+.photo-lightbox img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+.photo-lightbox figcaption {
+  color: var(--photo-muted);
+  text-align: center;
+}
+
+.photo-lightbox button {
+  border: 1px solid var(--photo-border);
+  border-radius: 6px;
+  margin: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  background: var(--photo-surface-strong);
+  color: var(--dark);
+  cursor: pointer;
+  font: inherit;
+}
+
+.photo-lightbox-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+@media (max-width: 760px) {
+  .photo-lens-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .photo-gallery-header {
+    display: block;
+  }
+
+  .photo-lightbox[open] {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .photo-lightbox figure {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    padding: 2.75rem 0.75rem 0.5rem;
+  }
+}
