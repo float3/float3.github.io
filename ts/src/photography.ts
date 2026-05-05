@@ -53,9 +53,9 @@ function renderGallery(): void {
   gallery?.replaceChildren()
 
   for (const [index, photo] of photos.entries()) {
-    const card = document.createElement("a")
+    const card = document.createElement("button")
     card.className = "photo-card"
-    card.href = photo.src
+    card.type = "button"
     card.dataset.index = String(index)
 
     const image = document.createElement("img")
@@ -71,10 +71,7 @@ function renderGallery(): void {
     text.append(title, meta)
 
     card.append(image, text)
-    card.addEventListener("click", (event) => {
-      event.preventDefault()
-      showPhoto(index)
-    })
+    card.addEventListener("click", () => showPhoto(index))
     gallery?.append(card)
   }
 
