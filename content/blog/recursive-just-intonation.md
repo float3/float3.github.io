@@ -7,7 +7,12 @@ tags:
   - programming
 ---
 
-## Recursive Just Intonation
+## What is this about?
+
+Recursive Just Intonation is a novel tuning system I invented up with during my highschool physics classes, while trying to come up with a solution
+to the dissonance of 12TET. Before i explain what it is I'll give a little background on tuning systems in general.
+
+## Equal Temperament vs Just Intonation
 
 Equal temperament gives us one keyboard. Every C# is the same C#, every G is
 the same G, and every semitone is the same distance from the last one. That is
@@ -27,54 +32,7 @@ Those ratios sound still and locked-in because their waveforms repeat against
 each other quickly. In a just major chord, the consonance comes directly from
 the exact `4:5:6` relationship.
 
-## What The Waves Look Like
-
-Nice mathematical ratios are pleasant to our ears.
-`x + 2*x`, where `x` is some frequency, sounds nice because it has a short
-period:
-
-<figure class="wave-figure">
-  <figcaption>A tone and its octave: two sine waves at a base frequency <code>f</code> and <code>2f</code>. The whole pattern repeats every <code>1/f</code> seconds, so the ear can lock onto it easily.</figcaption>
-  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(2*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
-  </iframe>
-</figure>
-
-While, for example, `x + 13/12*x` has a much longer period:
-
-<figure class="wave-figure">
-  <figcaption>A tone and a narrow nearby step: two sine waves at <code>f</code> and <code>13/12 f</code>. The combined wave needs <code>12/f</code> seconds to repeat, so it takes much longer to settle than the octave example.</figcaption>
-  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin((13/12)*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
-  </iframe>
-</figure>
-
-A just major chord is `4:5:6`, or `1:1.25:1.5`. In 12-TET, the same chord is
-closer to `500:630:749`, or `1:1.260:1.498`.
-
-<figure class="wave-figure">
-  <figcaption>Two major chords: the just version uses exact <code>4:5:6</code> ratios, while the 12-TET version uses the familiar piano/guitar approximation. They are close, but the 12-TET peaks do not quite return to the same places.</figcaption>
-  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(1.25*(x+5*t))+sin(1.5*(x+5*t))&v1=true&f2(x,t)=sin(x+5*t)+sin(1.26*(x+5*t))+sin(1.4983*(x+5*t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
-  </iframe>
-</figure>
-
-The annoying part is that just intonation normally needs a root. A `5/4` major
-third above C is E. A `5/4` major third above E is G#/Ab. Those two facts cannot
-both fit into one fixed 12-note keyboard unless we allow the same pitch name to
-mean different frequencies in different harmonic contexts.
-
-The experiment here is:
-
-> Keep the roots on a C-based just-intonation keyboard, but give every chord
-> root its own just-intonation keyboard.
-
-I think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
-and so on. The root of each piano is taken from the original C just-intonation
-scale. Once a chord chooses a root, all of its notes come from the piano rooted
-on that note.
-
-This is "recursive" in the simple algorithmic sense: use a just-ratio table to
-choose the chord root, then use the same ratio table again inside that root.
-
-## 12-TET
+### 12-TET
 
 In 12-tone equal temperament, the ratio between adjacent semitones is:
 
@@ -98,9 +56,28 @@ Going up two semitones one step at a time lands at the same frequency as
 jumping up two semitones directly. This is why transposition is easy in equal
 temperament. There is only one global grid.
 
-## One C Just Scale
+### Just Intonation
 
-For the C-based just-intonation scale used in my tuning playground, the 12 pitch
+The annoying part is that just intonation normally needs a root. A `5/4` major
+third above C is E. A `5/4` major third above E is G#/Ab. Those two facts cannot
+both fit into one fixed 12-note keyboard unless we allow the same pitch name to
+mean different frequencies in different harmonic contexts.
+
+The experiment here is:
+
+> Keep the roots on a C-based just-intonation keyboard, but give every chord
+> root its own just-intonation keyboard.
+
+I think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
+and so on. The root of each piano is taken from the original C just-intonation
+scale. Once a chord chooses a root, all of its notes come from the piano rooted
+on that note.
+
+This is "recursive" in the simple algorithmic sense: use a just-ratio table to
+choose the chord root, then use the same ratio table again inside that root.
+
+
+For a C-based just-intonation scale the 12 pitch
 classes are:
 
 | pitch | ratio from C |
@@ -144,7 +121,37 @@ A just major third should be `5/4 = 1.25`. So the E major chord has a fifth that
 works and a third that is too high by about `34.3` cents. That is not a tiny
 rounding error. It is enough to make the chord feel tense.
 
-## 12 Just Pianos
+### What The Waves Look Like
+
+Nice mathematical ratios are pleasant to our ears.
+`x + 2*x`, where `x` is some frequency, sounds nice because it has a short
+period:
+
+<figure class="wave-figure">
+  <figcaption>A tone and its octave: two sine waves at a base frequency <code>f</code> and <code>2f</code>. The whole pattern repeats every <code>1/f</code> seconds, so the ear can lock onto it easily.</figcaption>
+  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(2*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
+  </iframe>
+</figure>
+
+While, for example, `x + 13/12*x` has a much longer period:
+
+<figure class="wave-figure">
+  <figcaption>A tone and a narrow nearby step: two sine waves at <code>f</code> and <code>13/12 f</code>. The combined wave needs <code>12/f</code> seconds to repeat, so it takes much longer to settle than the octave example.</figcaption>
+  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin((13/12)*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
+  </iframe>
+</figure>
+
+A just major chord is `4:5:6`, or `1:1.25:1.5`. In 12-TET, the same chord is
+closer to `500:630:749`, or `1:1.260:1.498`.
+
+<figure class="wave-figure">
+  <figcaption>Two major chords: the just version uses exact <code>4:5:6</code> ratios, while the 12-TET version uses the familiar piano/guitar approximation. They are close, but the 12-TET peaks do not quite return to the same places.</figcaption>
+  <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(1.25*(x+5*t))+sin(1.5*(x+5*t))&v1=true&f2(x,t)=sin(x+5*t)+sin(1.26*(x+5*t))+sin(1.4983*(x+5*t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
+  </iframe>
+</figure>
+
+
+## 12 Just Pianos | Recursive Just Intonation
 
 Recursive just intonation changes only one rule: after choosing a root, restart
 the ratio table at that root.
@@ -218,7 +225,7 @@ octave, multiply or divide the whole row by `2`.
 So the system is not a 12-note tuning system anymore. It is a chord-contextual
 tuning system. Pitch classes split according to harmonic function.
 
-## What It Sounds Like
+### What It Sounds Like
 
 The audio examples use the same chord progression three ways:
 
@@ -273,7 +280,7 @@ Some of the generated split points:
 | A major       | C#/Db | `277.977 Hz` | `275.933 Hz` | `-12.777 cents` |
 | G7            | F     | `348.834 Hz` | `349.515 Hz` |  `+3.378 cents` |
 
-## Why This Is Nice
+### Why This Is Nice
 
 The nice part is that every major chord can be made into a clean `4:5:6`
 relationship, even if the chord root is not C. E major does not inherit C's
@@ -292,7 +299,7 @@ note_frequency = root_frequency * local_just_ratio[chord_degree]
 
 The same pure function works for any root.
 
-## Why This Is Bad
+### Why This Is Bad
 
 The bad part shows up as soon as the chord changes: the same note name can move.
 
@@ -316,7 +323,7 @@ Recursive just intonation is mostly a listening tool for me. It makes the
 root-relationship audible again, instead of flattening every chord tone onto one
 global keyboard.
 
-## Implementation Notes
+### Implementation Notes
 
 The Rust renderer lives in `tools/site/src/recursive_ji.rs`. It does not use
 MIDI, because standard MIDI note numbers assume fixed pitch classes unless you
