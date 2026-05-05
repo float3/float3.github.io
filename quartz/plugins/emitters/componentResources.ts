@@ -10,7 +10,6 @@ import customStyles from "../../styles/custom.scss"
 import popoverStyle from "../../components/styles/popover.scss"
 import { BuildCtx } from "../../util/ctx"
 import { QuartzComponent } from "../../components/types"
-import { componentRegistry } from "../../components/registry"
 import {
   googleFontHref,
   googleFontSubsetHref,
@@ -35,10 +34,6 @@ function getComponentResources(ctx: BuildCtx): ComponentResources {
     for (const component of components) {
       allComponents.add(component)
     }
-  }
-
-  for (const component of componentRegistry.getAllComponents()) {
-    allComponents.add(component)
   }
 
   const componentResources = {

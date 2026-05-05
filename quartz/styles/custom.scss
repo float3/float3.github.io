@@ -314,6 +314,12 @@ body.animation-ready #quartz-body {
       }
     }
   }
+
+  @media all and ($mobile) {
+    & > * > * {
+      animation: none;
+    }
+  }
 }
 
 // hack to duplicate the fade-in animation so that we reset the animation in both directions
@@ -358,6 +364,10 @@ body.animation-ready #quartz-body {
   --shadow: #1a1917;
   --bounce-light: #f5d7a6;
   --timing-fn: cubic-bezier(0.455, 0.19, 0, 0.985);
+
+  @media all and ($mobile) {
+    display: none;
+  }
 
   body.animation-ready & {
     animation-play-state: running;
@@ -524,6 +534,10 @@ body.animation-ready #quartz-body {
   }
 
   @media (prefers-reduced-motion: reduce) {
+    & > #progressive-blur {
+      display: none;
+    }
+
     #glow,
     #glow-bounce,
     #leaves {
