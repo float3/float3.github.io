@@ -1,7 +1,7 @@
 ---
 title: advent of code
 date: 2024-12-20
-updated: 2026-05-04
+updated: 2026-05-05
 tags:
   - programming
   - wasm

@@ -1,7 +1,7 @@
 ---
 title: the rendering equation
 date: 2024-11-26
-updated: 2024-12-07
+updated: 2026-05-05
 tags:
   - graphics
   - math

@@ -1,7 +1,7 @@
 ---
 title: chars
 date: 2025-02-26
-updated: 2025-02-26
+updated: 2026-05-05
 tags:
   - wasm
   - tools
