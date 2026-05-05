@@ -9,7 +9,7 @@ tags:
 
 ## What is this about?
 
-Recursive Just Intonation is a novel tuning system I invented up with during my highschool physics classes, while trying to come up with a solution
+Recursive Just Intonation is a novel tuning system I came up with during my highschool physics classes, while trying to find a solution
 to the dissonance of 12TET. Before i explain what it is I'll give a little background on tuning systems in general.
 
 ## Equal Temperament vs Just Intonation
