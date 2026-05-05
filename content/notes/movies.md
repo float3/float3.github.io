@@ -1,7 +1,7 @@
 ---
 title: "movies"
 date: 2024-03-19
-updated: 2025-04-27
+updated: 2026-05-05
 tags:
   - movies
   - list

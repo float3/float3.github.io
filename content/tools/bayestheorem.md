@@ -1,7 +1,7 @@
 ---
 title: bayes theorem
 date: 2024-11-29
-updated: 2026-05-04
+updated: 2026-05-05
 tags:
   - math
   - statistics
