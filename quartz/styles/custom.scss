@@ -198,6 +198,16 @@ pre.poetry {
   padding: 0;
 }
 
+.recursive-note-cell .tet-cents {
+  color: var(--note-color);
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin-top: 0.18rem;
+  opacity: 0.82;
+}
+
 .note-c {
   --note-color: #ff5a7a;
   --note-bg: rgba(255, 90, 122, 0.13);
