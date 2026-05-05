@@ -11,6 +11,9 @@ type RecentNotePage = {
   dates?: Record<string, DateValue | undefined>
   frontmatter?: {
     title?: string
+    date?: DateValue
+    updated?: DateValue
+    modified?: DateValue
     tags?: string[] | string
     noindex?: boolean
   }
@@ -126,10 +129,11 @@ function titleFor(page: RecentNotePage): string {
 }
 
 function dateFor(page: RecentNotePage): Date | undefined {
-  const dateType = page.defaultDateType
   const value =
-    (dateType ? page.dates?.[dateType] : undefined) ??
+    page.frontmatter?.updated ??
+    page.frontmatter?.modified ??
     page.dates?.modified ??
+    page.frontmatter?.date ??
     page.dates?.created ??
     page.dates?.published
 
