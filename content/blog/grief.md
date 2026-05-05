@@ -1,7 +1,7 @@
 ---
 title: grief
-date: 2025-10-10
-updated: 2025-10-10
+date: 2026-05-05
+updated: 2026-05-05
 tags:
 ---
 I’m writing this before it has even happened.  
