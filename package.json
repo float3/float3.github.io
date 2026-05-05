@@ -12,18 +12,18 @@
     "url": "https://github.com/jackyzha0/quartz.git"
   },
   "scripts": {
-    "quartz": "./quartz/bootstrap-cli.mjs",
-    "docs": "pnpm exec quartz build --serve -d docs",
-    "check": "tsc --noEmit && pnpm exec prettier . --check",
-    "format": "pnpm exec prettier . --write",
-    "test": "tsx --test",
+    "quartz": "bun quartz/bootstrap-cli.mjs",
+    "docs": "bun run quartz build --serve -d docs",
+    "check": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/prettier/bin/prettier.cjs . --check",
+    "format": "node node_modules/prettier/bin/prettier.cjs . --write",
+    "test": "node --import tsx --test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
-    "install-plugins": "pnpm exec tsx ./quartz/plugins/loader/install-plugins.ts",
-    "prebuild": "pnpm run install-plugins"
+    "install-plugins": "node node_modules/tsx/dist/cli.mjs ./quartz/plugins/loader/install-plugins.ts",
+    "prebuild": "bun run install-plugins"
   },
   "engines": {
     "node": ">=22",
-    "pnpm": ">=8.15.6"
+    "bun": ">=1.3.13"
   },
   "keywords": [
     "site generator",
@@ -73,8 +73,8 @@
     "yargs": "^18.0.0"
   },
   "devDependencies": {
-    "@quartz-community/types": "github:quartz-community/types",
-    "@quartz-community/utils": "github:quartz-community/utils",
+    "@quartz-community/types": "git+https://github.com/quartz-community/types.git#d342893db8240099cfd9d4499996333f1ca636b4",
+    "@quartz-community/utils": "git+https://github.com/quartz-community/utils.git#7a43501ac1c728e8a7bfa75db35e8791bfa1f41c",
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
     "@types/node": "^25.6.0",
@@ -87,5 +87,5 @@
     "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   },
-  "packageManager": "pnpm@8.15.6+sha1.8105075ad0aa306138be128c017e9c41e28ecffa"
+  "packageManager": "bun@1.3.13"
 }

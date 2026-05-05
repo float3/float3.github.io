@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { execSync } from "child_process"
+import { execFileSync, execSync } from "child_process"
 import git from "isomorphic-git"
 import http from "isomorphic-git/http/node"
 import { styleText } from "util"
@@ -177,7 +177,7 @@ function collectNativeDeps(pluginDir: string): Map<string, string> {
 
 /**
  * Install all collected native dependencies into the Quartz root with a single
- * `npm install --no-save`. Lets npm resolve compatible versions across plugins.
+ * `bun install --no-save`. Lets Bun resolve compatible versions across plugins.
  */
 export function installNativeDeps(
   nativeDeps: Map<string, Map<string, string>>,
@@ -216,10 +216,10 @@ export function installNativeDeps(
       if (options.verbose) {
         console.warn(
           styleText("yellow", `⚠`),
-          `Multiple version ranges for ${pkg}: ${uniqueRanges.join(", ")}. npm will attempt to resolve a compatible version.`,
+          `Multiple version ranges for ${pkg}: ${uniqueRanges.join(", ")}. Bun will attempt to resolve a compatible version.`,
         )
       }
-      // Use first range; npm will fail if truly incompatible
+      // Use first range; Bun will fail if truly incompatible
       installArgs.push(`${pkg}@${JSON.stringify(uniqueRanges[0])}`)
     }
   }
@@ -234,7 +234,7 @@ export function installNativeDeps(
   }
 
   try {
-    execSync(`npm install --no-save ${installArgs.join(" ")}`, {
+    execFileSync("bun", ["install", "--no-save", ...installArgs], {
       cwd: process.cwd(),
       stdio: options.verbose ? "inherit" : "pipe",
       timeout: 120_000,
@@ -385,7 +385,7 @@ function buildInstalledPlugin(pluginDir: string, name: string, verbose?: boolean
     if (verbose) {
       console.log(styleText("cyan", `→`), `${name}: installing dependencies...`)
     }
-    execSync("npm install --ignore-scripts", {
+    execFileSync("bun", ["install", "--ignore-scripts"], {
       cwd: pluginDir,
       stdio: verbose ? "inherit" : "pipe",
       timeout: 120_000,
@@ -395,14 +395,14 @@ function buildInstalledPlugin(pluginDir: string, name: string, verbose?: boolean
       if (verbose) {
         console.log(styleText("cyan", `→`), `${name}: building...`)
       }
-      execSync("npm run build", {
+      execFileSync("bun", ["run", "build"], {
         cwd: pluginDir,
         stdio: verbose ? "inherit" : "pipe",
         timeout: 120_000,
       })
     }
 
-    execSync("npm prune --omit=dev", {
+    execFileSync("bun", ["install", "--production", "--ignore-scripts"], {
       cwd: pluginDir,
       stdio: verbose ? "inherit" : "pipe",
       timeout: 60_000,

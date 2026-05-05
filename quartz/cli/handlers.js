@@ -59,7 +59,7 @@ function resolveContentPath(contentPath) {
 }
 
 /**
- * Handles `npx quartz create`
+ * Handles `bun run quartz create`
  * @param {*} argv arguments for `create`
  */
 export async function handleCreate(argv) {
@@ -310,13 +310,13 @@ See the [documentation](https://quartz.jzhao.xyz) for how to get started.
 
   outro(`You're all set! Not sure what to do next? Try:
   • Customizing Quartz a bit more by editing \`quartz.config.yaml\`
-  • Running \`npx quartz build --serve\` to preview your Quartz locally
+  • Running \`bun run quartz build --serve\` to preview your Quartz locally
   • Hosting your Quartz online (see: https://quartz.jzhao.xyz/hosting)
 `)
 }
 
 /**
- * Handles `npx quartz build`
+ * Handles `bun run quartz build`
  * @param {*} argv arguments for `build`
  */
 export async function handleBuild(argv) {
@@ -579,7 +579,7 @@ export async function handleBuild(argv) {
 }
 
 /**
- * Handles `npx quartz upgrade`
+ * Handles `bun run quartz upgrade`
  * Upgrades the Quartz framework itself by pulling latest changes from upstream.
  * @param {*} argv arguments for `upgrade`
  */
@@ -649,14 +649,12 @@ export async function handleUpgrade(argv) {
   console.log("Ensuring dependencies are up to date")
 
   /*
-  On Windows, if the command `npm` is really `npm.cmd', this call fails
-  as it will be unable to find `npm`. This is often the case on systems
-  where `npm` is installed via a package manager.
+  On Windows, package manager shims can require a shell to resolve correctly.
 
-  This means `npx quartz upgrade` will not actually update dependencies
-  on Windows, without a manual `npm i` from the caller.
+  This means `bun run quartz upgrade` may not actually update dependencies
+  on Windows, without a manual `bun install` from the caller.
 
-  However, by spawning a shell, we are able to call `npm.cmd`.
+  However, by spawning a shell, we are able to call the package manager shim.
   See: https://nodejs.org/api/child_process.html#spawning-bat-and-cmd-files-on-windows
   */
 
@@ -665,7 +663,7 @@ export async function handleUpgrade(argv) {
     opts.shell = true
   }
 
-  const res = spawnSync("npm", ["i"], opts)
+  const res = spawnSync("bun", ["install"], opts)
   if (res.status === 0) {
     console.log(styleText("green", "Dependencies updated!"))
   } else {
@@ -682,7 +680,7 @@ export async function handleUpgrade(argv) {
 }
 
 /**
- * Handles `npx quartz restore`
+ * Handles `bun run quartz restore`
  * @param {*} argv arguments for `restore`
  */
 export async function handleRestore(argv) {
@@ -691,7 +689,7 @@ export async function handleRestore(argv) {
 }
 
 /**
- * Handles `npx quartz sync`
+ * Handles `bun run quartz sync`
  * @param {*} argv arguments for `sync`
  */
 export async function handleSync(argv) {
