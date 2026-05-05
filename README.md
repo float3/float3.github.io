@@ -11,6 +11,7 @@ build system:
 
 ```sh
 cargo run --locked --manifest-path tools/site/Cargo.toml -- build
+cargo run --locked --manifest-path tools/site/Cargo.toml -- check
 cargo run --locked --manifest-path tools/site/Cargo.toml -- generate
 cargo run --locked --manifest-path tools/site/Cargo.toml -- help
 ```

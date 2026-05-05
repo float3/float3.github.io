@@ -4,6 +4,10 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[dependencies]
+image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
+music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+
 [[bin]]
 name = "site"
 path = "src/main.rs"
