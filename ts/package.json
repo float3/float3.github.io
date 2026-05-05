@@ -7,10 +7,11 @@
   "scripts": {
     "serve_release": "webpack-dev-server --config webpack.config.mjs --mode production",
     "serve_dev": "webpack-dev-server --config webpack.config.mjs --mode development",
-    "build:glsl2hlsl": "bun build dist/glsl.js --outfile=../../../content/tools/glsl2hlsl/glsl2hlsl.js --minify --drop=console",
-    "build:aoc": "bun build dist/aoc.js --outfile=../../../content/tools/aoc/aoc.js --minify --drop=console",
-    "build:tuningplayground": "bun build dist/tuningplayground.js --outfile=../../../content/tools/tuningplayground/tuningplayground.js --minify --drop=console",
-    "build:textprocessing": "bun build dist/textprocessing.js --outfile=../../../content/tools/textprocessing/textprocessing.js --minify --drop=console"
+    "check": "tsc --noEmit --incremental false && eslint src",
+    "format": "prettier src --write && eslint src --fix",
+    "watch": "tsc && run-p watch:ts watch:webpack",
+    "watch:ts": "tsc --watch --preserveWatchOutput",
+    "watch:webpack": "webpack --config webpack.config.mjs --mode development --watch"
   },
   "repository": {
     "type": "git",

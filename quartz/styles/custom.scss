@@ -143,6 +143,151 @@ pre.poetry {
   font-family: biro_script_standardRgus, var(--bodyFont);
 }
 
+.wasm-credit {
+  color: var(--darkgray);
+  font-family: biro_script_standardRgus, var(--bodyFont);
+  font-size: 1.15rem;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+}
+
+.wave-figure {
+  margin: 1.25rem 0 2rem;
+
+  figcaption {
+    border-left: 2px solid var(--lightgray);
+    color: var(--darkgray);
+    font-size: 0.92rem;
+    line-height: 1.35;
+    margin: 0 0 0.6rem;
+    padding-left: 0.75rem;
+  }
+
+  figcaption strong {
+    color: var(--dark);
+  }
+
+  iframe {
+    display: block;
+    max-width: 100%;
+    pointer-events: none;
+  }
+}
+
+.recursive-note-cell {
+  background: var(--note-bg);
+  border-left: 3px solid var(--note-color);
+  color: var(--dark);
+  display: block;
+  min-width: 6.4rem;
+  padding: 0.28rem 0.4rem 0.32rem;
+}
+
+.recursive-note-cell::before {
+  color: var(--note-color);
+  content: attr(data-note);
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0.2rem;
+}
+
+.recursive-note-cell code {
+  background: transparent;
+  padding: 0;
+}
+
+.note-c {
+  --note-color: #ff5a7a;
+  --note-bg: rgba(255, 90, 122, 0.13);
+}
+
+.note-c-sharp {
+  --note-color: #ff9f43;
+  --note-bg: rgba(255, 159, 67, 0.14);
+}
+
+.note-d {
+  --note-color: #ffd400;
+  --note-bg: rgba(255, 212, 0, 0.14);
+}
+
+.note-d-sharp {
+  --note-color: #a3e635;
+  --note-bg: rgba(163, 230, 53, 0.14);
+}
+
+.note-e {
+  --note-color: #2ed573;
+  --note-bg: rgba(46, 213, 115, 0.14);
+}
+
+.note-f {
+  --note-color: #00d2d3;
+  --note-bg: rgba(0, 210, 211, 0.14);
+}
+
+.note-f-sharp {
+  --note-color: #4f8cff;
+  --note-bg: rgba(79, 140, 255, 0.14);
+}
+
+.note-g {
+  --note-color: #7c5cff;
+  --note-bg: rgba(124, 92, 255, 0.14);
+}
+
+.note-g-sharp {
+  --note-color: #b56dff;
+  --note-bg: rgba(181, 109, 255, 0.14);
+}
+
+.note-a {
+  --note-color: #ff6bd6;
+  --note-bg: rgba(255, 107, 214, 0.14);
+}
+
+.note-a-sharp {
+  --note-color: #ff3f34;
+  --note-bg: rgba(255, 63, 52, 0.13);
+}
+
+.note-b {
+  --note-color: #8eecf5;
+  --note-bg: rgba(142, 236, 245, 0.14);
+}
+
+.audio-figure {
+  margin: 1.35rem 0 1.8rem;
+
+  audio {
+    display: block;
+    width: 100%;
+  }
+
+  figcaption {
+    color: var(--darkgray);
+    font-size: 0.92rem;
+    line-height: 1.35;
+    margin-bottom: 0.55rem;
+  }
+
+  figcaption strong {
+    color: var(--dark);
+  }
+}
+
+.oscilloscope-canvas {
+  aspect-ratio: 1 / 1;
+  background: #020403;
+  border: 1px solid rgba(170, 230, 205, 0.28);
+  display: block;
+  height: auto;
+  margin-top: 0.65rem;
+  width: min(100%, 24rem);
+}
+
 audio::-webkit-media-controls-panel {
   background-color: var(--lightgray);
 }

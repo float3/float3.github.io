@@ -9,7 +9,7 @@ tags:
   - rust
 ---
 
-made with love and rust (compiled to wasm)
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
 
 <script src="/js/adventofcode.js"></script>
 <link href="./adventofcode.css" rel="stylesheet" type="text/css">

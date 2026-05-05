@@ -10,6 +10,7 @@ tags:
 ---
 
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
 <noscript> hey this page needs javascript</noscript> use your computer keyboard, a midi device, or provide a midi file for example <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid"> this one </a> or <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irea.mid"> or this one in case the other site goes down </a>
 <div id="tuningPlaygroundStatus" role="status">Loading tuning playground...</div>
 <div style="display: block">
@@ -64,7 +65,7 @@ tags:
 </div>
 <p> Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
 </p>
-<p>Transpose: <input id="transpose" />
+<p>Transpose: <input id="transpose" value="24" />
 </p>
 <div id="stepSizeContainer" style="display: none">
   <label for="stepSize">Step Size (co-primes with 12):</label>

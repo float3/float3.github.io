@@ -129,11 +129,7 @@ fn random_u32(max: u32) -> u32 {
 fn random_kanji(remove: bool) -> char {
     let mut v = KANJI.lock().expect("failed to lock kanji");
     let idx = random_u32(v.len() as u32) as usize;
-    if remove {
-        v.remove(idx)
-    } else {
-        v[idx]
-    }
+    if remove { v.remove(idx) } else { v[idx] }
 }
 
 // fn random_bopomofo(remove: bool) -> char {

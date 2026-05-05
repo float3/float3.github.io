@@ -73,8 +73,8 @@ wasm.main()
 
 const wasmTransform =
   (index: number, leftToRight: boolean): Transform =>
-    (text) =>
-      wasm.transform_text(index, leftToRight, text)
+  (text) =>
+    wasm.transform_text(index, leftToRight, text)
 
 const transforms: TransformDefinition[] = [
   {
@@ -596,7 +596,15 @@ function renderGraphWorkspace(): HTMLElement {
   status.className = "graph-status"
   status.setAttribute("role", "status")
 
-  controls.append(addSelect, addButton, addSourceButton, addOutputButton, arrangeButton, resetButton, status)
+  controls.append(
+    addSelect,
+    addButton,
+    addSourceButton,
+    addOutputButton,
+    arrangeButton,
+    resetButton,
+    status,
+  )
   header.append(title, controls)
 
   const board = document.createElement("div")
@@ -684,8 +692,7 @@ function renderGraphWorkspace(): HTMLElement {
   }
 
   function getNodeTitle(node: GraphNode): string {
-    const base =
-      node.kind === "source" ? "Source" : node.kind === "output" ? "Output" : "Transform"
+    const base = node.kind === "source" ? "Source" : node.kind === "output" ? "Output" : "Transform"
     const suffix = new RegExp(`^${node.kind}-(\\d+)$`).exec(node.id)?.[1]
     return suffix ? `${base} ${suffix}` : base
   }
@@ -861,7 +868,9 @@ function renderGraphWorkspace(): HTMLElement {
           connections: state.connections,
         } satisfies StoredGraph),
       )
-    } catch { }
+    } catch {
+      // Ignore storage failures in private browsing or quota-limited contexts.
+    }
   }
 
   function clearGraph() {
@@ -1642,8 +1651,9 @@ function renderTransform(definition: TransformDefinition): RenderedTransform {
   title.className = "transform-title"
 
   const titleText = document.createElement("span")
-  titleText.textContent = `${definition.leftLabel} ${definition.rightToLeft ? "↔" : "→"} ${definition.rightLabel
-    }`
+  titleText.textContent = `${definition.leftLabel} ${definition.rightToLeft ? "↔" : "→"} ${
+    definition.rightLabel
+  }`
 
   const direction = document.createElement("span")
   direction.className = "transform-direction"
