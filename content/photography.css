@@ -122,12 +122,17 @@
 }
 
 .photo-card {
+  appearance: none;
   display: grid;
   overflow: hidden;
   border: 1px solid var(--photo-border);
   border-radius: 8px;
+  padding: 0;
   background: var(--photo-surface);
   color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
   text-decoration: none;
 }
 
