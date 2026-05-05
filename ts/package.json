@@ -1,17 +1,17 @@
 {
-  "name": "wasm",
+  "name": "float3-wasm-bundle",
   "version": "1.0.0",
   "description": "wasm",
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "serve_release": "webpack-dev-server --config webpack.config.mjs --mode production",
-    "serve_dev": "webpack-dev-server --config webpack.config.mjs --mode development",
-    "check": "tsc --noEmit --incremental false && eslint src",
-    "format": "prettier src --write && eslint src --fix",
-    "watch": "tsc && run-p watch:ts watch:webpack",
-    "watch:ts": "tsc --watch --preserveWatchOutput",
-    "watch:webpack": "webpack --config webpack.config.mjs --mode development --watch"
+    "serve_release": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.mjs --mode production",
+    "serve_dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.mjs --mode development",
+    "check": "node node_modules/typescript/bin/tsc --noEmit --incremental false && node node_modules/eslint/bin/eslint.js src",
+    "format": "node node_modules/prettier/bin/prettier.cjs src --write && node node_modules/eslint/bin/eslint.js src --fix",
+    "watch": "node node_modules/typescript/bin/tsc && node node_modules/npm-run-all/bin/run-p/index.js watch:ts watch:webpack",
+    "watch:ts": "node node_modules/typescript/bin/tsc --watch --preserveWatchOutput",
+    "watch:webpack": "node node_modules/webpack/bin/webpack.js --config webpack.config.mjs --mode development --watch"
   },
   "repository": {
     "type": "git",
@@ -33,8 +33,7 @@
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^2.1.0",
-    "abcjs": "^6.6.3",
-    "wasm": "file:../wasm/wasm/pkg"
+    "abcjs": "^6.6.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -57,11 +56,9 @@
     "webpack-cli": "^7.0.2",
     "webpack-dev-server": "^5.2.3"
   },
-  "packageManager": "pnpm@8.15.6+sha1.8105075ad0aa306138be128c017e9c41e28ecffa",
-  "pnpm": {
-    "overrides": {
-      "serialize-javascript": "^7.0.5",
-      "uuid": "^14.0.0"
-    }
+  "packageManager": "bun@1.3.13",
+  "overrides": {
+    "serialize-javascript": "^7.0.5",
+    "uuid": "^14.0.0"
   }
 }

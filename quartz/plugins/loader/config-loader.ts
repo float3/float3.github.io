@@ -120,7 +120,7 @@ function validateDependencies(
 
       if (!depEntry) {
         errors.push(
-          `Plugin "${pluginName}" requires "${depName}". Run: npx quartz plugin add ${dep}`,
+          `Plugin "${pluginName}" requires "${depName}". Run: bun run quartz plugin add ${dep}`,
         )
         continue
       }

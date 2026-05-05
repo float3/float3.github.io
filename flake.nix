@@ -32,8 +32,8 @@
             gcc
             gnugrep
             llvmPackages.bintools
-            nodejs_20
-            pnpm_8
+            bun
+            nodejs_22
             python313
             rustup
             typescript
