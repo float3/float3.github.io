@@ -10,7 +10,7 @@ tags:
   - rust
 ---
 
-made with love and rust (compiled to wasm)
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
 
 <script type="module" src="/js/textprocessing.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">

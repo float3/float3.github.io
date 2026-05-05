@@ -6,10 +6,16 @@ tags:
   - math
   - statistics
   - teaching
+  - tools
+  - wasm
+  - rust
 ---
 
-<link href="./math_stuff.css" rel="stylesheet" type="text/css">
+<link href="/notes/math_stuff.css" rel="stylesheet" type="text/css">
 <script type="module" src="/js/bayestheorem.js"></script>
+
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+
 <div class="container">
 
 $$

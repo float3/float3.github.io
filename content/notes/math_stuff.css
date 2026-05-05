@@ -120,11 +120,7 @@
 }
 
 .bayes-solver-result[data-bayes-role="numerator"] {
-  background: linear-gradient(
-    135deg,
-    #ffbc3f52 0 50%,
-    #fe7fb352 50% 100%
-  );
+  background: linear-gradient(135deg, #ffbc3f52 0 50%, #fe7fb352 50% 100%);
   border-color: #ffc668;
   box-shadow: inset 0 0 0 1px #fe7fb380;
 }
@@ -182,32 +178,45 @@
   font-weight: 700;
 }
 
+.bayes-phrase {
+  font-weight: 700;
+}
+
 .bayes-solver-field[data-bayes-role="posterior"] .bayes-solver-symbol,
 .bayes-solver-result[data-bayes-role="posterior"] .bayes-solver-symbol,
-.bayes-term[data-bayes-role="posterior"] {
+.bayes-term[data-bayes-role="posterior"],
+.bayes-phrase[data-bayes-role="posterior"] {
   color: var(--bayes-posterior);
 }
 
 .bayes-solver-field[data-bayes-role="likelihood"] .bayes-solver-symbol,
 .bayes-solver-result[data-bayes-role="likelihood"] .bayes-solver-symbol,
-.bayes-term[data-bayes-role="likelihood"] {
+.bayes-term[data-bayes-role="likelihood"],
+.bayes-phrase[data-bayes-role="likelihood"] {
   color: var(--bayes-likelihood);
 }
 
 .bayes-solver-field[data-bayes-role="prior"] .bayes-solver-symbol,
 .bayes-solver-result[data-bayes-role="prior"] .bayes-solver-symbol,
-.bayes-term[data-bayes-role="prior"] {
+.bayes-term[data-bayes-role="prior"],
+.bayes-phrase[data-bayes-role="prior"] {
   color: var(--bayes-prior);
 }
 
 .bayes-solver-field[data-bayes-role="evidence"] .bayes-solver-symbol,
 .bayes-solver-result[data-bayes-role="evidence"] .bayes-solver-symbol,
-.bayes-term[data-bayes-role="evidence"] {
+.bayes-term[data-bayes-role="evidence"],
+.bayes-phrase[data-bayes-role="evidence"] {
   color: var(--bayes-evidence);
 }
 
-.bayes-term[data-bayes-role="neutral"] {
+.bayes-term[data-bayes-role="neutral"],
+.bayes-phrase[data-bayes-role="neutral"] {
   color: #4d8dc3;
+}
+
+.bayes-phrase[data-bayes-role="numerator"] {
+  color: #ffc668;
 }
 
 .bayes-event-field .bayes-solver-symbol {
@@ -278,11 +287,7 @@
 }
 
 .bayes-solver-result[data-bayes-role="numerator"] strong {
-  background: linear-gradient(
-    135deg,
-    #ffbc3f33 0 50%,
-    #fe7fb333 50% 100%
-  );
+  background: linear-gradient(135deg, #ffbc3f33 0 50%, #fe7fb333 50% 100%);
   border-color: #ffc668;
 }
 
@@ -325,67 +330,22 @@
   width: fit-content;
 }
 
-.bayes-latex {
-  background: color-mix(in srgb, var(--bayes-posterior) 18%, var(--bayes-card));
-  border: 1px solid var(--bayes-posterior);
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 1px #0466e780;
-  display: grid;
-  gap: 0.55rem;
-  padding: 0.7rem;
-}
-
-.bayes-latex-heading {
+.bayes-solution {
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  justify-content: center;
+  padding: 0.35rem 0;
 }
 
-.bayes-latex-heading span:first-child {
-  color: var(--bayes-posterior);
-  font-family: var(--codeFont);
-  font-weight: 700;
-}
-
-.bayes-latex-heading button {
-  background: color-mix(in srgb, var(--bayes-posterior) 30%, var(--light));
-  border: 1px solid var(--bayes-posterior);
-  border-radius: 4px;
-  color: var(--dark);
-  cursor: pointer;
-  font: inherit;
-  min-height: 2rem;
-  padding: 0.25rem 0.6rem;
-}
-
-.bayes-latex-rendered {
+.bayes-solution-equation {
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
-  padding: 0.4rem 0;
+  padding: 0.25rem 0;
 }
 
-.bayes-latex-rendered .katex-display {
-  margin: 0;
-}
-
-.bayes-latex-output {
-  background: color-mix(in srgb, var(--bayes-posterior) 18%, var(--light));
-  border: 1px solid var(--bayes-posterior);
-  border-radius: 4px;
-  box-sizing: border-box;
-  color: var(--dark);
-  font-family: var(--codeFont);
-  font-size: 0.82rem;
-  line-height: 1.45;
-  min-height: 10rem;
-  padding: 0.6rem;
-  resize: vertical;
-  width: 100%;
-}
-
-.bayes-latex-status {
-  color: #4d8dc3;
-  min-height: 1.25rem;
+.bayes-rendered-math {
+  margin: 0 auto;
 }
 
 .bayes-solver-error {

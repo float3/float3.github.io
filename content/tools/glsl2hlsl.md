@@ -12,7 +12,7 @@ tags:
   - rust
 ---
 
-made with love and rust (compiled to wasm)
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
 
 written by pema99 https://github.com/pema99/glsl2hlsl/ \
 merged changes by Kit https://github.com/cutesthypnotist/glsl2hlsl/ \

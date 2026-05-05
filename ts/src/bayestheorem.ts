@@ -1,4 +1,4 @@
-import { solve_bayes_percent } from "wasm"
+import { bayes_number, solve_bayes_percent } from "wasm"
 
 type BayesMode = "computed-evidence" | "known-evidence"
 
@@ -7,13 +7,7 @@ type BayesEventLabels = {
   eventB: string
 }
 
-type BayesColorRole =
-  | "posterior"
-  | "likelihood"
-  | "prior"
-  | "evidence"
-  | "numerator"
-  | "neutral"
+type BayesColorRole = "posterior" | "likelihood" | "prior" | "evidence" | "numerator" | "neutral"
 type InlineContent = string | Node
 type BayesFormulaValues = {
   prior: number
@@ -53,7 +47,7 @@ function renderBayesSolver() {
 
   const heading = document.createElement("h2")
   heading.id = "bayes-solver-heading"
-  heading.textContent = "bayes theorem solver"
+  heading.textContent = "solver"
 
   const form = document.createElement("form")
   form.className = "bayes-solver-form"
@@ -61,14 +55,8 @@ function renderBayesSolver() {
   const eventGrid = document.createElement("div")
   eventGrid.className = "bayes-event-fields"
 
-  const eventA = createEventField(
-    "A",
-    "event A",
-    "a person has the disease",
-    "a person has the disease",
-  )
+  const eventA = createEventField("event A", "a person has the disease", "a person has the disease")
   const eventB = createEventField(
-    "B",
     "event B",
     "the screening test is positive",
     "the screening test is positive",
@@ -82,29 +70,34 @@ function renderBayesSolver() {
   fieldGrid.className = "bayes-solver-fields"
 
   const prior = createPercentField(
-    [bayesTerm("P(A)", "prior")],
-    [bayesTerm("P(A)", "prior"), ", the prior probability of event A"],
+    [bayesTerm("P(A)", "prior"), ", ", bayesPhrase("the prior probability of event A", "prior")],
     "1",
     "prior",
   )
   const likelihood = createPercentField(
-    [bayesTerm("P(B | A)", "likelihood")],
-    [bayesTerm("P(B | A)", "likelihood"), ", the likelihood of event B given event A"],
+    [
+      bayesTerm("P(B | A)", "likelihood"),
+      ", ",
+      bayesPhrase("the likelihood of event B given event A", "likelihood"),
+    ],
     "90",
     "likelihood",
   )
   const falsePositive = createPercentField(
-    [bayesTerm("P(B | not A)", "neutral")],
     [
       bayesTerm("P(B | not A)", "neutral"),
-      ", the probability of event B given event A did not occur",
+      ", ",
+      bayesPhrase("the probability of event B given event A did not occur", "neutral"),
     ],
     "5",
     "neutral",
   )
   const evidence = createPercentField(
-    [bayesTerm("P(B)", "evidence")],
-    [bayesTerm("P(B)", "evidence"), ", the marginal probability of event B"],
+    [
+      bayesTerm("P(B)", "evidence"),
+      ", ",
+      bayesPhrase("the marginal probability of event B", "evidence"),
+    ],
     "5.85",
     "evidence",
   )
@@ -131,49 +124,51 @@ function renderBayesSolver() {
 
   const output = document.createElement("div")
   output.className = "bayes-solver-output"
-  output.setAttribute("aria-live", "polite")
 
   const posterior = createOutputItem(
-    [bayesTerm("P(A | B)", "posterior")],
     [
       bayesTerm("P(A | B)", "posterior"),
-      ", the probability of event A occurring given event B has occurred",
+      ", ",
+      bayesPhrase("the probability of event A occurring given event B has occurred", "posterior"),
     ],
     "posterior",
     "posterior",
   )
   const numerator = createOutputItem(
-    [bayesTerm("P(B | A)", "likelihood"), " * ", bayesTerm("P(A)", "prior")],
     [
       bayesTerm("P(B | A)", "likelihood"),
       " times ",
       bayesTerm("P(A)", "prior"),
-      ", likelihood times prior",
+      ", ",
+      bayesPhrase("likelihood times prior", "numerator"),
     ],
     "numerator",
     "numerator",
   )
   const evidenceOutput = createOutputItem(
-    [bayesTerm("P(B)", "evidence")],
-    [bayesTerm("P(B)", "evidence"), ", the marginal probability of event B"],
+    [
+      bayesTerm("P(B)", "evidence"),
+      ", ",
+      bayesPhrase("the marginal probability of event B", "evidence"),
+    ],
     "evidence",
     "evidence",
   )
   const odds = createOutputItem(
-    ["odds"],
-    ["posterior odds from ", bayesTerm("P(A | B)", "posterior")],
+    [bayesPhrase("posterior odds", "posterior"), " from ", bayesTerm("P(A | B)", "posterior")],
     "odds",
     "posterior",
   )
 
   output.append(posterior.element, numerator.element, evidenceOutput.element, odds.element)
-  const latex = createLatexOutput()
+
+  const solution = createSolutionOutput()
 
   const error = document.createElement("p")
   error.className = "bayes-solver-error"
   error.setAttribute("role", "status")
 
-  form.append(eventGrid, definition, fieldGrid, modeLabel, output, latex.element, error)
+  form.append(eventGrid, definition, fieldGrid, modeLabel, output, solution.element, error)
   solverRoot.append(heading, form)
 
   function getMode(): BayesMode {
@@ -187,64 +182,56 @@ function renderBayesSolver() {
     }
   }
 
-  function updateCopy(labels: BayesEventLabels) {
+  function updateCopy(labels: BayesEventLabels, values: BayesFormulaValues) {
     const notEventA = `it is not true that ${labels.eventA}`
-    const priorPercent = percentInputText(prior.input)
-    const likelihoodPercent = percentInputText(likelihood.input)
-    const falsePositivePercent = percentInputText(falsePositive.input)
+    const priorPercent = formatProbabilityPercent(values.prior)
+    const likelihoodPercent = formatProbabilityPercent(values.likelihood)
+    const evidencePercent = formatProbabilityPercent(values.evidence)
+    const posteriorPercent = formatPosteriorPercent(values)
 
     setInlineContent(
       definition,
-      "Example: ",
-      priorPercent,
-      " is ",
-      bayesTerm("P(A)", "prior"),
-      ", the prior probability that ",
-      labels.eventA,
-      "; ",
-      likelihoodPercent,
-      " is ",
-      bayesTerm("P(B | A)", "likelihood"),
-      ", the likelihood that ",
-      labels.eventB,
-      " given that ",
-      labels.eventA,
-      "; and ",
-      falsePositivePercent,
-      " is ",
-      bayesTerm("P(B | not A)", "neutral"),
-      ", the probability that ",
-      labels.eventB,
-      " given that ",
-      notEventA,
-      ". The solver finds ",
-      bayesTerm("P(A | B)", "posterior"),
-      ", the probability that ",
-      labels.eventA,
-      " after observing that ",
-      labels.eventB,
+      "To find ",
+      bayesPhrase(
+        `the probability of the event "${labels.eventA}" occurring given the event "${labels.eventB}" has occurred`,
+        "posterior",
+      ),
+      ", we multiply ",
+      bayesPhrase(
+        `the ${likelihoodPercent} likelihood of the event "${labels.eventB}" given the event "${labels.eventA}"`,
+        "likelihood",
+      ),
+      " by ",
+      bayesPhrase(`the ${priorPercent} prior probability of the event "${labels.eventA}"`, "prior"),
+      " and divide by ",
+      bayesPhrase(
+        `the ${evidencePercent} marginal probability of the event "${labels.eventB}"`,
+        "evidence",
+      ),
+      ". This gives ",
+      bayesPhrase(posteriorPercent, "posterior"),
       ".",
     )
 
-    prior.setDefinition(bayesTerm("P(A)", "prior"), ", the prior probability that ", labels.eventA)
+    prior.setDefinition(
+      bayesTerm("P(A)", "prior"),
+      ", ",
+      bayesPhrase(`the prior probability that ${labels.eventA}`, "prior"),
+    )
     likelihood.setDefinition(
       bayesTerm("P(B | A)", "likelihood"),
-      ", the likelihood that ",
-      labels.eventB,
-      " given that ",
-      labels.eventA,
+      ", ",
+      bayesPhrase(`the likelihood that ${labels.eventB} given that ${labels.eventA}`, "likelihood"),
     )
     falsePositive.setDefinition(
       bayesTerm("P(B | not A)", "neutral"),
-      ", the probability that ",
-      labels.eventB,
-      " given that ",
-      notEventA,
+      ", ",
+      bayesPhrase(`the probability that ${labels.eventB} given that ${notEventA}`, "neutral"),
     )
     evidence.setDefinition(
       bayesTerm("P(B)", "evidence"),
-      ", the marginal probability that ",
-      labels.eventB,
+      ", ",
+      bayesPhrase(`the marginal probability that ${labels.eventB}`, "evidence"),
     )
 
     if (getMode() === "computed-evidence") {
@@ -252,7 +239,8 @@ function renderBayesSolver() {
         modeText,
         "compute ",
         bayesTerm("P(B)", "evidence"),
-        " from the false positive rate",
+        " from the ",
+        bayesPhrase("false positive rate", "neutral"),
       )
     } else {
       setInlineContent(modeText, "use a known marginal probability ", bayesTerm("P(B)", "evidence"))
@@ -260,29 +248,31 @@ function renderBayesSolver() {
 
     posterior.setDefinition(
       bayesTerm("P(A | B)", "posterior"),
-      ", the probability that ",
-      labels.eventA,
-      " given that ",
-      labels.eventB,
+      ", ",
+      bayesPhrase(`the probability that ${labels.eventA} given that ${labels.eventB}`, "posterior"),
     )
     numerator.setDefinition(
       bayesTerm("P(B | A)", "likelihood"),
       " times ",
       bayesTerm("P(A)", "prior"),
-      ", likelihood times prior",
+      ", ",
+      bayesPhrase("likelihood times prior", "numerator"),
     )
     evidenceOutput.setDefinition(
       bayesTerm("P(B)", "evidence"),
-      ", the marginal probability that ",
-      labels.eventB,
+      ", ",
+      bayesPhrase(`the marginal probability that ${labels.eventB}`, "evidence"),
     )
-    odds.setDefinition("posterior odds from ", bayesTerm("P(A | B)", "posterior"))
+    odds.setDefinition(
+      bayesPhrase("posterior odds", "posterior"),
+      " from ",
+      bayesTerm("P(A | B)", "posterior"),
+    )
   }
 
   function update() {
     const mode = getMode()
     const labels = getEventLabels()
-    updateCopy(labels)
 
     const result = solve_bayes_percent(
       Number.parseFloat(prior.input.value),
@@ -307,20 +297,21 @@ function renderBayesSolver() {
 
     setResult(numerator.value, numeratorValue)
     setResult(evidenceOutput.value, evidenceValue)
+
     const formulaValues = {
       prior: clampProbability(Number.parseFloat(prior.input.value) / 100),
       likelihood: clampProbability(Number.parseFloat(likelihood.input.value) / 100),
       evidence: evidenceValue,
       numerator: numeratorValue,
     }
-    const latexEquation = buildBayesLatex(formulaValues)
-    latex.output.value = latexEquation.source
-    latex.rendered.replaceChildren(createBayesMath(formulaValues))
-    latex.status.textContent = ""
+
+    updateCopy(labels, formulaValues)
+    updateSolution(solution, formulaValues)
 
     if (errorCode === 1) {
       posterior.value.textContent = "-"
       odds.value.textContent = "-"
+      solution.equation.textContent = "-"
       error.textContent = `The marginal probability that ${labels.eventB} must be greater than 0.`
       solverRoot.classList.add("has-error")
       return
@@ -345,14 +336,6 @@ function renderBayesSolver() {
   form.addEventListener("input", update)
   form.addEventListener("submit", (event) => event.preventDefault())
   modeToggle.addEventListener("change", update)
-  latex.copyButton.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(latex.output.value)
-      latex.status.textContent = "copied"
-    } catch {
-      latex.status.textContent = "copy failed"
-    }
-  })
   update()
 }
 
@@ -361,79 +344,44 @@ function eventName(value: string, fallback: string) {
   return trimmed.length > 0 ? trimmed : fallback
 }
 
-function percentInputText(input: HTMLInputElement) {
-  const value = Number.parseFloat(input.value)
-  return Number.isFinite(value) ? `${percentFormatter.format(value)}%` : "an unknown percentage"
-}
-
 function clampProbability(value: number) {
   if (!Number.isFinite(value)) return 0
   return Math.min(1, Math.max(0, value))
 }
 
-function latexColor(role: keyof typeof bayesColors, value: string) {
-  return `\\textcolor{${bayesColors[role]}}{${value}}`
+function formatProbabilityPercent(value: number) {
+  return Number.isFinite(value) ? `${probabilityToPercent(value)}%` : "an unknown percentage"
 }
 
-function latexNumber(value: number) {
-  if (!Number.isFinite(value)) return "\\text{undefined}"
-  const rounded = value.toFixed(6).replace(/(\.\d*?)0+$/, "$1").replace(/\.$/, "")
-  return rounded === "-0" ? "0" : rounded
+function updateSolution(
+  solution: ReturnType<typeof createSolutionOutput>,
+  values: BayesFormulaValues,
+) {
+  solution.equation.replaceChildren(createBayesEquation(values))
 }
 
-function buildBayesLatex(values: BayesFormulaValues) {
-  const posterior = values.evidence > 0 ? values.numerator / values.evidence : Number.NaN
-  const body = [
-    "\\begin{aligned}",
-    `${latexColor("posterior", "P(A \\mid B)")}`,
-    `&= \\frac{${latexColor("likelihood", "P(B \\mid A)")}\\,${latexColor("prior", "P(A)")}}{${latexColor("evidence", "P(B)")}} \\\\`,
-    `&= \\frac{${latexColor("likelihood", latexNumber(values.likelihood))}\\cdot` +
-      `${latexColor("prior", latexNumber(values.prior))}}` +
-      `{${latexColor("evidence", latexNumber(values.evidence))}} \\\\`,
-    `&= ${latexColor("posterior", latexNumber(posterior))}`,
-    "\\end{aligned}",
-  ].join("\n")
+function formatPosteriorPercent(values: BayesFormulaValues) {
+  if (values.evidence <= 0) {
+    return "-"
+  }
 
-  const source = [
-    "\\[",
-    body,
-    "\\]",
-  ].join("\n")
-
-  return { body, source }
+  return `${probabilityToPercent(values.numerator / values.evidence)}%`
 }
 
-function createBayesMath(values: BayesFormulaValues) {
-  const posterior = values.evidence > 0 ? values.numerator / values.evidence : Number.NaN
+function createBayesEquation(values: BayesFormulaValues) {
   return mathElement(
     "math",
     { class: "bayes-rendered-math", display: "block" },
     mathElement(
-      "mtable",
+      "mrow",
       {},
-      mathRow(
-        probabilityAGivenB(),
-        fraction(multiply(probabilityBGivenA(), probabilityA()), probabilityB()),
+      coloredMath("posterior", mathElement("mtext", {}, formatPosteriorPercent(values))),
+      mathElement("mo", {}, "="),
+      fraction(
+        multiply(mathNumber(values.likelihood, "likelihood"), mathNumber(values.prior, "prior")),
+        mathNumber(values.evidence, "evidence"),
       ),
-      mathRow(
-        null,
-        fraction(
-          multiply(mathNumber(values.likelihood, "likelihood"), mathNumber(values.prior, "prior")),
-          mathNumber(values.evidence, "evidence"),
-        ),
-      ),
-      mathRow(null, mathNumber(posterior, "posterior")),
     ),
-  )
-}
-
-function mathRow(left: Element | null, right: Element) {
-  return mathElement(
-    "mtr",
-    {},
-    mathElement("mtd", {}, left ?? mathElement("mrow")),
-    mathElement("mtd", {}, mathElement("mo", {}, "=")),
-    mathElement("mtd", {}, right),
   )
 }
 
@@ -445,57 +393,16 @@ function multiply(left: Element, right: Element) {
   return mathElement("mrow", {}, left, mathElement("mo", {}, "\u00b7"), right)
 }
 
-function probabilityAGivenB() {
-  return coloredMath(
-    "posterior",
-    mathElement("mi", {}, "P"),
-    mathElement("mo", {}, "("),
-    mathElement("mi", {}, "A"),
-    mathElement("mo", {}, "\u2223"),
-    mathElement("mi", {}, "B"),
-    mathElement("mo", {}, ")"),
-  )
-}
-
-function probabilityBGivenA() {
-  return coloredMath(
-    "likelihood",
-    mathElement("mi", {}, "P"),
-    mathElement("mo", {}, "("),
-    mathElement("mi", {}, "B"),
-    mathElement("mo", {}, "\u2223"),
-    mathElement("mi", {}, "A"),
-    mathElement("mo", {}, ")"),
-  )
-}
-
-function probabilityA() {
-  return coloredMath(
-    "prior",
-    mathElement("mi", {}, "P"),
-    mathElement("mo", {}, "("),
-    mathElement("mi", {}, "A"),
-    mathElement("mo", {}, ")"),
-  )
-}
-
-function probabilityB() {
-  return coloredMath(
-    "evidence",
-    mathElement("mi", {}, "P"),
-    mathElement("mo", {}, "("),
-    mathElement("mi", {}, "B"),
-    mathElement("mo", {}, ")"),
-  )
-}
-
 function mathNumber(value: number, role: keyof typeof bayesColors) {
-  return coloredMath(role, mathElement(Number.isFinite(value) ? "mn" : "mtext", {}, latexNumber(value)))
+  return coloredMath(
+    role,
+    mathElement(Number.isFinite(value) ? "mn" : "mtext", {}, bayes_number(value)),
+  )
 }
 
 function coloredMath(role: keyof typeof bayesColors, ...children: Array<Element | string>) {
   const element = mathElement("mrow", { mathcolor: bayesColors[role] }, ...children)
-  ;(element as HTMLElement).style.color = bayesColors[role]
+    ; (element as HTMLElement).style.color = bayesColors[role]
   return element
 }
 
@@ -514,39 +421,17 @@ function mathElement(
   return element
 }
 
-function createLatexOutput() {
+function createSolutionOutput() {
   const element = document.createElement("section")
-  element.className = "bayes-latex"
+  element.className = "bayes-solution"
+  element.setAttribute("aria-live", "polite")
 
-  const heading = document.createElement("div")
-  heading.className = "bayes-latex-heading"
+  const equation = document.createElement("div")
+  equation.className = "bayes-solution-equation"
+  equation.setAttribute("aria-label", "Bayes theorem equation with current numbers")
 
-  const label = document.createElement("span")
-  label.textContent = "LaTeX"
-
-  const copyButton = document.createElement("button")
-  copyButton.type = "button"
-  copyButton.textContent = "Copy LaTeX"
-
-  const status = document.createElement("span")
-  status.className = "bayes-latex-status"
-  status.setAttribute("aria-live", "polite")
-
-  heading.append(label, copyButton, status)
-
-  const rendered = document.createElement("div")
-  rendered.className = "bayes-latex-rendered"
-  rendered.setAttribute("aria-label", "Rendered Bayes theorem equation with current numbers")
-
-  const output = document.createElement("textarea")
-  output.className = "bayes-latex-output"
-  output.readOnly = true
-  output.rows = 8
-  output.spellcheck = false
-  output.setAttribute("aria-label", "Bayes theorem LaTeX with current numbers")
-
-  element.append(heading, rendered, output)
-  return { element, rendered, output, copyButton, status }
+  element.append(equation)
+  return { element, equation }
 }
 
 function setInlineContent(element: HTMLElement, ...content: InlineContent[]) {
@@ -564,18 +449,17 @@ function bayesTerm(text: string, role: BayesColorRole) {
   return term
 }
 
-function createEventField(
-  symbol: string,
-  labelText: string,
-  placeholder: string,
-  value: string,
-) {
+function bayesPhrase(text: string, role: BayesColorRole) {
+  const phrase = document.createElement("span")
+  phrase.className = "bayes-phrase"
+  phrase.dataset.bayesRole = role
+  phrase.textContent = text
+  return phrase
+}
+
+function createEventField(labelText: string, placeholder: string, value: string) {
   const label = document.createElement("label")
   label.className = "bayes-event-field"
-
-  const symbolText = document.createElement("span")
-  symbolText.className = "bayes-solver-symbol"
-  symbolText.textContent = symbol
 
   const descriptor = document.createElement("span")
   descriptor.className = "bayes-solver-definition-text"
@@ -587,32 +471,18 @@ function createEventField(
   input.value = value
   input.autocomplete = "off"
 
-  label.append(symbolText, descriptor, input)
+  label.append(descriptor, input)
   return { label, input }
 }
 
-function createPercentField(
-  symbol: InlineContent[],
-  labelContent: InlineContent[],
-  value: string,
-  role: BayesColorRole,
-) {
+function createPercentField(labelContent: InlineContent[], value: string, role: BayesColorRole) {
   const label = document.createElement("label")
   label.className = "bayes-solver-field"
   label.dataset.bayesRole = role
 
-  const text = document.createElement("span")
-  text.className = "bayes-solver-label"
-
-  const notation = document.createElement("span")
-  notation.className = "bayes-solver-symbol"
-  setInlineContent(notation, ...symbol)
-
   const definition = document.createElement("span")
   definition.className = "bayes-solver-definition-text"
   setInlineContent(definition, ...labelContent)
-
-  text.append(notation, definition)
 
   const control = document.createElement("span")
   control.className = "bayes-solver-control"
@@ -629,7 +499,7 @@ function createPercentField(
   percent.textContent = "%"
 
   control.append(input, percent)
-  label.append(text, control)
+  label.append(definition, control)
 
   return {
     label,
@@ -640,22 +510,13 @@ function createPercentField(
   }
 }
 
-function createOutputItem(
-  symbol: InlineContent[],
-  labelContent: InlineContent[],
-  title: string,
-  role: BayesColorRole,
-) {
+function createOutputItem(labelContent: InlineContent[], title: string, role: BayesColorRole) {
   const element = document.createElement("article")
   element.className = "bayes-solver-result"
   element.dataset.bayesRole = role
 
   const label = document.createElement("span")
   label.className = "bayes-solver-label"
-
-  const notation = document.createElement("span")
-  notation.className = "bayes-solver-symbol"
-  setInlineContent(notation, ...symbol)
 
   const definition = document.createElement("span")
   definition.className = "bayes-solver-definition-text"
@@ -664,7 +525,7 @@ function createOutputItem(
   const value = document.createElement("strong")
   value.title = title
 
-  label.append(notation, definition)
+  label.append(definition)
   element.append(label, value)
   return {
     element,

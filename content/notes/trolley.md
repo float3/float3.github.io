@@ -7,3 +7,5 @@ tags:
 ---
 
 <script src="/js/trolley.js"></script>
+
+<p class="wasm-credit">made with love and rust (compiled to wasm)</p>

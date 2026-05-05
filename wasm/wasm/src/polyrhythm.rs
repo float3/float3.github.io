@@ -50,6 +50,21 @@ fn compute_position_along_polygon(vertices: &[(f64, f64)], t: f64) -> (f64, f64)
     )
 }
 
+fn voice_color(index: usize) -> &'static str {
+    const COLORS: [&str; 8] = [
+        "#4f8cff", "#ffbc3f", "#fe7fb3", "#61d394", "#dd6fff", "#4dd0e1", "#f87171", "#a3e635",
+    ];
+    COLORS[index % COLORS.len()]
+}
+
+fn voice_frequency(base_pitch: u32, index: usize) -> f32 {
+    const INTERVALS: [i32; 8] = [0, 7, 12, 16, 19, 24, 28, 31];
+    let octave_offset = (index / INTERVALS.len()) as i32 * 24;
+    let semitones = INTERVALS[index % INTERVALS.len()] + octave_offset;
+    let frequency = base_pitch as f32 * 2.0_f32.powf(semitones as f32 / 12.0);
+    frequency.min(4_000.0)
+}
+
 type MyType = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
 
 /// Starts the animation with user settings.
@@ -64,12 +79,11 @@ pub fn start_with_settings(
     // Cancel any previous animation.
     let window = window().unwrap();
     CURRENT_ANIMATION.with(|id| {
-        if let Some(prev_id) = *id.borrow() {
+        if let Some(prev_id) = id.borrow_mut().take() {
             window
                 .cancel_animation_frame(prev_id)
                 .expect("Failed to cancel previous frame");
         }
-        *id.borrow_mut() = None;
     });
 
     // Parse subdivisions string; supports comma or colon separated values.
@@ -125,7 +139,7 @@ pub fn start_with_settings(
     let context2_rc = Rc::new(context2);
     let canvas2_rc = Rc::new(canvas2);
 
-    // For each voice, track the last triggered beat (None initially).
+    // For each voice, track the last triggered (measure, beat) pair.
     let beat_tracker = Rc::new(RefCell::new(vec![None; poly_rc.components.len()]));
 
     // Create an Rc for the animation closure.
@@ -139,6 +153,7 @@ pub fn start_with_settings(
         let current_time = js_sys::Date::now();
         let elapsed = (current_time - start_time) / 1000.0; // seconds
         let t_phase = (elapsed % measure_duration) / measure_duration;
+        let measure_index = (elapsed / measure_duration).floor() as u64;
 
         // Clear canvases.
         let cvs0 = &*canvas0_rc;
@@ -155,19 +170,14 @@ pub fn start_with_settings(
         let center_x = cvs1.width() as f64 / 2.0;
         let center_y = cvs1.height() as f64 / 2.0;
 
-        // Reset beat tracking at the start of each measure.
-        if t_phase < 0.05 {
-            let mut tracker = beat_tracker.borrow_mut();
-            for trig in tracker.iter_mut() {
-                *trig = None;
-            }
-        }
-
         // For each voice in the polyrhythm.
         for (i, &sides) in poly_rc.components.iter().enumerate() {
+            let color = voice_color(i);
             let radius = 40.0 + (i * 2) as f64 * 30.0;
             let vertices = compute_polygon_vertices(center_x, center_y, radius, sides as usize);
             ctx1.begin_path();
+            ctx1.set_stroke_style_str(color);
+            ctx1.set_line_width(2.0);
             if let Some(&(x, y)) = vertices.first() {
                 ctx1.move_to(x, y);
                 for &(vx, vy) in vertices.iter().skip(1) {
@@ -178,59 +188,72 @@ pub fn start_with_settings(
                 }
                 ctx1.stroke();
             }
+            ctx1.set_fill_style_str(color);
+            for &(vx, vy) in &vertices {
+                ctx1.begin_path();
+                ctx1.arc(vx, vy, 3.0, 0.0, std::f64::consts::PI * 2.0)
+                    .expect("Failed to draw polygon vertex");
+                ctx1.fill();
+            }
             let pos = compute_position_along_polygon(&vertices, t_phase);
             ctx1.begin_path();
-            ctx1.arc(pos.0, pos.1, 5.0, 0.0, std::f64::consts::PI * 2.0)
+            ctx1.arc(pos.0, pos.1, 6.0, 0.0, std::f64::consts::PI * 2.0)
                 .expect("Failed to draw moving point");
             ctx1.fill();
 
             // --- Beat Counting Visualization ---
-            let beat_disp = ((t_phase * sides as f64).floor() as u32) + 1;
-            ctx0.set_font("20px sans-serif");
-            ctx0.set_fill_style_str("blue");
+            let beat_index = ((t_phase * sides as f64).floor() as u32).min(sides.saturating_sub(1));
+            let beat_disp = beat_index + 1;
+            ctx0.set_font("18px sans-serif");
+            ctx0.set_fill_style_str(color);
             ctx0.fill_text(
-                &beat_disp.to_string(),
-                center_x - 10.0,
-                center_y - (70.0 + i as f64 * 30.0) - 10.0,
+                &format!("{} hits: {}", sides, beat_disp),
+                24.0,
+                30.0 + i as f64 * 26.0,
             )
             .expect("Failed to draw beat number");
 
+            // --- Timeline visualization ---
+            let timeline_left = 26.0;
+            let timeline_width = cvs2.width() as f64 - 110.0;
+            let timeline_y = 34.0 + i as f64 * 28.0;
+            ctx2.set_stroke_style_str("#667085");
+            ctx2.set_line_width(1.0);
+            ctx2.begin_path();
+            ctx2.move_to(timeline_left, timeline_y);
+            ctx2.line_to(timeline_left + timeline_width, timeline_y);
+            ctx2.stroke();
+
+            for beat in 0..sides {
+                let x = timeline_left + timeline_width * beat as f64 / sides as f64;
+                ctx2.begin_path();
+                ctx2.set_fill_style_str(if beat == beat_index { color } else { "#667085" });
+                ctx2.arc(
+                    x,
+                    timeline_y,
+                    if beat == beat_index { 5.0 } else { 3.0 },
+                    0.0,
+                    std::f64::consts::PI * 2.0,
+                )
+                .expect("Failed to draw timeline beat");
+                ctx2.fill();
+            }
+            ctx2.set_font("14px sans-serif");
+            ctx2.set_fill_style_str(color);
+            ctx2.fill_text(
+                &format!("voice {}", i + 1),
+                timeline_left + timeline_width + 14.0,
+                timeline_y + 5.0,
+            )
+            .expect("Failed to draw timeline label");
+
             // --- Trigger beep per beat for this voice ---
-            let vertex_interval = measure_duration / (sides as f64);
-            let measure_elapsed = elapsed % measure_duration;
-            let measure_start_time = current_time - (measure_elapsed * 1000.0);
-            // Compute current beat index (0-indexed).
-            let beat_index = (t_phase * sides as f64).floor() as u32;
-            // Compute the scheduled start time for this beat.
-            let beat_start_time =
-                measure_start_time + (beat_index as f64 * vertex_interval * 1000.0);
-            let delay = (beat_start_time - current_time) as i32;
-            let freq = pitch as f32 + (i as f32 * 20.0);
+            let freq = voice_frequency(pitch, i);
+            let beat_key = (measure_index, beat_index);
 
-            // Check if this beat hasn't been triggered yet.
-            if beat_tracker.borrow()[i] != Some(beat_index) {
-                let tracker_clone = beat_tracker.clone();
-                let window_inner = window_clone.clone();
-                let i_clone = i;
-                // Closure to trigger the beep and update tracker.
-                let beep_closure = Closure::wrap(Box::new(move || {
-                    play_beep(freq, 0.1);
-                    tracker_clone.borrow_mut()[i_clone] = Some(beat_index);
-                }) as Box<dyn FnMut()>);
-
-                if delay > 0 {
-                    window_inner
-                        .set_timeout_with_callback_and_timeout_and_arguments_0(
-                            beep_closure.as_ref().unchecked_ref(),
-                            delay,
-                        )
-                        .expect("Failed to schedule beep");
-                } else {
-                    // If we're already past the scheduled time, trigger immediately.
-                    play_beep(freq, 0.1);
-                    beat_tracker.borrow_mut()[i] = Some(beat_index);
-                }
-                beep_closure.forget();
+            if beat_tracker.borrow()[i] != Some(beat_key) {
+                play_beep(freq, if beat_index == 0 { 0.13 } else { 0.09 });
+                beat_tracker.borrow_mut()[i] = Some(beat_key);
             }
         }
 
@@ -257,12 +280,28 @@ pub fn start_with_settings(
 #[wasm_bindgen]
 pub fn stop() {
     CURRENT_ANIMATION.with(|id| {
-        if let Some(frame_id) = *id.borrow() {
+        if let Some(frame_id) = id.borrow_mut().take() {
             window()
                 .unwrap()
                 .cancel_animation_frame(frame_id)
                 .expect("Failed to cancel frame");
-            *id.borrow_mut() = None;
         }
     });
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn voice_frequencies_are_related_to_the_base_pitch() {
+        assert!((voice_frequency(440, 0) - 440.0).abs() < 0.001);
+        assert!((voice_frequency(440, 1) - 659.255).abs() < 0.01);
+        assert!(voice_frequency(440, 3) > voice_frequency(440, 2));
+    }
+
+    #[test]
+    fn voice_colors_cycle() {
+        assert_eq!(voice_color(0), voice_color(8));
+    }
 }

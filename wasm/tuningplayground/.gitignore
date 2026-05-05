@@ -3,7 +3,6 @@ www-dev/
 stable/
 debug/
 target/
-Cargo.lock
 **/*.rs.bk
 *.pdb
 pkg/
