@@ -501,10 +501,7 @@ impl Site {
             entries.push(GalleryEntry {
                 src: format!("/photography/gallery/{file_name}"),
                 title,
-                meta: format!(
-                    "protected export from {}",
-                    relative.to_string_lossy().replace('\\', "/")
-                ),
+                meta: relative.to_string_lossy().replace('\\', "/"),
                 width,
                 height,
             });
