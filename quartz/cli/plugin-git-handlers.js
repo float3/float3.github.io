@@ -55,12 +55,12 @@ async function buildPluginAsync(pluginDir, name) {
   try {
     const skipBuild = !needsBuild(pluginDir)
     console.log(styleText("cyan", `  → ${name}: installing dependencies...`))
-    await execAsync("npm install --ignore-scripts", { cwd: pluginDir })
+    await execAsync("bun install --ignore-scripts", { cwd: pluginDir })
     if (!skipBuild) {
       console.log(styleText("cyan", `  → ${name}: building...`))
-      await execAsync("npm run build", { cwd: pluginDir })
+      await execAsync("bun run build", { cwd: pluginDir })
     }
-    await execAsync("npm prune --omit=dev", { cwd: pluginDir })
+    await execAsync("bun install --production --ignore-scripts", { cwd: pluginDir })
     linkPeerPlugins(pluginDir)
     return true
   } catch (error) {
@@ -299,7 +299,10 @@ export async function handlePluginInstallUnified({
 
   if (!fromConfig && !lockfile) {
     console.log(
-      styleText("yellow", "⚠ No quartz.lock.json found. Run 'npx quartz plugin add <repo>' first."),
+      styleText(
+        "yellow",
+        "⚠ No quartz.lock.json found. Run 'bun run quartz plugin add <repo>' first.",
+      ),
     )
     return
   }
@@ -839,7 +842,7 @@ export async function handlePluginInstallUnified({
       const pluginDir = path.join(PLUGINS_DIR, name)
       if (!fs.existsSync(pluginDir)) {
         console.log(
-          styleText("yellow", `⚠ ${name} directory missing. Run 'npx quartz plugin install'.`),
+          styleText("yellow", `⚠ ${name} directory missing. Run 'bun run quartz plugin install'.`),
         )
         continue
       }
@@ -1618,7 +1621,7 @@ export async function handlePluginStatus() {
 
   if (updatesAvailable.length > 0) {
     console.log(styleText("yellow", `\nUpdates available: ${updatesAvailable.join(", ")}`))
-    console.log(styleText("gray", "Run 'npx quartz plugin install --latest' to update."))
+    console.log(styleText("gray", "Run 'bun run quartz plugin install --latest' to update."))
   }
 
   if (failedChecks.length > 0) {

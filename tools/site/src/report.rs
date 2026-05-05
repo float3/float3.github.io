@@ -25,16 +25,14 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
     let time_str = command_text(public, "date", &["+%x (%A) %X %z"]);
     let os_version = os_version();
     let nix_version = command_text(public, "nix", &["--version"]);
-    let quartz_version = command_text(&site.root, "npx", &["quartz", "--version"])
+    let quartz_version = command_text(&site.root, "bun", &["run", "quartz", "--version"])
         .lines()
         .last()
         .unwrap_or("not installed")
         .to_string();
     let python_version = command_text(public, "python", &["--version"]);
-    let corepack_version = command_text(public, "corepack", &["--version"]);
     let node_version = command_text(public, "node", &["--version"]);
-    let npm_version = command_text(public, "npm", &["--version"]);
-    let pnpm_version = command_text(public, "pnpm", &["--version"]);
+    let bun_version = command_text(public, "bun", &["--version"]);
     let cargo_version = command_text(public, "cargo", &["--version"]);
     let rustc_version = command_text(public, "rustc", &["--version"]);
     let rustup_version = command_text(public, "rustup", &["--version"])
@@ -43,7 +41,7 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
         .unwrap_or("not installed")
         .to_string();
     let wasm_pack_version = command_text(public, "wasm-pack", &["--version"]);
-    let tsc_version = command_text(public, "pnpm", &["exec", "tsc", "--version"]);
+    let tsc_version = command_text(&site.root, "bun", &["run", "tsc", "--version"]);
     let git_commit = site
         .output_optional(&site.root, "git", &os_args(&["rev-parse", "HEAD"]))?
         .unwrap_or_else(|| "unknown".to_string());
@@ -70,10 +68,8 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
     current_body.push(version_line("Nix", &nix_version));
     current_body.push(version_line("Quartz", &quartz_version));
     current_body.push(version_line("Python", &python_version));
-    current_body.push(version_line("corepack", &corepack_version));
     current_body.push(version_line("Node.js", &node_version));
-    current_body.push(version_line("npm", &npm_version));
-    current_body.push(version_line("pnpm", &pnpm_version));
+    current_body.push(version_line("Bun", &bun_version));
     current_body.push(version_line("cargo", &cargo_version));
     current_body.push(version_line("rustc", &rustc_version));
     current_body.push(version_line("rustup", &rustup_version));
@@ -164,7 +160,7 @@ fn command_text(cwd: &Path, program: &str, args: &[&str]) -> String {
 }
 
 fn webpack_version(ts_dir: &Path) -> String {
-    let full = command_text(ts_dir, "pnpm", &["exec", "webpack", "--version"]);
+    let full = command_text(ts_dir, "bun", &["run", "webpack", "--version"]);
     if let Some((_, packages)) = full.split_once("Packages:") {
         packages.trim().replace('\n', "<br>")
     } else {

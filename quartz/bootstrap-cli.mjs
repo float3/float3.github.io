@@ -1,4 +1,4 @@
-#!/usr/bin/env -S node --no-deprecation
+#!/usr/bin/env bun
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import {
@@ -32,7 +32,7 @@ async function launchTui() {
   if (!existsSync(tuiPath)) {
     console.error(
       "TUI plugin not installed. Install with:\n" +
-        "  npx quartz plugin add github:quartz-community/tui\n",
+        "  bun run quartz plugin add github:quartz-community/tui\n",
     )
     process.exit(1)
   }

@@ -122,7 +122,7 @@ impl Site {
         self.wasm(mode)?;
         remove_license_files(&self.root.join("content/js"))?;
 
-        self.pnpm_install(&self.root, InstallMode::Locked)?;
+        self.bun_install(&self.root, InstallMode::Locked)?;
 
         let mut args = os_args(&["quartz/bootstrap-cli.mjs", "build"]);
         if mode == Mode::Dev {
@@ -134,7 +134,7 @@ impl Site {
             Vec::new()
         };
 
-        self.run(&self.root, "node", &args)?;
+        self.run_bun(&self.root, &args)?;
 
         let public = self.root.join("public");
         report::write(self, &public, started.elapsed().as_secs())
@@ -162,9 +162,10 @@ impl Site {
             &wasm_args,
             &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
         )?;
+        remove_file_if_exists(&wasm_dir.join("pkg/.gitignore"))?;
 
         let ts_dir = self.root.join("ts");
-        self.pnpm_install(&ts_dir, InstallMode::Locked)?;
+        self.bun_install(&ts_dir, InstallMode::Locked)?;
         self.sync_wasm_package_dependency()?;
         self.run(
             &ts_dir,
@@ -217,11 +218,11 @@ impl Site {
         let target = self.root.join("ts/node_modules/wasm");
 
         if !target.exists() {
-            return Err(SiteError::new(format!(
-                "missing {}; run pnpm install in ts before bundling wasm",
-                target.display()
-            ))
-            .into());
+            fs::create_dir_all(&target)?;
+        }
+
+        if fs::canonicalize(&source)? == fs::canonicalize(&target)? {
+            return Ok(());
         }
 
         for entry in fs::read_dir(&source)? {
@@ -399,30 +400,25 @@ impl Site {
         let local_tsc = dir.join("node_modules/typescript/bin/tsc");
         let local_eslint = dir.join("node_modules/eslint/bin/eslint.js");
 
-        if local_tsc.is_file() && local_eslint.is_file() {
-            self.run(
-                &dir,
-                "node",
-                &os_args(&[
-                    "node_modules/typescript/bin/tsc",
-                    "--noEmit",
-                    "--incremental",
-                    "false",
-                ]),
-            )?;
-            return self.run(
-                &dir,
-                "node",
-                &os_args(&["node_modules/eslint/bin/eslint.js", "src"]),
-            );
+        if !local_tsc.is_file() || !local_eslint.is_file() {
+            self.bun_install(&dir, InstallMode::Locked)?;
         }
 
-        self.pnpm_install(&dir, InstallMode::Locked)?;
-        self.run_pnpm(
+        self.run(
             &dir,
-            &os_args(&["exec", "tsc", "--noEmit", "--incremental", "false"]),
+            "node",
+            &os_args(&[
+                "node_modules/typescript/bin/tsc",
+                "--noEmit",
+                "--incremental",
+                "false",
+            ]),
         )?;
-        self.run_pnpm(&dir, &os_args(&["exec", "eslint", "src"]))
+        self.run(
+            &dir,
+            "node",
+            &os_args(&["node_modules/eslint/bin/eslint.js", "src"]),
+        )
     }
 
     fn cargo_check_manifest(&self, manifest: &str, target_name: &str) -> Result<()> {
@@ -731,9 +727,9 @@ impl Site {
             &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
         )?;
 
-        self.run_pnpm(&self.root, &os_args(&["update"]))?;
-        self.run_pnpm(&self.root, &os_args(&["audit", "fix"]))?;
-        self.pnpm_install(&self.root, InstallMode::Unlocked)?;
+        self.run_bun(&self.root, &os_args(&["update"]))?;
+        self.run_bun(&self.root, &os_args(&["audit"]))?;
+        self.bun_install(&self.root, InstallMode::Unlocked)?;
 
         self.node_update(&self.root.join("ts"), "src")?;
 
@@ -754,11 +750,11 @@ impl Site {
     }
 
     fn node_update(&self, dir: &Path, lint_target: &str) -> Result<()> {
-        self.run_pnpm(dir, &os_args(&["update"]))?;
-        self.run_pnpm(dir, &os_args(&["audit", "fix"]))?;
-        self.pnpm_install(dir, InstallMode::Unlocked)?;
-        self.run_pnpm(dir, &os_args(&["exec", "prettier", lint_target, "--write"]))?;
-        self.run_pnpm(dir, &os_args(&["exec", "eslint", lint_target, "--fix"]))
+        self.run_bun(dir, &os_args(&["update"]))?;
+        self.run_bun(dir, &os_args(&["audit"]))?;
+        self.bun_install(dir, InstallMode::Unlocked)?;
+        self.run_bun(dir, &os_args(&["run", "prettier", lint_target, "--write"]))?;
+        self.run_bun(dir, &os_args(&["run", "eslint", lint_target, "--fix"]))
     }
 
     fn cargo_update(&self, dir: &Path) -> Result<()> {
@@ -873,47 +869,32 @@ impl Site {
         self.run(&self.root, "git", &os_args(&["push"]))
     }
 
-    fn pnpm_install(&self, dir: &Path, mode: InstallMode) -> Result<()> {
+    fn bun_install(&self, dir: &Path, mode: InstallMode) -> Result<()> {
         let args = match mode {
-            InstallMode::Locked if self.ci => os_args(&["install", "--frozen-lockfile"]),
+            InstallMode::Locked if self.ci => os_args(&["ci"]),
             InstallMode::Locked => os_args(&["install"]),
-            InstallMode::Unlocked => os_args(&["install", "--no-frozen-lockfile"]),
+            InstallMode::Unlocked => os_args(&["install"]),
         };
 
-        if !pnpm_available() && dir.join("node_modules").is_dir() {
+        if bun_program().is_none() && dir.join("node_modules").is_dir() {
             self.warn(&format!(
-                "pnpm was not found; reusing existing dependencies in {}",
+                "bun was not found; reusing existing dependencies in {}",
                 dir.display()
             ));
             return Ok(());
         }
 
-        self.run_pnpm(dir, &args)
+        self.run_bun(dir, &args)
     }
 
-    fn run_pnpm(&self, cwd: &Path, args: &[OsString]) -> Result<()> {
-        if command_succeeds("pnpm", &["--version"]) {
-            return self.run(cwd, "pnpm", args);
+    fn run_bun(&self, cwd: &Path, args: &[OsString]) -> Result<()> {
+        if let Some(program) = bun_program() {
+            return self.run(cwd, program, args);
         }
 
-        if !corepack_pnpm_available() {
-            return Err(Box::new(SiteError::new(
-                "could not find pnpm; enable Corepack or run pnpm install before building",
-            )));
-        }
-
-        let mut fallback_args = if cfg!(windows) {
-            os_args(&["/C", "corepack", "pnpm"])
-        } else {
-            os_args(&["pnpm"])
-        };
-        fallback_args.extend(args.iter().cloned());
-
-        if cfg!(windows) {
-            self.run(cwd, "cmd", &fallback_args)
-        } else {
-            self.run(cwd, "corepack", &fallback_args)
-        }
+        Err(Box::new(SiteError::new(
+            "could not find bun; install Bun or run bun install before building",
+        )))
     }
 
     fn git_iso_date(&self, args: &[OsString]) -> Result<Option<String>> {
@@ -1232,6 +1213,13 @@ fn find_repo_root() -> Result<PathBuf> {
 fn remove_dir_if_exists(path: &Path) -> Result<()> {
     if path.exists() {
         fs::remove_dir_all(path)?;
+    }
+    Ok(())
+}
+
+fn remove_file_if_exists(path: &Path) -> Result<()> {
+    if path.exists() {
+        fs::remove_file(path)?;
     }
     Ok(())
 }
@@ -1560,7 +1548,10 @@ fn os_args(args: &[&str]) -> Vec<OsString> {
     args.iter().map(OsString::from).collect()
 }
 
-fn command_succeeds(program: &str, args: &[&str]) -> bool {
+fn command_succeeds<P>(program: P, args: &[&str]) -> bool
+where
+    P: AsRef<OsStr>,
+{
     Command::new(program)
         .args(args)
         .stdout(Stdio::null())
@@ -1569,16 +1560,24 @@ fn command_succeeds(program: &str, args: &[&str]) -> bool {
         .is_ok_and(|status| status.success())
 }
 
-fn pnpm_available() -> bool {
-    command_succeeds("pnpm", &["--version"]) || corepack_pnpm_available()
-}
-
-fn corepack_pnpm_available() -> bool {
-    if cfg!(windows) {
-        command_succeeds("cmd", &["/C", "corepack", "pnpm", "--version"])
-    } else {
-        command_succeeds("corepack", &["pnpm", "--version"])
+fn bun_program() -> Option<OsString> {
+    if command_succeeds("bun", &["--version"]) {
+        return Some("bun".into());
     }
+
+    if cfg!(windows) {
+        let path = env::var_os("USERPROFILE")
+            .map(PathBuf::from)
+            .map(|home| home.join(".bun/bin/bun.exe"));
+
+        if let Some(path) = path {
+            if path.is_file() && command_succeeds(path.as_os_str(), &["--version"]) {
+                return Some(path.into_os_string());
+            }
+        }
+    }
+
+    None
 }
 
 fn format_command(program: &OsStr, args: &[OsString]) -> String {
