@@ -1,7 +1,7 @@
 ---
 title: media
 date: 2024-12-13
-updated: 2025-06-04
+updated: 2026-05-07
 tags:
   - list
 ---
@@ -15,8 +15,12 @@ tags:
 [beating_sir_aloone_damageless.webm](/misc/media/beating_sir_aloone_damageless.webm) \
 [beijing_tones.png](/misc/media/beijing_tones.png) \
 [chinese_sounds.png](/misc/media/chinese_sounds.png) \
+[curvestuff.glb](/misc/media/curvestuff.glb) \
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
+[fixed-c-ji-c-drone-progression.wav](/misc/media/fixed-c-ji-c-drone-progression.wav) \
+[fixed-c-ji-progression.wav](/misc/media/fixed-c-ji-progression.wav) \
+[fixed-c-ji-sine-progression.wav](/misc/media/fixed-c-ji-sine-progression.wav) \
 [helmet_guy.mp4](/misc/media/helmet_guy.mp4) \
 [hiragana-1.png](/misc/media/hiragana-1.png) \
 [hiragana-2.png](/misc/media/hiragana-2.png) \
@@ -30,8 +34,15 @@ tags:
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
 [render.mp4](/misc/media/render.mp4) \
 [render.png](/misc/media/render.png) \
+[recursive-ji-c-drone-progression.wav](/misc/media/recursive-ji-c-drone-progression.wav) \
+[recursive-ji-note-splits.wav](/misc/media/recursive-ji-note-splits.wav) \
+[recursive-ji-progression.wav](/misc/media/recursive-ji-progression.wav) \
+[recursive-ji-sine-progression.wav](/misc/media/recursive-ji-sine-progression.wav) \
 [statue_with_child.mp4](/misc/media/statue_with_child.mp4) \
 [taipei_tones.png](/misc/media/taipei_tones.png) \
+[twelve-tet-c-drone-progression.wav](/misc/media/twelve-tet-c-drone-progression.wav) \
+[twelve-tet-progression.wav](/misc/media/twelve-tet-progression.wav) \
+[twelve-tet-sine-progression.wav](/misc/media/twelve-tet-sine-progression.wav) \
 [ㄱ.png](/misc/media/ㄱ.png) \
 [ㄴ.png](/misc/media/ㄴ.png) \
 [ㅁ.png](/misc/media/ㅁ.png) \

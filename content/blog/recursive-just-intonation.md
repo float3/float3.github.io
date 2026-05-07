@@ -1,7 +1,7 @@
 ---
 title: Why you should buy 12 Pianos | Recursive Just Intonation
 date: 2022-11-29
-updated: 2026-05-05
+updated: 2026-05-07
 tags:
   - music
   - programming
@@ -127,26 +127,26 @@ Nice mathematical ratios are pleasant to our ears.
 period:
 
 <figure class="wave-figure">
-  <figcaption>A tone and its octave: two sine waves at a base frequency <code>f</code> and <code>2f</code>. The whole pattern repeats every <code>1/f</code> seconds, so the ear can lock onto it easily.</figcaption>
   <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(2*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
   </iframe>
+  <figcaption>A tone and its octave: two sine waves at a base frequency <code>f</code> and <code>2f</code>. The whole pattern repeats every <code>1/f</code> seconds, so the ear can lock onto it easily.</figcaption>
 </figure>
 
 While, for example, `x + 13/12*x` has a much longer period:
 
 <figure class="wave-figure">
-  <figcaption>A tone and a narrow nearby step: two sine waves at <code>f</code> and <code>13/12 f</code>. The combined wave needs <code>12/f</code> seconds to repeat, so it takes much longer to settle than the octave example.</figcaption>
   <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin((13/12)*(x+5*t))&v1=true&f2(x,t)=&v2=false&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=false&grid=1&coords=0,-3,12">
   </iframe>
+  <figcaption>A tone and a narrow nearby step: two sine waves at <code>f</code> and <code>13/12 f</code>. The combined wave needs <code>12/f</code> seconds to repeat, so it takes much longer to settle than the octave example.</figcaption>
 </figure>
 
 A just major chord is `4:5:6`, or `1:1.25:1.5`. In 12-TET, the same chord is
 closer to `500:630:749`, or `1:1.260:1.498`.
 
 <figure class="wave-figure">
-  <figcaption>Two major chords: the just version uses exact <code>4:5:6</code> ratios, while the 12-TET version uses the familiar piano/guitar approximation. They are close, but the 12-TET peaks do not quite return to the same places.</figcaption>
   <iframe class="no-input" tabindex="-1" width="850" height="500" src="https://graphtoy.com/?f1(x,t)=sin(x+5*t)+sin(1.25*(x+5*t))+sin(1.5*(x+5*t))&v1=true&f2(x,t)=sin(x+5*t)+sin(1.26*(x+5*t))+sin(1.4983*(x+5*t))&v2=true&f3(x,t)=&v3=false&f4(x,t)=&v4=false&f5(x,t)=&v5=false&f6(x,t)=&v6=true&grid=1&coords=0,-3,12">
   </iframe>
+  <figcaption>Two major chords: the just version uses exact <code>4:5:6</code> ratios, while the 12-TET version uses the familiar piano/guitar approximation. They are close, but the 12-TET peaks do not quite return to the same places.</figcaption>
 </figure>
 
 ## 12 Just Pianos | Recursive Just Intonation
@@ -227,48 +227,112 @@ tuning system. Pitch classes split according to harmonic function.
 
 ### What It Sounds Like
 
-The audio examples use the same chord progression three ways:
-
-```text
-C -> E -> G#/Ab -> C -> F -> A -> D -> G7 -> C -> E -> F -> C
-```
-
 I picked a progression that visits chords where fixed-C just intonation has
 audible trouble. In the recursive version, each chord retunes around its own
 root.
 
+<script type="module" src="/js/abcnotation.js"></script>
 <script type="module" src="/js/audiooscilloscope.js"></script>
 
-Here is the same recursive progression as pure sine waves, without the extra
-harmonics used in the examples below:
-
-<figure class="audio-figure" data-oscilloscope>
-  <figcaption>Pure sine recursive just intonation: the same chord progression, with each chord retuned around its own C-derived root.</figcaption>
-  <audio controls src="/blog/recursive-just-intonation/recursive-ji-sine-progression.wav"></audio>
+<figure class="abc-figure">
+  <div class="abc-notation" data-recursive-ji-abc="progression"></div>
 </figure>
 
-<figure class="audio-figure" data-oscilloscope>
-  <figcaption>12-TET: stable pitch classes, compromised intervals.</figcaption>
-  <audio controls src="/blog/recursive-just-intonation/twelve-tet-progression.wav"></audio>
-</figure>
+The first two columns use the same progression: once as pure sine waves, then
+again with a simple harmonic timbre. The third keeps a sustained C underneath
+the progression, so the tradeoff between a global reference pitch and
+chord-local purity becomes easier to hear.
 
-<figure class="audio-figure" data-oscilloscope>
-  <figcaption>Fixed C just intonation: C is beautiful, but remote chords start leaning hard.</figcaption>
-  <audio controls src="/blog/recursive-just-intonation/fixed-c-ji-progression.wav"></audio>
-</figure>
-
-<figure class="audio-figure" data-oscilloscope>
-  <figcaption>Recursive just intonation: each chord is tuned from its own C-derived root.</figcaption>
-  <audio controls src="/blog/recursive-just-intonation/recursive-ji-progression.wav"></audio>
-</figure>
+<div class="oscilloscope-matrix">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">tuning system</th>
+        <th scope="col">sine wave progression</th>
+        <th scope="col">harmonic timbre progression</th>
+        <th scope="col">C drone progression</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">12-TET</th>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/twelve-tet-sine-progression.wav"></audio>
+            <figcaption>Stable pitch classes, heard without extra harmonics.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/twelve-tet-progression.wav"></audio>
+            <figcaption>Stable pitch classes, compromised intervals.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/twelve-tet-c-drone-progression.wav"></audio>
+            <figcaption>The equal-tempered progression against a fixed C reference.</figcaption>
+          </figure>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">fixed C just intonation</th>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/fixed-c-ji-sine-progression.wav"></audio>
+            <figcaption>C stays beautiful; remote chords lean hard.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/fixed-c-ji-progression.wav"></audio>
+            <figcaption>C stays beautiful; the added harmonics make the leaning easier to hear.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/fixed-c-ji-c-drone-progression.wav"></audio>
+            <figcaption>Fixed-C tuning stays tied to the drone while the harmony travels.</figcaption>
+          </figure>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">recursive just intonation</th>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/recursive-ji-sine-progression.wav"></audio>
+            <figcaption>Each chord retunes around its own C-derived root.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/recursive-ji-progression.wav"></audio>
+            <figcaption>Chord-local roots with the simple harmonic timbre.</figcaption>
+          </figure>
+        </td>
+        <td>
+          <figure class="audio-figure" data-oscilloscope>
+            <audio controls src="/misc/media/recursive-ji-c-drone-progression.wav"></audio>
+            <figcaption>The drone exposes when chord-local roots move away from global C.</figcaption>
+          </figure>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 There is also a stripped-down example that alternates a fixed-C pitch with its
 recursive chord-local version, then plays both at once so the beating is easier
 to hear:
 
+<figure class="abc-figure">
+  <div class="abc-notation" data-recursive-ji-abc="note-splits"></div>
+  <figcaption>The stripped-down pitch split demo: fixed C just intonation first, recursive just intonation second, then both together with the recursive offset marked in cents.</figcaption>
+</figure>
+
 <figure class="audio-figure" data-oscilloscope>
+  <audio controls src="/misc/media/recursive-ji-note-splits.wav"></audio>
   <figcaption>Pitch-name splits: same nominal note, different chord context.</figcaption>
-  <audio controls src="/blog/recursive-just-intonation/recursive-ji-note-splits.wav"></audio>
 </figure>
 
 Some of the generated split points:
@@ -325,9 +389,10 @@ global keyboard.
 
 ### Implementation Notes
 
-The Rust renderer lives in `tools/site/src/recursive_ji.rs`. It does not use
+The shared Rust renderer lives in `crates/recursive_ji_core`. It does not use
 MIDI, because standard MIDI note numbers assume fixed pitch classes unless you
-add extra tuning messages. Instead it writes 16-bit mono WAV files directly.
+add extra tuning messages. Instead it writes 16-bit mono WAV files directly and
+feeds the browser notation through the WASM bundle.
 
 Generate the files with:
 
@@ -336,7 +401,7 @@ cargo run --manifest-path tools/site/Cargo.toml -- recursive-ji-music
 ```
 
 The same command also writes a CSV frequency report to
-`content/blog/recursive-just-intonation/recursive-ji-frequencies.csv`.
+`content/misc/plaintext/recursive-ji-frequencies.csv`.
 
 The renderer supports three tunings:
 

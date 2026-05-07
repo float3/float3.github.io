@@ -1,7 +1,7 @@
 ---
 title: plaintext
 date: 2024-12-13
-updated: 2026-05-05
+updated: 2026-05-07
 tags:
   - list
 ---
@@ -16,4 +16,5 @@ tags:
 [id_ed25519.pub](/misc/plaintext/id_ed25519.pub) \
 [overtones_series.ods](/misc/plaintext/overtones_series.ods) \
 [public-key.txt](/misc/plaintext/public-key.txt) \
+[recursive-ji-frequencies.csv](/misc/plaintext/recursive-ji-frequencies.csv) \
 [talks.txt](/misc/plaintext/talks.txt)
