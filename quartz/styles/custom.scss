@@ -112,6 +112,47 @@ body[data-slug="notes/craft"] {
   }
 }
 
+@media all and ($mobile) {
+  .page > #quartz-body .sidebar.left:has(.explorer) {
+    background-color: transparent;
+    overflow: visible;
+    z-index: 200;
+  }
+
+  .sidebar.left .explorer {
+    overflow: visible;
+  }
+
+  .sidebar.left .explorer .mobile-explorer {
+    position: relative;
+    z-index: 1001;
+  }
+
+  .sidebar.left .explorer .explorer-content {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: color-mix(in srgb, var(--light) 88%, transparent);
+    inset: 0;
+    overflow: hidden;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .sidebar.left .explorer .explorer-content > .explorer-ul {
+    box-sizing: border-box;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
+  html.mobile-no-scroll,
+  html.mobile-no-scroll body {
+    overflow: hidden;
+  }
+}
+
 hr {
   overflow: visible;
   padding: 0;
