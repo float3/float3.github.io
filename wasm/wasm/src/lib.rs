@@ -11,6 +11,7 @@ pub mod movies;
 pub mod photography;
 pub mod polyrhythm;
 pub mod random;
+pub mod recursive_ji;
 pub mod trolley;
 
 use wasm_bindgen::prelude::*;
