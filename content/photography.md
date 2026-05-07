@@ -1,7 +1,7 @@
 ---
 title: photography
 date: 2026-05-05
-updated: 2026-05-05
+updated: 2026-05-07
 tags:
   - photography
 ---
@@ -59,8 +59,8 @@ tags:
 <p>full-frame F-mount prime.</p>
 </article>
 <article class="photo-gear-item">
-<strong>AF-S VR Micro-Nikkor 105mm f/2.8G IF-ED</strong>
-<p>macro lens with VR.</p>
+<strong>AF Micro-Nikkor 105mm f/2.8</strong>
+<p>macro lens. used with the NIK F-L adapter for film scanning.</p>
 </article>
 <article class="photo-gear-item">
 <strong>Sigma Zoom-alpha III 35-135mm f/3.5-4.5</strong>
@@ -107,6 +107,10 @@ tags:
 <article class="photo-gear-item">
 <strong>Panasonic LUMIX S5 (DC-S5)</strong>
 <p>full-frame mirrorless camera used for camera scanning.</p>
+</article>
+<article class="photo-gear-item">
+<strong>K&amp;F Concept NIK F-L adapter</strong>
+<p>F-mount to L-mount adapter used on the Lumix for film scanning.</p>
 </article>
 <article class="photo-gear-item">
 <strong>VALOI easy35</strong>
