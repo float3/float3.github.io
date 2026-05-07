@@ -6,6 +6,7 @@ tags:
   - list
 ---
 
+[curvestuff.glb](/misc/blobs/curvestuff.glb) \
 [jm_mozdi.mid](/misc/blobs/jm_mozdi.mid) \
 [lighthouse_watchman_update.exe](/misc/blobs/lighthouse_watchman_update.exe) \
 [sample.mid](/misc/blobs/sample.mid) \
