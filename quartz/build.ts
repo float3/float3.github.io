@@ -186,6 +186,21 @@ async function startWatching(
   }
 }
 
+function logChangedFiles(changes: ChangeEvent[]) {
+  if (changes.length === 0) return
+
+  const changedFiles = new Map<FilePath, ChangeEvent["type"]>()
+  for (const change of changes) {
+    changedFiles.set(change.path, change.type)
+  }
+
+  const label = changedFiles.size === 1 ? "Changed file:" : "Changed files:"
+  console.log(styleText("gray", label))
+  for (const [fp, type] of [...changedFiles.entries()].sort(([a], [b]) => a.localeCompare(b))) {
+    console.log(styleText("gray", `  - ${type}: ${fp}`))
+  }
+}
+
 async function rebuild(changes: ChangeEvent[], clientRefresh: () => void, buildData: BuildData) {
   const { ctx, contentMap, mut, changesSinceLastBuild } = buildData
   const { argv, cfg } = ctx
@@ -205,6 +220,7 @@ async function rebuild(changes: ChangeEvent[], clientRefresh: () => void, buildD
   const perf = new PerfTimer()
   perf.addEvent("rebuild")
   console.log(styleText("yellow", "Detected change, rebuilding..."))
+  logChangedFiles(changes.slice(0, numChangesInBuild))
 
   // update changesSinceLastBuild
   for (const change of changes) {
