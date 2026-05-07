@@ -29,6 +29,7 @@ const config = {
     bayestheorem: "./dist/bayestheorem.js",
     photography: "./dist/photography.js",
     audiooscilloscope: "./dist/audiooscilloscope.js",
+    abcnotation: "./dist/abcnotation.js",
   },
   output: {
     path: path.resolve(contentJsDir),

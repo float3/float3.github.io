@@ -25,6 +25,23 @@ interface RenderComponents {
 }
 
 const headerRegex = new RegExp(/h[1-6]/)
+const progressiveBlurScrollScript = `
+;(() => {
+  if (window.__progressiveBlurScrollListener) return
+  window.__progressiveBlurScrollListener = true
+
+  let timeout
+  const stopScrolling = () => document.body.classList.remove("is-scrolling")
+  const startScrolling = () => {
+    document.body.classList.add("is-scrolling")
+    window.clearTimeout(timeout)
+    timeout = window.setTimeout(stopScrolling, 140)
+  }
+
+  window.addEventListener("scroll", startScrolling, { passive: true })
+})()
+`
+
 export function pageResources(
   baseDir: FullSlug | RelativeURL,
   staticResources: StaticResources,
@@ -50,6 +67,12 @@ export function pageResources(
         contentType: "inline",
         spaPreserve: true,
         script: contentIndexScript,
+      },
+      {
+        loadTime: "afterDOMReady",
+        contentType: "inline",
+        spaPreserve: true,
+        script: progressiveBlurScrollScript,
       },
       ...staticResources.js,
     ],

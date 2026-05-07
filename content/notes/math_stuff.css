@@ -364,16 +364,16 @@
   }
 }
 
-/* #interactiveSvg path,
+#interactiveSvg path,
 #interactiveSvg rect {
-    transform-origin: center;
-} */
-
-/* #interactiveSvg path:hover,
-#interactiveSvg rect:hover {
-    transform: scale(1.1);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    filter 160ms ease,
+    opacity 160ms ease;
 }
 
 .hovered {
-    transform: scale(1.05);
-} */
+  filter: brightness(1.16) drop-shadow(0 0 5px currentColor);
+  opacity: 0.92;
+}

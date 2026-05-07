@@ -14,18 +14,40 @@ const states = new WeakMap<HTMLAudioElement, OscilloscopeState>()
 
 document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) => {
   const audio = figure.querySelector("audio")
-  if (!(audio instanceof HTMLAudioElement) || !AudioContextClass) {
+  if (!(audio instanceof HTMLAudioElement)) {
     return
   }
+
+  if (!AudioContextClass) {
+    audio.controls = true
+    return
+  }
+
+  audio.controls = false
+  audio.preload = audio.preload || "metadata"
+  audio.classList.add("oscilloscope-audio")
+
+  const stage = document.createElement("div")
+  stage.className = "audio-oscilloscope-stage"
 
   const canvas = document.createElement("canvas")
   canvas.className = "oscilloscope-canvas"
   canvas.setAttribute("aria-hidden", "true")
-  audio.insertAdjacentElement("afterend", canvas)
+
+  const playButton = document.createElement("button")
+  playButton.className = "audio-oscilloscope-button"
+  playButton.type = "button"
+  playButton.dataset.playing = "false"
+  playButton.setAttribute("aria-label", "Play audio")
+
+  stage.append(canvas, playButton)
+  audio.insertAdjacentElement("beforebegin", stage)
 
   const context2d = canvas.getContext("2d")
   if (!context2d) {
-    canvas.remove()
+    stage.remove()
+    audio.controls = true
+    audio.classList.remove("oscilloscope-audio")
     return
   }
 
@@ -37,6 +59,11 @@ document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) =
       cancelAnimationFrame(animationFrame)
       animationFrame = null
     }
+  }
+  const updatePlaybackButton = () => {
+    const isPlaying = !audio.paused && !audio.ended
+    playButton.dataset.playing = String(isPlaying)
+    playButton.setAttribute("aria-label", isPlaying ? "Pause audio" : "Play audio")
   }
   const draw = () => {
     const state = states.get(audio)
@@ -55,20 +82,42 @@ document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) =
 
   resize()
   drawIdle(canvas, context2d)
+  updatePlaybackButton()
+
+  playButton.addEventListener("click", () => {
+    if (audio.paused || audio.ended) {
+      if (audio.ended) {
+        audio.currentTime = 0
+      }
+      audio.play().catch(() => undefined)
+    } else {
+      audio.pause()
+    }
+  })
 
   audio.addEventListener("play", () => {
     try {
       const state = getState(audio)
       state.context.resume().catch(() => undefined)
+      updatePlaybackButton()
       stopDrawing()
       draw()
     } catch {
-      canvas.remove()
+      stage.remove()
+      audio.controls = true
+      audio.classList.remove("oscilloscope-audio")
     }
   })
 
-  audio.addEventListener("pause", stopDrawing)
-  audio.addEventListener("ended", stopDrawing)
+  audio.addEventListener("pause", () => {
+    updatePlaybackButton()
+    stopDrawing()
+  })
+  audio.addEventListener("ended", () => {
+    updatePlaybackButton()
+    stopDrawing()
+    drawIdle(canvas, context2d)
+  })
   window.addEventListener("resize", () => {
     resize()
     const state = states.get(audio)
@@ -108,21 +157,20 @@ function getState(audio: HTMLAudioElement): OscilloscopeState {
 
 function resizeCanvas(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
   const ratio = window.devicePixelRatio || 1
-  const rect = canvas.getBoundingClientRect()
-  const cssSize = Math.min(rect.width, rect.height || rect.width)
-  const width = Math.max(220, Math.floor(cssSize * ratio))
+  const { size: cssSize } = canvasDisplaySize(canvas)
+  const width = Math.max(1, Math.floor(cssSize * ratio))
   const height = width
 
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width
     canvas.height = height
-    context.setTransform(ratio, 0, 0, ratio, 0, 0)
   }
+
+  context.setTransform(ratio, 0, 0, ratio, 0, 0)
 }
 
 function drawIdle(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
-  const width = canvas.clientWidth
-  const height = canvas.clientHeight
+  const { width, height } = canvasDisplaySize(canvas)
   drawBackground(context, width, height)
   context.strokeStyle = "rgba(160, 210, 190, 0.38)"
   context.lineWidth = 1
@@ -136,9 +184,7 @@ function drawPhaseScope(
   context: CanvasRenderingContext2D,
   data: Uint8Array<ArrayBuffer>,
 ) {
-  const width = canvas.clientWidth
-  const height = canvas.clientHeight
-  const size = Math.min(width, height)
+  const { width, height, size } = canvasDisplaySize(canvas)
   const centerX = width / 2
   const centerY = height / 2
   const radius = size * 0.42
@@ -162,6 +208,14 @@ function drawPhaseScope(
   })
 
   context.stroke()
+}
+
+function canvasDisplaySize(canvas: HTMLCanvasElement) {
+  const rect = canvas.getBoundingClientRect()
+  const width = rect.width || canvas.clientWidth || 1
+  const height = rect.height || rect.width || canvas.clientHeight || width
+  const size = Math.max(1, Math.min(width, height))
+  return { height, size, width }
 }
 
 function drawBackground(context: CanvasRenderingContext2D, width: number, height: number) {
