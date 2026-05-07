@@ -4,7 +4,10 @@ mod report;
 mod tables;
 
 use image::codecs::jpeg::JpegEncoder;
-use image::{ImageReader, Rgb, RgbImage};
+use image::imageops::FilterType;
+use image::{ImageReader, Rgb, RgbImage, RgbaImage};
+use ort::{ep, session::Session, value::Tensor};
+use serde::Serialize;
 use std::collections::HashMap;
 use std::env;
 use std::error::Error;
@@ -42,19 +45,32 @@ enum Mode {
     Prod,
 }
 
-struct PhotoPoisonOptions {
+struct ProcessPhotosOptions {
     input: PathBuf,
     output: PathBuf,
     manifest: PathBuf,
+    model: PathBuf,
+    device: PhotoClassifierDevice,
+    confidence: f32,
     strength: u8,
     quality: u8,
     dry_run: bool,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum PhotoClassifierDevice {
+    Auto,
+    Cpu,
+    Cuda,
+    DirectMl,
+}
+
+#[derive(Serialize)]
 struct GalleryEntry {
     src: String,
     title: String,
     meta: String,
+    tags: Vec<String>,
     width: u32,
     height: u32,
 }
@@ -437,13 +453,13 @@ impl Site {
         )
     }
 
-    fn poison_photos(&self, args: &[String]) -> Result<()> {
+    fn process_photos(&self, args: &[String]) -> Result<()> {
         if args.iter().any(|arg| arg == "--help" || arg == "-h") {
-            print_photo_poison_help();
+            print_process_photos_help();
             return Ok(());
         }
 
-        let options = self.parse_photo_poison_options(args)?;
+        let options = self.parse_process_photos_options(args)?;
         self.ensure_photo_input_is_private(&options.input)?;
         fs::create_dir_all(&options.input)?;
         fs::create_dir_all(&options.output)?;
@@ -454,12 +470,21 @@ impl Site {
 
         if photos.is_empty() {
             self.warn(&format!(
-                "no source photos found in {}; drop originals there and rerun poison-photos",
+                "no source photos found in {}; drop originals there and rerun process-photos",
                 options.input.display()
             ));
             return Ok(());
         }
 
+        let mut detector = if options.dry_run {
+            None
+        } else {
+            Some(PhotoDetector::new(
+                &options.model,
+                options.device,
+                options.confidence,
+            )?)
+        };
         let mut entries = Vec::new();
         let mut names = HashMap::<String, usize>::new();
 
@@ -478,30 +503,33 @@ impl Site {
                 format!("{base}-{count}.jpg")
             };
             let target = options.output.join(&file_name);
-            let title = title_from_stem(stem);
 
             println!(
-                "poison {} -> {}",
+                "process {} -> {}",
                 relative.display(),
                 target.strip_prefix(&self.root).unwrap_or(&target).display()
             );
 
-            let (width, height) = if options.dry_run {
-                (0, 0)
+            let (width, height, classification) = if options.dry_run {
+                (0, 0, PhotoClassification::unclassified())
             } else {
-                poison_photo_file(
+                process_photo_file(
                     &photo,
                     &target,
                     hash64(relative.to_string_lossy().as_bytes()),
                     options.strength,
                     options.quality,
+                    detector
+                        .as_mut()
+                        .ok_or_else(|| SiteError::new("photo detector was not initialized"))?,
                 )?
             };
 
             entries.push(GalleryEntry {
                 src: format!("/photography/gallery/{file_name}"),
-                title,
+                title: classification.title,
                 meta: relative.to_string_lossy().replace('\\', "/"),
+                tags: classification.tags,
                 width,
                 height,
             });
@@ -514,11 +542,14 @@ impl Site {
         Ok(())
     }
 
-    fn parse_photo_poison_options(&self, args: &[String]) -> Result<PhotoPoisonOptions> {
+    fn parse_process_photos_options(&self, args: &[String]) -> Result<ProcessPhotosOptions> {
         let mut positionals = Vec::new();
         let mut strength = 4_u8;
         let mut quality = 92_u8;
         let mut manifest = self.root.join("content/photography/gallery.json");
+        let mut model = self.root.join("private/photography/models/yolo11n.onnx");
+        let mut device = PhotoClassifierDevice::Auto;
+        let mut confidence = 0.25_f32;
         let mut dry_run = false;
         let mut index = 0;
 
@@ -549,14 +580,37 @@ impl Site {
                     })?;
                     manifest = self.resolve_path(value);
                 }
+                "--model" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--model requires a path")) as Box<dyn Error>
+                    })?;
+                    model = self.resolve_path(value);
+                }
+                "--device" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--device requires a value")) as Box<dyn Error>
+                    })?;
+                    device = parse_photo_classifier_device(value)?;
+                }
+                "--confidence" => {
+                    index += 1;
+                    let value = args.get(index).ok_or_else(|| {
+                        Box::new(SiteError::new("--confidence requires a value")) as Box<dyn Error>
+                    })?;
+                    confidence = value.parse::<f32>().map_err(|source| {
+                        SiteError::new(format!("invalid confidence {value:?}: {source}"))
+                    })?;
+                }
                 "--dry-run" => dry_run = true,
                 "--help" | "-h" => {
-                    print_photo_poison_help();
+                    print_process_photos_help();
                     return Err(Box::new(SiteError::new("help requested")));
                 }
                 value if value.starts_with('-') => {
                     return Err(Box::new(SiteError::new(format!(
-                        "unknown poison-photos option: {value}"
+                        "unknown process-photos option: {value}"
                     ))));
                 }
                 value => positionals.push(value.to_string()),
@@ -574,13 +628,18 @@ impl Site {
                 "quality must be between 60 and 100",
             )));
         }
+        if !(0.0..=1.0).contains(&confidence) {
+            return Err(Box::new(SiteError::new(
+                "confidence must be between 0.0 and 1.0",
+            )));
+        }
         if positionals.len() > 2 {
             return Err(Box::new(SiteError::new(
-                "poison-photos accepts at most INPUT and OUTPUT paths",
+                "process-photos accepts at most INPUT and OUTPUT paths",
             )));
         }
 
-        Ok(PhotoPoisonOptions {
+        Ok(ProcessPhotosOptions {
             input: positionals.first().map_or_else(
                 || self.root.join("private/photography/originals"),
                 |path| self.resolve_path(path),
@@ -590,6 +649,9 @@ impl Site {
                 |path| self.resolve_path(path),
             ),
             manifest,
+            model,
+            device,
+            confidence,
             strength,
             quality,
             dry_run,
@@ -1090,7 +1152,11 @@ fn run_main() -> Result<()> {
         "recursive-ji-music" | "rji-music" => recursive_ji::generate(&site, &args[1..]),
         "aoc-problems" | "download-aoc-problems" => aoc::download_problem_text(&site, &args[1..]),
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
-        "poison-photos" | "photo-poison" => site.poison_photos(&args[1..]),
+        "process-photos" => site.process_photos(&args[1..]),
+        "poison-photos" | "photo-poison" => {
+            site.warn("poison-photos is deprecated; use process-photos");
+            site.process_photos(&args[1..])
+        }
         "check" => site.check(),
         "dates" => {
             let target = args.get(1).map_or("content", String::as_str);
@@ -1154,8 +1220,8 @@ Commands:
                              render recursive just-intonation examples
   aoc-problems [options]     download scaffolded AoC problem statements
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
-  poison-photos [INPUT] [OUTPUT]
-                             protect source photos and update gallery manifest
+  process-photos [INPUT] [OUTPUT]
+                             protect, classify, and publish source photos
   check                      run Rust, TypeScript, and lint checks
   dates [path]               refresh markdown date metadata
   update                     run dependency updates and linters
@@ -1164,13 +1230,13 @@ Commands:
     );
 }
 
-fn print_photo_poison_help() {
+fn print_process_photos_help() {
     println!(
         "\
-poison-photos
+process-photos
 
 Usage:
-  cargo run --manifest-path tools/site/Cargo.toml -- poison-photos [INPUT] [OUTPUT] [options]
+  cargo run --manifest-path tools/site/Cargo.toml -- process-photos [INPUT] [OUTPUT] [options]
 
 Defaults:
   INPUT   private/photography/originals
@@ -1180,6 +1246,9 @@ Options:
   --strength N       perturbation strength, 1-32, default 4
   --quality N        JPEG quality, 60-100, default 92
   --manifest PATH    gallery JSON path, default content/photography/gallery.json
+  --model PATH       local YOLO ONNX model, default private/photography/models/yolo11n.onnx
+  --device DEVICE    auto, cpu, cuda, or directml, default auto
+  --confidence N     object confidence threshold, 0.0-1.0, default 0.25
   --dry-run          print planned work without writing images
 "
     );
@@ -1280,27 +1349,467 @@ fn is_photo_file(path: &Path) -> bool {
     )
 }
 
-fn poison_photo_file(
+const PHOTO_MODEL_INPUT_SIZE: u32 = 640;
+const MAX_PHOTO_TAGS: usize = 4;
+const COCO_LABELS: [&str; 80] = [
+    "person",
+    "bicycle",
+    "car",
+    "motorcycle",
+    "airplane",
+    "bus",
+    "train",
+    "truck",
+    "boat",
+    "traffic light",
+    "fire hydrant",
+    "stop sign",
+    "parking meter",
+    "bench",
+    "bird",
+    "cat",
+    "dog",
+    "horse",
+    "sheep",
+    "cow",
+    "elephant",
+    "bear",
+    "zebra",
+    "giraffe",
+    "backpack",
+    "umbrella",
+    "handbag",
+    "tie",
+    "suitcase",
+    "frisbee",
+    "skis",
+    "snowboard",
+    "sports ball",
+    "kite",
+    "baseball bat",
+    "baseball glove",
+    "skateboard",
+    "surfboard",
+    "tennis racket",
+    "bottle",
+    "wine glass",
+    "cup",
+    "fork",
+    "knife",
+    "spoon",
+    "bowl",
+    "banana",
+    "apple",
+    "sandwich",
+    "orange",
+    "broccoli",
+    "carrot",
+    "hot dog",
+    "pizza",
+    "donut",
+    "cake",
+    "chair",
+    "couch",
+    "potted plant",
+    "bed",
+    "dining table",
+    "toilet",
+    "tv",
+    "laptop",
+    "mouse",
+    "remote",
+    "keyboard",
+    "cell phone",
+    "microwave",
+    "oven",
+    "toaster",
+    "sink",
+    "refrigerator",
+    "book",
+    "clock",
+    "vase",
+    "scissors",
+    "teddy bear",
+    "hair drier",
+    "toothbrush",
+];
+
+struct PhotoDetector {
+    session: Session,
+    confidence: f32,
+}
+
+struct PhotoClassification {
+    title: String,
+    tags: Vec<String>,
+}
+
+#[derive(Clone, Debug)]
+struct DetectedObject {
+    label: String,
+    score: f32,
+}
+
+#[derive(Clone, Copy)]
+enum DetectionLayout {
+    ChannelsFirst { channels: usize, candidates: usize },
+    CandidatesFirst { channels: usize, candidates: usize },
+}
+
+impl PhotoClassifierDevice {
+    fn label(self) -> &'static str {
+        match self {
+            PhotoClassifierDevice::Auto => "auto",
+            PhotoClassifierDevice::Cpu => "cpu",
+            PhotoClassifierDevice::Cuda => "cuda",
+            PhotoClassifierDevice::DirectMl => "directml",
+        }
+    }
+}
+
+impl PhotoDetector {
+    fn new(model: &Path, device: PhotoClassifierDevice, confidence: f32) -> Result<Self> {
+        if !model.is_file() {
+            return Err(Box::new(SiteError::new(format!(
+                "photo object model not found at {}; export a YOLO ONNX model there or pass --model PATH",
+                model.display()
+            ))));
+        }
+
+        let providers = photo_detector_providers(device);
+        let session = if device == PhotoClassifierDevice::Auto && !providers.is_empty() {
+            match build_photo_detector_session(model, providers.as_slice()) {
+                Ok(session) => session,
+                Err(error) => {
+                    eprintln!(
+                        "warning: failed to initialize GPU object detection ({error}); falling back to CPU"
+                    );
+                    build_photo_detector_session(model, &[])?
+                }
+            }
+        } else {
+            build_photo_detector_session(model, providers.as_slice())?
+        };
+
+        println!(
+            "object detection model: {} ({})",
+            model.display(),
+            device.label()
+        );
+
+        Ok(Self {
+            session,
+            confidence,
+        })
+    }
+
+    fn classify(&mut self, source: &RgbaImage) -> Result<PhotoClassification> {
+        let input = photo_model_input(source);
+        let tensor = Tensor::from_array((
+            [
+                1_usize,
+                3,
+                PHOTO_MODEL_INPUT_SIZE as usize,
+                PHOTO_MODEL_INPUT_SIZE as usize,
+            ],
+            input.into_boxed_slice(),
+        ))?;
+        let outputs = self.session.run(ort::inputs![tensor])?;
+
+        if outputs.len() == 0 {
+            return Err(Box::new(SiteError::new(
+                "object detection model returned no outputs",
+            )));
+        }
+
+        let (shape, data) = outputs[0].try_extract_tensor::<f32>()?;
+        let detections = detections_from_output(shape, data, self.confidence)?;
+        Ok(PhotoClassification::from_detections(&detections))
+    }
+}
+
+impl PhotoClassification {
+    fn unclassified() -> Self {
+        Self {
+            title: "Unclassified photo".to_string(),
+            tags: Vec::new(),
+        }
+    }
+
+    fn from_detections(detections: &[DetectedObject]) -> Self {
+        let tags = detections
+            .iter()
+            .take(MAX_PHOTO_TAGS)
+            .map(|detection| detection.label.clone())
+            .collect::<Vec<_>>();
+
+        Self {
+            title: title_from_tags(&tags),
+            tags,
+        }
+    }
+}
+
+fn parse_photo_classifier_device(value: &str) -> Result<PhotoClassifierDevice> {
+    match value.to_ascii_lowercase().as_str() {
+        "auto" => Ok(PhotoClassifierDevice::Auto),
+        "cpu" => Ok(PhotoClassifierDevice::Cpu),
+        "cuda" => Ok(PhotoClassifierDevice::Cuda),
+        "directml" | "dml" => Ok(PhotoClassifierDevice::DirectMl),
+        _ => Err(Box::new(SiteError::new(format!(
+            "unknown photo classifier device {value:?}; use auto, cpu, cuda, or directml"
+        )))),
+    }
+}
+
+fn photo_detector_providers(device: PhotoClassifierDevice) -> Vec<ep::ExecutionProviderDispatch> {
+    let mut providers = Vec::new();
+
+    match device {
+        PhotoClassifierDevice::Auto => {
+            providers.push(ep::CUDA::default().build());
+            if cfg!(target_os = "windows") {
+                providers.push(ep::DirectML::default().build());
+            }
+        }
+        PhotoClassifierDevice::Cuda => providers.push(ep::CUDA::default().build()),
+        PhotoClassifierDevice::DirectMl => providers.push(ep::DirectML::default().build()),
+        PhotoClassifierDevice::Cpu => {}
+    }
+
+    providers
+}
+
+fn build_photo_detector_session(
+    model: &Path,
+    providers: &[ep::ExecutionProviderDispatch],
+) -> std::result::Result<Session, ort::Error> {
+    let mut builder = Session::builder()?;
+    if !providers.is_empty() {
+        builder = builder.with_execution_providers(providers)?;
+    }
+    builder.commit_from_file(model)
+}
+
+fn process_photo_file(
     input: &Path,
     output: &Path,
     seed: u64,
     strength: u8,
     quality: u8,
-) -> Result<(u32, u32)> {
+    detector: &mut PhotoDetector,
+) -> Result<(u32, u32, PhotoClassification)> {
     let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
     let source = image.to_rgba8();
     let (width, height) = source.dimensions();
-    let poisoned = poison_pixels(&source, seed, strength);
+    let classification = detector.classify(&source)?;
+    let protected = protect_pixels(&source, seed, strength);
 
     let file = File::create(output)?;
     let writer = BufWriter::new(file);
     let mut encoder = JpegEncoder::new_with_quality(writer, quality);
-    encoder.encode_image(&poisoned)?;
+    encoder.encode_image(&protected)?;
 
-    Ok((width, height))
+    Ok((width, height, classification))
 }
 
-fn poison_pixels(source: &image::RgbaImage, seed: u64, strength: u8) -> RgbImage {
+fn photo_model_input(source: &RgbaImage) -> Vec<f32> {
+    let rgb = rgba_to_rgb_on_white(source);
+    let (width, height) = rgb.dimensions();
+    let scale = (PHOTO_MODEL_INPUT_SIZE as f32 / width as f32)
+        .min(PHOTO_MODEL_INPUT_SIZE as f32 / height as f32);
+    let resized_width = ((width as f32 * scale).round() as u32).clamp(1, PHOTO_MODEL_INPUT_SIZE);
+    let resized_height = ((height as f32 * scale).round() as u32).clamp(1, PHOTO_MODEL_INPUT_SIZE);
+    let resized =
+        image::imageops::resize(&rgb, resized_width, resized_height, FilterType::Triangle);
+    let mut letterboxed = RgbImage::from_pixel(
+        PHOTO_MODEL_INPUT_SIZE,
+        PHOTO_MODEL_INPUT_SIZE,
+        Rgb([114, 114, 114]),
+    );
+    let x_offset = (PHOTO_MODEL_INPUT_SIZE - resized_width) / 2;
+    let y_offset = (PHOTO_MODEL_INPUT_SIZE - resized_height) / 2;
+
+    for y in 0..resized_height {
+        for x in 0..resized_width {
+            let pixel = *resized.get_pixel(x, y);
+            letterboxed.put_pixel(x + x_offset, y + y_offset, pixel);
+        }
+    }
+
+    let capacity = (PHOTO_MODEL_INPUT_SIZE * PHOTO_MODEL_INPUT_SIZE * 3) as usize;
+    let mut input = Vec::with_capacity(capacity);
+    for channel in 0..3 {
+        for y in 0..PHOTO_MODEL_INPUT_SIZE {
+            for x in 0..PHOTO_MODEL_INPUT_SIZE {
+                input.push(f32::from(letterboxed.get_pixel(x, y)[channel]) / 255.0);
+            }
+        }
+    }
+
+    input
+}
+
+fn rgba_to_rgb_on_white(source: &RgbaImage) -> RgbImage {
+    let (width, height) = source.dimensions();
+    let mut output = RgbImage::new(width, height);
+
+    for (x, y, pixel) in source.enumerate_pixels() {
+        let alpha = f32::from(pixel[3]) / 255.0;
+        let red = f32::from(pixel[0]) * alpha + 255.0 * (1.0 - alpha);
+        let green = f32::from(pixel[1]) * alpha + 255.0 * (1.0 - alpha);
+        let blue = f32::from(pixel[2]) * alpha + 255.0 * (1.0 - alpha);
+        output.put_pixel(
+            x,
+            y,
+            Rgb([
+                red.clamp(0.0, 255.0).round() as u8,
+                green.clamp(0.0, 255.0).round() as u8,
+                blue.clamp(0.0, 255.0).round() as u8,
+            ]),
+        );
+    }
+
+    output
+}
+
+fn detections_from_output(
+    shape: &ort::value::Shape,
+    data: &[f32],
+    confidence: f32,
+) -> Result<Vec<DetectedObject>> {
+    let layout = detection_layout(shape, data.len()).ok_or_else(|| {
+        SiteError::new(format!(
+            "unsupported object detection output shape {:?} with {} values",
+            shape.to_vec(),
+            data.len()
+        ))
+    })?;
+    let mut best_by_label = HashMap::<String, f32>::new();
+
+    for candidate in 0..layout.candidates() {
+        if layout.channels() == 6 {
+            let score = detection_value(data, layout, candidate, 4);
+            let class_index = detection_value(data, layout, candidate, 5).round();
+            if score.is_finite() && score >= confidence && class_index >= 0.0 {
+                if let Some(label) = COCO_LABELS.get(class_index as usize) {
+                    update_best_detection(&mut best_by_label, label, score);
+                }
+            }
+            continue;
+        }
+
+        let class_offset = if layout.channels() == COCO_LABELS.len() + 5 {
+            5
+        } else {
+            4
+        };
+        let objectness = if class_offset == 5 {
+            detection_value(data, layout, candidate, 4).clamp(0.0, 1.0)
+        } else {
+            1.0
+        };
+        let class_count = (layout.channels() - class_offset).min(COCO_LABELS.len());
+        let mut best_class = None;
+        let mut best_score = confidence;
+
+        for class_index in 0..class_count {
+            let class_score =
+                detection_value(data, layout, candidate, class_offset + class_index) * objectness;
+            if class_score.is_finite() && class_score >= best_score {
+                best_score = class_score;
+                best_class = Some(class_index);
+            }
+        }
+
+        if let Some(class_index) = best_class {
+            update_best_detection(&mut best_by_label, COCO_LABELS[class_index], best_score);
+        }
+    }
+
+    let mut detections = best_by_label
+        .into_iter()
+        .map(|(label, score)| DetectedObject { label, score })
+        .collect::<Vec<_>>();
+    detections.sort_by(|a, b| {
+        b.score
+            .total_cmp(&a.score)
+            .then_with(|| a.label.cmp(&b.label))
+    });
+
+    Ok(detections)
+}
+
+fn detection_layout(shape: &ort::value::Shape, data_len: usize) -> Option<DetectionLayout> {
+    let dims = shape
+        .iter()
+        .copied()
+        .map(usize::try_from)
+        .collect::<std::result::Result<Vec<_>, _>>()
+        .ok()?;
+
+    match dims.as_slice() {
+        [1, first, second] | [first, second] => {
+            if first.checked_mul(*second)? != data_len {
+                return None;
+            }
+
+            let first_is_channels = looks_like_detection_channels(*first);
+            let second_is_channels = looks_like_detection_channels(*second);
+
+            if first_is_channels && (!second_is_channels || second > first) {
+                Some(DetectionLayout::ChannelsFirst {
+                    channels: *first,
+                    candidates: *second,
+                })
+            } else if second_is_channels {
+                Some(DetectionLayout::CandidatesFirst {
+                    channels: *second,
+                    candidates: *first,
+                })
+            } else {
+                None
+            }
+        }
+        _ => None,
+    }
+}
+
+fn looks_like_detection_channels(value: usize) -> bool {
+    (6..=256).contains(&value)
+}
+
+fn update_best_detection(best_by_label: &mut HashMap<String, f32>, label: &str, score: f32) {
+    best_by_label
+        .entry(label.to_string())
+        .and_modify(|best| *best = (*best).max(score))
+        .or_insert(score);
+}
+
+fn detection_value(data: &[f32], layout: DetectionLayout, candidate: usize, channel: usize) -> f32 {
+    match layout {
+        DetectionLayout::ChannelsFirst { candidates, .. } => data[channel * candidates + candidate],
+        DetectionLayout::CandidatesFirst { channels, .. } => data[candidate * channels + channel],
+    }
+}
+
+impl DetectionLayout {
+    fn channels(self) -> usize {
+        match self {
+            DetectionLayout::ChannelsFirst { channels, .. }
+            | DetectionLayout::CandidatesFirst { channels, .. } => channels,
+        }
+    }
+
+    fn candidates(self) -> usize {
+        match self {
+            DetectionLayout::ChannelsFirst { candidates, .. }
+            | DetectionLayout::CandidatesFirst { candidates, .. } => candidates,
+        }
+    }
+}
+
+fn protect_pixels(source: &RgbaImage, seed: u64, strength: u8) -> RgbImage {
     let (width, height) = source.dimensions();
     let mut rgb = Vec::with_capacity((width * height) as usize);
     let mut luma = Vec::with_capacity((width * height) as usize);
@@ -1417,18 +1926,41 @@ fn sanitize_file_stem(stem: &str) -> String {
     }
 }
 
-fn title_from_stem(stem: &str) -> String {
-    let title = stem
-        .replace(['_', '-'], " ")
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ");
+fn title_from_tags(tags: &[String]) -> String {
+    let parts = tags.iter().map(|tag| titleize_tag(tag)).collect::<Vec<_>>();
 
-    if title.is_empty() {
-        "untitled photo".to_string()
-    } else {
-        title
+    match parts.as_slice() {
+        [] => "Unclassified photo".to_string(),
+        [only] => only.clone(),
+        [first, second] => format!("{first} and {second}"),
+        _ => {
+            let last = parts.last().expect("parts is not empty");
+            let leading = parts[..parts.len() - 1].join(", ");
+            format!("{leading}, and {last}")
+        }
     }
+}
+
+fn titleize_tag(tag: &str) -> String {
+    tag.split_whitespace()
+        .map(|word| {
+            if word.eq_ignore_ascii_case("tv") {
+                return "TV".to_string();
+            }
+
+            let mut chars = word.chars();
+            match chars.next() {
+                Some(first) => {
+                    let mut title = String::new();
+                    title.push(first.to_ascii_uppercase());
+                    title.push_str(chars.as_str());
+                    title
+                }
+                None => String::new(),
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
@@ -1436,38 +1968,10 @@ fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
         fs::create_dir_all(parent)?;
     }
 
-    let mut body = String::from("[\n");
-    for (index, entry) in entries.iter().enumerate() {
-        let comma = if index + 1 == entries.len() { "" } else { "," };
-        body.push_str("  {\n");
-        body.push_str(&format!("    \"src\": {},\n", json_string(&entry.src)));
-        body.push_str(&format!("    \"title\": {},\n", json_string(&entry.title)));
-        body.push_str(&format!("    \"meta\": {},\n", json_string(&entry.meta)));
-        body.push_str(&format!("    \"width\": {},\n", entry.width));
-        body.push_str(&format!("    \"height\": {}\n", entry.height));
-        body.push_str(&format!("  }}{comma}\n"));
-    }
-    body.push_str("]\n");
-
+    let mut body = serde_json::to_string_pretty(entries)?;
+    body.push('\n');
     fs::write(path, body)?;
     Ok(())
-}
-
-fn json_string(value: &str) -> String {
-    let mut result = String::from("\"");
-    for ch in value.chars() {
-        match ch {
-            '"' => result.push_str("\\\""),
-            '\\' => result.push_str("\\\\"),
-            '\n' => result.push_str("\\n"),
-            '\r' => result.push_str("\\r"),
-            '\t' => result.push_str("\\t"),
-            ch if ch.is_control() => result.push_str(&format!("\\u{:04x}", ch as u32)),
-            ch => result.push(ch),
-        }
-    }
-    result.push('"');
-    result
 }
 
 fn existing_date_metadata(path: &Path) -> Result<Vec<String>> {
@@ -1621,5 +2125,55 @@ mod tests {
             Mode::Dev
         );
         assert!(parse_mode(&["--nope".to_string()], Mode::Dev).is_err());
+    }
+
+    #[test]
+    fn titles_photos_from_detected_object_tags() {
+        assert_eq!(
+            title_from_tags(&["person".to_string(), "bicycle".to_string()]),
+            "Person and Bicycle"
+        );
+        assert_eq!(
+            title_from_tags(&[
+                "person".to_string(),
+                "traffic light".to_string(),
+                "tv".to_string()
+            ]),
+            "Person, Traffic Light, and TV"
+        );
+        assert_eq!(title_from_tags(&[]), "Unclassified photo");
+    }
+
+    #[test]
+    fn extracts_yolo_channel_first_object_tags() {
+        let shape = ort::value::Shape::new([1_i64, 7, 2]);
+        let data = vec![
+            0.0, 0.0, // x
+            0.0, 0.0, // y
+            0.0, 0.0, // w
+            0.0, 0.0, // h
+            0.8, 0.2, // person
+            0.1, 0.9, // bicycle
+            0.3, 0.2, // car
+        ];
+
+        let detections = detections_from_output(&shape, &data, 0.5).unwrap();
+
+        assert_eq!(detections[0].label, "bicycle");
+        assert_eq!(detections[1].label, "person");
+    }
+
+    #[test]
+    fn extracts_postprocessed_row_object_tags() {
+        let shape = ort::value::Shape::new([1_i64, 2, 6]);
+        let data = vec![
+            0.0, 0.0, 0.0, 0.0, 0.7, 2.0, // car
+            0.0, 0.0, 0.0, 0.0, 0.4, 0.0, // below threshold
+        ];
+
+        let detections = detections_from_output(&shape, &data, 0.5).unwrap();
+
+        assert_eq!(detections.len(), 1);
+        assert_eq!(detections[0].label, "car");
     }
 }

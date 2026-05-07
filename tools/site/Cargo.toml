@@ -7,7 +7,10 @@ publish = false
 [dependencies]
 image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+ort = { version = "2.0.0-rc.12", features = ["cuda", "directml"] }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
 
 [[bin]]
 name = "site"

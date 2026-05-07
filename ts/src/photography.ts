@@ -4,6 +4,7 @@ interface Photo {
   src: string
   title: string
   meta?: string
+  tags?: string[]
 }
 
 const fallbackPhotos: Photo[] = []
