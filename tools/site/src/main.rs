@@ -3,7 +3,24 @@ mod build;
 mod content;
 mod fsutil;
 mod maintenance;
+#[cfg(feature = "photos")]
 mod photos;
+#[cfg(not(feature = "photos"))]
+mod photos {
+    use crate::{Result, Site, SiteError};
+
+    pub(crate) fn process(_: &Site, _: &[String]) -> Result<()> {
+        Err(Box::new(SiteError::new(
+            "process-photos requires the `photos` feature; rebuild without --no-default-features",
+        )))
+    }
+
+    pub(crate) fn setup_nightshade(_: &Site, _: &[String]) -> Result<()> {
+        Err(Box::new(SiteError::new(
+            "setup-nightshade requires the `photos` feature; rebuild without --no-default-features",
+        )))
+    }
+}
 mod process;
 mod recursive_ji;
 mod report;

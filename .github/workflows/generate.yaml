@@ -33,7 +33,7 @@ jobs:
         run: rustup toolchain install --profile minimal stable
 
       - name: Generate files
-        run: cargo run --locked --manifest-path tools/site/Cargo.toml -- generate
+        run: cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- generate
 
       - name: Commit generated files
-        run: cargo run --locked --manifest-path tools/site/Cargo.toml -- commit generate
+        run: cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- commit generate

@@ -19,7 +19,7 @@
         overrides = builtins.fromTOML (builtins.readFile (self + "/rust-toolchain.toml"));
         updateScript = pkgs.writeShellScriptBin "update" ''
           set -e
-          nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- update
+          nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- update
         '';
       in {
         devShells.default = pkgs.mkShell rec {
@@ -34,6 +34,7 @@
             llvmPackages.bintools
             bun
             nodejs_22
+            openssl
             python313
             rustup
             typescript

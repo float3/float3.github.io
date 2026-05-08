@@ -4,6 +4,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 impl Site {
+    #[cfg(feature = "photos")]
     pub(crate) fn resolve_path(&self, path: &str) -> PathBuf {
         let path = PathBuf::from(path);
         if path.is_absolute() {
@@ -13,6 +14,7 @@ impl Site {
         }
     }
 
+    #[cfg(feature = "photos")]
     pub(crate) fn ensure_photo_input_is_private(&self, path: &Path) -> Result<()> {
         let normalized_root = normalize_path(&self.root)?;
         let normalized_path = normalize_path(path)?;
@@ -81,6 +83,7 @@ pub(crate) fn remove_license_files(path: &Path) -> Result<()> {
     Ok(())
 }
 
+#[cfg(feature = "photos")]
 fn normalize_path(path: &Path) -> Result<PathBuf> {
     if path.exists() {
         Ok(path.canonicalize()?)

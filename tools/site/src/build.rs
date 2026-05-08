@@ -137,26 +137,30 @@ impl Site {
         Ok(())
     }
     pub(crate) fn check(&self) -> Result<()> {
-        self.run(
-            &self.root,
-            "cargo",
-            &os_args(&[
-                "check",
-                "--locked",
-                "--manifest-path",
-                "tools/site/Cargo.toml",
-            ]),
-        )?;
-        self.run(
-            &self.root,
-            "cargo",
-            &os_args(&[
-                "test",
-                "--locked",
-                "--manifest-path",
-                "tools/site/Cargo.toml",
-            ]),
-        )?;
+        let mut site_check_args = os_args(&[
+            "check",
+            "--locked",
+            "--manifest-path",
+            "tools/site/Cargo.toml",
+        ]);
+        let mut site_test_args = os_args(&[
+            "test",
+            "--locked",
+            "--manifest-path",
+            "tools/site/Cargo.toml",
+        ]);
+
+        if self.ci {
+            site_check_args.push("--no-default-features".into());
+            site_test_args.push("--no-default-features".into());
+        }
+
+        if self.ci {
+            self.warn("checking site tool without default features");
+        }
+
+        self.run(&self.root, "cargo", &site_check_args)?;
+        self.run(&self.root, "cargo", &site_test_args)?;
         self.wasm(Mode::Dev)?;
         self.check_typescript()?;
 

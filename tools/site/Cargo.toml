@@ -4,13 +4,17 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
+[features]
+default = ["photos"]
+photos = ["dep:image", "dep:ort", "dep:serde", "dep:serde_json"]
+
 [dependencies]
-image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"] }
+image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"], optional = true }
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
-ort = { version = "2.0.0-rc.12", features = ["cuda", "directml"] }
+ort = { version = "2.0.0-rc.12", features = ["cuda", "directml"], optional = true }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }
-serde = { version = "1.0.228", features = ["derive"] }
-serde_json = "1.0.145"
+serde = { version = "1.0.228", features = ["derive"], optional = true }
+serde_json = { version = "1.0.145", optional = true }
 
 [[bin]]
 name = "site"

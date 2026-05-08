@@ -32,4 +32,7 @@ jobs:
         run: nix develop . --command rustup toolchain install --profile minimal stable
 
       - name: Check
-        run: nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- check
+        run: nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- check
+
+      - name: Check photo feature
+        run: nix develop . --command cargo check --locked --tests --manifest-path tools/site/Cargo.toml --no-default-features --features photos

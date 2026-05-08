@@ -33,7 +33,7 @@ jobs:
         run: nix develop . --command rustup toolchain install --profile minimal stable --component rustfmt --component clippy --target wasm32-unknown-unknown
 
       - name: Update dependencies and lint
-        run: nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- update
+        run: nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- update
 
       - name: Commit maintenance changes
-        run: nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- commit update_and_lint
+        run: nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- commit update_and_lint
