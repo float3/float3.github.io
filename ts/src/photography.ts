@@ -31,8 +31,7 @@ function isPhoto(value: unknown): value is Photo {
   return (
     typeof candidate.src === "string" &&
     typeof candidate.title === "string" &&
-    (tags === undefined ||
-      (Array.isArray(tags) && tags.every((tag) => typeof tag === "string"))) &&
+    (tags === undefined || (Array.isArray(tags) && tags.every((tag) => typeof tag === "string"))) &&
     photo_manifest_entry_is_valid(candidate.src, candidate.title)
   )
 }
