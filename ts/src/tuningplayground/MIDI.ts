@@ -25,6 +25,8 @@ function onMIDIFailure(error: DOMException): void {
 }
 
 function onMIDIMessage(event: MIDIMessageEvent): void {
+  if (!event.data) return
+
   const [status, tone_index, velocity] = event.data
   const is_note_on = (status & 240) === 144
   const is_note_off = (status & 240) === 128
