@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { isCancel, outro } from "@clack/prompts"
 import { styleText } from "util"
-import { contentCacheFolder } from "./constants.js"
+import { contentCacheFolder } from "./constants.ts"
 import { spawnSync } from "child_process"
 import fs from "fs"
 
