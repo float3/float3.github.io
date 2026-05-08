@@ -1,4 +1,4 @@
-import { photo_caption, photo_count_label, photo_manifest_entry_is_valid } from "wasm"
+import { photo_count_label, photo_manifest_entry_is_valid } from "wasm"
 
 interface Photo {
   src: string
@@ -27,9 +27,12 @@ function isPhoto(value: unknown): value is Photo {
   }
 
   const candidate = value as Partial<Photo>
+  const tags = candidate.tags
   return (
     typeof candidate.src === "string" &&
     typeof candidate.title === "string" &&
+    (tags === undefined ||
+      (Array.isArray(tags) && tags.every((tag) => typeof tag === "string"))) &&
     photo_manifest_entry_is_valid(candidate.src, candidate.title)
   )
 }
@@ -67,9 +70,7 @@ function renderGallery(): void {
     const text = document.createElement("span")
     const title = document.createElement("strong")
     title.textContent = photo.title
-    const meta = document.createElement("small")
-    meta.textContent = photo.meta ?? ""
-    text.append(title, meta)
+    text.append(title)
 
     card.append(image, text)
     card.addEventListener("click", () => showPhoto(index))
@@ -90,7 +91,7 @@ function showPhoto(index: number): void {
   const photo = photos[currentIndex]
   dialogImage.src = photo.src
   dialogImage.alt = photo.title
-  dialogCaption.textContent = photo_caption(photo.title, photo.meta ?? "")
+  dialogCaption.textContent = photo.title
   dialog.showModal()
 }
 
