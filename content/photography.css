@@ -191,8 +191,20 @@
 }
 
 .photo-lightbox figcaption {
+  display: grid;
+  gap: 0.18rem;
   color: var(--photo-muted);
+  line-height: 1.35;
   text-align: center;
+}
+
+.photo-lightbox figcaption strong {
+  color: var(--dark);
+}
+
+.photo-lightbox figcaption span {
+  max-width: 52rem;
+  justify-self: center;
 }
 
 .photo-lightbox button {

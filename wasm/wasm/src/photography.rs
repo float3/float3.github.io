@@ -20,8 +20,8 @@ pub fn photo_caption(title: &str, meta: &str) -> String {
 }
 
 #[wasm_bindgen]
-pub fn photo_manifest_entry_is_valid(src: &str, title: &str) -> bool {
-    !src.trim().is_empty() && !title.trim().is_empty()
+pub fn photo_manifest_entry_is_valid(src: &str, _title: &str) -> bool {
+    !src.trim().is_empty()
 }
 
 #[cfg(test)]
@@ -44,6 +44,6 @@ mod tests {
     fn validates_manifest_entry_shape() {
         assert!(photo_manifest_entry_is_valid("/photo.jpg", "photo"));
         assert!(!photo_manifest_entry_is_valid("", "photo"));
-        assert!(!photo_manifest_entry_is_valid("/photo.jpg", ""));
+        assert!(photo_manifest_entry_is_valid("/photo.jpg", ""));
     }
 }

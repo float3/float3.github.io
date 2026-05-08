@@ -1,8 +1,6 @@
 use crate::{Result, Site, SiteError};
 use image::codecs::jpeg::JpegEncoder;
-use image::imageops::FilterType;
 use image::{ImageReader, Rgb, RgbImage, RgbaImage};
-use ort::{ep, session::Session, value::Tensor};
 use serde::Serialize;
 use std::collections::HashMap;
 use std::error::Error;
@@ -16,35 +14,35 @@ struct ProcessPhotosOptions {
     input: PathBuf,
     output: PathBuf,
     manifest: PathBuf,
-    model: PathBuf,
-    device: PhotoClassifierDevice,
-    confidence: f32,
-    nightshade_input: PathBuf,
-    nightshade_output: PathBuf,
+    describer: PhotoDescriberOptions,
+    // nightshade_input: PathBuf,
+    // nightshade_output: PathBuf,
     quality: u8,
     dry_run: bool,
 }
 
-struct SetupNightshadeOptions {
-    install_dir: PathBuf,
-    download_dir: PathBuf,
-    force: bool,
-    print_url: bool,
-    dry_run: bool,
-}
+// struct SetupNightshadeOptions {
+//     install_dir: PathBuf,
+//     download_dir: PathBuf,
+//     archive: Option<PathBuf>,
+//     url: Option<String>,
+//     force: bool,
+//     print_url: bool,
+//     dry_run: bool,
+// }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum PhotoClassifierDevice {
-    Auto,
-    Cpu,
-    Cuda,
-    DirectMl,
+#[derive(Clone, Debug)]
+struct PhotoDescriberOptions {
+    ollama_model: String,
+    prompt: String,
 }
 
 #[derive(Serialize)]
 struct GalleryEntry {
     src: String,
     title: String,
+    #[serde(skip_serializing_if = "String::is_empty")]
+    description: String,
     meta: String,
     tags: Vec<String>,
     width: u32,
@@ -53,136 +51,55 @@ struct GalleryEntry {
 
 struct PhotoClassification {
     title: String,
+    description: String,
     tags: Vec<String>,
 }
 
-#[derive(Serialize)]
-struct NightshadeStagingEntry {
-    source: String,
-    file: String,
-    tag: String,
-    title: String,
+// #[derive(Serialize)]
+// struct NightshadeStagingEntry {
+//     source: String,
+//     file: String,
+//     tag: String,
+//     title: String,
+// }
+
+// #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+// enum NightshadeArchiveKind {
+//     Zip,
+//     Dmg,
+// }
+
+// struct NightshadePackage {
+//     version: &'static str,
+//     urls: &'static [&'static str],
+//     file_name: &'static str,
+//     archive_kind: NightshadeArchiveKind,
+// }
+
+struct OllamaPhotoDescriber {
+    model: String,
+    prompt: String,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum NightshadeArchiveKind {
-    Zip,
-    Dmg,
-}
-
-struct NightshadePackage {
-    version: &'static str,
-    url: &'static str,
-    file_name: &'static str,
-    archive_kind: NightshadeArchiveKind,
-}
-
-#[derive(Clone, Debug)]
-struct DetectedObject {
-    label: String,
-    score: f32,
-}
-
-#[derive(Clone, Copy)]
-enum DetectionLayout {
-    ChannelsFirst { channels: usize, candidates: usize },
-    CandidatesFirst { channels: usize, candidates: usize },
-}
-
-struct PhotoDetector {
-    session: Session,
-    confidence: f32,
-}
-
-const PHOTO_MODEL_INPUT_SIZE: u32 = 640;
-const MAX_PHOTO_TAGS: usize = 4;
-const NIGHTSHADE_VERSION: &str = "1.1";
-const NIGHTSHADE_WINDOWS_URL: &str =
-    "https://webvault.cs.uchicago.edu/sandlab/fawkes/files/nightshade/Nightshade-1.1-Windows.zip";
-const NIGHTSHADE_MACOS_APPLE_SILICON_URL: &str =
-    "https://webvault.cs.uchicago.edu/sandlab/fawkes/files/nightshade/Nightshade-1.1-m1.dmg";
-const COCO_LABELS: [&str; 80] = [
-    "person",
-    "bicycle",
-    "car",
-    "motorcycle",
-    "airplane",
-    "bus",
-    "train",
-    "truck",
-    "boat",
-    "traffic light",
-    "fire hydrant",
-    "stop sign",
-    "parking meter",
-    "bench",
-    "bird",
-    "cat",
-    "dog",
-    "horse",
-    "sheep",
-    "cow",
-    "elephant",
-    "bear",
-    "zebra",
-    "giraffe",
-    "backpack",
-    "umbrella",
-    "handbag",
-    "tie",
-    "suitcase",
-    "frisbee",
-    "skis",
-    "snowboard",
-    "sports ball",
-    "kite",
-    "baseball bat",
-    "baseball glove",
-    "skateboard",
-    "surfboard",
-    "tennis racket",
-    "bottle",
-    "wine glass",
-    "cup",
-    "fork",
-    "knife",
-    "spoon",
-    "bowl",
-    "banana",
-    "apple",
-    "sandwich",
-    "orange",
-    "broccoli",
-    "carrot",
-    "hot dog",
-    "pizza",
-    "donut",
-    "cake",
-    "chair",
-    "couch",
-    "potted plant",
-    "bed",
-    "dining table",
-    "toilet",
-    "tv",
-    "laptop",
-    "mouse",
-    "remote",
-    "keyboard",
-    "cell phone",
-    "microwave",
-    "oven",
-    "toaster",
-    "sink",
-    "refrigerator",
-    "book",
-    "clock",
-    "vase",
-    "scissors",
-    "teddy bear",
-    "hair drier",
-    "toothbrush",
-];
+const MAX_GENERATED_PHOTO_TAGS: usize = 8;
+const DEFAULT_OLLAMA_PHOTO_MODEL: &str = "gemma3";
+const DEFAULT_PHOTO_DESCRIPTION_PROMPT: &str = "\
+Describe this image for a personal photography gallery.
+Return only these three labeled fields:
+Title: 3 to 7 words
+Description: one concise sentence about the visible scene
+Tags: 3 to 8 lowercase tags, separated by commas
+Do not include markdown, filenames, camera settings, or guesses about private identity.";
+// const NIGHTSHADE_VERSION: &str = "1.1";
+// const NIGHTSHADE_DOWNLOADS_PAGE: &str = "https://nightshade.cs.uchicago.edu/downloads.html";
+// const NIGHTSHADE_WINDOWS_URLS: &[&str] = &[
+//     "https://webvault.cs.uchicago.edu/sandlab/fawkes/files/nightshade/Nightshade-1.1-Windows.zip",
+//     "https://mirror.cs.uchicago.edu/fawkes/files/nightshade/Nightshade-1.1-Windows.zip",
+// ];
+// const NIGHTSHADE_MACOS_APPLE_SILICON_URLS: &[&str] = &[
+//     "https://webvault.cs.uchicago.edu/sandlab/fawkes/files/nightshade/Nightshade-1.1-m1.dmg",
+//     "https://mirror.cs.uchicago.edu/fawkes/files/nightshade/Nightshade-1.1-m1.dmg",
+// ];
 
 pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
     if args.iter().any(|arg| arg == "--help" || arg == "-h") {
@@ -207,24 +124,24 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         return Ok(());
     }
 
-    let mut detector = if options.dry_run {
+    let describer = if options.dry_run {
         None
     } else {
-        Some(PhotoDetector::new(
-            &options.model,
-            options.device,
-            options.confidence,
+        Some(OllamaPhotoDescriber::new(
+            site,
+            &options.describer.ollama_model,
+            &options.describer.prompt,
         )?)
     };
     let mut entries = Vec::new();
     let mut names = HashMap::<String, usize>::new();
-    let mut staging_entries = Vec::new();
-    let mut missing_nightshade_outputs = Vec::new();
+    // let mut staging_entries = Vec::new();
+    // let mut missing_nightshade_outputs = Vec::new();
 
-    if !options.dry_run {
-        fs::create_dir_all(&options.nightshade_input)?;
-        fs::create_dir_all(&options.nightshade_output)?;
-    }
+    // if !options.dry_run {
+    //     fs::create_dir_all(&options.nightshade_input)?;
+    //     fs::create_dir_all(&options.nightshade_output)?;
+    // }
 
     for photo in photos {
         let relative = photo.strip_prefix(&options.input).unwrap_or(&photo);
@@ -241,10 +158,10 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
             format!("{base}-{count}.jpg")
         };
         let target = options.output.join(&file_name);
-        let staged_file_name = staged_photo_file_name(&base, *count, &photo);
-        let staged_photo = options.nightshade_input.join(&staged_file_name);
-        let nightshade_photo =
-            find_nightshade_output(&options.nightshade_output, &staged_file_name);
+        // let staged_file_name = staged_photo_file_name(&base, *count, &photo);
+        // let staged_photo = options.nightshade_input.join(&staged_file_name);
+        // let nightshade_photo =
+        //     find_nightshade_output(&options.nightshade_output, &staged_file_name);
 
         println!(
             "process {} -> {}",
@@ -256,36 +173,34 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
             (0, 0, PhotoClassification::unclassified())
         } else {
             process_photo_file(
+                site,
                 &photo,
-                nightshade_photo.as_deref(),
                 &target,
                 options.quality,
-                nightshade_photo.is_some(),
-                detector
-                    .as_mut()
-                    .ok_or_else(|| SiteError::new("photo detector was not initialized"))?,
+                describer
+                    .as_ref()
+                    .ok_or_else(|| SiteError::new("photo describer was not initialized"))?,
             )?
         };
-        let nightshade_tag = nightshade_tag(&classification.tags);
+        // let nightshade_tag = nightshade_tag(&classification.tags);
 
-        if !options.dry_run {
-            stage_nightshade_input(&photo, &staged_photo)?;
-            staging_entries.push(NightshadeStagingEntry {
-                source: relative.to_string_lossy().replace('\\', "/"),
-                file: staged_file_name.clone(),
-                tag: nightshade_tag.clone(),
-                title: classification.title.clone(),
-            });
+        // if !options.dry_run {
+        //     stage_nightshade_input(&photo, &staged_photo)?;
+        //     staging_entries.push(NightshadeStagingEntry {
+        //         source: relative.to_string_lossy().replace('\\', "/"),
+        //         file: staged_file_name.clone(),
+        //         tag: nightshade_tag.clone(),
+        //         title: classification.title.clone(),
+        //     });
 
-            if nightshade_photo.is_none() {
-                missing_nightshade_outputs.push(staged_file_name);
-            }
-        }
+        //     if nightshade_photo.is_none() {
+        //         missing_nightshade_outputs.push(staged_file_name);
+        //     }
+        // }
 
         println!(
-            "  title: {}; nightshade tag: {}; tags: {}",
+            "  title: {}; tags: {}",
             classification.title,
-            nightshade_tag,
             if classification.tags.is_empty() {
                 "unclassified".to_string()
             } else {
@@ -296,6 +211,7 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         entries.push(GalleryEntry {
             src: format!("/photography/gallery/{file_name}"),
             title: classification.title,
+            description: classification.description,
             meta: relative.to_string_lossy().replace('\\', "/"),
             tags: classification.tags,
             width,
@@ -303,18 +219,18 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         });
     }
 
-    if !options.dry_run {
-        write_nightshade_staging_manifest(&options.nightshade_input, &staging_entries)?;
-    }
+    // if !options.dry_run {
+    //     write_nightshade_staging_manifest(&options.nightshade_input, &staging_entries)?;
+    // }
 
-    if !missing_nightshade_outputs.is_empty() {
-        return Err(Box::new(SiteError::new(format!(
-            "staged {} photo(s) for Nightshade in {}; run Nightshade on that folder with the tags in nightshade-tags.csv, write results to {}, then rerun process-photos",
-            missing_nightshade_outputs.len(),
-            options.nightshade_input.display(),
-            options.nightshade_output.display()
-        ))));
-    }
+    // if !missing_nightshade_outputs.is_empty() {
+    //     return Err(Box::new(SiteError::new(format!(
+    //         "staged {} photo(s) for Nightshade in {}; run Nightshade on that folder with the tags in nightshade-tags.csv, write results to {}, then rerun process-photos",
+    //         missing_nightshade_outputs.len(),
+    //         options.nightshade_input.display(),
+    //         options.nightshade_output.display()
+    //     ))));
+    // }
 
     if !options.dry_run {
         write_gallery_manifest(&options.manifest, &entries)?;
@@ -323,72 +239,101 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
     Ok(())
 }
 
-pub(crate) fn setup_nightshade(site: &Site, args: &[String]) -> Result<()> {
-    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
-        print_setup_help();
-        return Ok(());
-    }
+// pub(crate) fn setup_nightshade(site: &Site, args: &[String]) -> Result<()> {
+//     if args.iter().any(|arg| arg == "--help" || arg == "-h") {
+//         print_setup_help();
+//         return Ok(());
+//     }
 
-    let options = parse_setup_options(site, args)?;
-    let package = nightshade_package()?;
+//     let options = parse_setup_options(site, args)?;
+//     let package = nightshade_package()?;
+//     let download_urls = setup_download_urls(&options, &package);
 
-    if options.print_url {
-        println!("{}", package.url);
-        return Ok(());
-    }
+//     if options.print_url {
+//         for url in &download_urls {
+//             println!("{url}");
+//         }
+//         return Ok(());
+//     }
 
-    let archive = options.download_dir.join(package.file_name);
-    println!("Nightshade {}", package.version);
-    println!("download: {}", package.url);
-    println!("archive: {}", archive.display());
+//     let archive = options
+//         .archive
+//         .clone()
+//         .unwrap_or_else(|| options.download_dir.join(package.file_name));
+//     println!("Nightshade {}", package.version);
+//     if options.archive.is_some() {
+//         println!("archive source: local file");
+//     } else {
+//         for (index, url) in download_urls.iter().enumerate() {
+//             if index == 0 {
+//                 println!("download: {url}");
+//             } else {
+//                 println!("fallback download: {url}");
+//             }
+//         }
+//     }
+//     println!("archive: {}", archive.display());
 
-    if options.dry_run {
-        println!("dry run: would download Nightshade and unpack it into private/tools/nightshade");
-        return Ok(());
-    }
+//     if options.dry_run {
+//         if options.archive.is_some() {
+//             println!("dry run: would unpack Nightshade into private/tools/nightshade");
+//         } else {
+//             println!(
+//                 "dry run: would download Nightshade and unpack it into private/tools/nightshade"
+//             );
+//         }
+//         return Ok(());
+//     }
 
-    fs::create_dir_all(&options.download_dir)?;
-    fs::create_dir_all(&options.install_dir)?;
+//     fs::create_dir_all(&options.download_dir)?;
+//     fs::create_dir_all(&options.install_dir)?;
 
-    if archive.is_file() && !options.force {
-        println!("reusing existing {}", archive.display());
-    } else {
-        download_file(site, package.url, &archive)?;
-    }
+//     if options.archive.is_some() {
+//         if !archive.is_file() {
+//             return Err(Box::new(SiteError::new(format!(
+//                 "Nightshade archive does not exist: {}",
+//                 archive.display()
+//             ))));
+//         }
+//         println!("using existing {}", archive.display());
+//     } else if archive.is_file() && !options.force {
+//         println!("reusing existing {}", archive.display());
+//     } else {
+//         download_nightshade_archive(site, &download_urls, &archive)?;
+//     }
 
-    match package.archive_kind {
-        NightshadeArchiveKind::Zip => {
-            let app_dir = options
-                .install_dir
-                .join(format!("Nightshade-{}", package.version));
-            unpack_zip_archive(site, &archive, &app_dir)?;
-            if let Some(executable) = find_nightshade_executable(&app_dir)? {
-                println!("Nightshade executable: {}", executable.display());
-            } else {
-                println!("Nightshade unpacked to {}", app_dir.display());
-            }
-        }
-        NightshadeArchiveKind::Dmg => {
-            println!(
-                "Nightshade DMG downloaded to {}; mount it and drag the app into {}",
-                archive.display(),
-                options.install_dir.display()
-            );
-        }
-    }
+//     match package.archive_kind {
+//         NightshadeArchiveKind::Zip => {
+//             let app_dir = options
+//                 .install_dir
+//                 .join(format!("Nightshade-{}", package.version));
+//             unpack_zip_archive(&archive, &app_dir)?;
+//             if let Some(executable) = find_nightshade_executable(&app_dir)? {
+//                 println!("Nightshade executable: {}", executable.display());
+//             } else {
+//                 println!("Nightshade unpacked to {}", app_dir.display());
+//             }
+//         }
+//         NightshadeArchiveKind::Dmg => {
+//             println!(
+//                 "Nightshade DMG downloaded to {}; mount it and drag the app into {}",
+//                 archive.display(),
+//                 options.install_dir.display()
+//             );
+//         }
+//     }
 
-    Ok(())
-}
+//     Ok(())
+// }
 
 fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOptions> {
     let mut positionals = Vec::new();
     let mut quality = 92_u8;
     let mut manifest = site.root.join("content/photography/gallery.json");
-    let mut model = site.root.join("private/photography/models/yolo11n.onnx");
-    let mut device = PhotoClassifierDevice::Auto;
-    let mut confidence = 0.25_f32;
-    let mut nightshade_input = site.root.join("private/photography/nightshade/input");
-    let mut nightshade_output = site.root.join("private/photography/nightshade/output");
+    let mut ollama_model = DEFAULT_OLLAMA_PHOTO_MODEL.to_string();
+    let mut description_prompt = DEFAULT_PHOTO_DESCRIPTION_PROMPT.to_string();
+    // let mut nightshade_input = site.root.join("private/photography/nightshade/input");
+    // let mut nightshade_output = site.root.join("private/photography/nightshade/output");
     let mut dry_run = false;
     let mut index = 0;
 
@@ -410,44 +355,43 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
                 })?;
                 manifest = site.resolve_path(value);
             }
-            "--model" => {
+            "--describer" => {
                 index += 1;
                 let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--model requires a path")) as Box<dyn Error>
+                    Box::new(SiteError::new("--describer requires a value")) as Box<dyn Error>
                 })?;
-                model = site.resolve_path(value);
+                validate_photo_describer(value)?;
             }
-            "--device" => {
+            "--ollama-model" => {
                 index += 1;
                 let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--device requires a value")) as Box<dyn Error>
-                })?;
-                device = parse_photo_classifier_device(value)?;
-            }
-            "--confidence" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--confidence requires a value")) as Box<dyn Error>
-                })?;
-                confidence = value.parse::<f32>().map_err(|source| {
-                    SiteError::new(format!("invalid confidence {value:?}: {source}"))
-                })?;
-            }
-            "--nightshade-input" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--nightshade-input requires a path")) as Box<dyn Error>
-                })?;
-                nightshade_input = site.resolve_path(value);
-            }
-            "--nightshade-output" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--nightshade-output requires a path"))
+                    Box::new(SiteError::new("--ollama-model requires a model name"))
                         as Box<dyn Error>
                 })?;
-                nightshade_output = site.resolve_path(value);
+                ollama_model = value.to_string();
             }
+            "--description-prompt" => {
+                index += 1;
+                let value = args.get(index).ok_or_else(|| {
+                    Box::new(SiteError::new("--description-prompt requires text")) as Box<dyn Error>
+                })?;
+                description_prompt = value.to_string();
+            }
+            // "--nightshade-input" => {
+            //     index += 1;
+            //     let value = args.get(index).ok_or_else(|| {
+            //         Box::new(SiteError::new("--nightshade-input requires a path")) as Box<dyn Error>
+            //     })?;
+            //     nightshade_input = site.resolve_path(value);
+            // }
+            // "--nightshade-output" => {
+            //     index += 1;
+            //     let value = args.get(index).ok_or_else(|| {
+            //         Box::new(SiteError::new("--nightshade-output requires a path"))
+            //             as Box<dyn Error>
+            //     })?;
+            //     nightshade_output = site.resolve_path(value);
+            // }
             "--dry-run" => dry_run = true,
             "--help" | "-h" => {
                 print_process_help();
@@ -468,11 +412,6 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
             "quality must be between 60 and 100",
         )));
     }
-    if !(0.0..=1.0).contains(&confidence) {
-        return Err(Box::new(SiteError::new(
-            "confidence must be between 0.0 and 1.0",
-        )));
-    }
     if positionals.len() > 2 {
         return Err(Box::new(SiteError::new(
             "process-photos accepts at most INPUT and OUTPUT paths",
@@ -489,132 +428,152 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
             |path| site.resolve_path(path),
         ),
         manifest,
-        model,
-        device,
-        confidence,
-        nightshade_input,
-        nightshade_output,
+        describer: PhotoDescriberOptions {
+            ollama_model,
+            prompt: description_prompt,
+        },
+        // nightshade_input,
+        // nightshade_output,
         quality,
         dry_run,
     })
 }
 
-fn parse_setup_options(site: &Site, args: &[String]) -> Result<SetupNightshadeOptions> {
-    let mut install_dir = site.root.join("private/tools/nightshade");
-    let mut download_dir = None;
-    let mut force = false;
-    let mut print_url = false;
-    let mut dry_run = false;
-    let mut index = 0;
+// fn parse_setup_options(site: &Site, args: &[String]) -> Result<SetupNightshadeOptions> {
+//     let mut install_dir = site.root.join("private/tools/nightshade");
+//     let mut download_dir = None;
+//     let mut archive = None;
+//     let mut url = None;
+//     let mut force = false;
+//     let mut print_url = false;
+//     let mut dry_run = false;
+//     let mut index = 0;
 
-    while index < args.len() {
-        match args[index].as_str() {
-            "--install-dir" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--install-dir requires a path")) as Box<dyn Error>
-                })?;
-                install_dir = site.resolve_path(value);
-            }
-            "--download-dir" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--download-dir requires a path")) as Box<dyn Error>
-                })?;
-                download_dir = Some(site.resolve_path(value));
-            }
-            "--force" => force = true,
-            "--print-url" => print_url = true,
-            "--dry-run" => dry_run = true,
-            "--help" | "-h" => {
-                print_setup_help();
-                return Err(Box::new(SiteError::new("help requested")));
-            }
-            value => {
-                return Err(Box::new(SiteError::new(format!(
-                    "unknown setup-nightshade option: {value}"
-                ))));
-            }
-        }
-        index += 1;
-    }
+//     while index < args.len() {
+//         match args[index].as_str() {
+//             "--install-dir" => {
+//                 index += 1;
+//                 let value = args.get(index).ok_or_else(|| {
+//                     Box::new(SiteError::new("--install-dir requires a path")) as Box<dyn Error>
+//                 })?;
+//                 install_dir = site.resolve_path(value);
+//             }
+//             "--download-dir" => {
+//                 index += 1;
+//                 let value = args.get(index).ok_or_else(|| {
+//                     Box::new(SiteError::new("--download-dir requires a path")) as Box<dyn Error>
+//                 })?;
+//                 download_dir = Some(site.resolve_path(value));
+//             }
+//             "--archive" => {
+//                 index += 1;
+//                 let value = args.get(index).ok_or_else(|| {
+//                     Box::new(SiteError::new("--archive requires a path")) as Box<dyn Error>
+//                 })?;
+//                 archive = Some(site.resolve_path(value));
+//             }
+//             "--url" => {
+//                 index += 1;
+//                 let value = args.get(index).ok_or_else(|| {
+//                     Box::new(SiteError::new("--url requires a URL")) as Box<dyn Error>
+//                 })?;
+//                 url = Some(value.to_string());
+//             }
+//             "--force" => force = true,
+//             "--print-url" => print_url = true,
+//             "--dry-run" => dry_run = true,
+//             "--help" | "-h" => {
+//                 print_setup_help();
+//                 return Err(Box::new(SiteError::new("help requested")));
+//             }
+//             value => {
+//                 return Err(Box::new(SiteError::new(format!(
+//                     "unknown setup-nightshade option: {value}"
+//                 ))));
+//             }
+//         }
+//         index += 1;
+//     }
 
-    let download_dir = download_dir.unwrap_or_else(|| install_dir.join("downloads"));
+//     let download_dir = download_dir.unwrap_or_else(|| install_dir.join("downloads"));
 
-    Ok(SetupNightshadeOptions {
-        install_dir,
-        download_dir,
-        force,
-        print_url,
-        dry_run,
-    })
-}
+//     Ok(SetupNightshadeOptions {
+//         install_dir,
+//         download_dir,
+//         archive,
+//         url,
+//         force,
+//         print_url,
+//         dry_run,
+//     })
+// }
 
-fn download_file(site: &Site, url: &str, output: &Path) -> Result<()> {
-    if let Some(parent) = output.parent() {
-        fs::create_dir_all(parent)?;
-    }
+// fn setup_download_urls(
+//     options: &SetupNightshadeOptions,
+//     package: &NightshadePackage,
+// ) -> Vec<String> {
+//     if let Some(url) = &options.url {
+//         return vec![url.to_string()];
+//     }
 
-    let program = if cfg!(target_os = "windows") {
-        "curl.exe"
-    } else {
-        "curl"
-    };
-    let args = vec![
-        OsString::from("--fail"),
-        OsString::from("--location"),
-        OsString::from("--show-error"),
-        OsString::from("--output"),
-        output.as_os_str().to_os_string(),
-        OsString::from(url),
-    ];
-    site.run(&site.root, program, &args)
-}
+//     package.urls.iter().map(|url| url.to_string()).collect()
+// }
 
-fn unpack_zip_archive(site: &Site, archive: &Path, destination: &Path) -> Result<()> {
-    fs::create_dir_all(destination)?;
+// fn download_nightshade_archive(site: &Site, urls: &[String], output: &Path) -> Result<()> {
+//     let mut errors = Vec::new();
 
-    if cfg!(target_os = "windows") {
-        let args = vec![
-            OsString::from("-NoProfile"),
-            OsString::from("-ExecutionPolicy"),
-            OsString::from("Bypass"),
-            OsString::from("-Command"),
-            OsString::from("Expand-Archive -LiteralPath $args[0] -DestinationPath $args[1] -Force"),
-            archive.as_os_str().to_os_string(),
-            destination.as_os_str().to_os_string(),
-        ];
-        site.run(&site.root, "powershell.exe", &args)
-    } else {
-        let args = vec![
-            OsString::from("-o"),
-            archive.as_os_str().to_os_string(),
-            OsString::from("-d"),
-            destination.as_os_str().to_os_string(),
-        ];
-        site.run(&site.root, "unzip", &args)
-    }
-}
+//     for url in urls {
+//         match download_file(site, url, output) {
+//             Ok(()) => return Ok(()),
+//             Err(error) => {
+//                 errors.push(format!("{url}: {error}"));
+//                 site.warn(&format!("Nightshade download failed from {url}"));
+//             }
+//         }
+//     }
 
-fn print_setup_help() {
-    println!(
-        "\
-setup-nightshade
+//     Err(Box::new(SiteError::new(format!(
+//         "failed to download Nightshade archive from pinned URL(s): {}\nDownload it manually from {NIGHTSHADE_DOWNLOADS_PAGE}, then rerun setup-nightshade with --archive PATH.",
+//         errors.join("; ")
+//     ))))
+// }
 
-Usage:
-  cargo run --manifest-path tools/site/Cargo.toml -- setup-nightshade [options]
+// fn unpack_zip_archive(archive: &Path, destination: &Path) -> Result<()> {
+//     fs::create_dir_all(destination)?;
 
-Options:
-  --install-dir PATH   default private/tools/nightshade
-  --download-dir PATH  default INSTALL_DIR/downloads
-  --force              redownload the archive if it already exists
-  --print-url          print the pinned official download URL and exit
-  --dry-run            print planned work without downloading
+//     println!(
+//         "extracting {} to {}",
+//         archive.display(),
+//         destination.display()
+//     );
+//     let archive_file = File::open(archive)?;
+//     let mut archive = zip::ZipArchive::new(archive_file)?;
+//     archive.extract(destination)?;
 
-Nightshade is not part of the normal build and is ignored by git.
-"
-    );
-}
+//     Ok(())
+// }
+
+// fn print_setup_help() {
+//     println!(
+//         "\
+// setup-nightshade
+
+// Usage:
+//   cargo run --manifest-path tools/site/Cargo.toml -- setup-nightshade [options]
+
+// Options:
+//   --install-dir PATH   default private/tools/nightshade
+//   --download-dir PATH  default INSTALL_DIR/downloads
+//   --archive PATH       unpack an already downloaded Nightshade archive
+//   --url URL            override the pinned download URL
+//   --force              redownload the archive if it already exists
+//   --print-url          print the pinned official download URL(s) and exit
+//   --dry-run            print planned work without downloading
+
+// Nightshade is not part of the normal build and is ignored by git.
+// "
+//     );
+// }
 
 fn print_process_help() {
     println!(
@@ -631,19 +590,15 @@ Defaults:
 Options:
   --quality N        JPEG quality, 60-100, default 92
   --manifest PATH    gallery JSON path, default content/photography/gallery.json
-  --model PATH       local YOLO ONNX model, default private/photography/models/yolo11n.onnx
-  --device DEVICE    auto, cpu, cuda, or directml, default auto
-  --confidence N     object confidence threshold, 0.0-1.0, default 0.25
-  --nightshade-input PATH
-                     private staging folder for source images and tags
-  --nightshade-output PATH
-                     folder where Nightshade writes protected images
+  --describer NAME   ollama, default ollama
+  --ollama-model M   local Ollama vision model, default gemma3
+  --description-prompt TEXT
+                     prompt for Ollama labeled descriptions
   --dry-run          print planned work without writing images
 
 Model:
-  Download or export Ultralytics YOLO11n detection as ONNX and place it at
-  private/photography/models/yolo11n.onnx.
-  Example: yolo export model=yolo11n.pt format=onnx imgsz=640
+  Install Ollama, pull a local vision model, then run process-photos.
+  The --describer option is kept for explicitness and currently accepts ollama.
 "
     );
 }
@@ -677,282 +632,164 @@ fn is_photo_file(path: &Path) -> bool {
     )
 }
 
-fn nightshade_package() -> Result<NightshadePackage> {
-    if cfg!(target_os = "windows") {
-        return Ok(NightshadePackage {
-            version: NIGHTSHADE_VERSION,
-            url: NIGHTSHADE_WINDOWS_URL,
-            file_name: "Nightshade-1.1-Windows.zip",
-            archive_kind: NightshadeArchiveKind::Zip,
-        });
-    }
+// fn nightshade_package() -> Result<NightshadePackage> {
+//     if cfg!(target_os = "windows") {
+//         return Ok(NightshadePackage {
+//             version: NIGHTSHADE_VERSION,
+//             urls: NIGHTSHADE_WINDOWS_URLS,
+//             file_name: "Nightshade-1.1-Windows.zip",
+//             archive_kind: NightshadeArchiveKind::Zip,
+//         });
+//     }
 
-    if cfg!(target_os = "macos") && cfg!(target_arch = "aarch64") {
-        return Ok(NightshadePackage {
-            version: NIGHTSHADE_VERSION,
-            url: NIGHTSHADE_MACOS_APPLE_SILICON_URL,
-            file_name: "Nightshade-1.1-m1.dmg",
-            archive_kind: NightshadeArchiveKind::Dmg,
-        });
-    }
+//     if cfg!(target_os = "macos") && cfg!(target_arch = "aarch64") {
+//         return Ok(NightshadePackage {
+//             version: NIGHTSHADE_VERSION,
+//             urls: NIGHTSHADE_MACOS_APPLE_SILICON_URLS,
+//             file_name: "Nightshade-1.1-m1.dmg",
+//             archive_kind: NightshadeArchiveKind::Dmg,
+//         });
+//     }
 
-    Err(Box::new(SiteError::new(
-        "Nightshade setup is only pinned for Windows and Apple Silicon macOS",
-    )))
-}
+//     Err(Box::new(SiteError::new(
+//         "Nightshade setup is only pinned for Windows and Apple Silicon macOS",
+//     )))
+// }
 
-fn find_nightshade_executable(dir: &Path) -> Result<Option<PathBuf>> {
-    if !dir.is_dir() {
-        return Ok(None);
-    }
+// fn find_nightshade_executable(dir: &Path) -> Result<Option<PathBuf>> {
+//     if !dir.is_dir() {
+//         return Ok(None);
+//     }
 
-    let mut pending = vec![dir.to_path_buf()];
-    while let Some(current) = pending.pop() {
-        for entry in fs::read_dir(current)? {
-            let path = entry?.path();
-            if is_nightshade_executable(&path) {
-                return Ok(Some(path));
-            }
-            if path.is_dir() {
-                pending.push(path);
-            }
-        }
-    }
+//     let mut pending = vec![dir.to_path_buf()];
+//     while let Some(current) = pending.pop() {
+//         for entry in fs::read_dir(current)? {
+//             let path = entry?.path();
+//             if is_nightshade_executable(&path) {
+//                 return Ok(Some(path));
+//             }
+//             if path.is_dir() {
+//                 pending.push(path);
+//             }
+//         }
+//     }
 
-    Ok(None)
-}
+//     Ok(None)
+// }
 
-fn is_nightshade_executable(path: &Path) -> bool {
-    let Some(stem) = path.file_stem().and_then(OsStr::to_str) else {
-        return false;
-    };
-    if !stem.to_ascii_lowercase().contains("nightshade") {
-        return false;
-    }
+// fn is_nightshade_executable(path: &Path) -> bool {
+//     let Some(stem) = path.file_stem().and_then(OsStr::to_str) else {
+//         return false;
+//     };
+//     if !stem.to_ascii_lowercase().contains("nightshade") {
+//         return false;
+//     }
 
-    if cfg!(target_os = "windows") {
-        path.extension()
-            .and_then(OsStr::to_str)
-            .is_some_and(|extension| extension.eq_ignore_ascii_case("exe"))
-    } else if cfg!(target_os = "macos") {
-        path.extension()
-            .and_then(OsStr::to_str)
-            .is_some_and(|extension| extension.eq_ignore_ascii_case("app"))
-    } else {
-        false
-    }
-}
-
-impl PhotoClassifierDevice {
-    fn label(self) -> &'static str {
-        match self {
-            PhotoClassifierDevice::Auto => "auto",
-            PhotoClassifierDevice::Cpu => "cpu",
-            PhotoClassifierDevice::Cuda => "cuda",
-            PhotoClassifierDevice::DirectMl => "directml",
-        }
-    }
-}
-
-impl PhotoDetector {
-    fn new(model: &Path, device: PhotoClassifierDevice, confidence: f32) -> Result<Self> {
-        if !model.is_file() {
-            return Err(Box::new(SiteError::new(format!(
-                "photo object model not found at {}; export Ultralytics YOLO11n with `yolo export model=yolo11n.pt format=onnx imgsz=640` or pass --model PATH",
-                model.display()
-            ))));
-        }
-
-        let providers = photo_detector_providers(device);
-        let session = if device == PhotoClassifierDevice::Auto && !providers.is_empty() {
-            match build_photo_detector_session(model, providers.as_slice()) {
-                Ok(session) => session,
-                Err(error) => {
-                    eprintln!(
-                        "warning: failed to initialize GPU object detection ({error}); falling back to CPU"
-                    );
-                    build_photo_detector_session(model, &[])?
-                }
-            }
-        } else {
-            build_photo_detector_session(model, providers.as_slice())?
-        };
-
-        println!(
-            "object detection model: {} ({})",
-            model.display(),
-            device.label()
-        );
-
-        Ok(Self {
-            session,
-            confidence,
-        })
-    }
-
-    fn classify(&mut self, source: &RgbaImage) -> Result<PhotoClassification> {
-        let input = photo_model_input(source);
-        let tensor = Tensor::from_array((
-            [
-                1_usize,
-                3,
-                PHOTO_MODEL_INPUT_SIZE as usize,
-                PHOTO_MODEL_INPUT_SIZE as usize,
-            ],
-            input.into_boxed_slice(),
-        ))?;
-        let outputs = self.session.run(ort::inputs![tensor])?;
-
-        if outputs.len() == 0 {
-            return Err(Box::new(SiteError::new(
-                "object detection model returned no outputs",
-            )));
-        }
-
-        let (shape, data) = outputs[0].try_extract_tensor::<f32>()?;
-        let detections = detections_from_output(shape, data, self.confidence)?;
-        Ok(PhotoClassification::from_detections(&detections))
-    }
-}
+//     if cfg!(target_os = "windows") {
+//         path.extension()
+//             .and_then(OsStr::to_str)
+//             .is_some_and(|extension| extension.eq_ignore_ascii_case("exe"))
+//     } else if cfg!(target_os = "macos") {
+//         path.extension()
+//             .and_then(OsStr::to_str)
+//             .is_some_and(|extension| extension.eq_ignore_ascii_case("app"))
+//     } else {
+//         false
+//     }
+// }
 
 impl PhotoClassification {
     fn unclassified() -> Self {
         Self {
             title: "Unclassified photo".to_string(),
+            description: String::new(),
             tags: Vec::new(),
-        }
-    }
-
-    fn from_detections(detections: &[DetectedObject]) -> Self {
-        let tags = detections
-            .iter()
-            .take(MAX_PHOTO_TAGS)
-            .map(|detection| detection.label.clone())
-            .collect::<Vec<_>>();
-
-        Self {
-            title: title_from_tags(&tags),
-            tags,
         }
     }
 }
 
-fn parse_photo_classifier_device(value: &str) -> Result<PhotoClassifierDevice> {
+impl OllamaPhotoDescriber {
+    fn new(site: &Site, model: &str, prompt: &str) -> Result<Self> {
+        let model = model.trim();
+        if model.is_empty() {
+            return Err(Box::new(SiteError::new(
+                "--ollama-model must not be empty when --describer ollama is used",
+            )));
+        }
+
+        let show_args = vec![OsString::from("show"), OsString::from(model)];
+        if !site.status_success(&site.root, "ollama", &show_args)? {
+            return Err(Box::new(SiteError::new(format!(
+                "Ollama model {model:?} is not available locally; run `ollama pull {model}` first"
+            ))));
+        }
+
+        println!("photo describer: ollama ({model})");
+
+        Ok(Self {
+            model: model.to_string(),
+            prompt: prompt.to_string(),
+        })
+    }
+
+    fn describe(&self, site: &Site, image: &Path) -> Result<PhotoClassification> {
+        let args = vec![
+            OsString::from("run"),
+            OsString::from(&self.model),
+            image.as_os_str().to_os_string(),
+            OsString::from(&self.prompt),
+        ];
+        let output = site
+            .output_optional(&site.root, "ollama", &args)?
+            .ok_or_else(|| {
+                SiteError::new(format!(
+                    "Ollama failed to describe {}; check that {} is a local vision model",
+                    image.display(),
+                    self.model
+                ))
+            })?;
+
+        parse_generated_photo_description(&output)
+    }
+}
+
+fn validate_photo_describer(value: &str) -> Result<()> {
     match value.to_ascii_lowercase().as_str() {
-        "auto" => Ok(PhotoClassifierDevice::Auto),
-        "cpu" => Ok(PhotoClassifierDevice::Cpu),
-        "cuda" => Ok(PhotoClassifierDevice::Cuda),
-        "directml" | "dml" => Ok(PhotoClassifierDevice::DirectMl),
+        "ollama" => Ok(()),
         _ => Err(Box::new(SiteError::new(format!(
-            "unknown photo classifier device {value:?}; use auto, cpu, cuda, or directml"
+            "unknown photo describer {value:?}; only ollama is supported"
         )))),
     }
 }
 
-fn photo_detector_providers(device: PhotoClassifierDevice) -> Vec<ep::ExecutionProviderDispatch> {
-    let mut providers = Vec::new();
-
-    match device {
-        PhotoClassifierDevice::Auto => {
-            providers.push(ep::CUDA::default().build());
-            if cfg!(target_os = "windows") {
-                providers.push(ep::DirectML::default().build());
-            }
-        }
-        PhotoClassifierDevice::Cuda => providers.push(ep::CUDA::default().build()),
-        PhotoClassifierDevice::DirectMl => providers.push(ep::DirectML::default().build()),
-        PhotoClassifierDevice::Cpu => {}
-    }
-
-    providers
-}
-
-fn build_photo_detector_session(
-    model: &Path,
-    providers: &[ep::ExecutionProviderDispatch],
-) -> std::result::Result<Session, ort::Error> {
-    let mut builder = Session::builder()?;
-    if !providers.is_empty() {
-        builder = builder.with_execution_providers(providers)?;
-    }
-    builder.commit_from_file(model)
-}
-
 fn process_photo_file(
+    site: &Site,
     input: &Path,
-    nightshade_output: Option<&Path>,
     output: &Path,
     quality: u8,
-    publish: bool,
-    detector: &mut PhotoDetector,
+    describer: &OllamaPhotoDescriber,
 ) -> Result<(u32, u32, PhotoClassification)> {
     let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
     let source = image.to_rgba8();
-    let classification = detector.classify(&source)?;
-    let (width, height) = if publish {
-        let nightshade_output = nightshade_output.ok_or_else(|| {
-            SiteError::new("Nightshade output is required before publishing photo")
-        })?;
-        publish_nightshade_photo(nightshade_output, output, quality)?
-    } else {
-        source.dimensions()
-    };
+    let classification = describer.describe(site, input)?;
+    let (width, height) = publish_photo(&source, output, quality)?;
 
     Ok((width, height, classification))
 }
 
-fn publish_nightshade_photo(input: &Path, output: &Path, quality: u8) -> Result<(u32, u32)> {
+fn publish_photo(source: &RgbaImage, output: &Path, quality: u8) -> Result<(u32, u32)> {
     if let Some(parent) = output.parent() {
         fs::create_dir_all(parent)?;
     }
 
-    let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
-    let source = image.to_rgba8();
     let (width, height) = source.dimensions();
-    let rgb = rgba_to_rgb_on_white(&source);
+    let rgb = rgba_to_rgb_on_white(source);
     let file = File::create(output)?;
     let writer = BufWriter::new(file);
     let mut encoder = JpegEncoder::new_with_quality(writer, quality);
     encoder.encode_image(&rgb)?;
 
     Ok((width, height))
-}
-
-fn photo_model_input(source: &RgbaImage) -> Vec<f32> {
-    let rgb = rgba_to_rgb_on_white(source);
-    let (width, height) = rgb.dimensions();
-    let scale = (PHOTO_MODEL_INPUT_SIZE as f32 / width as f32)
-        .min(PHOTO_MODEL_INPUT_SIZE as f32 / height as f32);
-    let resized_width = ((width as f32 * scale).round() as u32).clamp(1, PHOTO_MODEL_INPUT_SIZE);
-    let resized_height = ((height as f32 * scale).round() as u32).clamp(1, PHOTO_MODEL_INPUT_SIZE);
-    let resized =
-        image::imageops::resize(&rgb, resized_width, resized_height, FilterType::Triangle);
-    let mut letterboxed = RgbImage::from_pixel(
-        PHOTO_MODEL_INPUT_SIZE,
-        PHOTO_MODEL_INPUT_SIZE,
-        Rgb([114, 114, 114]),
-    );
-    let x_offset = (PHOTO_MODEL_INPUT_SIZE - resized_width) / 2;
-    let y_offset = (PHOTO_MODEL_INPUT_SIZE - resized_height) / 2;
-
-    for y in 0..resized_height {
-        for x in 0..resized_width {
-            let pixel = *resized.get_pixel(x, y);
-            letterboxed.put_pixel(x + x_offset, y + y_offset, pixel);
-        }
-    }
-
-    let capacity = (PHOTO_MODEL_INPUT_SIZE * PHOTO_MODEL_INPUT_SIZE * 3) as usize;
-    let mut input = Vec::with_capacity(capacity);
-    for channel in 0..3 {
-        for y in 0..PHOTO_MODEL_INPUT_SIZE {
-            for x in 0..PHOTO_MODEL_INPUT_SIZE {
-                input.push(f32::from(letterboxed.get_pixel(x, y)[channel]) / 255.0);
-            }
-        }
-    }
-
-    input
 }
 
 fn rgba_to_rgb_on_white(source: &RgbaImage) -> RgbImage {
@@ -978,142 +815,6 @@ fn rgba_to_rgb_on_white(source: &RgbaImage) -> RgbImage {
     output
 }
 
-fn detections_from_output(
-    shape: &ort::value::Shape,
-    data: &[f32],
-    confidence: f32,
-) -> Result<Vec<DetectedObject>> {
-    let layout = detection_layout(shape, data.len()).ok_or_else(|| {
-        SiteError::new(format!(
-            "unsupported object detection output shape {:?} with {} values",
-            shape.to_vec(),
-            data.len()
-        ))
-    })?;
-    let mut best_by_label = HashMap::<String, f32>::new();
-
-    for candidate in 0..layout.candidates() {
-        if layout.channels() == 6 {
-            let score = detection_value(data, layout, candidate, 4);
-            let class_index = detection_value(data, layout, candidate, 5).round();
-            if score.is_finite() && score >= confidence && class_index >= 0.0 {
-                if let Some(label) = COCO_LABELS.get(class_index as usize) {
-                    update_best_detection(&mut best_by_label, label, score);
-                }
-            }
-            continue;
-        }
-
-        let class_offset = if layout.channels() == COCO_LABELS.len() + 5 {
-            5
-        } else {
-            4
-        };
-        let objectness = if class_offset == 5 {
-            detection_value(data, layout, candidate, 4).clamp(0.0, 1.0)
-        } else {
-            1.0
-        };
-        let class_count = (layout.channels() - class_offset).min(COCO_LABELS.len());
-        let mut best_class = None;
-        let mut best_score = confidence;
-
-        for class_index in 0..class_count {
-            let class_score =
-                detection_value(data, layout, candidate, class_offset + class_index) * objectness;
-            if class_score.is_finite() && class_score >= best_score {
-                best_score = class_score;
-                best_class = Some(class_index);
-            }
-        }
-
-        if let Some(class_index) = best_class {
-            update_best_detection(&mut best_by_label, COCO_LABELS[class_index], best_score);
-        }
-    }
-
-    let mut detections = best_by_label
-        .into_iter()
-        .map(|(label, score)| DetectedObject { label, score })
-        .collect::<Vec<_>>();
-    detections.sort_by(|a, b| {
-        b.score
-            .total_cmp(&a.score)
-            .then_with(|| a.label.cmp(&b.label))
-    });
-
-    Ok(detections)
-}
-
-fn detection_layout(shape: &ort::value::Shape, data_len: usize) -> Option<DetectionLayout> {
-    let dims = shape
-        .iter()
-        .copied()
-        .map(usize::try_from)
-        .collect::<std::result::Result<Vec<_>, _>>()
-        .ok()?;
-
-    match dims.as_slice() {
-        [1, first, second] | [first, second] => {
-            if first.checked_mul(*second)? != data_len {
-                return None;
-            }
-
-            let first_is_channels = looks_like_detection_channels(*first);
-            let second_is_channels = looks_like_detection_channels(*second);
-
-            if first_is_channels && (!second_is_channels || second > first) {
-                Some(DetectionLayout::ChannelsFirst {
-                    channels: *first,
-                    candidates: *second,
-                })
-            } else if second_is_channels {
-                Some(DetectionLayout::CandidatesFirst {
-                    channels: *second,
-                    candidates: *first,
-                })
-            } else {
-                None
-            }
-        }
-        _ => None,
-    }
-}
-
-fn looks_like_detection_channels(value: usize) -> bool {
-    (6..=256).contains(&value)
-}
-
-fn update_best_detection(best_by_label: &mut HashMap<String, f32>, label: &str, score: f32) {
-    best_by_label
-        .entry(label.to_string())
-        .and_modify(|best| *best = (*best).max(score))
-        .or_insert(score);
-}
-
-fn detection_value(data: &[f32], layout: DetectionLayout, candidate: usize, channel: usize) -> f32 {
-    match layout {
-        DetectionLayout::ChannelsFirst { candidates, .. } => data[channel * candidates + candidate],
-        DetectionLayout::CandidatesFirst { channels, .. } => data[candidate * channels + channel],
-    }
-}
-
-impl DetectionLayout {
-    fn channels(self) -> usize {
-        match self {
-            DetectionLayout::ChannelsFirst { channels, .. }
-            | DetectionLayout::CandidatesFirst { channels, .. } => channels,
-        }
-    }
-
-    fn candidates(self) -> usize {
-        match self {
-            DetectionLayout::ChannelsFirst { candidates, .. }
-            | DetectionLayout::CandidatesFirst { candidates, .. } => candidates,
-        }
-    }
-}
-
 fn sanitize_file_stem(stem: &str) -> String {
     let mut result = String::new();
     for ch in stem.chars() {
@@ -1132,109 +833,247 @@ fn sanitize_file_stem(stem: &str) -> String {
     }
 }
 
-fn staged_photo_file_name(base: &str, count: usize, source: &Path) -> String {
-    let extension = source
-        .extension()
-        .and_then(OsStr::to_str)
-        .map(|extension| extension.to_ascii_lowercase())
-        .filter(|extension| is_safe_extension(extension))
-        .unwrap_or_else(|| "jpg".to_string());
+// fn staged_photo_file_name(base: &str, count: usize, source: &Path) -> String {
+//     let extension = source
+//         .extension()
+//         .and_then(OsStr::to_str)
+//         .map(|extension| extension.to_ascii_lowercase())
+//         .filter(|extension| is_safe_extension(extension))
+//         .unwrap_or_else(|| "jpg".to_string());
 
-    if count == 1 {
-        format!("{base}.{extension}")
-    } else {
-        format!("{base}-{count}.{extension}")
-    }
+//     if count == 1 {
+//         format!("{base}.{extension}")
+//     } else {
+//         format!("{base}-{count}.{extension}")
+//     }
+// }
+
+// fn is_safe_extension(extension: &str) -> bool {
+//     extension
+//         .chars()
+//         .all(|ch| ch.is_ascii_alphanumeric() || ch == '-' || ch == '_')
+// }
+
+// fn find_nightshade_output(output_dir: &Path, staged_file_name: &str) -> Option<PathBuf> {
+//     let direct = output_dir.join(staged_file_name);
+//     if direct.is_file() {
+//         return Some(direct);
+//     }
+
+//     let stem = Path::new(staged_file_name).file_stem()?.to_string_lossy();
+//     for extension in ["jpg", "jpeg", "png", "webp"] {
+//         let candidate = output_dir.join(format!("{stem}.{extension}"));
+//         if candidate.is_file() {
+//             return Some(candidate);
+//         }
+//     }
+
+//     None
+// }
+
+// fn stage_nightshade_input(source: &Path, target: &Path) -> Result<()> {
+//     if let Some(parent) = target.parent() {
+//         fs::create_dir_all(parent)?;
+//     }
+//     fs::copy(source, target)?;
+//     Ok(())
+// }
+
+// fn nightshade_tag(tags: &[String]) -> String {
+//     tags.first()
+//         .filter(|tag| !tag.trim().is_empty())
+//         .cloned()
+//         .unwrap_or_else(|| "photo".to_string())
+// }
+
+// fn write_nightshade_staging_manifest(
+//     input_dir: &Path,
+//     entries: &[NightshadeStagingEntry],
+// ) -> Result<()> {
+//     fs::create_dir_all(input_dir)?;
+
+//     let mut json = serde_json::to_string_pretty(entries)?;
+//     json.push('\n');
+//     fs::write(input_dir.join("nightshade-tags.json"), json)?;
+
+//     let mut csv = String::from("file,tag,title,source\n");
+//     for entry in entries {
+//         csv.push_str(&csv_field(&entry.file));
+//         csv.push(',');
+//         csv.push_str(&csv_field(&entry.tag));
+//         csv.push(',');
+//         csv.push_str(&csv_field(&entry.title));
+//         csv.push(',');
+//         csv.push_str(&csv_field(&entry.source));
+//         csv.push('\n');
+//     }
+//     fs::write(input_dir.join("nightshade-tags.csv"), csv)?;
+
+//     Ok(())
+// }
+
+// fn csv_field(value: &str) -> String {
+//     if value
+//         .chars()
+//         .any(|ch| matches!(ch, '"' | ',' | '\n' | '\r'))
+//     {
+//         format!("\"{}\"", value.replace('"', "\"\""))
+//     } else {
+//         value.to_string()
+//     }
+// }
+
+fn parse_generated_photo_description(output: &str) -> Result<PhotoClassification> {
+    let (raw_title, raw_description, raw_tags) = parse_labeled_photo_description(output)
+        .ok_or_else(|| {
+            SiteError::new(format!(
+                "photo describer did not return Title, Description, and Tags fields: {}",
+                output.trim()
+            ))
+        })?;
+    let description = clean_generated_text(&raw_description).unwrap_or_default();
+    let title = clean_generated_text(&raw_title)
+        .or_else(|| title_from_description(&description))
+        .unwrap_or_else(|| "Untitled photo".to_string());
+    let tags = raw_tags
+        .split(',')
+        .filter_map(|tag| clean_generated_tag(tag))
+        .take(MAX_GENERATED_PHOTO_TAGS)
+        .collect::<Vec<_>>();
+
+    Ok(PhotoClassification {
+        title,
+        description,
+        tags,
+    })
 }
 
-fn is_safe_extension(extension: &str) -> bool {
-    extension
-        .chars()
-        .all(|ch| ch.is_ascii_alphanumeric() || ch == '-' || ch == '_')
-}
+fn parse_labeled_photo_description(output: &str) -> Option<(String, String, String)> {
+    let mut title = String::new();
+    let mut description = String::new();
+    let mut tags = String::new();
+    let mut current = None;
 
-fn find_nightshade_output(output_dir: &Path, staged_file_name: &str) -> Option<PathBuf> {
-    let direct = output_dir.join(staged_file_name);
-    if direct.is_file() {
-        return Some(direct);
-    }
+    for line in strip_code_fence(output).lines() {
+        let line = line.trim();
+        if line.is_empty() {
+            continue;
+        }
 
-    let stem = Path::new(staged_file_name).file_stem()?.to_string_lossy();
-    for extension in ["jpg", "jpeg", "png", "webp"] {
-        let candidate = output_dir.join(format!("{stem}.{extension}"));
-        if candidate.is_file() {
-            return Some(candidate);
+        if let Some((field, value)) = parse_labeled_line(line) {
+            current = Some(field);
+            append_generated_field(
+                match field {
+                    Field::Title => &mut title,
+                    Field::Description => &mut description,
+                    Field::Tags => &mut tags,
+                },
+                value,
+            );
+            continue;
+        }
+
+        if let Some(field) = current {
+            append_generated_field(
+                match field {
+                    Field::Title => &mut title,
+                    Field::Description => &mut description,
+                    Field::Tags => &mut tags,
+                },
+                line,
+            );
         }
     }
 
-    None
+    (!title.trim().is_empty() || !description.trim().is_empty() || !tags.trim().is_empty())
+        .then_some((title, description, tags))
 }
 
-fn stage_nightshade_input(source: &Path, target: &Path) -> Result<()> {
-    if let Some(parent) = target.parent() {
-        fs::create_dir_all(parent)?;
+fn parse_labeled_line(line: &str) -> Option<(Field, &str)> {
+    let line = line
+        .trim_start_matches(|ch: char| matches!(ch, '-' | '*'))
+        .trim();
+    let (label, value) = line.split_once(':')?;
+    let field = match label.trim().to_ascii_lowercase().as_str() {
+        "title" => Field::Title,
+        "description" | "caption" => Field::Description,
+        "tags" => Field::Tags,
+        _ => return None,
+    };
+
+    Some((field, value.trim()))
+}
+
+#[derive(Clone, Copy)]
+enum Field {
+    Title,
+    Description,
+    Tags,
+}
+
+fn append_generated_field(target: &mut String, value: &str) {
+    if value.trim().is_empty() {
+        return;
     }
-    fs::copy(source, target)?;
-    Ok(())
-}
-
-fn nightshade_tag(tags: &[String]) -> String {
-    tags.first()
-        .filter(|tag| !tag.trim().is_empty())
-        .cloned()
-        .unwrap_or_else(|| "photo".to_string())
-}
-
-fn write_nightshade_staging_manifest(
-    input_dir: &Path,
-    entries: &[NightshadeStagingEntry],
-) -> Result<()> {
-    fs::create_dir_all(input_dir)?;
-
-    let mut json = serde_json::to_string_pretty(entries)?;
-    json.push('\n');
-    fs::write(input_dir.join("nightshade-tags.json"), json)?;
-
-    let mut csv = String::from("file,tag,title,source\n");
-    for entry in entries {
-        csv.push_str(&csv_field(&entry.file));
-        csv.push(',');
-        csv.push_str(&csv_field(&entry.tag));
-        csv.push(',');
-        csv.push_str(&csv_field(&entry.title));
-        csv.push(',');
-        csv.push_str(&csv_field(&entry.source));
-        csv.push('\n');
+    if !target.is_empty() {
+        target.push(' ');
     }
-    fs::write(input_dir.join("nightshade-tags.csv"), csv)?;
-
-    Ok(())
+    target.push_str(value.trim());
 }
 
-fn csv_field(value: &str) -> String {
-    if value
+fn strip_code_fence(output: &str) -> &str {
+    let trimmed = output.trim();
+    let without_start = trimmed
+        .strip_prefix("```text")
+        .or_else(|| trimmed.strip_prefix("```"))
+        .unwrap_or(trimmed)
+        .trim();
+
+    without_start
+        .strip_suffix("```")
+        .unwrap_or(without_start)
+        .trim()
+}
+
+fn clean_generated_text(value: &str) -> Option<String> {
+    let cleaned = value
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+        .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`'))
+        .trim()
+        .to_string();
+
+    (!cleaned.is_empty()).then_some(cleaned)
+}
+
+fn clean_generated_tag(value: &str) -> Option<String> {
+    let tag = value
+        .trim()
+        .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`' | '.' | ',' | ';' | ':'))
+        .to_ascii_lowercase()
         .chars()
-        .any(|ch| matches!(ch, '"' | ',' | '\n' | '\r'))
-    {
-        format!("\"{}\"", value.replace('"', "\"\""))
-    } else {
-        value.to_string()
-    }
+        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(ch, ' ' | '-' | '_'))
+        .collect::<String>()
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ");
+
+    (!tag.is_empty()).then_some(tag)
 }
 
-fn title_from_tags(tags: &[String]) -> String {
-    let parts = tags.iter().map(|tag| titleize_tag(tag)).collect::<Vec<_>>();
+fn title_from_description(description: &str) -> Option<String> {
+    let words = description
+        .split_whitespace()
+        .take(7)
+        .map(|word| {
+            word.trim_matches(|ch: char| !ch.is_alphanumeric())
+                .to_string()
+        })
+        .filter(|word| !word.is_empty())
+        .collect::<Vec<_>>();
 
-    match parts.as_slice() {
-        [] => "Unclassified photo".to_string(),
-        [only] => only.clone(),
-        [first, second] => format!("{first} and {second}"),
-        _ => {
-            let last = parts.last().expect("parts is not empty");
-            let leading = parts[..parts.len() - 1].join(", ");
-            format!("{leading}, and {last}")
-        }
-    }
+    (!words.is_empty()).then(|| titleize_tag(&words.join(" ")))
 }
 
 fn titleize_tag(tag: &str) -> String {
@@ -1274,68 +1113,182 @@ fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
 mod tests {
     use super::*;
 
+    // #[test]
+    // fn prepares_nightshade_staging_names_and_tags() {
+    //     assert_eq!(
+    //         staged_photo_file_name("p1073908", 1, Path::new("P1073908.JPG")),
+    //         "p1073908.jpg"
+    //     );
+    //     assert_eq!(
+    //         staged_photo_file_name("p1073908", 2, Path::new("P1073908.PNG")),
+    //         "p1073908-2.png"
+    //     );
+    //     assert_eq!(nightshade_tag(&[]), "photo");
+    //     assert_eq!(nightshade_tag(&["cat".to_string()]), "cat");
+    //     assert_eq!(csv_field("cat, portrait"), "\"cat, portrait\"");
+    // }
+
+    // #[test]
+    // fn parses_setup_nightshade_archive_and_url_options() {
+    //     let site = Site {
+    //         root: PathBuf::from("C:/repo"),
+    //         ci: false,
+    //     };
+    //     let options = parse_setup_options(
+    //         &site,
+    //         &[
+    //             "--archive".to_string(),
+    //             "downloads/Nightshade.zip".to_string(),
+    //             "--url".to_string(),
+    //             "https://example.invalid/Nightshade.zip".to_string(),
+    //         ],
+    //     )
+    //     .unwrap();
+
+    //     assert_eq!(
+    //         options.archive.as_deref(),
+    //         Some(Path::new("C:/repo/downloads/Nightshade.zip"))
+    //     );
+    //     assert_eq!(
+    //         options.url.as_deref(),
+    //         Some("https://example.invalid/Nightshade.zip")
+    //     );
+    // }
+
     #[test]
-    fn titles_photos_from_detected_object_tags() {
-        assert_eq!(
-            title_from_tags(&["person".to_string(), "bicycle".to_string()]),
-            "Person and Bicycle"
-        );
-        assert_eq!(
-            title_from_tags(&[
-                "person".to_string(),
-                "traffic light".to_string(),
-                "tv".to_string()
-            ]),
-            "Person, Traffic Light, and TV"
-        );
-        assert_eq!(title_from_tags(&[]), "Unclassified photo");
+    fn parses_ollama_photo_describer_options() {
+        let site = Site {
+            root: PathBuf::from("C:/repo"),
+            ci: false,
+        };
+        let options = parse_process_options(
+            &site,
+            &[
+                "--describer".to_string(),
+                "ollama".to_string(),
+                "--ollama-model".to_string(),
+                "moondream".to_string(),
+                "--description-prompt".to_string(),
+                "describe briefly".to_string(),
+            ],
+        )
+        .unwrap();
+
+        assert_eq!(options.describer.ollama_model, "moondream");
+        assert_eq!(options.describer.prompt, "describe briefly");
     }
 
     #[test]
-    fn prepares_nightshade_staging_names_and_tags() {
-        assert_eq!(
-            staged_photo_file_name("p1073908", 1, Path::new("P1073908.JPG")),
-            "p1073908.jpg"
-        );
-        assert_eq!(
-            staged_photo_file_name("p1073908", 2, Path::new("P1073908.PNG")),
-            "p1073908-2.png"
-        );
-        assert_eq!(nightshade_tag(&[]), "photo");
-        assert_eq!(nightshade_tag(&["cat".to_string()]), "cat");
-        assert_eq!(csv_field("cat, portrait"), "\"cat, portrait\"");
+    fn defaults_to_ollama_photo_describer() {
+        let site = Site {
+            root: PathBuf::from("C:/repo"),
+            ci: false,
+        };
+        let options = parse_process_options(&site, &[]).unwrap();
+
+        assert_eq!(options.describer.ollama_model, DEFAULT_OLLAMA_PHOTO_MODEL);
+        assert_eq!(options.describer.prompt, DEFAULT_PHOTO_DESCRIPTION_PROMPT);
     }
 
     #[test]
-    fn extracts_yolo_channel_first_object_tags() {
-        let shape = ort::value::Shape::new([1_i64, 7, 2]);
-        let data = vec![
-            0.0, 0.0, // x
-            0.0, 0.0, // y
-            0.0, 0.0, // w
-            0.0, 0.0, // h
-            0.8, 0.2, // person
-            0.1, 0.9, // bicycle
-            0.3, 0.2, // car
-        ];
+    fn parses_labeled_photo_description() {
+        let classification = parse_generated_photo_description(
+            r#"Title: Bicycle by Brick Wall
+Description: A bicycle leans against a brick wall on a quiet street.
+Tags: Bicycle, brick wall, street!,
+```"#,
+        )
+        .unwrap();
 
-        let detections = detections_from_output(&shape, &data, 0.5).unwrap();
-
-        assert_eq!(detections[0].label, "bicycle");
-        assert_eq!(detections[1].label, "person");
+        assert_eq!(classification.title, "Bicycle by Brick Wall");
+        assert_eq!(
+            classification.description,
+            "A bicycle leans against a brick wall on a quiet street."
+        );
+        assert_eq!(
+            classification.tags,
+            vec![
+                "bicycle".to_string(),
+                "brick wall".to_string(),
+                "street".to_string()
+            ]
+        );
     }
 
     #[test]
-    fn extracts_postprocessed_row_object_tags() {
-        let shape = ort::value::Shape::new([1_i64, 2, 6]);
-        let data = vec![
-            0.0, 0.0, 0.0, 0.0, 0.7, 2.0, // car
-            0.0, 0.0, 0.0, 0.0, 0.4, 0.0, // below threshold
-        ];
+    fn parses_wrapped_ollama_description_output() {
+        let classification = parse_generated_photo_description(
+            r#"Title: Red Cat in Motion
+Description: A blurred, warm-toned image of a ginger cat in a moment
+of movement.
+Tags: cat, motion blur, ginger, pet, animal, texture,
+warm tones, photography"#,
+        )
+        .unwrap();
 
-        let detections = detections_from_output(&shape, &data, 0.5).unwrap();
+        assert_eq!(classification.title, "Red Cat in Motion");
+        assert_eq!(
+            classification.description,
+            "A blurred, warm-toned image of a ginger cat in a moment of movement."
+        );
+        assert_eq!(
+            classification.tags,
+            vec![
+                "cat".to_string(),
+                "motion blur".to_string(),
+                "ginger".to_string(),
+                "pet".to_string(),
+                "animal".to_string(),
+                "texture".to_string(),
+                "warm tones".to_string(),
+                "photography".to_string()
+            ]
+        );
+    }
 
-        assert_eq!(detections.len(), 1);
-        assert_eq!(detections[0].label, "car");
+    #[test]
+    fn parses_bulleted_labeled_photo_description() {
+        let classification = parse_generated_photo_description(
+            r#"- Title: Warm Cat Blur
+- Description: A ginger cat moves through warm light.
+- Tags: cat, motion blur, warm tones"#,
+        )
+        .unwrap();
+
+        assert_eq!(classification.title, "Warm Cat Blur");
+        assert_eq!(
+            classification.description,
+            "A ginger cat moves through warm light."
+        );
+        assert_eq!(
+            classification.tags,
+            vec![
+                "cat".to_string(),
+                "motion blur".to_string(),
+                "warm tones".to_string()
+            ]
+        );
+    }
+
+    #[test]
+    fn derives_title_from_generated_description_when_missing() {
+        let classification = parse_generated_photo_description(
+            r#"Description: a foggy hill path curves into the trees.
+Tags: fog, hill path, trees"#,
+        )
+        .unwrap();
+
+        assert_eq!(classification.title, "A Foggy Hill Path Curves Into The");
+        assert_eq!(
+            classification.description,
+            "a foggy hill path curves into the trees."
+        );
+    }
+
+    #[test]
+    fn rejects_unlabeled_photo_description() {
+        assert!(
+            parse_generated_photo_description("A foggy hill path curves into the trees.").is_err()
+        );
     }
 }

@@ -1,8 +1,9 @@
-import { photo_count_label, photo_manifest_entry_is_valid } from "wasm"
+import { photo_count_label } from "wasm"
 
 interface Photo {
   src: string
   title: string
+  description?: string
   meta?: string
   tags?: string[]
 }
@@ -21,19 +22,59 @@ const nextButton = dialog?.querySelector<HTMLButtonElement>(".photo-lightbox-nex
 let photos = fallbackPhotos
 let currentIndex = 0
 
-function isPhoto(value: unknown): value is Photo {
-  if (!value || typeof value !== "object") {
-    return false
+function nonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== "string") {
+    return undefined
   }
 
-  const candidate = value as Partial<Photo>
-  const tags = candidate.tags
-  return (
-    typeof candidate.src === "string" &&
-    typeof candidate.title === "string" &&
-    (tags === undefined || (Array.isArray(tags) && tags.every((tag) => typeof tag === "string"))) &&
-    photo_manifest_entry_is_valid(candidate.src, candidate.title)
-  )
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
+function titleFromPath(path: string): string | undefined {
+  const filename = path.split(/[\\/]/).pop()?.split(/[?#]/)[0] ?? path
+  const stem = filename.replace(/\.[^.]*$/, "")
+  const title = stem.replace(/[_-]+/g, " ").trim()
+  return title.length > 0 ? title : undefined
+}
+
+function photoTags(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined
+  }
+
+  const tags = value.flatMap((tag) => {
+    const trimmed = nonEmptyString(tag)
+    return trimmed ? [trimmed] : []
+  })
+
+  return tags.length > 0 ? tags : undefined
+}
+
+function toPhoto(value: unknown): Photo | null {
+  if (!value || typeof value !== "object") {
+    return null
+  }
+
+  const candidate = value as Record<string, unknown>
+  const src = nonEmptyString(candidate.src)
+  if (!src) {
+    return null
+  }
+
+  const description = nonEmptyString(candidate.description)
+  const meta = nonEmptyString(candidate.meta)
+  const title =
+    nonEmptyString(candidate.title) ?? titleFromPath(meta ?? src) ?? description ?? "Untitled photo"
+  const tags = photoTags(candidate.tags)
+
+  return {
+    src,
+    title,
+    ...(description ? { description } : {}),
+    ...(meta ? { meta } : {}),
+    ...(tags ? { tags } : {}),
+  }
 }
 
 async function loadPhotos(): Promise<void> {
@@ -41,8 +82,12 @@ async function loadPhotos(): Promise<void> {
     const response = await fetch("/photography/gallery.json", { cache: "no-cache" })
     if (response.ok) {
       const loaded: unknown = await response.json()
-      if (Array.isArray(loaded) && loaded.length > 0 && loaded.every(isPhoto)) {
-        photos = loaded
+      if (Array.isArray(loaded)) {
+        const loadedPhotos = loaded.map(toPhoto).filter((photo): photo is Photo => photo !== null)
+
+        if (loadedPhotos.length > 0) {
+          photos = loadedPhotos
+        }
       }
     }
   } catch {
@@ -89,9 +134,26 @@ function showPhoto(index: number): void {
   currentIndex = (index + photos.length) % photos.length
   const photo = photos[currentIndex]
   dialogImage.src = photo.src
-  dialogImage.alt = photo.title
-  dialogCaption.textContent = photo.title
+  dialogImage.alt = photo.description || photo.title
+  renderCaption(photo)
   dialog.showModal()
+}
+
+function renderCaption(photo: Photo): void {
+  if (!dialogCaption) {
+    return
+  }
+
+  const title = document.createElement("strong")
+  title.textContent = photo.title
+  dialogCaption.replaceChildren(title)
+
+  const description = photo.description?.trim()
+  if (description) {
+    const body = document.createElement("span")
+    body.textContent = description
+    dialogCaption.append(body)
+  }
 }
 
 function stepPhoto(delta: number): void {

@@ -6,15 +6,15 @@ publish = false
 
 [features]
 default = ["photos"]
-photos = ["dep:image", "dep:ort", "dep:serde", "dep:serde_json"]
+photos = ["dep:image", "dep:serde", "dep:serde_json"]
 
 [dependencies]
 image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"], optional = true }
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
-ort = { version = "2.0.0-rc.12", features = ["cuda", "directml"], optional = true }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }
 serde = { version = "1.0.228", features = ["derive"], optional = true }
 serde_json = { version = "1.0.145", optional = true }
+# zip = { version = "2.4.2", default-features = false, features = ["deflate"] }
 
 [[bin]]
 name = "site"

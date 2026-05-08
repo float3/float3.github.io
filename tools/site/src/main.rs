@@ -15,11 +15,11 @@ mod photos {
         )))
     }
 
-    pub(crate) fn setup_nightshade(_: &Site, _: &[String]) -> Result<()> {
-        Err(Box::new(SiteError::new(
-            "setup-nightshade requires the `photos` feature; rebuild without --no-default-features",
-        )))
-    }
+    // pub(crate) fn setup_nightshade(_: &Site, _: &[String]) -> Result<()> {
+    //     Err(Box::new(SiteError::new(
+    //         "setup-nightshade requires the `photos` feature; rebuild without --no-default-features",
+    //     )))
+    // }
 }
 mod process;
 mod recursive_ji;
@@ -127,11 +127,7 @@ fn run_main() -> Result<()> {
         "aoc-problems" | "download-aoc-problems" => aoc::download_problem_text(&site, &args[1..]),
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
         "process-photos" => photos::process(&site, &args[1..]),
-        "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
-        "poison-photos" | "photo-poison" => {
-            site.warn("poison-photos is deprecated; use process-photos");
-            photos::process(&site, &args[1..])
-        }
+        // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "check" => site.check(),
         "dates" => {
             let target = args.get(1).map_or("content", String::as_str);
@@ -196,8 +192,7 @@ Commands:
   aoc-problems [options]     download scaffolded AoC problem statements
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
   process-photos [INPUT] [OUTPUT]
-                             protect, classify, and publish source photos
-  setup-nightshade [options] download Nightshade into private/tools/nightshade
+                             classify and publish source photos
   check                      run Rust, TypeScript, and lint checks
   dates [path]               refresh markdown date metadata
   update                     run dependency updates and linters
