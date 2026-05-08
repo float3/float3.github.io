@@ -5,13 +5,13 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "serve_release": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.mjs --mode production",
-    "serve_dev": "node node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.config.mjs --mode development",
-    "check": "node node_modules/typescript/bin/tsc --noEmit --incremental false && node node_modules/eslint/bin/eslint.js src",
-    "format": "node node_modules/prettier/bin/prettier.cjs src --write && node node_modules/eslint/bin/eslint.js src --fix",
-    "watch": "node node_modules/typescript/bin/tsc && node node_modules/npm-run-all/bin/run-p/index.js watch:ts watch:webpack",
-    "watch:ts": "node node_modules/typescript/bin/tsc --watch --preserveWatchOutput",
-    "watch:webpack": "node node_modules/webpack/bin/webpack.js --config webpack.config.mjs --mode development --watch"
+    "serve_release": "bun run webpack-dev-server --config webpack.config.mjs --mode production",
+    "serve_dev": "bun run webpack-dev-server --config webpack.config.mjs --mode development",
+    "check": "bun run tsc --noEmit --incremental false && bun run eslint src",
+    "format": "bun run prettier src --write && bun run eslint src --fix",
+    "watch": "bun run tsc && bun run run-p watch:ts watch:webpack",
+    "watch:ts": "bun run tsc --watch --preserveWatchOutput",
+    "watch:webpack": "bun run webpack --config webpack.config.mjs --mode development --watch"
   },
   "repository": {
     "type": "git",

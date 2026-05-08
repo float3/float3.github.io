@@ -14,9 +14,9 @@
   "scripts": {
     "quartz": "bun quartz/bootstrap-cli.mjs",
     "docs": "bun run quartz build --serve -d docs",
-    "check": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/prettier/bin/prettier.cjs . --check",
-    "format": "node node_modules/prettier/bin/prettier.cjs . --write",
-    "test": "node --import tsx --test",
+    "check": "bun run tsc --noEmit && bun run prettier . --check",
+    "format": "bun run prettier . --write",
+    "test": "bun test",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
     "install-plugins": "node node_modules/tsx/dist/cli.mjs ./quartz/plugins/loader/install-plugins.ts",
     "prebuild": "bun run install-plugins"
