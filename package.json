@@ -12,17 +12,16 @@
     "url": "https://github.com/jackyzha0/quartz.git"
   },
   "scripts": {
-    "quartz": "bun quartz/bootstrap-cli.mjs",
+    "quartz": "bun quartz/bootstrap-cli.mts",
     "docs": "bun run quartz build --serve -d docs",
-    "check": "node node_modules/typescript/bin/tsc --noEmit && node node_modules/prettier/bin/prettier.cjs . --check",
-    "format": "node node_modules/prettier/bin/prettier.cjs . --write",
-    "test": "node --import tsx --test",
-    "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1",
-    "install-plugins": "node node_modules/tsx/dist/cli.mjs ./quartz/plugins/loader/install-plugins.ts",
+    "check": "bun run tsc --noEmit && bun run prettier . --check",
+    "format": "bun run prettier . --write",
+    "test": "bun test",
+    "profile": "bun --cpu-prof --cpu-prof-dir prof quartz/bootstrap-cli.mts build --concurrency=1",
+    "install-plugins": "bun quartz/plugins/loader/install-plugins.ts",
     "prebuild": "bun run install-plugins"
   },
   "engines": {
-    "node": ">=22",
     "bun": ">=1.3.13"
   },
   "keywords": [
@@ -34,7 +33,7 @@
     "quartz"
   ],
   "bin": {
-    "quartz": "./quartz/bootstrap-cli.mjs"
+    "quartz": "./quartz/bootstrap-cli.mts"
   },
   "dependencies": {
     "@clack/prompts": "^1.3.0",
@@ -84,7 +83,6 @@
     "@types/yargs": "^17.0.35",
     "esbuild": "^0.28.0",
     "prettier": "^3.8.3",
-    "tsx": "^4.21.0",
     "typescript": "^6.0.3"
   },
   "packageManager": "bun@1.3.13"

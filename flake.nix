@@ -33,7 +33,6 @@
             gnugrep
             llvmPackages.bintools
             bun
-            nodejs_22
             python313
             rustup
             typescript

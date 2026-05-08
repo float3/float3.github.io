@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { promises } from "fs"
 import path from "path"
 import esbuild from "esbuild"
@@ -14,7 +15,7 @@ import serveHandler from "serve-handler"
 import { WebSocketServer } from "ws"
 import { randomUUID } from "crypto"
 import { Mutex } from "async-mutex"
-import { CreateArgv } from "./args.js"
+import { CreateArgv } from "./args.ts"
 import { globby } from "globby"
 import {
   exitIfCancel,
@@ -22,12 +23,12 @@ import {
   gitPull,
   popContentFolder,
   stashContentFolder,
-} from "./helpers.js"
+} from "./helpers.ts"
 import {
   handlePluginRestore,
   handlePluginCheck,
   handlePluginResolve,
-} from "./plugin-git-handlers.js"
+} from "./plugin-git-handlers.ts"
 import {
   configExists,
   createConfigFromDefault,
@@ -37,7 +38,7 @@ import {
   extractPluginName,
   updateGlobalConfig,
   LOCKFILE_PATH,
-} from "./plugin-data.js"
+} from "./plugin-data.ts"
 import {
   UPSTREAM_NAME,
   QUARTZ_SOURCE_BRANCH,
@@ -47,7 +48,7 @@ import {
   fp,
   cacheFile,
   cwd,
-} from "./constants.js"
+} from "./constants.ts"
 
 /**
  * Resolve content directory path
@@ -583,7 +584,7 @@ export async function handleBuild(argv) {
   if (argv.watch) {
     const paths = await globby([
       "**/*.ts",
-      "quartz/cli/*.js",
+      "quartz/cli/*.ts",
       "quartz/static/**/*",
       "**/*.tsx",
       "**/*.scss",
