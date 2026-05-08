@@ -62,16 +62,16 @@ body[data-slug="notes/craft"] {
   & li:has(> img, > video) {
     list-style-type: none;
 
-    & > img,
-    & > video {
+    &>img,
+    &>video {
       margin: 1rem 0;
     }
   }
 
-  article > ul {
+  article>ul {
     padding-left: 0;
 
-    & > li {
+    &>li {
       list-style-type: none;
       margin: 1rem 0;
     }
@@ -103,11 +103,53 @@ body[data-slug="notes/craft"] {
 }
 
 @media all and not ($mobile) {
+
   .sidebar.left .explorer,
   .sidebar.left .explorer-content,
   .sidebar.left .explorer-content .overflow {
     max-height: none;
     overflow: visible;
+  }
+}
+
+@media all and ($mobile) {
+  .page > #quartz-body .sidebar.left:has(.explorer) {
+    background-color: transparent;
+    overflow: visible;
+    z-index: 200;
+  }
+
+  .sidebar.left .explorer {
+    overflow: visible;
+  }
+
+  .sidebar.left .explorer .mobile-explorer {
+    position: relative;
+    z-index: 1001;
+  }
+
+  .sidebar.left .explorer .explorer-content {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background-color: color-mix(in srgb, var(--light) 88%, transparent);
+    inset: 0;
+    overflow: hidden;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: fixed;
+    z-index: 1000;
+  }
+
+  .sidebar.left .explorer .explorer-content > .explorer-ul {
+    box-sizing: border-box;
+    max-height: 100%;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+  }
+
+  html.mobile-no-scroll,
+  html.mobile-no-scroll body {
+    overflow: hidden;
   }
 }
 
@@ -161,6 +203,7 @@ pre.poetry {
     line-height: 1.35;
     margin: 0 0 0.6rem;
     padding-left: 0.75rem;
+    text-align: left;
   }
 
   figcaption strong {
@@ -169,6 +212,7 @@ pre.poetry {
 
   iframe {
     display: block;
+    margin: 0 auto;
     max-width: 100%;
     pointer-events: none;
   }
@@ -273,14 +317,19 @@ pre.poetry {
 
   audio {
     display: block;
+    margin-bottom: 0.75rem;
     width: 100%;
+  }
+
+  audio.oscilloscope-audio {
+    display: none;
   }
 
   figcaption {
     color: var(--darkgray);
     font-size: 0.92rem;
     line-height: 1.35;
-    margin-bottom: 0.55rem;
+    margin-top: 0.65rem;
   }
 
   figcaption strong {
@@ -288,14 +337,169 @@ pre.poetry {
   }
 }
 
+.wave-figure figcaption,
+.audio-figure figcaption {
+  border-left: 2px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin: 0.65rem 0 0;
+  padding-left: 0.75rem;
+  text-align: left;
+}
+
+.wave-figure figcaption strong,
+.audio-figure figcaption strong {
+  color: var(--dark);
+}
+
+.abc-figure {
+  margin: 1.35rem 0 1.8rem;
+}
+
+.abc-notation {
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  overflow-x: auto;
+  padding: 0.5rem;
+}
+
+.abc-figure figcaption {
+  border-left: 2px solid var(--lightgray);
+  color: var(--darkgray);
+  font-size: 0.92rem;
+  line-height: 1.35;
+  margin: 0.65rem 0 0;
+  padding-left: 0.75rem;
+  text-align: left;
+}
+
+.oscilloscope-matrix {
+  margin: 1.5rem 0 2rem;
+  overflow-x: auto;
+}
+
+.oscilloscope-matrix table {
+  border-collapse: collapse;
+  min-width: 54rem;
+  width: 100%;
+}
+
+.oscilloscope-matrix th,
+.oscilloscope-matrix td {
+  border: 1px solid var(--lightgray);
+  padding: 0.75rem;
+  vertical-align: top;
+}
+
+.oscilloscope-matrix thead th {
+  color: var(--dark);
+  font-size: 0.9rem;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.oscilloscope-matrix tbody th {
+  color: var(--dark);
+  font-size: 0.92rem;
+  line-height: 1.25;
+  min-width: 8rem;
+  text-align: left;
+}
+
+.oscilloscope-matrix .audio-figure {
+  margin: 0;
+  min-width: 11rem;
+}
+
+.oscilloscope-matrix .audio-oscilloscope-stage {
+  width: min(100%, 10.5rem);
+}
+
+.oscilloscope-matrix .audio-figure figcaption {
+  border-left: 0;
+  font-size: 0.84rem;
+  margin: 0.55rem auto 0;
+  max-width: 11rem;
+  padding-left: 0;
+}
+
+.audio-oscilloscope-stage {
+  aspect-ratio: 1 / 1;
+  display: block;
+  margin: 0 auto;
+  position: relative;
+  width: min(100%, 24rem);
+}
+
+.audio-oscilloscope-button {
+  align-items: center;
+  appearance: none;
+  background: rgba(8, 18, 14, 0.72);
+  border: 1px solid rgba(170, 230, 205, 0.72);
+  border-radius: 50% !important;
+  box-shadow: 0 0 0 0.28em rgba(8, 18, 14, 0.22);
+  color: rgba(202, 255, 229, 0.95);
+  cursor: pointer;
+  display: flex;
+  height: clamp(2.15rem, 18%, 3.15rem);
+  justify-content: center;
+  left: 50%;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+  width: clamp(2.15rem, 18%, 3.15rem);
+}
+
+.audio-oscilloscope-button::before {
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+  content: "";
+  display: block;
+  height: 38%;
+  margin-left: 7%;
+  width: 32%;
+}
+
+.audio-oscilloscope-button[data-playing="true"]::before {
+  background: linear-gradient(to right,
+      currentColor 0 35%,
+      transparent 35% 65%,
+      currentColor 65% 100%);
+  clip-path: none;
+  height: 38%;
+  margin-left: 0;
+  width: 32%;
+}
+
+.audio-oscilloscope-button:hover {
+  background: rgba(16, 40, 31, 0.82);
+  border-color: rgba(202, 255, 229, 0.95);
+  color: #ffffff;
+}
+
+.audio-oscilloscope-button:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 4px;
+}
+
+.audio-oscilloscope-button:active {
+  transform: translate(-50%, -50%) scale(0.96);
+}
+
 .oscilloscope-canvas {
   aspect-ratio: 1 / 1;
   background: #020403;
   border: 1px solid rgba(170, 230, 205, 0.28);
   display: block;
-  height: auto;
-  margin-top: 0.65rem;
-  width: min(100%, 24rem);
+  height: 100%;
+  width: 100%;
 }
 
 audio::-webkit-media-controls-panel {
@@ -318,7 +522,7 @@ body.animation-ready #quartz-body {
 
   @for $i from 1 through 4 {
     @for $j from 1 through 8 {
-      & > *:nth-child(#{$i}) > *:nth-child(#{$j}) {
+      &>*:nth-child(#{$i})>*:nth-child(#{$j}) {
         animation: var(--animation-name) 2s ease 1 normal backwards;
         animation-delay: #{0.1 * $j + 0.4 * $i}s;
       }
@@ -326,7 +530,7 @@ body.animation-ready #quartz-body {
   }
 
   @media all and ($mobile) {
-    & > * > * {
+    &>*>* {
       animation: none;
     }
   }
@@ -360,9 +564,11 @@ body.animation-ready #quartz-body {
   animation-timing-function: linear;
   pointer-events: none;
   position: fixed;
-  height: 100%;
-  width: 100%;
+  inset: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   isolation: isolate;
+  overflow: hidden;
 
   --day: #fffdfa;
   --evening: #fccc83;
@@ -391,23 +597,28 @@ body.animation-ready #quartz-body {
     --bounce-light: #1b293f;
   }
 
-  & > #progressive-blur {
+  &>#progressive-blur {
     position: absolute;
     height: 100%;
     width: 100%;
+    contain: paint;
 
-    & > div {
+    &>div {
       position: absolute;
       height: 100%;
       width: 100%;
+      -webkit-backdrop-filter: blur(var(--blur-amount));
       backdrop-filter: blur(var(--blur-amount));
-      mask-image: linear-gradient(
-        252deg,
-        transparent,
-        transparent var(--stop1),
-        black var(--stop2),
-        black
-      );
+      -webkit-mask-image: linear-gradient(252deg,
+          transparent,
+          transparent var(--stop1),
+          black var(--stop2),
+          black);
+      mask-image: linear-gradient(252deg,
+          transparent,
+          transparent var(--stop1),
+          black var(--stop2),
+          black);
 
       &:nth-child(1) {
         --blur-amount: 8px;
@@ -435,6 +646,10 @@ body.animation-ready #quartz-body {
     }
   }
 
+  body.is-scrolling &>#progressive-blur>div:nth-child(n + 3) {
+    display: none;
+  }
+
   #glow {
     position: absolute;
     background: linear-gradient(309deg, var(--bounce-light), var(--bounce-light) 20%, transparent);
@@ -457,7 +672,7 @@ body.animation-ready #quartz-body {
     animation: outside-light-bounce 47s ease-in-out infinite;
   }
 
-  & > .perspective {
+  &>.perspective {
     position: absolute;
     transition:
       transform 1.7s var(--timing-fn),
@@ -524,7 +739,7 @@ body.animation-ready #quartz-body {
       }
     }
 
-    & > .vertical {
+    &>.vertical {
       top: 0;
       position: absolute;
       height: 100%;
@@ -532,7 +747,7 @@ body.animation-ready #quartz-body {
       display: flex;
       justify-content: space-around;
 
-      & > .bar {
+      &>.bar {
         width: 12px;
         height: 100%;
       }
@@ -540,13 +755,10 @@ body.animation-ready #quartz-body {
   }
 
   @media all and ($mobile) {
-    height: 100vh;
-    height: 100svh;
-    overflow: hidden;
     contain: layout paint style;
     opacity: 0.7;
 
-    & > #progressive-blur {
+    &>#progressive-blur {
       display: none;
     }
 
@@ -562,11 +774,12 @@ body.animation-ready #quartz-body {
       opacity: 0.18;
     }
 
-    & > .perspective {
+    &>.perspective {
       top: -16vh;
       right: -24vw;
       width: 105vw;
-      height: 115svh;
+      height: 115vh;
+      height: 115dvh;
       opacity: 0.04;
 
       [saved-theme="dark"] & {
@@ -581,7 +794,8 @@ body.animation-ready #quartz-body {
       right: -42vw;
       width: 128vw;
       max-width: 560px;
-      height: 82svh;
+      height: 82vh;
+      height: 82dvh;
       max-height: 620px;
       opacity: 0.42;
       background-size: contain;
@@ -606,14 +820,16 @@ body.animation-ready #quartz-body {
         }
       }
 
-      & > .vertical > .bar {
+      &>.vertical>.bar {
         width: 8px;
       }
     }
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    & > #progressive-blur {
+  @media (prefers-reduced-motion: reduce),
+  (prefers-reduced-transparency: reduce),
+  (update: slow) {
+    &>#progressive-blur {
       display: none;
     }
 
@@ -645,7 +861,7 @@ body.animation-ready #quartz-body {
 
 @keyframes sunset {
   0% {
-    background-color: color-mix(in srgb, var(--day) 72%, var(--evening));
+    background-color: var(--day);
   }
 
   30% {
@@ -666,6 +882,7 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-light {
+
   0%,
   100% {
     opacity: 0.38;
@@ -689,6 +906,7 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-light-bounce {
+
   0%,
   100% {
     opacity: 0.24;
@@ -707,6 +925,7 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-shadow {
+
   0%,
   100% {
     opacity: 0.82;
@@ -747,6 +966,7 @@ body.animation-ready #quartz-body {
 }
 
 [saved-theme="dark"] {
+
   #interactiveSvg path:hover,
   #interactiveSvg rect:hover {
     filter: brightness(1.7);
@@ -758,6 +978,7 @@ body.animation-ready #quartz-body {
 }
 
 [saved-theme="light"] {
+
   #interactiveSvg path:hover,
   #interactiveSvg rect:hover {
     filter: brightness(0.5);

@@ -25,6 +25,7 @@ mini-alloc = { version = "1.0.0", optional = true }
 glsl2hlsl = { path = "../glsl2hlsl" }
 adventofcode = { path = "../adventofcode/" }
 textprocessing = { path = "../textprocessing/" }
+recursive-ji-core = { path = "../../crates/recursive_ji_core" }
 web-sys = { version = "0.3.97", features = [
     "Window",
     "Document",

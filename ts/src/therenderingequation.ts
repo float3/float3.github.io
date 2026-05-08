@@ -1,9 +1,20 @@
-import { random_range } from "wasm"
+function randomRange(min: number, max: number): number {
+  if (!Number.isFinite(min) || !Number.isFinite(max) || max <= min) {
+    return min
+  }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const elements: NodeListOf<SVGPathElement | SVGRectElement> = document.querySelectorAll(
-    "#interactiveSvg path, #interactiveSvg rect",
-  )
+  return min + Math.random() * (max - min)
+}
+
+function initializeRenderingEquation() {
+  const svg = document.getElementById("interactiveSvg")
+  if (!(svg instanceof SVGSVGElement) || svg.dataset.interactiveReady === "true") {
+    return
+  }
+
+  svg.dataset.interactiveReady = "true"
+
+  const elements: NodeListOf<SVGPathElement | SVGRectElement> = svg.querySelectorAll("path, rect")
   const groupMap: Record<string, (SVGPathElement | SVGRectElement)[]> = {}
 
   elements.forEach((element) => {
@@ -19,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
 
-    const frequency = random_range(2, 5)
-    const amplitude = random_range(8, 13)
+    const frequency = randomRange(2, 5)
+    const amplitude = randomRange(8, 13)
 
     element.style.animation = `moveUpDown ${frequency}s ease-in-out infinite alternate`
     element.style.setProperty("--amplitude", `${amplitude}px`)
@@ -37,4 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
       groupMap[fillColor]?.forEach((el) => el.classList.remove("hovered"))
     })
   })
-})
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initializeRenderingEquation, { once: true })
+} else {
+  initializeRenderingEquation()
+}

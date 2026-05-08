@@ -1,9 +1,11 @@
 ---
 title: "art"
 date: 2024-04-15
-updated: 2024-12-07
+updated: 2026-05-07
 sort_by: "title"
 ---
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 this is some art i've made
 
@@ -42,3 +44,11 @@ blender:
 
 <source src="/misc/media/render.mp4">
 </video>
+
+<model-viewer
+  src="/misc/blobs/curvestuff.glb"
+  auto-rotate
+  camera-controls
+  shadow-intensity="0"
+  style="display: block; width: 100%; height: 100vh;">
+</model-viewer>

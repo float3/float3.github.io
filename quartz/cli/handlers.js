@@ -394,6 +394,25 @@ export async function handleBuild(argv) {
   const buildMutex = new Mutex()
   let lastBuildMs = 0
   let cleanupBuild = null
+  const pendingSourceChanges = new Map()
+  const normalizeWatchedPath = (fp) =>
+    path.relative(path.resolve("."), path.resolve(fp)).split(path.sep).join(path.posix.sep)
+  const recordSourceChange = (type, fp) => {
+    pendingSourceChanges.set(normalizeWatchedPath(fp), type)
+  }
+  const takeSourceChanges = () => {
+    const changes = [...pendingSourceChanges.entries()]
+    pendingSourceChanges.clear()
+    return changes
+  }
+  const logSourceChanges = (changes) => {
+    if (changes.length === 0) return
+
+    console.log(styleText("gray", "Changed source files:"))
+    for (const [fp, type] of changes) {
+      console.log(styleText("gray", `  - ${type}: ${fp}`))
+    }
+  }
   const build = async (clientRefresh) => {
     const buildStart = new Date().getTime()
     lastBuildMs = buildStart
@@ -404,7 +423,9 @@ export async function handleBuild(argv) {
     }
 
     if (cleanupBuild) {
+      const sourceChanges = takeSourceChanges()
       console.log(styleText("yellow", "Detected a source code change, doing a hard rebuild..."))
+      logSourceChanges(sourceChanges)
       await cleanupBuild()
     }
 
@@ -570,9 +591,18 @@ export async function handleBuild(argv) {
     ])
     chokidar
       .watch(paths, { ignoreInitial: true })
-      .on("add", () => build(clientRefresh))
-      .on("change", () => build(clientRefresh))
-      .on("unlink", () => build(clientRefresh))
+      .on("add", (fp) => {
+        recordSourceChange("add", fp)
+        void build(clientRefresh)
+      })
+      .on("change", (fp) => {
+        recordSourceChange("change", fp)
+        void build(clientRefresh)
+      })
+      .on("unlink", (fp) => {
+        recordSourceChange("delete", fp)
+        void build(clientRefresh)
+      })
 
     console.log(styleText("gray", "hint: exit with ctrl+c"))
   }

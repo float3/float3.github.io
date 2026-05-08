@@ -298,6 +298,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "recursive-ji-core"
+version = "0.1.0"
+dependencies = [
+ "music21-rs",
+]
+
+[[package]]
 name = "regex"
 version = "1.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -368,6 +375,7 @@ version = "0.1.0"
 dependencies = [
  "image",
  "music21-rs",
+ "recursive-ji-core",
 ]
 
 [[package]]
