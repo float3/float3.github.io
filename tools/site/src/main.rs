@@ -124,7 +124,7 @@ impl Site {
 
         self.bun_install(&self.root, InstallMode::Locked)?;
 
-        let mut args = os_args(&["quartz/bootstrap-cli.mjs", "build"]);
+        let mut args = os_args(&["quartz/bootstrap-cli.mts", "build"]);
         if mode == Mode::Dev {
             args.push("--serve".into());
         }

@@ -9,7 +9,7 @@
     "serve_dev": "bun run webpack-dev-server --config webpack.config.mjs --mode development",
     "check": "bun run tsc --noEmit --incremental false && bun run eslint src",
     "format": "bun run prettier src --write && bun run eslint src --fix",
-    "watch": "bun run tsc && bun scripts/watch.mjs",
+    "watch": "bun run tsc && bun scripts/watch.mts",
     "watch:ts": "bun run tsc --watch --preserveWatchOutput",
     "watch:webpack": "bun run webpack --config webpack.config.mjs --mode development --watch"
   },

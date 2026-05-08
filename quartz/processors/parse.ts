@@ -166,7 +166,7 @@ export async function parseMarkdown(ctx: BuildCtx, fps: FilePath[]): Promise<Pro
     }
   } else {
     await transpileWorkerScript()
-    const pool = workerpool.pool("./quartz/bootstrap-worker.mjs", {
+    const pool = workerpool.pool("./quartz/bootstrap-worker.mts", {
       minWorkers: "max",
       maxWorkers: concurrency,
       workerType: "thread",
