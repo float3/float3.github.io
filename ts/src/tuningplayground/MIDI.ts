@@ -10,8 +10,8 @@ export function requestMIDI(): void {
   }
 }
 
-function onMIDISuccess(midiAccess: WebMidi.MIDIAccess): void {
-  const input: WebMidi.MIDIInput = midiAccess.inputs.values().next().value as WebMidi.MIDIInput
+function onMIDISuccess(midiAccess: MIDIAccess): void {
+  const input: MIDIInput = midiAccess.inputs.values().next().value as MIDIInput
 
   if (input) {
     input.onmidimessage = onMIDIMessage
@@ -24,7 +24,7 @@ function onMIDIFailure(error: DOMException): void {
   console.error("MIDI Access failed:", error)
 }
 
-function onMIDIMessage(event: WebMidi.MIDIMessageEvent): void {
+function onMIDIMessage(event: MIDIMessageEvent): void {
   const [status, tone_index, velocity] = event.data
   const is_note_on = (status & 240) === 144
   const is_note_off = (status & 240) === 128
