@@ -7,7 +7,7 @@ import {
   handleUpgrade,
   handleRestore,
   handleSync,
-} from "./cli/handlers.js"
+} from "./cli/handlers.ts"
 
 import {
   handlePluginInstallUnified,
@@ -19,9 +19,9 @@ import {
   handlePluginDisable,
   handlePluginConfig,
   handlePluginPrune,
-} from "./cli/plugin-git-handlers.js"
-import { CommonArgv, BuildArgv, CreateArgv, SyncArgv } from "./cli/args.js"
-import { version } from "./cli/constants.js"
+} from "./cli/plugin-git-handlers.ts"
+import { CommonArgv, BuildArgv, CreateArgv, SyncArgv } from "./cli/args.ts"
+import { version } from "./cli/constants.ts"
 
 async function launchTui() {
   const { join } = await import("path")

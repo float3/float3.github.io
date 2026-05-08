@@ -20,7 +20,7 @@ impl Site {
 
         self.bun_install(&self.root, InstallMode::Locked)?;
 
-        let mut args = os_args(&["quartz/bootstrap-cli.mjs", "build"]);
+        let mut args = os_args(&["quartz/bootstrap-cli.mts", "build"]);
         if mode == Mode::Dev {
             args.push("--serve".into());
         }
@@ -63,16 +63,12 @@ impl Site {
         let ts_dir = self.root.join("ts");
         self.bun_install(&ts_dir, InstallMode::Locked)?;
         self.sync_wasm_package_dependency()?;
-        self.run(
+        self.run_bun(&ts_dir, &os_args(&["run", "tsc"]))?;
+        self.run_bun(
             &ts_dir,
-            "node",
-            &os_args(&["node_modules/typescript/bin/tsc"]),
-        )?;
-        self.run(
-            &ts_dir,
-            "node",
             &os_args(&[
-                "node_modules/webpack/bin/webpack.js",
+                "run",
+                "webpack",
                 "--config",
                 "webpack.config.mjs",
                 "--mode",
@@ -85,20 +81,15 @@ impl Site {
         let ts_dir = self.root.join("ts");
         self.warn("watching TypeScript and webpack output for Quartz reloads");
         Ok(vec![
-            self.spawn(
+            self.spawn_bun(
                 &ts_dir,
-                "node",
-                &os_args(&[
-                    "node_modules/typescript/bin/tsc",
-                    "--watch",
-                    "--preserveWatchOutput",
-                ]),
+                &os_args(&["run", "tsc", "--watch", "--preserveWatchOutput"]),
             )?,
-            self.spawn(
+            self.spawn_bun(
                 &ts_dir,
-                "node",
                 &os_args(&[
-                    "node_modules/webpack/bin/webpack.js",
+                    "run",
+                    "webpack",
                     "--config",
                     "webpack.config.mjs",
                     "--mode",
@@ -184,21 +175,11 @@ impl Site {
             self.bun_install(&dir, InstallMode::Locked)?;
         }
 
-        self.run(
+        self.run_bun(
             &dir,
-            "node",
-            &os_args(&[
-                "node_modules/typescript/bin/tsc",
-                "--noEmit",
-                "--incremental",
-                "false",
-            ]),
+            &os_args(&["run", "tsc", "--noEmit", "--incremental", "false"]),
         )?;
-        self.run(
-            &dir,
-            "node",
-            &os_args(&["node_modules/eslint/bin/eslint.js", "src"]),
-        )
+        self.run_bun(&dir, &os_args(&["run", "eslint", "src"]))
     }
 
     fn cargo_check_manifest(&self, manifest: &str, target_name: &str) -> Result<()> {

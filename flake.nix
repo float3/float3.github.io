@@ -33,7 +33,6 @@
             gnugrep
             llvmPackages.bintools
             bun
-            nodejs_22
             openssl
             python313
             rustup

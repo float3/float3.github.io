@@ -61,6 +61,16 @@ impl Site {
         )))
     }
 
+    pub(crate) fn spawn_bun(&self, cwd: &Path, args: &[OsString]) -> Result<ChildGuard> {
+        if let Some(program) = bun_program() {
+            return self.spawn(cwd, program, args);
+        }
+
+        Err(Box::new(SiteError::new(
+            "could not find bun; install Bun or run bun install before building",
+        )))
+    }
+
     pub(crate) fn git_iso_date(&self, args: &[OsString]) -> Result<Option<String>> {
         let Some(output) = self.output_optional(&self.root, "git", args)? else {
             return Ok(None);
