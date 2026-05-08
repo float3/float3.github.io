@@ -5,13 +5,13 @@
   "main": "./src/index.ts",
   "type": "module",
   "scripts": {
-    "serve_release": "bun run webpack-dev-server --config webpack.config.mjs --mode production",
-    "serve_dev": "bun run webpack-dev-server --config webpack.config.mjs --mode development",
+    "serve_release": "bun run webpack-dev-server --config webpack.config.mts --mode production",
+    "serve_dev": "bun run webpack-dev-server --config webpack.config.mts --mode development",
     "check": "bun run tsc --noEmit --incremental false && bun run eslint src",
     "format": "bun run prettier src --write && bun run eslint src --fix",
     "watch": "bun run tsc && bun scripts/watch.mts",
     "watch:ts": "bun run tsc --watch --preserveWatchOutput",
-    "watch:webpack": "bun run webpack --config webpack.config.mjs --mode development --watch"
+    "watch:webpack": "bun run webpack --config webpack.config.mts --mode development --watch"
   },
   "repository": {
     "type": "git",
