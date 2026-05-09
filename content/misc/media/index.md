@@ -31,6 +31,7 @@ tags:
 [katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
+[rat.png](/misc/media/rat.png) \
 [recursive-ji-c-drone-progression.wav](/misc/media/recursive-ji-c-drone-progression.wav) \
 [recursive-ji-note-splits.wav](/misc/media/recursive-ji-note-splits.wav) \
 [recursive-ji-progression.wav](/misc/media/recursive-ji-progression.wav) \
