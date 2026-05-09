@@ -25,7 +25,6 @@ const config = {
     movies: "./dist/movies.js",
     trolley: "./dist/trolley.js",
     chars: "./dist/chars.js",
-    pokemon: "./dist/pokemon.js",
     bayestheorem: "./dist/bayestheorem.js",
     photography: "./dist/photography.js",
     audiooscilloscope: "./dist/audiooscilloscope.js",
