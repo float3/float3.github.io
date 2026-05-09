@@ -1,7 +1,7 @@
 ---
 title: Why you should buy 12 Pianos | Recursive Just Intonation
 date: 2022-11-29
-updated: 2026-05-05
+updated: 2026-05-09
 tags:
   - music
   - programming
@@ -9,18 +9,30 @@ tags:
 
 ## What is this about?
 
-Recursive Just Intonation is a novel tuning system I came up with during my highschool physics classes, while trying to find a solution
-to the dissonance of 12TET. Before i explain what it is I'll give a little background on tuning systems in general.
+Before getting to recursive just intonation, there are two tuning ideas worth
+separating:
+
+- 12-tone equal temperament, or 12-TET, divides the octave into twelve equal
+  steps. It is why a piano can play in every key without retuning, but its
+  thirds and fifths are approximations of simpler acoustic ratios.
+- Just intonation tunes notes as small whole-number frequency ratios, like
+  `2/1`, `3/2`, and `5/4`. Those intervals can sound more settled because the
+  waves line up more often, but the "right" version of a note depends on the
+  harmonic context.
+
+The rest of the post builds from that tradeoff: one global keyboard versus
+cleaner chord-local relationships.
 
 ## Equal Temperament vs Just Intonation
 
-Equal temperament gives us one keyboard. Every C# is the same C#, every G is
-the same G, and every semitone is the same distance from the last one. That is
-very convenient, at the cost of shaving almost every interval a little. The
-intervals are close enough to simple ratios that they work, but most of them
-are not exact.
+Equal temperament gives us one frequency table. Every C# is the same C#, every G is the
+same G, and every semitone is the same distance from the last one. That is very
+convenient, at the cost of shaving almost every interval a little. The intervals
+are close enough to simple ratios that they work, but most of them are not
+exact.
 
-Just intonation goes the other way. It starts from simple frequency ratios:
+Just intonation goes the other way. It treats notes as relationships to a root,
+then builds those relationships from simple frequency ratios:
 
 - octave: `2/1`
 - perfect fifth: `3/2`
@@ -63,21 +75,7 @@ third above C is E. A `5/4` major third above E is G#/Ab. Those two facts cannot
 both fit into one fixed 12-note keyboard unless we allow the same pitch name to
 mean different frequencies in different harmonic contexts.
 
-The experiment here is:
-
-> Keep the roots on a C-based just-intonation keyboard, but give every chord
-> root its own just-intonation keyboard.
-
-I think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
-and so on. The root of each piano is taken from the original C just-intonation
-scale. Once a chord chooses a root, all of its notes come from the piano rooted
-on that note.
-
-This is "recursive" in the simple algorithmic sense: use a just-ratio table to
-choose the chord root, then use the same ratio table again inside that root.
-
-For a C-based just-intonation scale the 12 pitch
-classes are:
+For a C-based just-intonation scale, the 12 pitch classes are:
 
 | pitch | ratio from C |
 | ----- | -----------: |
@@ -151,8 +149,18 @@ closer to `500:630:749`, or `1:1.260:1.498`.
 
 ## 12 Just Pianos | Recursive Just Intonation
 
-Recursive just intonation changes only one rule: after choosing a root, restart
-the ratio table at that root.
+Here is what I call recursive just intonation:
+
+> Keep the roots on a C-based just-intonation keyboard, but give every chord
+> root its own just-intonated keyboard.
+
+I think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
+and so on. The root of each piano is taken from the original C just-intonation
+scale. Once a chord chooses a root, all of its notes come from the piano rooted
+on that note.
+
+This is "recursive" in the simple algorithmic sense: use a just-ratio table to
+choose the chord root, then use the same ratio table again inside that root.
 
 For an E major chord:
 
@@ -405,28 +413,6 @@ the practical compromise that lets every key share one physical instrument.
 Recursive just intonation is mostly a listening tool for me. It makes the
 root-relationship audible again, instead of flattening every chord tone onto one
 global keyboard.
-
-### Implementation Notes
-
-The shared Rust renderer lives in `crates/recursive_ji_core`. It does not use
-MIDI, because standard MIDI note numbers assume fixed pitch classes unless you
-add extra tuning messages. Instead it writes 16-bit mono WAV files directly and
-feeds the browser notation through the WASM bundle.
-
-Generate the files with:
-
-```sh
-cargo run --manifest-path tools/site/Cargo.toml -- recursive-ji-music
-```
-
-The same command also writes a CSV frequency report to
-`content/misc/plaintext/recursive-ji-frequencies.csv`.
-
-The renderer supports three tunings:
-
-- `12-TET`: `C4 * 2^(n/12)`
-- `Fixed C just intonation`: `C4 * J[pitch_class] * octave`
-- `Recursive just intonation`: `C4 * J[root] * J[chord_degree] * octave`
 
 ## My Other Music Work
 

@@ -36,7 +36,7 @@ jobs:
         run: nix develop . --command rustup toolchain install --profile minimal stable --target wasm32-unknown-unknown
 
       - name: Build site
-        run: nix develop . --command cargo run --locked --manifest-path tools/site/Cargo.toml -- build --prod
+        run: nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- build --prod
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5.0.0

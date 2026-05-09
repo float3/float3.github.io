@@ -193,8 +193,20 @@
 }
 
 .photo-lightbox figcaption {
+  display: grid;
+  gap: 0.18rem;
   color: var(--photo-muted);
+  line-height: 1.35;
   text-align: center;
+}
+
+.photo-lightbox figcaption strong {
+  color: var(--dark);
+}
+
+.photo-lightbox figcaption span {
+  max-width: 52rem;
+  justify-self: center;
 }
 
 .photo-lightbox button {
@@ -215,17 +227,16 @@
 }
 
 .trolley-gallery {
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 }
 
 .trolley-page .photo-card {
-  max-width: min(100%, 48rem);
+  height: 100%;
 }
 
 .trolley-page .photo-card img,
 .trolley-page .photo-card video {
-  aspect-ratio: auto;
-  max-height: 78vh;
+  aspect-ratio: 4 / 3;
   object-fit: contain;
 }
 

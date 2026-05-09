@@ -120,11 +120,7 @@ impl Site {
 
     fn generate_chords(&self) -> Result<()> {
         let dir = self.root.join("wasm/tuningplayground");
-        self.run(
-            &dir,
-            "cargo",
-            &os_args(&["run", "--release", "-p", "chord_generator"]),
-        )
+        self.run(&dir, "cargo", &os_args(&["run", "-p", "chord_generator"]))
     }
     pub(crate) fn dates(&self, target: &str) -> Result<()> {
         if self.ci {

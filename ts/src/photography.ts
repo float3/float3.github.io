@@ -1,7 +1,12 @@
 import { photo_caption, photo_count_label, photo_manifest_entry_is_valid } from "wasm"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
 
-const fallbackPhotos: GalleryItem[] = []
+interface Photo extends GalleryItem {
+  description?: string
+  tags?: string[]
+}
+
+const fallbackPhotos: Photo[] = []
 
 const gallery = document.getElementById("photo-gallery")
 const count = document.getElementById("photo-gallery-count")
@@ -9,17 +14,63 @@ const dialog = document.getElementById("photo-lightbox") as HTMLDialogElement | 
 
 let photos = fallbackPhotos
 
-function isPhoto(value: unknown): value is GalleryItem {
-  if (!value || typeof value !== "object") {
-    return false
+function nonEmptyString(value: unknown): string | undefined {
+  if (typeof value !== "string") {
+    return undefined
   }
 
-  const candidate = value as Partial<GalleryItem>
-  return (
-    typeof candidate.src === "string" &&
-    typeof candidate.title === "string" &&
-    photo_manifest_entry_is_valid(candidate.src, candidate.title)
-  )
+  const trimmed = value.trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
+function titleFromPath(path: string): string | undefined {
+  const filename = path.split(/[\\/]/).pop()?.split(/[?#]/)[0] ?? path
+  const stem = filename.replace(/\.[^.]*$/, "")
+  const title = stem.replace(/[_-]+/g, " ").trim()
+  return title.length > 0 ? title : undefined
+}
+
+function photoTags(value: unknown): string[] | undefined {
+  if (!Array.isArray(value)) {
+    return undefined
+  }
+
+  const tags = value.flatMap((tag) => {
+    const trimmed = nonEmptyString(tag)
+    return trimmed ? [trimmed] : []
+  })
+
+  return tags.length > 0 ? tags : undefined
+}
+
+function toPhoto(value: unknown): Photo | null {
+  if (!value || typeof value !== "object") {
+    return null
+  }
+
+  const candidate = value as Record<string, unknown>
+  const src = nonEmptyString(candidate.src)
+  if (!src) {
+    return null
+  }
+
+  const description = nonEmptyString(candidate.description)
+  const meta = nonEmptyString(candidate.meta)
+  const title =
+    nonEmptyString(candidate.title) ?? titleFromPath(meta ?? src) ?? description ?? "Untitled photo"
+  const tags = photoTags(candidate.tags)
+
+  if (!photo_manifest_entry_is_valid(src, title)) {
+    return null
+  }
+
+  return {
+    src,
+    title,
+    ...(description ? { description } : {}),
+    ...(meta ? { meta } : {}),
+    ...(tags ? { tags } : {}),
+  }
 }
 
 async function loadPhotos(): Promise<void> {
@@ -27,8 +78,12 @@ async function loadPhotos(): Promise<void> {
     const response = await fetch("/photography/gallery.json", { cache: "no-cache" })
     if (response.ok) {
       const loaded: unknown = await response.json()
-      if (Array.isArray(loaded) && loaded.length > 0 && loaded.every(isPhoto)) {
-        photos = loaded
+      if (Array.isArray(loaded)) {
+        const loadedPhotos = loaded.map(toPhoto).filter((photo): photo is Photo => photo !== null)
+
+        if (loadedPhotos.length > 0) {
+          photos = loadedPhotos
+        }
       }
     }
   } catch {
@@ -45,7 +100,10 @@ function renderGallery(): void {
     count,
     dialog,
     countLabel: photo_count_label,
-    caption: (photo) => photo_caption(photo.title, photo.meta ?? ""),
+    caption: (photo) => {
+      const description = "description" in photo ? (photo as Photo).description : undefined
+      return photo_caption(photo.title, description ?? photo.meta ?? "")
+    },
   })
 }
 

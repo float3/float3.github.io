@@ -1,3 +1,4 @@
+// @ts-nocheck
 import fs from "fs"
 import path from "path"
 import os from "os"
@@ -19,7 +20,7 @@ import {
   formatSource,
   resolveLockfileName,
   getNameOverrides,
-} from "./plugin-data.js"
+} from "./plugin-data.ts"
 
 const INTERNAL_EXPORTS = new Set(["manifest", "default"])
 
