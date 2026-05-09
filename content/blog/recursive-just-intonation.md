@@ -222,8 +222,7 @@ octave, multiply or divide the whole row by `2`.
 | A#/Bb      | <span class="recursive-note-cell note-a-sharp" data-note="A#/Bb"><code>233.010 Hz</code><small class="tet-cents">-0.532 cents</small></span> |            <span class="recursive-note-cell note-b" data-note="B"><code>247.573 Hz</code><small class="tet-cents">+4.423 cents</small></span> |            <span class="recursive-note-cell note-c" data-note="C"><code>262.137 Hz</code><small class="tet-cents">+3.378 cents</small></span> | <span class="recursive-note-cell note-c-sharp" data-note="C#/Db"><code>276.700 Hz</code><small class="tet-cents">-3.019 cents</small></span> |           <span class="recursive-note-cell note-d" data-note="D"><code>291.263 Hz</code><small class="tet-cents">-14.218 cents</small></span> | <span class="recursive-note-cell note-d-sharp" data-note="D#/Eb"><code>310.680 Hz</code><small class="tet-cents">-2.487 cents</small></span> |           <span class="recursive-note-cell note-e" data-note="E"><code>327.671 Hz</code><small class="tet-cents">-10.308 cents</small></span> |           <span class="recursive-note-cell note-f" data-note="F"><code>349.515 Hz</code><small class="tet-cents">+1.423 cents</small></span> |  <span class="recursive-note-cell note-f-sharp" data-note="F#/Gb"><code>371.360 Hz</code><small class="tet-cents">+6.378 cents</small></span> |            <span class="recursive-note-cell note-g" data-note="G"><code>393.205 Hz</code><small class="tet-cents">+5.333 cents</small></span> | <span class="recursive-note-cell note-g-sharp" data-note="G#/Ab"><code>415.050 Hz</code><small class="tet-cents">-1.064 cents</small></span> |           <span class="recursive-note-cell note-a" data-note="A"><code>436.894 Hz</code><small class="tet-cents">-12.263 cents</small></span> |
 | B          |          <span class="recursive-note-cell note-b" data-note="B"><code>245.274 Hz</code><small class="tet-cents">-11.731 cents</small></span> |            <span class="recursive-note-cell note-c" data-note="C"><code>260.604 Hz</code><small class="tet-cents">-6.776 cents</small></span> |  <span class="recursive-note-cell note-c-sharp" data-note="C#/Db"><code>275.933 Hz</code><small class="tet-cents">-7.821 cents</small></span> |          <span class="recursive-note-cell note-d" data-note="D"><code>291.263 Hz</code><small class="tet-cents">-14.218 cents</small></span> | <span class="recursive-note-cell note-d-sharp" data-note="D#/Eb"><code>306.592 Hz</code><small class="tet-cents">-25.418 cents</small></span> |          <span class="recursive-note-cell note-e" data-note="E"><code>327.032 Hz</code><small class="tet-cents">-13.686 cents</small></span> |           <span class="recursive-note-cell note-f" data-note="F"><code>344.917 Hz</code><small class="tet-cents">-21.508 cents</small></span> | <span class="recursive-note-cell note-f-sharp" data-note="F#/Gb"><code>367.911 Hz</code><small class="tet-cents">-9.776 cents</small></span> |            <span class="recursive-note-cell note-g" data-note="G"><code>390.905 Hz</code><small class="tet-cents">-4.821 cents</small></span> |  <span class="recursive-note-cell note-g-sharp" data-note="G#/Ab"><code>413.900 Hz</code><small class="tet-cents">-5.866 cents</small></span> |          <span class="recursive-note-cell note-a" data-note="A"><code>436.894 Hz</code><small class="tet-cents">-12.263 cents</small></span> | <span class="recursive-note-cell note-a-sharp" data-note="A#/Bb"><code>459.889 Hz</code><small class="tet-cents">-23.463 cents</small></span> |
 
-So the system is not a 12-note tuning system anymore. It is a chord-contextual
-tuning system. Pitch classes split according to harmonic function.
+We now have a chord-contextual tuning system. Pitch classes split according to harmonic function.
 
 ### What It Sounds Like
 
@@ -320,6 +319,26 @@ chord-local purity becomes easier to hear.
     </tbody>
   </table>
 </div>
+
+### What If The Roots Come From 12-TET?
+
+Another way to build the 12 pianos is to take the row roots from 12-TET, then
+build a just-intoned scale on top of each one:
+
+```text
+hybrid_frequency(root, degree) =
+    C_frequency * 2^(root / 12) * J[degree]
+```
+
+So the root grid keeps equal temperament's transposition symmetry, while each
+row still has just local intervals. The tradeoff is that the row roots no
+longer come from the original C-based just scale; they are the familiar piano
+frequencies with just chords hanging from them.
+
+<figure class="audio-figure" data-oscilloscope>
+  <audio controls src="/misc/media/twelve-tet-rooted-ji-progression.wav"></audio>
+  <figcaption>12-TET roots with just-intoned chord tones on each root.</figcaption>
+</figure>
 
 There is also a stripped-down example that alternates a fixed-C pitch with its
 recursive chord-local version, then plays both at once so the beating is easier

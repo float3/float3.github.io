@@ -72,6 +72,7 @@ Audio files:
   recursive-ji-sine-progression.wav
   recursive-ji-c-drone-progression.wav
   recursive-ji-note-splits.wav
+  twelve-tet-rooted-ji-progression.wav
 
 Text files:
   recursive-ji-frequencies.csv

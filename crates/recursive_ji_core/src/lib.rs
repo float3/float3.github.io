@@ -24,6 +24,7 @@ pub enum Tuning {
     TwelveTet,
     FixedCJust,
     RecursiveJust,
+    TwelveTetRootedJust,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -85,6 +86,7 @@ impl Tuning {
             Tuning::TwelveTet => "twelve-tet-progression",
             Tuning::FixedCJust => "fixed-c-ji-progression",
             Tuning::RecursiveJust => "recursive-ji-progression",
+            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-progression",
         }
     }
 
@@ -93,6 +95,7 @@ impl Tuning {
             Tuning::TwelveTet => "twelve-tet-sine-progression",
             Tuning::FixedCJust => "fixed-c-ji-sine-progression",
             Tuning::RecursiveJust => "recursive-ji-sine-progression",
+            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-sine-progression",
         }
     }
 
@@ -101,6 +104,7 @@ impl Tuning {
             Tuning::TwelveTet => "twelve-tet-c-drone-progression",
             Tuning::FixedCJust => "fixed-c-ji-c-drone-progression",
             Tuning::RecursiveJust => "recursive-ji-c-drone-progression",
+            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-c-drone-progression",
         }
     }
 
@@ -109,6 +113,7 @@ impl Tuning {
             Tuning::TwelveTet => "12-TET",
             Tuning::FixedCJust => "Fixed C just intonation",
             Tuning::RecursiveJust => "Recursive just intonation",
+            Tuning::TwelveTetRootedJust => "12-TET-rooted just intonation",
         }
     }
 }
@@ -154,6 +159,13 @@ pub fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
     files.push(GeneratedBinary {
         name: "recursive-ji-note-splits.wav",
         bytes: wav_bytes(&render_note_splits())?,
+    });
+    files.push(GeneratedBinary {
+        name: "twelve-tet-rooted-ji-progression.wav",
+        bytes: wav_bytes(&render_progression(
+            Tuning::TwelveTetRootedJust,
+            ToneColor::Harmonic,
+        ))?,
     });
 
     Ok(files)
@@ -332,6 +344,11 @@ fn concat_wav(stem: &'static str) -> &'static str {
         "recursive-ji-progression" => "recursive-ji-progression.wav",
         "recursive-ji-sine-progression" => "recursive-ji-sine-progression.wav",
         "recursive-ji-c-drone-progression" => "recursive-ji-c-drone-progression.wav",
+        "twelve-tet-rooted-ji-progression" => "twelve-tet-rooted-ji-progression.wav",
+        "twelve-tet-rooted-ji-sine-progression" => "twelve-tet-rooted-ji-sine-progression.wav",
+        "twelve-tet-rooted-ji-c-drone-progression" => {
+            "twelve-tet-rooted-ji-c-drone-progression.wav"
+        }
         _ => unreachable!("unexpected recursive JI audio stem"),
     }
 }
@@ -451,6 +468,11 @@ fn note_frequency(tuning: Tuning, chord: Chord, offset: i32) -> f64 {
         Tuning::FixedCJust => fixed_c_frequency(chord.octave_shift, chord.root_pc + offset),
         Tuning::RecursiveJust => {
             let root = fixed_c_frequency(chord.octave_shift, chord.root_pc);
+            root * just_ratio_for_interval(offset)
+        }
+        Tuning::TwelveTetRootedJust => {
+            let root = EQUAL_TEMPERAMENT
+                .frequency_at(chromatic_pitch_space(chord.octave_shift, chord.root_pc));
             root * just_ratio_for_interval(offset)
         }
     }
@@ -595,6 +617,17 @@ mod tests {
         let fixed = note_frequency(Tuning::FixedCJust, chord, 4);
 
         assert!((cents_between(recursive, fixed) + 34.282).abs() < 0.01);
+    }
+
+    #[test]
+    fn twelve_tet_rooted_just_keeps_tet_roots_and_just_intervals() {
+        let chord = Chord::major("E", 4);
+        let root = note_frequency(Tuning::TwelveTetRootedJust, chord, 0);
+        let tet_root = note_frequency(Tuning::TwelveTet, chord, 0);
+        let third = note_frequency(Tuning::TwelveTetRootedJust, chord, 4);
+
+        assert!((cents_between(root, tet_root)).abs() < 0.001);
+        assert!((third / root - 5.0 / 4.0).abs() < 0.000_001);
     }
 
     #[test]

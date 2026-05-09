@@ -41,6 +41,7 @@ tags:
 [taipei_tones.png](/misc/media/taipei_tones.png) \
 [twelve-tet-c-drone-progression.wav](/misc/media/twelve-tet-c-drone-progression.wav) \
 [twelve-tet-progression.wav](/misc/media/twelve-tet-progression.wav) \
+[twelve-tet-rooted-ji-progression.wav](/misc/media/twelve-tet-rooted-ji-progression.wav) \
 [twelve-tet-sine-progression.wav](/misc/media/twelve-tet-sine-progression.wav) \
 [ㄱ.png](/misc/media/ㄱ.png) \
 [ㄴ.png](/misc/media/ㄴ.png) \
