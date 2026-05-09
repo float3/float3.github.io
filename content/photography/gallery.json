@@ -1,43 +1,71 @@
 [
   {
     "src": "/photography/gallery/70873501585.jpg",
-    "title": "Red cat in motion",
-    "description": "A blurred, warm-toned image of a cat mid-movement.",
+    "title": "blurred ginger cat paws",
+    "description": "A softly blurred image captures the delicate movement of a ginger cat's paws resting on a dark surface.",
     "meta": "70873501585.jpg",
-    "tags": [],
+    "tags": [
+      "feline",
+      "ginger",
+      "paws",
+      "blur",
+      "motion",
+      "soft",
+      "warm",
+      "pet"
+    ],
     "width": 5984,
     "height": 3989
   },
   {
     "src": "/photography/gallery/p1073908.jpg",
-    "title": "Silhouetted Boats at Dusk",
-    "description": "Darkened masts reflect the moon on a calm water surface",
+    "title": "Silhouetted Yachts Under Moonlight",
+    "description": "Dark yachts reflect the moonlight on the water creating a serene, atmospheric scene.",
     "meta": "P1073908.jpg",
-    "tags": [],
+    "tags": [
+      "yachts",
+      "moonlight",
+      "reflection",
+      "marina",
+      "boats",
+      "night",
+      "calm",
+      "silhouette"
+    ],
     "width": 5761,
     "height": 3841
   },
   {
     "src": "/photography/gallery/p1073909.jpg",
-    "title": "Nighttime Sailboats",
-    "description": "Dark silhouettes of sailboats reflected on the calm water under a hazy moon.",
+    "title": "Moonlight on the harbor",
+    "description": "Silhouetted sailboats reflect in the calm, dark water under a full moon.",
     "meta": "P1073909.jpg",
-    "tags": [],
+    "tags": [
+      "boats",
+      "harbor",
+      "moonlight",
+      "reflection",
+      "water",
+      "night",
+      "seascape",
+      "shadows"
+    ],
     "width": 5870,
     "height": 3913
   },
   {
     "src": "/photography/gallery/p1073910.jpg",
-    "title": "Shadow on White",
-    "description": "A dark silhouette interacts with a bright white screen displaying a simplified circle.",
+    "title": "Silhouette interacting with a projection",
+    "description": "A dark figure adjusts a circular projection on a white wall.",
     "meta": "P1073910.jpg",
     "tags": [
       "shadow",
-      "white",
+      "projection",
       "circle",
-      "screen",
-      "minimalism",
-      "geometric",
+      "white",
+      "wall",
+      "editing",
+      "abstract",
       "light"
     ],
     "width": 5870,
@@ -45,132 +73,198 @@
   },
   {
     "src": "/photography/gallery/p1073936.jpg",
-    "title": "Row houses in the sun",
-    "description": "A view of white row houses with red tile roofs under a bright blue sky with scattered clouds",
+    "title": "Residential Buildings Under Sky",
+    "description": "A row of buildings sits beneath a bright blue sky dotted with clouds, framed by lush green trees.",
     "meta": "P1073936.jpg",
     "tags": [
-      "urban",
-      "architecture",
-      "rowhouse",
+      "cityscape",
+      "rooftops",
       "residential",
-      "sweden",
-      "europe",
+      "buildings",
+      "trees",
       "sky",
-      "houses"
+      "cloudy",
+      "serene"
     ],
     "width": 6000,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084939.jpg",
-    "title": "Dark Figure Passage",
-    "description": "A solitary figure walks into the darkness",
+    "title": "Shadowed Passage",
+    "description": "A solitary figure walks into darkness.",
     "meta": "P1084939.jpg",
     "tags": [
-      "silhouette",
       "night",
       "movement",
       "urban",
-      "mystery",
-      "shdarkness"
+      "solitude",
+      "fleeting",
+      "silhouette",
+      "dark",
+      "passage"
     ],
     "width": 3999,
     "height": 5326
   },
   {
     "src": "/photography/gallery/p1084942.jpg",
-    "title": "Urban Skyscape",
-    "description": "A cloudy sky views a distant cityscape in muted tones",
+    "title": "Distant Cityscape Through Trees",
+    "description": "A hazy cityscape is viewed through a frame of dark trees under a cloudy sky.",
     "meta": "P1084942.jpg",
-    "tags": [],
+    "tags": [
+      "cityscape",
+      "clouds",
+      "trees",
+      "view",
+      "urban",
+      "hazy",
+      "muted",
+      "twilight"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084946.jpg",
-    "title": "Distant cityscape through foliage",
-    "description": "A muted cityscape is visible through a leafy foreground, framed by a cloudy sky.",
+    "title": "obscured cityscape view",
+    "description": "A muted cityscape is framed by foliage within a distorted perspective.",
     "meta": "P1084946.jpg",
-    "tags": [],
+    "tags": [
+      "urban",
+      "landscape",
+      "cloudy",
+      "view",
+      "obscured",
+      "horizon",
+      "trees",
+      "cityscape"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084950.jpg",
-    "title": "Solitary Contemplation",
-    "description": "A man gazes upwards against a dark, expansive sky.",
+    "title": "contemplative figure under grey sky",
+    "description": "A solitary figure gazes upwards into a dramatic, overcast sky.",
     "meta": "P1084950.jpg",
-    "tags": [],
+    "tags": [
+      "portrait",
+      "melancholy",
+      "sky",
+      "human",
+      "figure",
+      "isolation",
+      "urban",
+      "grey"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084952.jpg",
-    "title": "Night cityscape vista",
-    "description": "Blurred city lights shimmer over the distant water and mountains.",
+    "title": "Dusk cityscape and mountains",
+    "description": "A blurred nighttime cityscape fades into distant mountains under a dusky sky.",
     "meta": "P1084952.jpg",
-    "tags": [],
+    "tags": [
+      "cityscape",
+      "night",
+      "mountains",
+      "blur",
+      "twilight",
+      "urban",
+      "scenic",
+      "atmosphere"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084958.jpg",
-    "title": "Darkened Passage",
-    "description": "A stark, dimly lit corridor lined with numerous vertical columns of books creates an overwhelming sense of depth and mystery",
+    "title": "Dark corridor of bookshelves",
+    "description": "A stark, shadowy corridor is defined by the imposing presence of tall, wooden bookshelves.",
     "meta": "P1084958.jpg",
     "tags": [
       "darkness",
-      "architecture",
+      "japan",
       "books",
-      "mystery"
+      "corridor",
+      "shelves",
+      "shadows",
+      "minimalist",
+      "architecture"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084977.jpg",
-    "title": "Golden Hour Reflection",
-    "description": "A serene view of a distant mountain range bathed in warm sunlight at sunset.",
+    "title": "fading horizon, distant landscape",
+    "description": "a warm, muted view through an airplane window captures a serene sunset over rolling hills.",
     "meta": "P1084977.jpg",
-    "tags": [],
+    "tags": [
+      "airplane",
+      "window",
+      "horizon",
+      "sunset",
+      "landscape",
+      "travel",
+      "sky",
+      "muted"
+    ],
     "width": 4000,
     "height": 5328
   },
   {
     "src": "/photography/gallery/p1084998.jpg",
-    "title": "Ethereal Blue Drift",
-    "description": "A luminous, indistinct blue swirl evokes a sense of weightless movement and atmospheric depth.",
+    "title": "Ethereal Blue Flame",
+    "description": "A delicate, luminous blue form drifts across a dark background.",
     "meta": "P1084998.jpg",
-    "tags": [],
+    "tags": [
+      "blue",
+      "smoke",
+      "abstract",
+      "light",
+      "ethereal",
+      "flame",
+      "texture",
+      "vapor"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1084999.jpg",
-    "title": "Ethereal blue cascade",
-    "description": "A vibrant blue waterfall plunges through a dense, dark forest canopy",
+    "title": "Blue Waterfall Silhouette",
+    "description": "A dark forest scene is illuminated by a vibrant blue waterfall.",
     "meta": "P1084999.jpg",
     "tags": [
       "blue",
-      "waterfall",
-      "canopy",
+      "water",
       "forest",
-      "abstract"
+      "silhouette",
+      "ethereal",
+      "moody",
+      "nature",
+      "trees"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085002.jpg",
-    "title": "Black Tower Against Azure",
-    "description": "A dark wooden pagoda silhouette rises dramatically against a vivid blue sky, hinting at ancient Japanese architecture and serene landscapes",
+    "title": "Dark Tower Against Blue Sky",
+    "description": "A black pagoda silhouette stands prominently under a clear blue sky.",
     "meta": "P1085002.jpg",
     "tags": [
-      "pagoda",
       "japan",
-      "landscapes",
+      "pagoda",
+      "temple",
       "silhouette",
-      "architecture"
+      "tiered",
+      "architecture",
+      "asian",
+      "photography"
     ],
     "width": 4000,
     "height": 5328
@@ -178,87 +272,97 @@
   {
     "src": "/photography/gallery/p1085008.jpg",
     "title": "Torii Gate in Forest",
-    "description": "A traditional Japanese torii gate stands prominently within a dense, green forest under a bright sky",
+    "description": "A traditional Japanese torii gate stands prominently within a dense, green forest.",
     "meta": "P1085008.jpg",
     "tags": [
-      "torii",
-      "gate",
       "japan",
-      "forest",
       "shrine",
-      "zen",
       "nature",
-      "tradisy"
+      "trees",
+      "serene",
+      "traditional",
+      "architecture",
+      "gate"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085009.jpg",
-    "title": "Torii Gate under a Blue Sky",
-    "description": "A traditional Japanese torii gate stands silhouetted against a clear blue sky, framed by lush greenery.",
+    "title": "Torii Gate Under Trees",
+    "description": "A solitary torii gate stands silhouetted against a clear blue sky, framed by lush green foliage.",
     "meta": "P1085009.jpg",
     "tags": [
       "japan",
       "torii",
-      "gate",
-      "temple",
       "shrine",
-      "zen",
-      "asia",
-      "landscape"
+      "gate",
+      "trees",
+      "japaneseculture",
+      "serene",
+      "nature"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085010.jpg",
-    "title": "Torii Gate at Dusk",
-    "description": "A traditional Japanese torii gate stands prominently amidst a crowd of visitors on a path surrounded by lush greenery.",
+    "title": "Torii Gate Entrance, Japan",
+    "description": "A group of people walk through the entrance of a traditional Japanese torii gate surrounded by lush greenery.",
     "meta": "P1085010.jpg",
     "tags": [
-      "torii",
       "japan",
+      "torii",
+      "gate",
       "shrine",
-      "gates",
+      "temple",
+      "japaneseculture",
       "travel",
-      "zen",
-      "nature",
-      "architecture"
+      "outdoors"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085015.jpg",
-    "title": "Stacks of Maneki-neko",
-    "description": "A charming collection of white, lucky Maneki-neko figurines are artfully arranged.",
+    "title": "Lucky Cat Overload",
+    "description": "A dense collection of white Japanese maneki-neko figurines fills the frame.",
     "meta": "P1085015.jpg",
     "tags": [
-      "maneki-neko",
       "lucky cat",
       "japan",
-      "tokyo",
-      "statues",
-      "collection",
-      "cat"
+      "figurines",
+      "white",
+      "red",
+      "ceramic",
+      "cute",
+      "collection"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085016.jpg",
-    "title": "Solitary Silhouette in Blue",
-    "description": "A dark figure retreats against a hazy blue sky and distant foliage.",
+    "title": "blue shadow, quiet moment",
+    "description": "A solitary figure is silhouetted against a bright blue sky, partially obscured by trees.",
     "meta": "P1085016.jpg",
-    "tags": [],
+    "tags": [
+      "silhouette",
+      "blue",
+      "trees",
+      "shadow",
+      "peaceful",
+      "solitude",
+      "summer",
+      "sky"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085025.jpg",
-    "title": "Miniature Penguin on Sand",
-    "description": "A small gray penguin figure stands on a sandy surface with a blurred background.",
+    "title": "Small Penguin On Sand",
+    "description": "A gray plastic penguin sits calmly on a gray beach.",
     "meta": "P1085025.jpg",
     "tags": [
       "penguin",
@@ -267,116 +371,151 @@
       "sand",
       "miniature",
       "gray",
-      "figure",
-      "still life"
+      "calm",
+      "simple"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085029.jpg",
-    "title": "Night cityscape reflection",
-    "description": "Blurred city lights shimmer on the dark river surface at night.",
+    "title": "City Lights at Night",
+    "description": "A blurred, atmospheric view of city lights reflecting on water.",
     "meta": "P1085029.jpg",
     "tags": [
       "cityscape",
       "night",
-      "reflection",
+      "reflections",
+      "blurred",
+      "lights",
+      "urban",
       "water",
-      "urban"
+      "twilight"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085030.jpg",
-    "title": "Neon Ferris Wheel at Night",
-    "description": "A brightly lit Ferris wheel dominates the cityscape skyline reflecting in the dark water.",
+    "title": "City Lights, Ferris Wheel",
+    "description": "A blurred nighttime cityscape reflects off a body of water, dominated by a large Ferris wheel.",
     "meta": "P1085030.jpg",
-    "tags": [],
+    "tags": [
+      "cityscape",
+      "night",
+      "ferris wheel",
+      "reflections",
+      "urban",
+      "blurred",
+      "lights",
+      "water"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085033.jpg",
-    "title": "Mahjong Tiles",
-    "description": "A close-up view of empty mahjong tiles arranged on a blue table.",
+    "title": "Dominoes on a blue table",
+    "description": "A close-up shot captures a set of dominoes resting on a vibrant blue surface.",
     "meta": "P1085033.jpg",
     "tags": [
-      "mahjong",
+      "dominoes",
       "tiles",
       "game",
-      "table",
-      "close-up",
-      "minimalist",
-      "abstract"
+      "casual",
+      "blue",
+      "pattern",
+      "texture",
+      "still life"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085034.jpg",
-    "title": "Mahjong Hands",
-    "description": "Two hands reach across a blue mahjong table, contemplating the tiles.",
+    "title": "Mahjong Game in Progress",
+    "description": "A close-up shot captures a game of mahjong in progress, with hands interacting with the tiles.",
     "meta": "P1085034.jpg",
     "tags": [
       "mahjong",
-      "game",
       "tiles",
+      "game",
       "hands",
       "blue",
-      "table",
-      "strategy"
+      "close-up",
+      "japan",
+      "casual"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085040.jpg",
-    "title": "Floating Chrysanthemums in Stone",
-    "description": "A grey stone basin filled with vibrant, assorted chrysanthemums and a bamboo stick.",
+    "title": "Floating Flowers in Stone",
+    "description": "A stone basin is filled with vibrant chrysanthemums, creating a peaceful still life.",
     "meta": "P1085040.jpg",
-    "tags": [],
+    "tags": [
+      "flowers",
+      "stone",
+      "japan",
+      "zen",
+      "water",
+      "chrysanthemums",
+      "serenity",
+      "garden"
+    ],
     "width": 4000,
     "height": 5328
   },
   {
     "src": "/photography/gallery/p1085053.jpg",
-    "title": "Man with Red Hair",
-    "description": "A portrait of a man with flowing red hair, standing near a bridge.",
+    "title": "contemplative portrait, urban setting",
+    "description": "A man with flowing dark hair gazes directly at the viewer amidst a muted cityscape.",
     "meta": "P1085053.jpg",
     "tags": [
       "portrait",
-      "red hair",
-      "bridge",
       "urban",
-      "reflection",
-      "moody",
-      "hair"
+      "contemplative",
+      "dark hair",
+      "bridge",
+      "outdoors",
+      "texture",
+      "moody"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085056.jpg",
-    "title": "Mount Fuji in the Distance",
-    "description": "A hazy view of Mount Fuji framed by a blue sky and distant coastline.",
+    "title": "Fuji on a cloudy day",
+    "description": "A hazy view of Mount Fuji dominates the distant skyline over the ocean.",
     "meta": "P1085056.jpg",
-    "tags": [],
+    "tags": [
+      "japan",
+      "mt fuji",
+      "landscape",
+      "cloudy",
+      "scenic",
+      "japaneselandscape",
+      "travel",
+      "mountains"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085059.jpg",
-    "title": "Intimate moment, candid portrait",
-    "description": "A photographer focuses on a scene with a child in the background",
+    "title": "Through a Photographer's Eye",
+    "description": "A person focuses through a camera lens, with blurred figures of children visible through a window.",
     "meta": "P1085059.jpg",
     "tags": [
-      "portrait",
-      "background",
-      "candid",
       "photography",
-      "child",
+      "candid",
+      "window",
+      "people",
+      "blurred",
+      "focus",
+      "children",
       "moment"
     ],
     "width": 5328,
@@ -384,516 +523,757 @@
   },
   {
     "src": "/photography/gallery/p1085061.jpg",
-    "title": "Mount Fuji Horizon",
-    "description": "A hazy blue panorama reveals Mount Fuji shrouded in distant clouds above a calm sea and sprawling coastline",
+    "title": "Fuji on the Horizon",
+    "description": "A hazy, muted view of Mount Fuji rising above the ocean and distant mountains.",
     "meta": "P1085061.jpg",
     "tags": [
       "japan",
-      "mountfuji",
-      "horizon",
-      "sea",
-      "coastline",
-      "landscacoastlne"
-    ],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1085065.jpg",
-    "title": "Serene Portrait, Coastal Dusk",
-    "description": "A contemplative portrait of a man amidst a muted, coastal scene.",
-    "meta": "P1085065.jpg",
-    "tags": [],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1085066.jpg",
-    "title": "Contemplative Observer",
-    "description": "A man peers into the distance with binoculars, lost in thought.",
-    "meta": "P1085066.jpg",
-    "tags": [],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1085067.jpg",
-    "title": "Coastal Dusk Reflection",
-    "description": "A solitary boat reflects on a calm, moonlit sea under a grey sky.",
-    "meta": "P1085067.jpg",
-    "tags": [],
-    "width": 4000,
-    "height": 5328
-  },
-  {
-    "src": "/photography/gallery/p1085070.jpg",
-    "title": "Solitary Figure on Dusk Shores",
-    "description": "A lone figure stands on a desolate beach as the sun dips below the horizon",
-    "meta": "P1085070.jpg",
-    "tags": [],
-    "width": 4000,
-    "height": 5328
-  },
-  {
-    "src": "/photography/gallery/p1085072.jpg",
-    "title": "Bird in flight",
-    "description": "A lone bird soars against a vast, open sky",
-    "meta": "P1085072.jpg",
-    "tags": [],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1085076.jpg",
-    "title": "Rocky Coastline at Dusk",
-    "description": "A serene coastal scene with dark rocks and calm waters under a muted sky",
-    "meta": "P1085076.jpg",
-    "tags": [
-      "coastline",
-      "sky",
-      "rocks",
-      "ocean",
-      "dusk",
+      "fuji",
+      "mountains",
+      "seascape",
+      "haze",
+      "blue",
+      "water",
       "landscape"
     ],
     "width": 5328,
     "height": 4000
   },
   {
+    "src": "/photography/gallery/p1085065.jpg",
+    "title": "Quiet Portrait, Soft Light",
+    "description": "A contemplative portrait of a man with a gentle smile against a blurred, overcast sky.",
+    "meta": "P1085065.jpg",
+    "tags": [
+      "portrait",
+      "face",
+      "serene",
+      "calm",
+      "light",
+      "blue",
+      "contemplative",
+      "human"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
+    "src": "/photography/gallery/p1085066.jpg",
+    "title": "Contemplative Moment by the Sea",
+    "description": "A man gazes into the distance while holding a binoculars, seemingly lost in thought.",
+    "meta": "P1085066.jpg",
+    "tags": [
+      "seascape",
+      "contemplation",
+      "horizon",
+      "binoculars",
+      "coastal",
+      "solitude",
+      "outdoors",
+      "man"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
+    "src": "/photography/gallery/p1085067.jpg",
+    "title": "Moody coastal reflection",
+    "description": "A solitary boat glimmers on a calm, gray sea under a bright, diffused sky.",
+    "meta": "P1085067.jpg",
+    "tags": [
+      "seascape",
+      "reflection",
+      "coastal",
+      "boat",
+      "horizon",
+      "serene",
+      "muted",
+      "light"
+    ],
+    "width": 4000,
+    "height": 5328
+  },
+  {
+    "src": "/photography/gallery/p1085070.jpg",
+    "title": "solitary figure on shoreline",
+    "description": "A lone figure stands on a dark, wet shoreline beneath a hazy sunset sky.",
+    "meta": "P1085070.jpg",
+    "tags": [
+      "solitude",
+      "seascape",
+      "twilight",
+      "coastal",
+      "reflection",
+      "minimal",
+      "horizon",
+      "grey"
+    ],
+    "width": 4000,
+    "height": 5328
+  },
+  {
+    "src": "/photography/gallery/p1085072.jpg",
+    "title": "Bird in a Blue Sky",
+    "description": "A solitary bird flies against a vast, hazy blue sky.",
+    "meta": "P1085072.jpg",
+    "tags": [
+      "bird",
+      "flight",
+      "sky",
+      "nature",
+      "tranquil",
+      "coastal",
+      "overcast",
+      "silhouette"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
+    "src": "/photography/gallery/p1085076.jpg",
+    "title": "Dark Passage To Ocean",
+    "description": "A dark opening reveals a misty ocean view with rocky shores.",
+    "meta": "P1085076.jpg",
+    "tags": [
+      "coastal",
+      "seascape",
+      "twilight",
+      "rocks",
+      "water",
+      "moody",
+      "stillness",
+      "horizon"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
     "src": "/photography/gallery/p1085077.jpg",
-    "title": "Three birds against a vast sky",
-    "description": "Dark birds fly across a deep blue sky, creating a sense of freedom and movement.",
+    "title": "birds against the evening sky",
+    "description": "Three birds soar gracefully across a dusky, expansive sky.",
     "meta": "P1085077.jpg",
-    "tags": [],
+    "tags": [
+      "birds",
+      "sky",
+      "flight",
+      "dusk",
+      "serene",
+      "peaceful",
+      "nature",
+      "clouds"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085078.jpg",
-    "title": "Coastal cliffs and seabirds",
-    "description": "Two birds soar across a dramatic, cloudy sky above the sea and a distant cliff edge",
+    "title": "Coastal Skies and Seabirds",
+    "description": "Two birds fly across a dramatic, overcast sky above a distant sea.",
     "meta": "P1085078.jpg",
-    "tags": [],
+    "tags": [
+      "coastal",
+      "seascape",
+      "birds",
+      "sky",
+      "clouds",
+      "dramatic",
+      "ocean",
+      "grey"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085082.jpg",
-    "title": "Mount Fuji Silhouette",
-    "description": "A hazy view of Mount Fuji framed by wires and trees.",
+    "title": "Power Lines and Distant Fuji",
+    "description": "A hazy view of Mount Fuji is framed by power lines and trees.",
     "meta": "P1085082.jpg",
     "tags": [
-      "mount_fuji",
-      "silhouette",
       "japan",
-      "wires",
-      "trees",
-      "horizon",
-      "sky"
+      "fuji",
+      "mountains",
+      "powerlines",
+      "landscape",
+      "hazy",
+      "residential",
+      "japanscape"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085083.jpg",
-    "title": "Framed Mount Fuji",
-    "description": "A blurred view of Mount Fuji seen through a residential street.",
+    "title": "Distant Fuji Through Lines",
+    "description": "The hazy silhouette of Mount Fuji is framed by power lines and a residential building.",
     "meta": "P1085083.jpg",
-    "tags": [],
+    "tags": [
+      "japan",
+      "fuji",
+      "landscape",
+      "urban",
+      "powerlines",
+      "subtle",
+      "muted",
+      "atmospheric"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085084.jpg",
-    "title": "Subdued mountain view",
-    "description": "Power lines obscure a distant mountain landscape under a hazy sky",
+    "title": "Mountain Through Utility Lines",
+    "description": "A hazy view of Mount Fuji is partially obscured by power lines and foliage.",
     "meta": "P1085084.jpg",
-    "tags": [],
+    "tags": [
+      "japan",
+      "mt fuji",
+      "landscape",
+      "haze",
+      "utility",
+      "sky",
+      "trees",
+      "blurred"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085087.jpg",
-    "title": "Blurring transit",
-    "description": "A blurry figure stands amidst a crowd in a train station",
+    "title": "blurred transit, quiet moment",
+    "description": "A solitary figure is partially visible amidst a crowd in a busy train station.",
     "meta": "P1085087.jpg",
     "tags": [
+      "motion blur",
+      "urban",
       "transit",
-      "blur",
+      "japan",
       "people",
-      "station"
+      "reflection",
+      "abstract",
+      "indistinct"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085088.jpg",
-    "title": "Fragmented Gaze, Urban Decay",
-    "description": "A blurred, unsettling portrait merges with the anonymous backdrop of a subway station.",
+    "title": "obscured urban portrait",
+    "description": "A blurred, intimate portrait emerges from the depths of a crowded, institutional space.",
     "meta": "P1085088.jpg",
-    "tags": [],
+    "tags": [
+      "urban",
+      "portrait",
+      "blurred",
+      "japan",
+      "transit",
+      "detail",
+      "isolation",
+      "uncanny"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085096.jpg",
-    "title": "Stormy Glass Pavilion",
-    "description": "A darkened glass pavilion stands silhouetted against a dramatic, overcast sky.",
+    "title": "Gothic Building Under Stormy Skies",
+    "description": "A darkened silhouette of a gothic building is framed against a dramatic, cloudy sky.",
     "meta": "P1085096.jpg",
     "tags": [
+      "gothic",
       "architecture",
-      "silhouette",
       "storm",
-      "sky",
-      "glass",
-      "pavilion",
+      "overcast",
       "trees",
-      "dark"
+      "shadows",
+      "bleak",
+      "serene"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085097.jpg",
-    "title": "Stormy Pavilion Silhouette",
-    "description": "A dark, imposing pavilion is framed by dramatic, overcast skies.",
+    "title": "Gothic Structure in Storm",
+    "description": "A dark, imposing building is silhouetted against a dramatic, overcast sky.",
     "meta": "P1085097.jpg",
-    "tags": [],
+    "tags": [
+      "gothic",
+      "architecture",
+      "storm",
+      "trees",
+      "silhouette",
+      "dark",
+      "cloudy",
+      "sky"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085099.jpg",
-    "title": "Blurred Gold",
-    "description": "A dense, almost abstract, composition of warm gold tones creates a shimmering, indistinct surface.",
+    "title": "shimmering vertical lines",
+    "description": "the image presents a blurred, warm-toned sequence of vertical lines, creating a sense of depth and movement.",
     "meta": "P1085099.jpg",
-    "tags": [],
+    "tags": [
+      "abstraction",
+      "texture",
+      "light",
+      "lines",
+      "pattern",
+      "blur",
+      "warm",
+      "vertical"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085130.jpg",
-    "title": "Riverbank Serenity and Urban Edge",
-    "description": "A concrete riverbank scene with a low bridge and a distant high-rise building.",
+    "title": "riverside urban landscape",
+    "description": "a concrete bridge sits beside a calm river with a building in the background.",
     "meta": "P1085130.jpg",
     "tags": [
       "river",
       "bridge",
       "urban",
-      "reflection",
-      "water",
-      "architecture",
-      "cityscape",
-      "serenity"
+      "gray",
+      "concrete",
+      "people",
+      "landscape",
+      "japan"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085135.jpg",
-    "title": "Railway through the forest",
-    "description": "A weathered railway line winds through a densely wooded hillside",
+    "title": "Railway Into The Distance",
+    "description": "A dark, straight railway track disappears into a dense, overgrown hillside.",
     "meta": "P1085135.jpg",
     "tags": [
       "railway",
-      "forest",
-      "hillside",
+      "tracks",
       "landscape",
-      "rural"
+      "rural",
+      "japan",
+      "foliage",
+      "monochrome",
+      "depth"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085146.jpg",
-    "title": "Remote Cabin in the Woods",
-    "description": "A small cabin is nestled deep within a dense, dark forest, creating a sense of isolation and quiet.",
+    "title": "Secluded Mountain Dwelling",
+    "description": "A small house nestles within a dense, shadowed forest, viewed from a high vantage point.",
     "meta": "P1085146.jpg",
-    "tags": [],
+    "tags": [
+      "mountain",
+      "forest",
+      "house",
+      "tranquil",
+      "view",
+      "rural",
+      "escape",
+      "nature"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085147.jpg",
-    "title": "Bamboo Forest River View",
-    "description": "A dramatic aerial view captures a river winding through a dense bamboo forest with traditional Japanese houses nestled on the banks.",
+    "title": "Lush River Valley Vista",
+    "description": "The photograph captures a dense, green river valley with traditional buildings nestled along the water's edge.",
     "meta": "P1085147.jpg",
-    "tags": [],
+    "tags": [
+      "japan",
+      "river",
+      "landscape",
+      "nature",
+      "foliage",
+      "serenity",
+      "mountains",
+      "valley"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085148.jpg",
-    "title": "Stormy Mountain Vista",
-    "description": "Dark clouds obscure a distant mountain range under a grey sky.",
+    "title": "Dark Clouds Over Hills",
+    "description": "A somber landscape dominated by dense, grey clouds obscuring the hills.",
     "meta": "P1085148.jpg",
-    "tags": [],
+    "tags": [
+      "landscape",
+      "clouds",
+      "atmospheric",
+      "dramatic",
+      "moody",
+      "silhouette",
+      "nature",
+      "overcast"
+    ],
     "width": 4000,
     "height": 5328
   },
   {
     "src": "/photography/gallery/p1085151.jpg",
-    "title": "Dense foliage and rolling hills",
-    "description": "A verdant landscape of trees fades into distant hills under a cloudy sky",
+    "title": "Verdant hillside, misty distance",
+    "description": "A hazy, expansive view of a densely vegetated hillside receding into a soft, overcast sky.",
     "meta": "P1085151.jpg",
-    "tags": [],
+    "tags": [
+      "landscape",
+      "rural",
+      "foliage",
+      "misty",
+      "serene",
+      "trees",
+      "hill",
+      "nature"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085185.jpg",
-    "title": "Giant Redwood Tree",
-    "description": "A towering redwood dominates the frame, partially obscured by lush green foliage and a weathered wooden stairway.",
+    "title": "Massive Tree on Stairway",
+    "description": "A towering tree dominates the frame, rising above a stone staircase under a pale sky.",
     "meta": "P1085185.jpg",
     "tags": [
-      "redwood",
       "tree",
-      "forest",
-      "stairway",
+      "stairs",
       "nature",
-      "california",
-      "tall"
+      "forest",
+      "japan",
+      "tall",
+      "serene",
+      "perspective"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085186.jpg",
-    "title": "Japanese Torii Gate in Lush Foliage",
-    "description": "A weathered torii gate stands partially obscured by vibrant green vegetation, suggesting a serene, secluded shrine.",
+    "title": "Blurred Shinto Shrine Entrance",
+    "description": "A partially obscured shinto shrine entrance is framed by lush greenery and blurred light.",
     "meta": "P1085186.jpg",
-    "tags": [],
+    "tags": [
+      "shrine",
+      "japan",
+      "nature",
+      "blurred",
+      "entrance",
+      "foliage",
+      "stone",
+      "traditional"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085195.jpg",
-    "title": "Cloudy mountain vista",
-    "description": "A hazy, overcast landscape featuring distant mountains and trees",
+    "title": "hazy mountain landscape",
+    "description": "A muted, atmospheric view of distant mountains under a cloudy sky.",
     "meta": "P1085195.jpg",
     "tags": [
+      "landscape",
       "mountains",
-      "clouds",
-      "sky"
+      "cloudy",
+      "haze",
+      "serene",
+      "muted",
+      "nature",
+      "vista"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085198.jpg",
-    "title": "Overlooking a misty hillside",
-    "description": "A serene view of a forest and mountains under a cloudy sky",
+    "title": "Through a shaded window",
+    "description": "A muted view of dense foliage and distant mountains framed by a tree.",
     "meta": "P1085198.jpg",
     "tags": [
       "landscape",
-      "forest",
-      "sky",
       "trees",
-      "mountains"
+      "overcast",
+      "japan",
+      "nature",
+      "serene",
+      "quiet",
+      "foliage"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085202.jpg",
-    "title": "Night Reflection on the River",
-    "description": "A dark bridge reflects light across a calm river under a starry night.",
+    "title": "Night Reflection on the Bridge",
+    "description": "A bridge reflects the warm lights of the city across a dark, still water surface.",
     "meta": "P1085202.jpg",
-    "tags": [],
+    "tags": [
+      "night",
+      "bridge",
+      "reflection",
+      "water",
+      "cityscape",
+      "dark",
+      "quiet",
+      "evening"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1085209.jpg",
-    "title": "Rainy Street Scene",
-    "description": "A solitary figure walks down a wet, neon-lit street in a bustling Japanese city.",
+    "title": "Neon-lit street at night",
+    "description": "A rainy street scene features illuminated signs and passing vehicles.",
     "meta": "P1085209.jpg",
-    "tags": [],
+    "tags": [
+      "japan",
+      "city",
+      "night",
+      "rain",
+      "neon",
+      "street",
+      "traffic",
+      "urban"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105672.jpg",
-    "title": "Clock Tower",
-    "description": "A towering Gothic clock tower dominates the night sky.",
+    "title": "Munich Glockenspiel Tower",
+    "description": "A towering clock tower dominates the night sky, its intricate details illuminated against the darkness.",
     "meta": "P1105672.jpg",
-    "tags": [],
+    "tags": [
+      "germany",
+      "clock",
+      "tower",
+      "nighttime",
+      "gothic",
+      "architecture",
+      "bavaria",
+      "historic"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105680.jpg",
-    "title": "Tree-lined driveway and graveyard",
-    "description": "A weathered gravel driveway cuts through a shadowy graveyard of ancient trees",
+    "title": "Serene Tree-Lined Path",
+    "description": "A weathered dirt path stretches through a dense row of bare trees under a cloudy sky.",
     "meta": "P1105680.jpg",
     "tags": [
-      "driveway",
-      "graveyard",
       "trees",
-      "autumn",
-      "rural",
       "path",
-      "shadows",
-      "stone"
-    ],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1105691.jpg",
-    "title": "Dark silhouette, obscured face",
-    "description": "A person's head is partially visible, blending into the shadows of a room",
-    "meta": "P1105691.jpg",
-    "tags": [
-      "room",
-      "shadows",
-      "head",
-      "darkness",
-      "portrait",
-      "minimalism",
-      "texture"
-    ],
-    "width": 5328,
-    "height": 4000
-  },
-  {
-    "src": "/photography/gallery/p1105692.jpg",
-    "title": "Forgotten stoneware in the woods",
-    "description": "A weathered clay pot rests amongst the trees, hinting at a quiet stillness",
-    "meta": "P1105692.jpg",
-    "tags": [
-      "still life",
-      "texture",
-      "woodland",
-      "decay",
-      "nature",
-      "minimalism",
-      "earth",
+      "cemetery",
+      "autumn",
+      "grey",
+      "rural",
+      "landscape",
       "shadows"
     ],
     "width": 5328,
     "height": 4000
   },
   {
+    "src": "/photography/gallery/p1105691.jpg",
+    "title": "Shifting Shapes in Darkness",
+    "description": "A blurred figure occupies the foreground, lost in shadow and movement.",
+    "meta": "P1105691.jpg",
+    "tags": [
+      "darkness",
+      "blur",
+      "motion",
+      "introspection",
+      "solitude",
+      "silhouette",
+      "abstract",
+      "depth"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
+    "src": "/photography/gallery/p1105692.jpg",
+    "title": "Stillness in the forest",
+    "description": "A weathered ceramic pot rests amongst the fallen leaves of a quiet woodland clearing.",
+    "meta": "P1105692.jpg",
+    "tags": [
+      "monochrome",
+      "forest",
+      "texture",
+      "stillness",
+      "organic",
+      "nature",
+      "quiet",
+      "form"
+    ],
+    "width": 5328,
+    "height": 4000
+  },
+  {
     "src": "/photography/gallery/p1105695.jpg",
-    "title": "bare winter trees",
-    "description": "a stark, desolate scene of leafless trees against a grey sky",
+    "title": "stark winter forest scene",
+    "description": "The black and white image depicts a dense, bare forest with prominent, reaching tree trunks.",
     "meta": "P1105695.jpg",
     "tags": [
       "winter",
       "trees",
-      "bare",
-      "sky"
+      "stark",
+      "monochrome",
+      "forest",
+      "branches",
+      "quiet",
+      "shadows"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105698.jpg",
-    "title": "Electric Guitarist in Concert",
-    "description": "A musician passionately plays electric guitar on stage during a live performance.",
+    "title": "Guitarist Lost in Sound",
+    "description": "A lone musician is captured mid-performance, bathed in stage lighting.",
     "meta": "P1105698.jpg",
     "tags": [
-      "guitar",
       "concert",
       "stage",
-      "music",
-      "performance",
-      "rock",
-      "amplifier"
+      "musician",
+      "dark",
+      "energy",
+      "rhythm",
+      "blur",
+      "performance"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105703.jpg",
-    "title": "bare trees against gray sky",
-    "description": "silhouetted trees create a stark contrast against a hazy, overcast sky",
+    "title": "Stark Trees Against Grey Sky",
+    "description": "Silhouetted trees dominate a muted, overcast sky.",
     "meta": "P1105703.jpg",
     "tags": [
       "trees",
-      "sky",
-      "silhouettes",
       "winter",
-      "gray"
+      "sky",
+      "bleak",
+      "shadows",
+      "minimalist",
+      "nature",
+      "dark"
     ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105706.jpg",
-    "title": "Solitary Figure by the Water",
-    "description": "A dark silhouette sits pensively by the calm, reflective waters of a lake.",
+    "title": "Stillness on the Water",
+    "description": "A solitary figure sits on the shore, reflected in the calm water of a misty lake.",
     "meta": "P1105706.jpg",
-    "tags": [],
+    "tags": [
+      "lake",
+      "reflection",
+      "silhouette",
+      "autumn",
+      "quiet",
+      "water",
+      "trees",
+      "solitude"
+    ],
     "width": 5328,
     "height": 4000
   },
   {
     "src": "/photography/gallery/p1105713.jpg",
-    "title": "Red streaks on dark water",
-    "description": "Dynamic streaks of red light dance across the surface of still water reflecting city lights",
+    "title": "Night Lights on Water",
+    "description": "Streaks of orange light reflect across a dark, still body of water.",
     "meta": "P1105713.jpg",
     "tags": [
+      "night",
+      "reflections",
       "light trails",
-      "night photography",
-      "cityscape",
       "water",
-      "photography",
-      "reflection"
+      "urban",
+      "movement",
+      "dark",
+      "serene"
     ],
     "width": 5106,
     "height": 3404
   },
   {
     "src": "/photography/gallery/p1105714.jpg",
-    "title": "Abstract Light Trails",
-    "description": "Swirling streaks of light illuminate a dark rural road at night.",
+    "title": "City Lights Reflections",
+    "description": "Streaks of warm light dance across the wet asphalt in the darkness.",
     "meta": "P1105714.jpg",
     "tags": [
-      "nightscape",
-      "light trails",
-      "road",
-      "rural",
-      "abstract",
-      "motion",
-      "trails"
+      "night",
+      "reflections",
+      "city",
+      "lights",
+      "asphalt",
+      "wet",
+      "urban",
+      "landscape"
     ],
     "width": 5106,
     "height": 3404
   },
   {
     "src": "/photography/gallery/p1105715.jpg",
-    "title": "Silhouetted Church at Dusk",
-    "description": "Dark church spires rise against a vibrant, hazy sunset sky.",
+    "title": "Gothic Window View",
+    "description": "A blurred, evocative view through a window reveals a church silhouette against a dramatic sunset sky.",
     "meta": "P1105715.jpg",
-    "tags": [],
+    "tags": [
+      "gothic",
+      "cathedral",
+      "sky",
+      "silhouette",
+      "window",
+      "evening",
+      "twilight",
+      "urban"
+    ],
     "width": 5106,
     "height": 3404
   },
   {
     "src": "/photography/gallery/p1105716.jpg",
-    "title": "Fireworks Trails at Night",
-    "description": "Vibrant trails of fireworks illuminate the dark night sky with streaks of color and light",
+    "title": "Nighttime Light Trails",
+    "description": "A streak of vibrant lights weaves across a dark, expansive sky.",
     "meta": "P1105716.jpg",
     "tags": [
-      "fireworks",
       "night",
+      "lights",
       "trails",
-      "light",
+      "motion",
+      "urban",
+      "photography",
       "color",
-      "celebration",
-      "tgs"
+      "movement"
     ],
     "width": 5106,
     "height": 3404
   },
   {
     "src": "/photography/gallery/p1105724.jpg",
-    "title": "Distant Silhouette",
-    "description": "A muted view of a person’s back disappearing into a blurred interior space.",
+    "title": "Isolated Back View",
+    "description": "A blurry, muted image captures a person's back in a dimly lit space.",
     "meta": "P1105724.jpg",
-    "tags": [],
+    "tags": [
+      "back",
+      "shadow",
+      "muted",
+      "gray",
+      "texture",
+      "urban",
+      "solitude",
+      "reflection"
+    ],
     "width": 5106,
     "height": 3404
   }
