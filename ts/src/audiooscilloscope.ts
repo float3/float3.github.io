@@ -6,11 +6,20 @@ type OscilloscopeState = {
   data: Uint8Array<ArrayBuffer>
 }
 
+type OscilloscopeWindow = Window & {
+  __audioOscilloscopeStates?: WeakMap<HTMLAudioElement, OscilloscopeState>
+  addCleanup?: (fn: () => void) => void
+}
+
 const AudioContextClass: AudioContextConstructor | undefined =
   window.AudioContext ??
   (window as Window & { webkitAudioContext?: AudioContextConstructor }).webkitAudioContext
 
-const states = new WeakMap<HTMLAudioElement, OscilloscopeState>()
+const browserWindow = window as OscilloscopeWindow
+const states = (browserWindow.__audioOscilloscopeStates ??= new WeakMap<
+  HTMLAudioElement,
+  OscilloscopeState
+>())
 
 document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) => {
   const audio = figure.querySelector("audio")
@@ -18,10 +27,17 @@ document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) =
     return
   }
 
+  if (figure.dataset.oscilloscopeEnhanced === "true") {
+    return
+  }
+
   if (!AudioContextClass) {
     audio.controls = true
     return
   }
+
+  removeExistingStages(figure)
+  figure.dataset.oscilloscopeEnhanced = "true"
 
   audio.controls = false
   audio.preload = audio.preload || "metadata"
@@ -118,7 +134,8 @@ document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) =
     stopDrawing()
     drawIdle(canvas, context2d)
   })
-  window.addEventListener("resize", () => {
+
+  const handleResize = () => {
     resize()
     const state = states.get(audio)
     if (state && !audio.paused && !audio.ended) {
@@ -126,8 +143,21 @@ document.querySelectorAll<HTMLElement>("[data-oscilloscope]").forEach((figure) =
     } else {
       drawIdle(canvas, context2d)
     }
+  }
+  window.addEventListener("resize", handleResize)
+  browserWindow.addCleanup?.(() => {
+    stopDrawing()
+    window.removeEventListener("resize", handleResize)
   })
 })
+
+function removeExistingStages(figure: HTMLElement) {
+  Array.from(figure.children).forEach((child) => {
+    if (child.classList.contains("audio-oscilloscope-stage")) {
+      child.remove()
+    }
+  })
+}
 
 function getState(audio: HTMLAudioElement): OscilloscopeState {
   const existing = states.get(audio)
