@@ -1,3 +1,4 @@
+const NUM = 63
 import { trolley_media_src } from "wasm"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
 

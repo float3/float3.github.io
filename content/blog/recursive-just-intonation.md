@@ -1,7 +1,7 @@
 ---
 title: Why you should buy 12 Pianos | Recursive Just Intonation
 date: 2022-11-29
-updated: 2026-05-09
+updated: 2026-05-10
 tags:
   - music
   - programming
