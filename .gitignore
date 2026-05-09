@@ -11,6 +11,7 @@ tsconfig.tsbuildinfo
 quartz/cli/tui/dist/
 private/
 private/photography/originals/
+private/tools/nightshade/
 .replit
 replit.nix
 
