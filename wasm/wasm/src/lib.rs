@@ -6,6 +6,7 @@ pub mod bayes;
 pub mod chars;
 pub mod glsl;
 pub mod graph;
+#[cfg(feature = "krabby")]
 pub mod krabby;
 pub mod movies;
 pub mod photography;
