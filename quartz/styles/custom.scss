@@ -506,6 +506,64 @@ audio::-webkit-media-controls-panel {
   background-color: var(--lightgray);
 }
 
+.sortable-table {
+  thead th {
+    padding: 0;
+    user-select: none;
+    vertical-align: bottom;
+  }
+
+  .sortable-table-header {
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    gap: 0.35rem;
+    justify-content: flex-start;
+    min-height: 2rem;
+    padding: 0.4rem 0.7rem;
+    text-align: inherit;
+    width: 100%;
+  }
+
+  th[style*="right"] .sortable-table-header {
+    justify-content: flex-end;
+  }
+
+  .sortable-table-header:hover,
+  .sortable-table-header:focus-visible {
+    color: var(--secondary);
+  }
+
+  .sortable-table-header:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: -2px;
+  }
+
+  .sortable-table-indicator {
+    color: var(--gray);
+    display: inline-block;
+    font-size: 0.8em;
+    min-width: 0.8em;
+  }
+
+  th[aria-sort="ascending"] .sortable-table-indicator::before {
+    content: "^";
+  }
+
+  th[aria-sort="descending"] .sortable-table-indicator::before {
+    content: "v";
+  }
+
+  th[aria-sort="none"] .sortable-table-indicator::before {
+    content: "";
+  }
+}
+
 #quartz-root {
   isolation: isolate;
 }
