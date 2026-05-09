@@ -136,7 +136,8 @@
   text-decoration: none;
 }
 
-.photo-card img {
+.photo-card img,
+.photo-card video {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
@@ -184,7 +185,8 @@
   padding: 0.75rem 0;
 }
 
-.photo-lightbox img {
+.photo-lightbox img,
+.photo-lightbox video {
   max-width: 100%;
   max-height: 78vh;
   object-fit: contain;
@@ -210,6 +212,21 @@
   position: absolute;
   top: 0;
   right: 0;
+}
+
+.trolley-gallery {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.trolley-page .photo-card {
+  max-width: min(100%, 48rem);
+}
+
+.trolley-page .photo-card img,
+.trolley-page .photo-card video {
+  aspect-ratio: auto;
+  max-height: 78vh;
+  object-fit: contain;
 }
 
 @media (max-width: 760px) {
