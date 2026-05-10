@@ -7,17 +7,17 @@ tags:
   - philosophy
 ---
 
-> *“This book can never be popular. It is not for the many, but for the few. The reader must already be at odds with the world and disillusioned with its apparent order.”*
+> *"This book can never be popular. It is not for the many, but for the few. The reader must already be at odds with the world and disillusioned with its apparent order."*
 >
 > **Arthur Schopenhauer**, *Parerga and Paralipomena*
 
-Schopenhauer began with a prediction: only those who already suspect he’s right will find his work meaningful. I feel similarly about this post. I’m confident this will not convince anyone. This is not meant to shock or provoke for its own sake, but to clarify inconsistencies in how we treat animals, ethics, and ourselves.
+Schopenhauer began with a prediction: only those who already suspect he's right will find his work meaningful. I feel similarly about this post. I'm confident this will not convince anyone. This is not meant to shock or provoke for its own sake, but to clarify inconsistencies in how we treat animals, ethics, and ourselves.
 
 In this blog post, I talk about bestiality, not because I've practised it or have any personal interest in it,but because I believe it's important to bring up in order to make a point about moral consistency. If you don't like to think about bestiality then imagine that every time I mention it that I'm instead talking about kicking puppies.
 
 ## Intro：What the hell is shrimp welfare, why should I care and why the hell do people donate money for shrimp?
 
-Shrimp welfare refers to the consideration of farmed shrimp’s physical and psychological well-being—recognizing that decapod crustaceans possess nociceptors and can experience distress. Each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). In recent years, scientific studies and legal rulings (e.g., the UK’s 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). Organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
+Shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being—recognizing that decapod crustaceans possess nociceptors and can experience distress. Each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). In recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). Organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
 
 To quantify the scale of suffering: if we conservatively assume each shrimp experiences 1/100,000th the suffering of a human, then 440 billion shrimp × 0.00001 human-suffering units per shrimp yields 4.4 million human-equivalent suffering units every year. (the 1/100,000th is a number I made up) ([PRB][2]).
 
@@ -40,8 +40,7 @@ probably not but I lean toward at least some inter-subjectively stable moral cla
 ## What being vegan means to me
 
 I don't contribute to the animal product industry, but that doesn't mean I can't consume animal products. For example, I'll eat animal products to avoid food waste, finishing someone else's meal, for instance, or use bones from a butcher if they're given to me for free. Roadkill would also be acceptable in theory.
-
-I can wear second-hand leather. I don't go to the zoo. I don't have pets, and if I ever did (or had children), I'd only provide them with vegan food. If you think that's immoral, I understand where you're coming from. I haven't researched whether a plant-based diet is sufficient for pets or children. I've decided to have neither children nor pets for now. I think this would require lot's of research on the effects such a diet has on developing humans and animals.
+I can wear second-hand leather. I don't go to the zoo. If supply and demand of animal products is not affected by my actions and I don't make those companies more profitable, then the action is probably not vegan.
 
 ## Why I'm vegan
 
@@ -63,11 +62,11 @@ I can wear second-hand leather. I don't go to the zoo. I don't have pets, and if
 ## The "animals would kill us though" argument
 
 - You're not an animal that kills to survive so comparing yourself to them or using them as ethical role models makes no sense.
-- Livestock animals are herbivorous and are in Captivity, and represent no threat to you whatsoever.
+- Livestock animals are herbivorous and are in captivity, and represent no threat to you whatsoever.
 
 ## I'm not vegan can we still be friends?
 
-Yes, most of my friends are not vegan and for lot's of them I'm the only exposure to vegan philosophy. I also was not a vegan for most of my live, because I was convinced I didn't need to value animals. I will not shame you, because that's not useful. I will be sad about what you're doing and I will disagree with it. I care about your moral framework but I also care about moral consistency, so I would hope that you try to be as consistent as possible.
+Yes, most of my friends are not vegan and for lots of them I'm the only exposure to vegan philosophy. I also was not a vegan for most of my life, because I was convinced I didn't need to value animals. I will not shame you, because that's not useful. I will be sad about what you're doing and I will disagree with it. I care about your moral framework but I also care about moral consistency, so I would hope that you try to be as consistent as possible.
 If you become more consistent by deciding that no animals matter at all, you have increased logical coherence but, in my view, produced a worse world. My aim is not abstract consistency alone. My aim is to invite you to take the concern you already show to a few animals and apply it where the morally relevant differences are weak or absent.
 
 one person who read this blog post said the following:
@@ -85,7 +84,7 @@ I don't like meat-eating but I also don't like vegetarianism or naive veganism.
 
 Most moral theories acknowledge that duties have boundaries—agents are not required to sacrifice their well-being or personal resources without limit. In utilitarianism, for example, the principle of diminishing marginal utility implies that beyond a point, additional sacrifice yields negligible overall benefit. Deontological ethics recognizes agent-relative permissions: obligations must be balanced against other duties, including self-preservation and commitments to family or community.
 
-In practice, we accept that extraordinary heroism—risking one’s life to save another—is laudable but not morally obligatory for everyone. We recognize that our capacity for empathy and action is finite: time, health, emotional energy, and social bonds constrain how much we can give. Thus, choosing to reduce meat consumption can be seen as a reasonable calibration of moral concern rather than an all-or-nothing demand that would erode one’s ability to function and fulfill other responsibilities.
+In practice, we accept that extraordinary heroism—risking one's life to save another—is laudable but not morally obligatory for everyone. We recognize that our capacity for empathy and action is finite: time, health, emotional energy, and social bonds constrain how much we can give. Thus, choosing to reduce meat consumption can be seen as a reasonable calibration of moral concern rather than an all-or-nothing demand that would erode one's ability to function and fulfill other responsibilities.
 
 ### I want to eat animal products
 
@@ -93,7 +92,9 @@ I know veganism is inconvenient, but I have more respect for people who realise 
 
 ### I believe that my individual actions will have no effect
 
-fair enough, similar to voting your individual actions don't have any effect but at the same time we as a society need to make sure that people don't believe that and go vote anyways. so if you're in this camp, do you vote in elections? if yes why?
+I don't think this is right. Animal products follow supply and demand. One purchase is noisy, but demand is aggregated: shops restock based on what sells, producers respond to orders, and fewer purchases means fewer animals bred into the system in expectation. The effect of any one meal is small and probabilistic, but over a lifetime it is not zero.
+
+If you still believe tiny individual actions can matter when they aggregate, for example voting, I don't see why animal products should get a special exemption.
 
 ### vegan food tastes bad
 
@@ -105,13 +106,13 @@ it's not that difficult, I challenge you do a little research to see what supple
 
 ### it's unhealthy
 
-Even if I believed that veganism was unhealthy, which I don't, I would still be vegan. I do things that are bad for me all the time because I want to act morally, for instance I don't lie, cheat, steal, litter and scam everyday even though those things could provide benefits to me.
+Even if I believed that veganism was unhealthy, which I don't, I would still be vegan. I do things that are bad for me all the time because I want to act morally, for instance I don't lie, cheat, steal, litter and scam every day even though those things could provide benefits to me.
 
 ### I'm vegetarian
 
-The egg industry kills about billions of male chicks because they are useless to the egg industry. In most of the world I believe they are either shredded or gassed. When you buy eggs you're paying for an industry that kills animals, so I would argue that most egg sources are not vegetarian.
+The egg industry creates male chicks who cannot lay eggs and are usually treated as waste. In many countries they are killed shortly after hatching, commonly by gassing or maceration. Germany is an important exception: routine killing of day-old male chicks has been banned since 1 January 2022, so German eggs are not a good example for that exact claim. The underlying point still remains: eggs depend on breeding, culling decisions, spent hens, and an industry that treats animals as production units, so I don't think most egg sources escape the moral problem. https://www.bmel.de/EN/topics/animals/animal-welfare/research-poultry-in-ovo.html
 
-The milk industry separates calves and their mothers directly after birth, inducing large amounts of stress on both, and then keep the mothers artificially lactating.
+The milk industry separates calves and their mothers directly after birth, inducing large amounts of stress on both, and then keeps the mothers artificially lactating.
 
 There's more very bad practices in both the dairy and egg industry that you can look up yourself or scroll down to the section where I list a bunch of facts about factory farming and sources.
 
@@ -121,7 +122,7 @@ There's more very bad practices in both the dairy and egg industry that you can 
 
 If you think horses, dogs and cats deserve to live happy lives, but pigs and cows can be killed then I truly don't understand you.
 A rule like "Eating animals is allowed, except dogs and cats" is not a direct contradiction. It is just a patchwork rule that needs a reason. If the reason is "I feel closer to dogs," that describes a fact about you but does not by itself justify different treatment, unless you claim that empathy strength is the correct moral criterion. If you do not endorse empathy strength as decisive, your practice and your stated values are inconsistent.
-I strongly belief that empathy strength is morally worthless.
+I strongly believe that empathy strength is morally worthless.
 
 ### torturing sheep and eating sheep is not the same thing
 
@@ -129,11 +130,11 @@ ok let's say I like to hear animals squeal when I kick or stab them, I enjoy the
 
 ### animals deserve no moral consideration
 
-Ok. I can empathise with this view point because I held it since I started thinking about philosophy for the first time until I first became vegan, it's possible that I'm wrong about having empathy for animals. But I wonder how with this view point infants or the mentally handicapped qualify for moral consideration. What if there was another enlightened Species? it's easy to imagine a species so far advanced and above us that from their perspective we wouldn't deserve any moral consideration. If there was a Species to which we were like cattle would they be in the moral right to enslave us? I think not.
+Ok. I can empathise with this viewpoint because I held it since I started thinking about philosophy for the first time until I first became vegan, it's possible that I'm wrong about having empathy for animals. But I wonder how with this viewpoint infants or the mentally handicapped qualify for moral consideration. What if there was another enlightened species? It's easy to imagine a species so far advanced and above us that from their perspective we wouldn't deserve any moral consideration. If there was a species to which we were like cattle would they be in the moral right to enslave us? I think not.
 
 ### animal suffering is real but matters less than my enjoyment of life
 
-I believe that causing harm without need is very simply wrong. There’s clear evidence that animals suffer under current systems of animal agriculture—and equally clear evidence that I don’t need to participate in those systems to live well. So choosing veganism is a natural expression of my values. Make sure your values allow for what you do.
+I believe that causing harm without need is very simply wrong. There's clear evidence that animals suffer under current systems of animal agriculture—and equally clear evidence that I don't need to participate in those systems to live well. So choosing veganism is a natural expression of my values. Make sure your values allow for what you do.
 
 ### animals are happy in captivity.
 
@@ -147,13 +148,14 @@ let's address each claim:
 	- Ok idk why living in pens is listed like it's a positive, seems like a negative to me.
 	- pigs housed in barren, crowded pens often resort to fighting and tail-biting, inflicting wounds on their pen-mates out of stress and boredom
 -  They have no predators:
-	- Ok this is true, I just had a great idea though, let's look up people in demographics and areas that are high risk groups for getting assaulted, that way they have no assaulters
-	- If you don't think the comparison between humans and animals is valid then consider that animals experience chronic stress in captivity
+	- Yes, the absence of predators is a real benefit, but it does not settle welfare. Removing one danger can still leave an animal in an environment full of chronic stress, pain, confinement, and early death.
+	- A protected prison would also have no predators. That fact alone would not make it good.
+	- If you don't think the comparison between humans and animals is valid, consider the narrower point: animals can experience chronic stress in captivity even when predators are absent.
 	- 556 million chickens in the USA die annually prematurely, without ever reaching slaughter because of holding conditions. https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
 - They are able to fuck:
-	- Most livestock animals are bred through artifical insemination, bred turkeys because of their big body size cannot mate naturally at all.
+	- Most livestock animals are bred through artificial insemination. Turkeys bred for very large bodies often cannot mate naturally at all.
 	- only about 3% of female pigs ever breed through direct contact with a male. 
-	- 80% of dairy cows in the US are bred through artificial insemination, Bulls are usually not kept on-site. https://pmc.ncbi.nlm.nih.gov/articles/PMC4095965
+	- 80% of dairy cows in the US are bred through artificial insemination, bulls are usually not kept on-site. https://pmc.ncbi.nlm.nih.gov/articles/PMC4095965
 - They get fed:
 	- Not all farm animals are allowed to eat freely. Breeding animals, in particular, often have their feed intentionally restricted, leaving them in a constant state of hunger. https://pubmed.ncbi.nlm.nih.gov/12782235
 	- Similarly, pregnant sows in industrial systems are typically fed a restricted diet to avoid excessive weight gain. Studies and welfare audits report that gestating sows on farms exhibit physiological and behavioral signs of hunger, such as aggression at feeding time and sham chewing, because they are not given enough bulk food to feel satiated https://www.thepigsite.com/articles/welfare-issues-resulting-from-feed-restriction-in-pregnant-sows
@@ -163,16 +165,18 @@ let's address each claim:
 	- workers do not attempt to treat ill chickens – they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
 	- hundreds of thousands of animals (pigs, cows, sheep, etc.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
 - They are free of diseases:
-	- factory farms are “breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health
+	- factory farms are "breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health
 	- The practice of administering sub-therapeutic antibiotics has fostered drug-resistant pathogens that can spread to humans. this 2023 study links 1 Million human deaths per year to antibiotic resistance stemming from factory farm antibiotic abuse https://www.aspca.org/protecting-farm-animals/factory-farming-hurts-people-and-communities ---------- https://www.prnewswire.com/news-releases/one-million-human-deaths-linked-to-factory-farming-set-to-double-by-2050-301792539.html
 -  They live better lives than many humans:
 	- ...
 
-now if you read all this and say "we'll I just won't eat factory farmed meat" then I refer you to the rest of my blog post
+now if you read all this and say "well, I just won't eat factory farmed meat" then I refer you to the rest of my blog post
 
 ## What about the people who would lose their job if everyone went vegan?
 
-jobs have no inherent value, if they did we could just pay people to do things, like you could pay me 10€ per hour to just stand somewhere and do nothing and it would have created one new job. but no one pays me to stand somewhere so clearly jobs don't have inherent value, but instead people provide value to society through their jobs, if everyone who works in the animal industry loses their job then I hope we have socialist policies for them to fall back on, just like I would hope for people in any other industry.
+Jobs don't have inherent value by themselves. If they did, we could create value by paying people 10 EUR per hour to stand still. The value is in meeting human needs, and we should be willing to stop harmful industries even when that means helping workers transition.
+
+If everyone who works in the animal industry lost their job, I would want strong social policy, retraining, and income support for them, just as I would for workers displaced from any other industry. Realistically, current politics might fail them, and that is a serious transition problem, but it is not a reason to preserve the underlying harm forever.
 
 ## What "animals" don't deserve moral consideration?
 
@@ -183,11 +187,11 @@ Placozoans are extremely simple marine animals a few millimeters across. They la
 
 ### Sponges
 
-Sponges also lack a nervous system; nevertheless they show coordinated behaviors such as “sneezing” to clear debris and may possess cell types (neuroids) that hint at evolutionary precursors to neurons. Absence of neurons makes subjective pain very unlikely; most scientists treat sponges as non-sentient for welfare purposes, though their proto-signaling complexity is scientifically interesting
+Sponges also lack a nervous system; nevertheless they show coordinated behaviors such as "sneezing" to clear debris and may possess cell types (neuroids) that hint at evolutionary precursors to neurons. Absence of neurons makes subjective pain very unlikely; most scientists treat sponges as non-sentient for welfare purposes, though their proto-signaling complexity is scientifically interesting
 
 ### Insects, Gastropods, Arthropods, Bivalve Mollusks, Decapods
 
-The Jury is still out on these so any call here would be premature. My precautionary stance is that we should wait until we have better studies.
+The jury is still out on these so any call here would be premature. My precautionary stance is that we should wait until we have better studies.
 
 ## Problems I haven't solved
 
@@ -196,22 +200,22 @@ The Jury is still out on these so any call here would be premature. My precautio
 - If it's _more life_, should I have as many children as possible?
 - If it's _less suffering_, should I sell all my possessions, donate the money and devote my life to doing good?
 
-I haven't figured these things out yet.
+I haven't figured these things out yet. My current view is that reducing suffering probably asks more of me than I currently give. But selling all my possessions may be self-defeating if it makes me unstable, burned out, or less able to help over time. So the question is not only "how much can I sacrifice?" but "what level of sacrifice is sustainable and actually improves the world?"
 
 What about honey? If you think insects deserve moral consideration then you probably shouldn't consume honey.
 
-If everyone suddenly went vegan what should we do about the animals in captivity right now? Certainly we can't kill them and process them as a sort of last batch, but releasing them into the wild for which they are clearly unfit to survive also seems wrong.
+If everyone suddenly went vegan, what should we do about the animals in captivity right now? A literal overnight global switch will not happen. If demand fell quickly, the least bad transition would be to stop breeding new animals into the system, let existing animals live out their lives where possible, and use sanctuaries or managed care for the ones who cannot survive outside. Some animals would still be killed or neglected in any realistic transition, which is awful, but the practical impossibility of a perfect wind-down is not an argument for continuing to breed billions more.
 
-What about wild animal suffering, should we kill all predatory animals, should capture and protect all aimals that would suffer otherwise? the answer to all of these seems to be no.
+What about wild animal suffering? Should we kill all predatory animals, should we capture and protect all animals that would suffer otherwise? The answer to all of these seems to be no.
 But if we really value less suffering then we can't just ignore suffering of wild animals just because it's "natural", remember natural doesn't mean good. Children getting bone cancer is also natural but it's not good.
 
 I have more research to do on these topics.
 
 Also I think the word humane slaughter is a misnomer, humane would be the absence of slaughter.
 
-If you have something to say, something you want me to add, or something you want to argue about then email my at veganism [at] hilll [dot] dev 
+If you have something to say, something you want me to add, or something you want to argue about then email me at veganism [at] hilll [dot] dev
 
-There are more conclusion and parallels to be drawn here, particularly to natalism, AI CSAM and abortion, I will write about those topics in the future.
+There are more conclusions and parallels to be drawn here, particularly to natalism, AI CSAM and abortion. I will write about those topics in the future.
 
 note for kaj:
-I don't care about what's legal or not and what is a societal norm or not. Responding to me with, "Bestiality is not accepted by society but meat eating is therefore one is okay and the other one isn't" is not useful to anyone. I'm writing this because I'm interested in drawing parallels and exploring the moral implications of actions that are commonly viewed as acceptable but from my standpoint should not be viewed as such. If your world view denies the existence of morals then you shouldn't engage in moral discussions like this one but more broader discussions.
+I don't care about what's legal or not and what is a societal norm or not. Responding to me with, "Bestiality is not accepted by society but meat eating is therefore one is okay and the other one isn't" is not useful to anyone. I'm writing this because I'm interested in drawing parallels and exploring the moral implications of actions that are commonly viewed as acceptable but from my standpoint should not be viewed as such. If your world view denies the existence of morals then you shouldn't engage in moral discussions like this one but broader discussions.
