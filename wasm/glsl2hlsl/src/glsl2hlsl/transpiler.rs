@@ -423,7 +423,7 @@ where
     show_type_specifier(f, &field.ty);
     let _ = f.write_str(" ");
 
-    // there’s at least one identifier
+    // there's at least one identifier
     let mut identifiers = field.identifiers.0.iter();
     let identifier = identifiers.next().unwrap();
 
