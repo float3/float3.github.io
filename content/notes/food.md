@@ -1,7 +1,7 @@
 ---
 title: "food"
 date: 2022-11-29
-updated: 2024-12-14
+updated: 2026-05-10
 tags:
   - list
 ---
@@ -26,6 +26,12 @@ in descending order of quality per place \
     - [Oriental Vegetarian](#oriental-vegetarian)
     - [Veggie Kingdom 緻素坊](#veggie-kingdom-緻素坊)
     - [LockCha (Admiralty) 樂茶軒 (金鐘)](#lockcha-admiralty-樂茶軒-金鐘)
+- [Japan](#japan)
+  - [Kyoto](#kyoto)
+    - [玄 gen](#玄-gen)
+  - [Tokyo](#tokyo)
+    - [CAFÉ Tarot](#café-tarot)
+    - [Masaka (Vegan Izakaya)](#masaka-vegan-izakaya)
 - [Denmark](#denmark)
   - [Copenhagen](#copenhagen)
     - [ferment](#ferment)
@@ -70,7 +76,7 @@ you can also search for: 卍, a buddhist symbol and often used in the names of v
 ### 御喜自助餐
 
 25°01'05.3"N 121°32'25.0"E \
-106, Taiwan, Taipei City, Da’an District, 羅斯福路四段 1 號
+106, Taiwan, Taipei City, Da'an District, 羅斯福路四段 1 號
 
 nice vegan buffet on NTU campus, eat surrounded by local and international students
 
@@ -142,6 +148,33 @@ good food, too expensive
 good vegan dim sum, much too expensive, not worth \
 I didn't wanna include the last 2; I wouldn't go there again,
 because there are better options with lower prices but I decided to Document them anyways.
+
+# Japan
+
+## Kyoto
+
+### 玄 gen
+
+35°02'00.0"N 135°44'56.5"E \
+京都府京都市上京区花開院町127ハイムいすず1F
+
+vegan and gluten-free shop
+
+## Tokyo
+
+### CAFÉ Tarot
+
+35°41'53.0"N 139°47'05.3"E \
+〒111-0053 東京都台東区浅草橋1-27-3
+
+plant-based cafe by Tokyo Tarot Museum
+
+### Masaka (Vegan Izakaya)
+
+35°39'43.2"N 139°41'56.2"E \
+Shibuya PARCO B1F, 15-1 Udagawacho, Shibuya-ku, Tokyo, Japan
+
+vegan izakaya
 
 # Denmark
 
