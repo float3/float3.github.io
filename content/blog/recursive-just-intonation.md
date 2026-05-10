@@ -9,26 +9,14 @@ tags:
 
 ## What is this about?
 
-Before getting to recursive just intonation, there are two tuning ideas worth
-separating:
-
-- 12-tone equal temperament, or 12-TET, divides the octave into twelve equal
-  steps. It is why a piano can play in every key without retuning, but its
-  thirds and fifths are approximations of simpler acoustic ratios.
-- Just intonation tunes notes as small whole-number frequency ratios, like
-  `2/1`, `3/2`, and `5/4`. Those intervals can sound more settled because the
-  waves line up more often, but the "right" version of a note depends on the
-  harmonic context.
-
-The rest of the post builds from that tradeoff: one global keyboard versus
-cleaner chord-local relationships.
+Recursive just intonation is a novel toy-tuning system that I came up with during my high school physics classes, It's very easy to predict why it won't become popular. That said I find it interesting and both mathematically and musically beautiful, so I decided to write this blogpost (listening examples further below).
 
 ## Equal Temperament vs Just Intonation
 
 Equal temperament gives us one frequency table. Every C# is the same C#, every G is the
 same G, and every semitone is the same distance from the last one. That is very
 convenient, at the cost of shaving almost every interval a little. The intervals
-are close enough to simple ratios that they work, but most of them are not
+are close enough to simple ratios that they work, but all of them are not
 exact.
 
 Just intonation goes the other way. It treats notes as relationships to a root,
@@ -75,22 +63,23 @@ third above C is E. A `5/4` major third above E is G#/Ab. Those two facts cannot
 both fit into one fixed 12-note keyboard unless we allow the same pitch name to
 mean different frequencies in different harmonic contexts.
 
-For a C-based just-intonation scale, the 12 pitch classes are:
+For a C-based just-intonation scale, the 12 pitch classes could be (if chosen from the overtone series):
 
-| pitch | ratio from C |
-| ----- | -----------: |
-| C     |        `1/1` |
-| C#/Db |      `17/16` |
-| D     |        `9/8` |
-| D#/Eb |      `19/16` |
-| E     |        `5/4` |
-| F     |        `4/3` |
-| F#/Gb |      `45/32` |
-| G     |        `3/2` |
-| G#/Ab |      `51/32` |
-| A     |      `27/16` |
-| A#/Bb |      `57/32` |
-| B     |       `15/8` |
+| pitch | ratio from C | Nth overtone |
+| ----- | -----------: | ------------ |
+| C     |        `1/1` | 0th          |
+| C#/Db |      `17/16` | 16th         |
+| D     |        `9/8` | 8th          |
+| D#/Eb |      `19/16` | 18th         |
+| E     |        `5/4` | 4th          |
+| F     |        `4/3` | N/A          |
+| F#/Gb |      `45/32` | 44th         |
+| G     |        `3/2` | 2nd          |
+| G#/Ab |      `51/32` | 50th         |
+| A     |      `27/16` | 26th         |
+| A#/Bb |      `57/32` | 56th         |
+| B     |       `15/8` | 14th         |
+| C     |        `2/1` | 1st          |
 
 This already makes a C major chord exact:
 
@@ -410,9 +399,6 @@ A few consequences fall out of that:
 So this is not a replacement for equal temperament. Equal temperament is still
 the practical compromise that lets every key share one physical instrument.
 
-Recursive just intonation is mostly a listening tool for me. It makes the
-root-relationship audible again, instead of flattening every chord tone onto one
-global keyboard.
 
 ## My Other Music Work
 
