@@ -60,11 +60,7 @@ tags:
 </article>
 <article class="photo-gear-item">
 <strong>AF Micro-Nikkor 105mm f/2.8</strong>
-<p>macro lens. used with the NIK F-L adapter for film scanning.</p>
-</article>
-<article class="photo-gear-item">
-<strong>Sigma Zoom-alpha III 35-135mm f/3.5-4.5</strong>
-<p>multi-coated zoom, marked 55mm.</p>
+<p>non-D macro lens marked 1:2.8 on the barrel. used with the NIK F-L adapter for film scanning.</p>
 </article>
 </div>
 </section>
@@ -75,6 +71,10 @@ tags:
 <strong>NIKKOR-S Auto 50mm f/1.4</strong>
 <p>Nippon Kogaku Japan pre-AI standard prime.</p>
 </article>
+<article class="photo-gear-item">
+<strong>Sigma Zoom-α III 35-135mm f/3.5-4.5</strong>
+<p>manual-focus multi-coated zoom, marked 55mm.</p>
+</article>
 </div>
 </section>
 </div>
@@ -83,8 +83,8 @@ tags:
 <h3>film</h3>
 <div class="photo-gear-list">
 <article class="photo-gear-item">
-<strong>Fujifilm and Kodak 200/400 ISO stocks</strong>
-<p>my default film speeds are ISO 200 and 400, in both black-and-white and color.</p>
+<strong>Fujifilm, Kodak, and ILFORD HP5 PLUS</strong>
+<p>my default film speeds are ISO 200 and 400, in both black-and-white and color. photos will eventually be tagged by the film stock they were shot on.</p>
 </article>
 </div>
 </section>
@@ -109,7 +109,7 @@ tags:
 <p>full-frame mirrorless camera used for camera scanning.</p>
 </article>
 <article class="photo-gear-item">
-<strong>K&amp;F Concept NIK F-L adapter</strong>
+<strong>K&amp;F Concept Nikon F to L-mount adapter</strong>
 <p>F-mount to L-mount adapter used on the Lumix for film scanning.</p>
 </article>
 <article class="photo-gear-item">
