@@ -1,7 +1,7 @@
 ---
 title: photography
 date: 2026-05-05
-updated: 2026-05-07
+updated: 2026-05-10
 tags:
   - photography
 ---

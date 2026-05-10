@@ -1,7 +1,7 @@
 ---
 title: what the fuck is shrimp welfare?
 date: 2025-06-04
-updated: 2025-07-17
+updated: 2026-05-10
 tags:
   - veganism
   - philosophy
