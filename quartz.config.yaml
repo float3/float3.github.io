@@ -115,11 +115,15 @@ plugins:
     enabled: true
   - source: github:quartz-community/alias-redirects
     enabled: true
-  - source: github:quartz-community/content-index
+  - source: ./quartz-local/content-index-filtered
     enabled: true
     options:
       enableSiteMap: true
       enableRSS: true
+      rssIncludePrefixes:
+        - blog/
+        - notes/
+        - tools/
   - source: github:quartz-community/favicon
     enabled: true
   - source: github:quartz-community/og-image

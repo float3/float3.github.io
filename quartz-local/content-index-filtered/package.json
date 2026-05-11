@@ -1,0 +1,16 @@
+{
+  "name": "@hill/quartz-content-index-filtered",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "quartz": {
+    "name": "content-index-filtered",
+    "displayName": "Filtered Content Index",
+    "description": "Generate the sitemap, RSS feed, and content index with optional RSS path filtering.",
+    "version": "1.0.0",
+    "category": "emitter",
+    "defaultOrder": 50
+  }
+}
