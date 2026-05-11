@@ -190,7 +190,6 @@ export const PageTypeDispatcher: QuartzEmitterPlugin<Partial<DispatcherOptions>>
             relativePath: vpRelativePath,
             frontmatter: { title: vp.title, tags: [] },
             ...vp.data,
-            unlisted: true,
           })
           if (vpSlug !== "404") {
             ctx.virtualPages.push([tree, vfile])
@@ -281,7 +280,6 @@ export const PageTypeDispatcher: QuartzEmitterPlugin<Partial<DispatcherOptions>>
             relativePath: vpRelativePath,
             frontmatter: { title: vp.title, tags: [] },
             ...vp.data,
-            unlisted: true,
           })
           if (vpSlug !== "404") {
             ctx.virtualPages.push([tree, vfile])
