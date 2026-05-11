@@ -23,13 +23,6 @@ function nonEmptyString(value: unknown): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined
 }
 
-function titleFromPath(path: string): string | undefined {
-  const filename = path.split(/[\\/]/).pop()?.split(/[?#]/)[0] ?? path
-  const stem = filename.replace(/\.[^.]*$/, "")
-  const title = stem.replace(/[_-]+/g, " ").trim()
-  return title.length > 0 ? title : undefined
-}
-
 function photoTags(value: unknown): string[] | undefined {
   if (!Array.isArray(value)) {
     return undefined
@@ -56,8 +49,7 @@ function toPhoto(value: unknown): Photo | null {
 
   const description = nonEmptyString(candidate.description)
   const meta = nonEmptyString(candidate.meta)
-  const title =
-    nonEmptyString(candidate.title) ?? titleFromPath(meta ?? src) ?? description ?? "Untitled photo"
+  const title = nonEmptyString(candidate.title) ?? ""
   const tags = photoTags(candidate.tags)
 
   if (!photo_manifest_entry_is_valid(src, title)) {

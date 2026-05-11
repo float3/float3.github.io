@@ -1,7 +1,7 @@
 use crate::{Result, Site, SiteError};
 use image::codecs::jpeg::JpegEncoder;
 use image::{ImageReader, Rgb, RgbImage, RgbaImage};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::error::Error;
 use std::ffi::{OsStr, OsString};
@@ -37,7 +37,7 @@ struct PhotoDescriberOptions {
     prompt: String,
 }
 
-#[derive(Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 struct GalleryEntry {
     src: String,
     title: String,
@@ -135,6 +135,7 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
     };
     let mut entries = Vec::new();
     let mut names = HashMap::<String, usize>::new();
+    let existing_entries = load_existing_gallery_manifest(&options.manifest)?;
     // let mut staging_entries = Vec::new();
     // let mut missing_nightshade_outputs = Vec::new();
 
@@ -198,22 +199,40 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         //     }
         // }
 
+        let existing = existing_entries.get(&relative.to_string_lossy().replace('\\', "/"));
+        let title = existing
+            .map(|entry| entry.title.trim().to_string())
+            .unwrap_or_default();
+        let description = existing
+            .and_then(|entry| {
+                let description = entry.description.trim();
+                (!description.is_empty()).then(|| description.to_string())
+            })
+            .unwrap_or(classification.description);
+        let tags = existing
+            .map(|entry| entry.tags.clone())
+            .unwrap_or_default();
+
         println!(
             "  title: {}; tags: {}",
-            classification.title,
-            if classification.tags.is_empty() {
-                "unclassified".to_string()
+            if title.is_empty() {
+                "[manual later]".to_string()
             } else {
-                classification.tags.join(", ")
+                title.clone()
+            },
+            if tags.is_empty() {
+                "[manual later]".to_string()
+            } else {
+                tags.join(", ")
             }
         );
 
         entries.push(GalleryEntry {
             src: format!("/photography/gallery/{file_name}"),
-            title: classification.title,
-            description: classification.description,
+            title,
+            description,
             meta: relative.to_string_lossy().replace('\\', "/"),
-            tags: classification.tags,
+            tags,
             width,
             height,
         });
@@ -1235,6 +1254,20 @@ fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
     body.push('\n');
     fs::write(path, body)?;
     Ok(())
+}
+
+fn load_existing_gallery_manifest(path: &Path) -> Result<HashMap<String, GalleryEntry>> {
+    if !path.is_file() {
+        return Ok(HashMap::new());
+    }
+
+    let body = fs::read_to_string(path)?;
+    let entries: Vec<GalleryEntry> = serde_json::from_str(&body)?;
+
+    Ok(entries
+        .into_iter()
+        .map(|entry| (entry.meta.clone(), entry))
+        .collect())
 }
 
 #[cfg(test)]

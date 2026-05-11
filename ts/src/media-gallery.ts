@@ -22,6 +22,12 @@ function mediaKind(item: GalleryItem): "image" | "video" {
   return /\.(mp4|webm|mov)$/i.test(item.src) ? "video" : "image"
 }
 
+function mediaLabel(item: GalleryItem): string {
+  const title = item.title.trim()
+  const meta = item.meta?.trim() ?? ""
+  return title || meta || "photo"
+}
+
 function createMediaElement(
   item: GalleryItem,
   preview: boolean,
@@ -33,13 +39,13 @@ function createMediaElement(
     video.playsInline = true
     video.muted = preview
     video.controls = !preview
-    video.setAttribute("aria-label", item.title)
+    video.setAttribute("aria-label", mediaLabel(item))
     return video
   }
 
   const image = document.createElement("img")
   image.src = item.src
-  image.alt = item.title
+  image.alt = mediaLabel(item)
   image.loading = preview ? "lazy" : "eager"
   return image
 }
@@ -87,6 +93,7 @@ export function renderMediaGallery(options: GalleryOptions): void {
     const meta = document.createElement("small")
 
     title.textContent = item.title
+    title.hidden = item.title.trim().length === 0
     meta.textContent = item.meta ?? ""
     text.append(title, meta)
     card.append(media, text)
