@@ -1,4 +1,3 @@
-const NUM = 63
 import { trolley_media_src } from "wasm"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
 
@@ -10,17 +9,15 @@ async function trolleyProblem(index: number): Promise<GalleryItem> {
   const mp4Src = trolley_media_src(trolleyPath, index, "mp4")
   const label = String(index).padStart(2, "0")
 
-  try {
-    const response = await fetch(jpgSrc, { method: "HEAD", cache: "no-cache" })
-    if (response.ok) {
-      return {
-        src: jpgSrc,
-        title: `trolley problem ${label}`,
-        meta: "image",
-        kind: "image",
-      }
+  const response = await fetch(jpgSrc, { method: "HEAD", cache: "no-cache" }).catch(() => null)
+  if (response?.ok) {
+    return {
+      src: jpgSrc,
+      title: `trolley problem ${label}`,
+      meta: "image",
+      kind: "image",
     }
-  } catch {}
+  }
 
   return {
     src: mp4Src,
