@@ -2,7 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 use crate::{Result, Site, SiteError};
-use recursive_ji_core::{generated_audio_files, generated_text_files};
+use recursive_ji_core::{generated_audio_files, generated_media_text_files, generated_text_files};
 
 const DEFAULT_AUDIO_OUTPUT_DIR: &str = "content/misc/media";
 const DEFAULT_TEXT_OUTPUT_DIR: &str = "content/misc/plaintext";
@@ -31,6 +31,12 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     for file in generated_audio_files()? {
         let path = audio_output_dir.join(file.name);
         fs::write(&path, file.bytes)?;
+        println!("wrote {}", relative_to_root(site, &path).display());
+    }
+
+    for file in generated_media_text_files() {
+        let path = audio_output_dir.join(file.name);
+        fs::write(&path, file.text)?;
         println!("wrote {}", relative_to_root(site, &path).display());
     }
 
@@ -73,6 +79,11 @@ Audio files:
   recursive-ji-c-drone-progression.wav
   recursive-ji-note-splits.wav
   twelve-tet-rooted-ji-progression.wav
+  recursive-just-intonation-composition.wav
+  mozart-dies-irae-recursive-just-intonation-piano.wav
+
+Media text files:
+  recursive-just-intonation-composition.musicxml
 
 Text files:
   recursive-ji-frequencies.csv

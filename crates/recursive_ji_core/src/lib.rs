@@ -5,6 +5,8 @@ use std::io::Write;
 use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
 use music21_rs::{abc_chord, abc_note, Pitch, TuningSystem};
 
+mod long_form;
+
 pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 pub const SAMPLE_RATE: u32 = 44_100;
@@ -167,6 +169,7 @@ pub fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
             ToneColor::Harmonic,
         ))?,
     });
+    files.extend(long_form::generated_audio_files()?);
 
     Ok(files)
 }
@@ -176,6 +179,10 @@ pub fn generated_text_files() -> Vec<GeneratedText> {
         name: "recursive-ji-frequencies.csv",
         text: frequency_report(),
     }]
+}
+
+pub fn generated_media_text_files() -> Vec<GeneratedText> {
+    long_form::generated_media_text_files()
 }
 
 pub fn chord_progression_abc() -> Result<String> {
