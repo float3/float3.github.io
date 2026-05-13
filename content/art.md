@@ -41,7 +41,6 @@ from my pathtracer:
 
 blender:
 <video controls>
-
 <source src="/misc/media/render.mp4">
 </video>
 
