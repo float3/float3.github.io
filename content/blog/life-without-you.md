@@ -1,5 +1,5 @@
 ---
-title: life with you
+title: life without you
 date: 2026-05-13
 updated: 2026-05-13
 tags:
