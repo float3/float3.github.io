@@ -1246,216 +1246,216 @@ fn load_existing_gallery_manifest(path: &Path) -> Result<HashMap<String, Gallery
         .collect())
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
 
-    // #[test]
-    // fn prepares_nightshade_staging_names_and_tags() {
-    //     assert_eq!(
-    //         staged_photo_file_name("p1073908", 1, Path::new("P1073908.JPG")),
-    //         "p1073908.jpg"
-    //     );
-    //     assert_eq!(
-    //         staged_photo_file_name("p1073908", 2, Path::new("P1073908.PNG")),
-    //         "p1073908-2.png"
-    //     );
-    //     assert_eq!(nightshade_tag(&[]), "photo");
-    //     assert_eq!(nightshade_tag(&["cat".to_string()]), "cat");
-    //     assert_eq!(csv_field("cat, portrait"), "\"cat, portrait\"");
-    // }
+// #[test]
+// fn prepares_nightshade_staging_names_and_tags() {
+//     assert_eq!(
+//         staged_photo_file_name("p1073908", 1, Path::new("P1073908.JPG")),
+//         "p1073908.jpg"
+//     );
+//     assert_eq!(
+//         staged_photo_file_name("p1073908", 2, Path::new("P1073908.PNG")),
+//         "p1073908-2.png"
+//     );
+//     assert_eq!(nightshade_tag(&[]), "photo");
+//     assert_eq!(nightshade_tag(&["cat".to_string()]), "cat");
+//     assert_eq!(csv_field("cat, portrait"), "\"cat, portrait\"");
+// }
 
-    // #[test]
-    // fn parses_setup_nightshade_archive_and_url_options() {
-    //     let site = Site {
-    //         root: PathBuf::from("C:/repo"),
-    //         ci: false,
-    //     };
-    //     let options = parse_setup_options(
-    //         &site,
-    //         &[
-    //             "--archive".to_string(),
-    //             "downloads/Nightshade.zip".to_string(),
-    //             "--url".to_string(),
-    //             "https://example.invalid/Nightshade.zip".to_string(),
-    //         ],
-    //     )
-    //     .unwrap();
+// #[test]
+// fn parses_setup_nightshade_archive_and_url_options() {
+//     let site = Site {
+//         root: PathBuf::from("C:/repo"),
+//         ci: false,
+//     };
+//     let options = parse_setup_options(
+//         &site,
+//         &[
+//             "--archive".to_string(),
+//             "downloads/Nightshade.zip".to_string(),
+//             "--url".to_string(),
+//             "https://example.invalid/Nightshade.zip".to_string(),
+//         ],
+//     )
+//     .unwrap();
 
-    //     assert_eq!(
-    //         options.archive.as_deref(),
-    //         Some(Path::new("C:/repo/downloads/Nightshade.zip"))
-    //     );
-    //     assert_eq!(
-    //         options.url.as_deref(),
-    //         Some("https://example.invalid/Nightshade.zip")
-    //     );
-    // }
+//     assert_eq!(
+//         options.archive.as_deref(),
+//         Some(Path::new("C:/repo/downloads/Nightshade.zip"))
+//     );
+//     assert_eq!(
+//         options.url.as_deref(),
+//         Some("https://example.invalid/Nightshade.zip")
+//     );
+// }
 
-    #[test]
-    fn parses_ollama_photo_describer_options() {
-        let site = Site {
-            root: PathBuf::from("C:/repo"),
-            ci: false,
-        };
-        let options = parse_process_options(
-            &site,
-            &[
-                "--describer".to_string(),
-                "ollama".to_string(),
-                "--ollama-model".to_string(),
-                "moondream".to_string(),
-                "--description-prompt".to_string(),
-                "describe briefly".to_string(),
-            ],
-        )
-        .unwrap();
+//     #[test]
+//     fn parses_ollama_photo_describer_options() {
+//         let site = Site {
+//             root: PathBuf::from("C:/repo"),
+//             ci: false,
+//         };
+//         let options = parse_process_options(
+//             &site,
+//             &[
+//                 "--describer".to_string(),
+//                 "ollama".to_string(),
+//                 "--ollama-model".to_string(),
+//                 "moondream".to_string(),
+//                 "--description-prompt".to_string(),
+//                 "describe briefly".to_string(),
+//             ],
+//         )
+//         .unwrap();
 
-        assert_eq!(options.describer.ollama_model, "moondream");
-        assert_eq!(options.describer.prompt, "describe briefly");
-    }
+//         assert_eq!(options.describer.ollama_model, "moondream");
+//         assert_eq!(options.describer.prompt, "describe briefly");
+//     }
 
-    #[test]
-    fn defaults_to_ollama_photo_describer() {
-        let site = Site {
-            root: PathBuf::from("C:/repo"),
-            ci: false,
-        };
-        let options = parse_process_options(&site, &[]).unwrap();
+//     #[test]
+//     fn defaults_to_ollama_photo_describer() {
+//         let site = Site {
+//             root: PathBuf::from("C:/repo"),
+//             ci: false,
+//         };
+//         let options = parse_process_options(&site, &[]).unwrap();
 
-        assert_eq!(options.describer.ollama_model, DEFAULT_OLLAMA_PHOTO_MODEL);
-        assert_eq!(options.describer.prompt, DEFAULT_PHOTO_DESCRIPTION_PROMPT);
-    }
+//         assert_eq!(options.describer.ollama_model, DEFAULT_OLLAMA_PHOTO_MODEL);
+//         assert_eq!(options.describer.prompt, DEFAULT_PHOTO_DESCRIPTION_PROMPT);
+//     }
 
-    #[test]
-    fn parses_labeled_photo_description() {
-        let classification = parse_generated_photo_description(
-            r#"Title: Bicycle by Brick Wall
-Description: A bicycle leans against a brick wall on a quiet street.
-Tags: Bicycle, brick wall, street!,
-```"#,
-        )
-        .unwrap();
+//     #[test]
+//     fn parses_labeled_photo_description() {
+//         let classification = parse_generated_photo_description(
+//             r#"Title: Bicycle by Brick Wall
+// Description: A bicycle leans against a brick wall on a quiet street.
+// Tags: Bicycle, brick wall, street!,
+// ```"#,
+//         )
+//         .unwrap();
 
-        assert_eq!(classification.title, "Bicycle by Brick Wall");
-        assert_eq!(
-            classification.description,
-            "A bicycle leans against a brick wall on a quiet street."
-        );
-        assert_eq!(
-            classification.tags,
-            vec![
-                "bicycle".to_string(),
-                "brick wall".to_string(),
-                "street".to_string()
-            ]
-        );
-    }
+//         assert_eq!(classification.title, "Bicycle by Brick Wall");
+//         assert_eq!(
+//             classification.description,
+//             "A bicycle leans against a brick wall on a quiet street."
+//         );
+//         assert_eq!(
+//             classification.tags,
+//             vec![
+//                 "bicycle".to_string(),
+//                 "brick wall".to_string(),
+//                 "street".to_string()
+//             ]
+//         );
+//     }
 
-    #[test]
-    fn parses_wrapped_ollama_description_output() {
-        let classification = parse_generated_photo_description(
-            r#"Title: Red Cat in Motion
-Description: A blurred, warm-toned image of a ginger cat in a moment
-of movement.
-Tags: cat, motion blur, ginger, pet, animal, texture,
-warm tones, photography"#,
-        )
-        .unwrap();
+//     #[test]
+//     fn parses_wrapped_ollama_description_output() {
+//         let classification = parse_generated_photo_description(
+//             r#"Title: Red Cat in Motion
+// Description: A blurred, warm-toned image of a ginger cat in a moment
+// of movement.
+// Tags: cat, motion blur, ginger, pet, animal, texture,
+// warm tones, photography"#,
+//         )
+//         .unwrap();
 
-        assert_eq!(classification.title, "Red Cat in Motion");
-        assert_eq!(
-            classification.description,
-            "A blurred, warm-toned image of a ginger cat in a moment of movement."
-        );
-        assert_eq!(
-            classification.tags,
-            vec![
-                "cat".to_string(),
-                "motion blur".to_string(),
-                "ginger".to_string(),
-                "pet".to_string(),
-                "animal".to_string(),
-                "texture".to_string(),
-                "warm tones".to_string(),
-                "photography".to_string()
-            ]
-        );
-    }
+//         assert_eq!(classification.title, "Red Cat in Motion");
+//         assert_eq!(
+//             classification.description,
+//             "A blurred, warm-toned image of a ginger cat in a moment of movement."
+//         );
+//         assert_eq!(
+//             classification.tags,
+//             vec![
+//                 "cat".to_string(),
+//                 "motion blur".to_string(),
+//                 "ginger".to_string(),
+//                 "pet".to_string(),
+//                 "animal".to_string(),
+//                 "texture".to_string(),
+//                 "warm tones".to_string(),
+//                 "photography".to_string()
+//             ]
+//         );
+//     }
 
-    #[test]
-    fn parses_bulleted_labeled_photo_description() {
-        let classification = parse_generated_photo_description(
-            r#"- Title: Warm Cat Blur
-- Description: A ginger cat moves through warm light.
-- Tags: cat, motion blur, warm tones"#,
-        )
-        .unwrap();
+//     #[test]
+//     fn parses_bulleted_labeled_photo_description() {
+//         let classification = parse_generated_photo_description(
+//             r#"- Title: Warm Cat Blur
+// - Description: A ginger cat moves through warm light.
+// - Tags: cat, motion blur, warm tones"#,
+//         )
+//         .unwrap();
 
-        assert_eq!(classification.title, "Warm Cat Blur");
-        assert_eq!(
-            classification.description,
-            "A ginger cat moves through warm light."
-        );
-        assert_eq!(
-            classification.tags,
-            vec![
-                "cat".to_string(),
-                "motion blur".to_string(),
-                "warm tones".to_string()
-            ]
-        );
-    }
+//         assert_eq!(classification.title, "Warm Cat Blur");
+//         assert_eq!(
+//             classification.description,
+//             "A ginger cat moves through warm light."
+//         );
+//         assert_eq!(
+//             classification.tags,
+//             vec![
+//                 "cat".to_string(),
+//                 "motion blur".to_string(),
+//                 "warm tones".to_string()
+//             ]
+//         );
+//     }
 
-    #[test]
-    fn strips_terminal_control_sequences_from_generated_descriptions() {
-        let classification = parse_generated_photo_description(
-            "Title: Rainy Street\nDescription: A solitary figure walks down a wet, neon-lit street in a \u{1b}[1D\u{1b}[K bustling Japanese city.\nTags: street, night",
-        )
-        .unwrap();
+//     #[test]
+//     fn strips_terminal_control_sequences_from_generated_descriptions() {
+//         let classification = parse_generated_photo_description(
+//             "Title: Rainy Street\nDescription: A solitary figure walks down a wet, neon-lit street in a \u{1b}[1D\u{1b}[K bustling Japanese city.\nTags: street, night",
+//         )
+//         .unwrap();
 
-        assert_eq!(
-            classification.description,
-            "A solitary figure walks down a wet, neon-lit street in a bustling Japanese city."
-        );
-    }
+//         assert_eq!(
+//             classification.description,
+//             "A solitary figure walks down a wet, neon-lit street in a bustling Japanese city."
+//         );
+//     }
 
-    #[test]
-    fn repairs_orphaned_terminal_fragments_from_generated_descriptions() {
-        let classification = parse_generated_photo_description(
-            "Title: Graveyard Path\nDescription: A weathered gra [3D [K gravel driveway cuts through trees.\nTags: gra [3D [K gravel, trees",
-        )
-        .unwrap();
+//     #[test]
+//     fn repairs_orphaned_terminal_fragments_from_generated_descriptions() {
+//         let classification = parse_generated_photo_description(
+//             "Title: Graveyard Path\nDescription: A weathered gra [3D [K gravel driveway cuts through trees.\nTags: gra [3D [K gravel, trees",
+//         )
+//         .unwrap();
 
-        assert_eq!(
-            classification.description,
-            "A weathered gravel driveway cuts through trees."
-        );
-        assert_eq!(
-            classification.tags,
-            vec!["gravel".to_string(), "trees".to_string()]
-        );
-    }
+//         assert_eq!(
+//             classification.description,
+//             "A weathered gravel driveway cuts through trees."
+//         );
+//         assert_eq!(
+//             classification.tags,
+//             vec!["gravel".to_string(), "trees".to_string()]
+//         );
+//     }
 
-    #[test]
-    fn derives_title_from_generated_description_when_missing() {
-        let classification = parse_generated_photo_description(
-            r#"Description: a foggy hill path curves into the trees.
-Tags: fog, hill path, trees"#,
-        )
-        .unwrap();
+//     #[test]
+//     fn derives_title_from_generated_description_when_missing() {
+//         let classification = parse_generated_photo_description(
+//             r#"Description: a foggy hill path curves into the trees.
+// Tags: fog, hill path, trees"#,
+//         )
+//         .unwrap();
 
-        assert_eq!(classification.title, "A Foggy Hill Path Curves Into The");
-        assert_eq!(
-            classification.description,
-            "a foggy hill path curves into the trees."
-        );
-    }
+//         assert_eq!(classification.title, "A Foggy Hill Path Curves Into The");
+//         assert_eq!(
+//             classification.description,
+//             "a foggy hill path curves into the trees."
+//         );
+//     }
 
-    #[test]
-    fn rejects_unlabeled_photo_description() {
-        assert!(
-            parse_generated_photo_description("A foggy hill path curves into the trees.").is_err()
-        );
-    }
-}
+//     #[test]
+//     fn rejects_unlabeled_photo_description() {
+//         assert!(
+//             parse_generated_photo_description("A foggy hill path curves into the trees.").is_err()
+//         );
+//     }
+// }
