@@ -15,6 +15,6 @@ default = ["wasm"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
-wasm-bindgen = { version = "0.2.120", optional = true }
+wasm-bindgen = { version = "0.2.121", optional = true }
 tuning_systems = { path = "./tuning_systems" }
 keymapping = { path = "./keymapping" }
