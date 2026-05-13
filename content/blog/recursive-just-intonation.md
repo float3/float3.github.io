@@ -351,6 +351,13 @@ to hear:
   <figcaption>Pitch-name splits: same nominal note, different chord context.</figcaption>
 </figure>
 
+more audio examples:
+
+<figure class="audio-figure" data-oscilloscope>
+  <audio controls src="/misc/media/mozart-dies-irae-recursive-just-intonation-piano.wav"></audio>
+  <figcaption>mozarts dies irae.</figcaption>
+</figure>
+
 Some of the generated split points:
 
 | chord context | note  |   fixed C JI | recursive JI |      difference |
@@ -399,6 +406,9 @@ A few consequences fall out of that:
 So this is not a replacement for equal temperament. Equal temperament is still
 the practical compromise that lets every key share one physical instrument.
 
+### Practical Uses
+
+One day I will make a keyboard on which with you left hand you can determine the current key and with your right hand you play notes that are dynamically retuned according to the table, until then the practical applications remain few.
 
 ## My Other Music Work
 
