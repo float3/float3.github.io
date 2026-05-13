@@ -55,8 +55,8 @@ impl Site {
         self.generate_index("media", "media")?;
         self.generate_index("blobs", "blobs")?;
         self.generate_index("plaintext", "plaintext")?;
-        let trolley_count = self.generate_index("trolley", "trolley")?;
-        self.update_trolley_count(trolley_count.saturating_sub(1))
+        self.generate_index("trolley", "trolley")?;
+        Ok(())
     }
 
     fn generate_index(&self, dir: &str, title: &str) -> Result<usize> {
@@ -91,31 +91,6 @@ impl Site {
 
         fs::write(base.join("index.md"), body)?;
         Ok(entries.len())
-    }
-
-    fn update_trolley_count(&self, count: usize) -> Result<()> {
-        let path = self.root.join("ts/src/trolley.ts");
-        let source = fs::read_to_string(&path)?;
-        let replacement = format!("const NUM = {count}");
-        let mut replaced = false;
-        let mut body = String::new();
-
-        for line in source.lines() {
-            if !replaced && line.starts_with("const NUM =") {
-                body.push_str(&replacement);
-                replaced = true;
-            } else {
-                body.push_str(line);
-            }
-            body.push('\n');
-        }
-
-        if !replaced {
-            body = format!("{replacement}\n{body}");
-        }
-
-        fs::write(path, body)?;
-        Ok(())
     }
 
     fn generate_chords(&self) -> Result<()> {

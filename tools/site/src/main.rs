@@ -184,7 +184,7 @@ Commands:
   wasm [--dev|--prod]        build only the wasm and TypeScript bundle
   generate                   regenerate link lists, indices, chords, and dates
   links                      regenerate plaintext link lists
-  indices                    regenerate misc indices and trolley count
+  indices                    regenerate misc indices
   report [seconds]           write public/report.html build report
   align-tables LEFT RIGHT SEP merge matching lines from two files
   recursive-ji-music [OUTPUT]
