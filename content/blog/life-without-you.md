@@ -1,7 +1,7 @@
 ---
 title: life without you
-date: 2026-05-13
-updated: 2026-05-13
+date: 2026-05-14
+updated: 2026-05-14
 tags:
 ---
 > Ein Schleier legt sich über die Sterne,  
