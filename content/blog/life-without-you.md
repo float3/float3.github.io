@@ -4,12 +4,12 @@ date: 2026-05-14
 updated: 2026-05-14
 tags:
 ---
-> Ein Schleier legt sich über die Sterne,  
-> leise beklagen sie den Verlust einer der ihren.  
-> Und doch bricht der Morgen an
-> zart, beinahe zögernd
-> als wüsste auch das Licht um den Schmerz.
-> ~ me, 2026
+> Ein Schleier legt sich über die Sterne,  \
+leise beklagen sie den Verlust einer der ihren. \
+Und doch bricht der Morgen an \
+zart, beinahe zögernd \
+als wüsste auch das Licht um den Schmerz. \
+~ me, 2026
 
 Life without you is strange, some of you are still out there, some of you aren't anymore. I think about you sometimes, not everyday and not all of you but often, I've written a few poems, played a ballad or two, I've cried many times, I'm alone a lot now, I'm not sure there's many who understand me or have ever really understood me, I've written this text and others, one day I will have my last thought about you, I will talk about you for the last time, I will remember your face and your words, what you taught me and what we shared for the last time. If the heat death of the Universe is inevitable, then so is ours, but until then I want to live with everyone else. I hope you'll forgive me, I'll live without you for now, I hope I - no, We can make it there, to the point where a child can have their 4 or more grandparents forever (within the bounds of the lifespan of the universe). As far as frontiers go death is a pretty good one to be frontiering on. Life was always a bit strange to me, and If I'm right then it's about the get the strangest it's been for a long time, but one of the strangest parts is that it's without you. Some of you I have yet to meet and some I will never - what a horrible thought, almost unbearable. I wrote this text last year, I didn't finish it, I didn't wanna publish it, I just wanted to write.
 
