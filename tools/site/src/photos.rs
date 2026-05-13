@@ -4,7 +4,7 @@ use image::{ImageReader, Rgb, RgbImage, RgbaImage};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::error::Error;
-use std::ffi::{OsStr, OsString};
+use std::ffi::OsStr;
 use std::fs;
 use std::fs::File;
 use std::io::BufWriter;
@@ -14,7 +14,7 @@ struct ProcessPhotosOptions {
     input: PathBuf,
     output: PathBuf,
     manifest: PathBuf,
-    describer: PhotoDescriberOptions,
+    // describer: PhotoDescriberOptions,
     // nightshade_input: PathBuf,
     // nightshade_output: PathBuf,
     quality: u8,
@@ -31,29 +31,29 @@ struct ProcessPhotosOptions {
 //     dry_run: bool,
 // }
 
-#[derive(Clone, Debug)]
-struct PhotoDescriberOptions {
-    ollama_model: String,
-    prompt: String,
-}
+// #[derive(Clone, Debug)]
+// struct PhotoDescriberOptions {
+//     ollama_model: String,
+//     prompt: String,
+// }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 struct GalleryEntry {
     src: String,
-    title: String,
-    #[serde(skip_serializing_if = "String::is_empty")]
-    description: String,
+    // title: String,
+    // #[serde(skip_serializing_if = "String::is_empty")]
+    // description: String,
     meta: String,
     tags: Vec<String>,
     width: u32,
     height: u32,
 }
 
-struct PhotoClassification {
-    title: String,
-    description: String,
-    tags: Vec<String>,
-}
+// struct PhotoClassification {
+//     // title: String,
+//     description: String,
+//     // tags: Vec<String>,
+// }
 
 // #[derive(Serialize)]
 // struct NightshadeStagingEntry {
@@ -76,20 +76,20 @@ struct PhotoClassification {
 //     archive_kind: NightshadeArchiveKind,
 // }
 
-struct OllamaPhotoDescriber {
-    model: String,
-    prompt: String,
-}
+// struct OllamaPhotoDescriber {
+//     model: String,
+//     prompt: String,
+// }
 
-const MAX_GENERATED_PHOTO_TAGS: usize = 8;
-const DEFAULT_OLLAMA_PHOTO_MODEL: &str = "gemma3";
-const DEFAULT_PHOTO_DESCRIPTION_PROMPT: &str = "\
-Describe this image for a personal photography gallery.
-Return only these three labeled fields:
-Title: 3 to 7 words
-Description: one concise sentence about the visible scene
-Tags: 3 to 8 lowercase tags, separated by commas
-Do not include markdown, filenames, camera settings, or guesses about private identity.";
+// const MAX_GENERATED_PHOTO_TAGS: usize = 8;
+// const DEFAULT_OLLAMA_PHOTO_MODEL: &str = "gemma3";
+// const DEFAULT_PHOTO_DESCRIPTION_PROMPT: &str = "\
+// Describe this image for a personal photography gallery.
+// Return only these three labeled fields:
+// Title: 3 to 7 words
+// Description: one concise sentence about the visible scene
+// Tags: 3 to 8 lowercase tags, separated by commas
+// Do not include markdown, filenames, camera settings, or guesses about private identity.";
 // const NIGHTSHADE_VERSION: &str = "1.1";
 // const NIGHTSHADE_DOWNLOADS_PAGE: &str = "https://nightshade.cs.uchicago.edu/downloads.html";
 // const NIGHTSHADE_WINDOWS_URLS: &[&str] = &[
@@ -124,15 +124,15 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         return Ok(());
     }
 
-    let describer = if options.dry_run {
-        None
-    } else {
-        Some(OllamaPhotoDescriber::new(
-            site,
-            &options.describer.ollama_model,
-            &options.describer.prompt,
-        )?)
-    };
+    // let describer = if options.dry_run {
+    //     None
+    // } else {
+    //     Some(OllamaPhotoDescriber::new(
+    //         site,
+    //         &options.describer.ollama_model,
+    //         &options.describer.prompt,
+    //     )?)
+    // };
     let mut entries = Vec::new();
     let mut names = HashMap::<String, usize>::new();
     let existing_entries = load_existing_gallery_manifest(&options.manifest)?;
@@ -170,18 +170,10 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
             target.strip_prefix(&site.root).unwrap_or(&target).display()
         );
 
-        let (width, height, classification) = if options.dry_run {
-            (0, 0, PhotoClassification::unclassified())
+        let (width, height) = if options.dry_run {
+            (0, 0)
         } else {
-            process_photo_file(
-                site,
-                &photo,
-                &target,
-                options.quality,
-                describer
-                    .as_ref()
-                    .ok_or_else(|| SiteError::new("photo describer was not initialized"))?,
-            )?
+            process_photo_file(&photo, &target, options.quality)?
         };
         // let nightshade_tag = nightshade_tag(&classification.tags);
 
@@ -200,26 +192,19 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
         // }
 
         let existing = existing_entries.get(&relative.to_string_lossy().replace('\\', "/"));
-        let title = existing
-            .map(|entry| entry.title.trim().to_string())
-            .unwrap_or_default();
-        let description = existing
-            .and_then(|entry| {
-                let description = entry.description.trim();
-                (!description.is_empty()).then(|| description.to_string())
-            })
-            .unwrap_or(classification.description);
-        let tags = existing
-            .map(|entry| entry.tags.clone())
-            .unwrap_or_default();
+        // let title = existing
+        //     .map(|entry| entry.title.trim().to_string())
+        //     .unwrap_or_default();
+        // let description = existing
+        //     .and_then(|entry| {
+        //         let description = entry.description.trim();
+        //         (!description.is_empty()).then(|| description.to_string())
+        //     })
+        //     .unwrap_or(classification.description);
+        let tags = existing.map(|entry| entry.tags.clone()).unwrap_or_default();
 
         println!(
-            "  title: {}; tags: {}",
-            if title.is_empty() {
-                "[manual later]".to_string()
-            } else {
-                title.clone()
-            },
+            "  tags: {}",
             if tags.is_empty() {
                 "[manual later]".to_string()
             } else {
@@ -229,8 +214,8 @@ pub(crate) fn process(site: &Site, args: &[String]) -> Result<()> {
 
         entries.push(GalleryEntry {
             src: format!("/photography/gallery/{file_name}"),
-            title,
-            description,
+            // title,
+            // description,
             meta: relative.to_string_lossy().replace('\\', "/"),
             tags,
             width,
@@ -349,8 +334,8 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
     let mut positionals = Vec::new();
     let mut quality = 92_u8;
     let mut manifest = site.root.join("content/photography/gallery.json");
-    let mut ollama_model = DEFAULT_OLLAMA_PHOTO_MODEL.to_string();
-    let mut description_prompt = DEFAULT_PHOTO_DESCRIPTION_PROMPT.to_string();
+    // let mut ollama_model = DEFAULT_OLLAMA_PHOTO_MODEL.to_string();
+    // let mut description_prompt = DEFAULT_PHOTO_DESCRIPTION_PROMPT.to_string();
     // let mut nightshade_input = site.root.join("private/photography/nightshade/input");
     // let mut nightshade_output = site.root.join("private/photography/nightshade/output");
     let mut dry_run = false;
@@ -374,28 +359,28 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
                 })?;
                 manifest = site.resolve_path(value);
             }
-            "--describer" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--describer requires a value")) as Box<dyn Error>
-                })?;
-                validate_photo_describer(value)?;
-            }
-            "--ollama-model" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--ollama-model requires a model name"))
-                        as Box<dyn Error>
-                })?;
-                ollama_model = value.to_string();
-            }
-            "--description-prompt" => {
-                index += 1;
-                let value = args.get(index).ok_or_else(|| {
-                    Box::new(SiteError::new("--description-prompt requires text")) as Box<dyn Error>
-                })?;
-                description_prompt = value.to_string();
-            }
+            // "--describer" => {
+            //     index += 1;
+            //     let value = args.get(index).ok_or_else(|| {
+            //         Box::new(SiteError::new("--describer requires a value")) as Box<dyn Error>
+            //     })?;
+            //     validate_photo_describer(value)?;
+            // }
+            // "--ollama-model" => {
+            //     index += 1;
+            //     let value = args.get(index).ok_or_else(|| {
+            //         Box::new(SiteError::new("--ollama-model requires a model name"))
+            //             as Box<dyn Error>
+            //     })?;
+            //     ollama_model = value.to_string();
+            // }
+            // "--description-prompt" => {
+            //     index += 1;
+            //     let value = args.get(index).ok_or_else(|| {
+            //         Box::new(SiteError::new("--description-prompt requires text")) as Box<dyn Error>
+            //     })?;
+            //     description_prompt = value.to_string();
+            // }
             // "--nightshade-input" => {
             //     index += 1;
             //     let value = args.get(index).ok_or_else(|| {
@@ -447,10 +432,10 @@ fn parse_process_options(site: &Site, args: &[String]) -> Result<ProcessPhotosOp
             |path| site.resolve_path(path),
         ),
         manifest,
-        describer: PhotoDescriberOptions {
-            ollama_model,
-            prompt: description_prompt,
-        },
+        // describer: PhotoDescriberOptions {
+        //     ollama_model,
+        //     prompt: description_prompt,
+        // },
         // nightshade_input,
         // nightshade_output,
         quality,
@@ -610,14 +595,14 @@ Options:
   --quality N        JPEG quality, 60-100, default 92
   --manifest PATH    gallery JSON path, default content/photography/gallery.json
   --describer NAME   ollama, default ollama
-  --ollama-model M   local Ollama vision model, default gemma3
-  --description-prompt TEXT
-                     prompt for Ollama labeled descriptions
+//   --ollama-model M   local Ollama vision model, default gemma3
+//   --description-prompt TEXT
+//                      prompt for Ollama labeled descriptions
   --dry-run          print planned work without writing images
 
-Model:
-  Install Ollama, pull a local vision model, then run process-photos.
-  The --describer option is kept for explicitness and currently accepts ollama.
+// Model:
+//   Install Ollama, pull a local vision model, then run process-photos.
+//   The --describer option is kept for explicitness and currently accepts ollama.
 "
     );
 }
@@ -717,83 +702,75 @@ fn is_photo_file(path: &Path) -> bool {
 //     }
 // }
 
-impl PhotoClassification {
-    fn unclassified() -> Self {
-        Self {
-            title: "Unclassified photo".to_string(),
-            description: String::new(),
-            tags: Vec::new(),
-        }
-    }
-}
+// impl PhotoClassification {
+//     fn unclassified() -> Self {
+//         Self {
+//             // title: "Unclassified photo".to_string(),
+//             description: String::new(),
+//             // tags: Vec::new(),
+//         }
+//     }
+// }
 
-impl OllamaPhotoDescriber {
-    fn new(site: &Site, model: &str, prompt: &str) -> Result<Self> {
-        let model = model.trim();
-        if model.is_empty() {
-            return Err(Box::new(SiteError::new(
-                "--ollama-model must not be empty when --describer ollama is used",
-            )));
-        }
+// impl OllamaPhotoDescriber {
+//     fn new(site: &Site, model: &str, prompt: &str) -> Result<Self> {
+//         let model = model.trim();
+//         if model.is_empty() {
+//             return Err(Box::new(SiteError::new(
+//                 "--ollama-model must not be empty when --describer ollama is used",
+//             )));
+//         }
 
-        let show_args = vec![OsString::from("show"), OsString::from(model)];
-        if !site.status_success(&site.root, "ollama", &show_args)? {
-            return Err(Box::new(SiteError::new(format!(
-                "Ollama model {model:?} is not available locally; run `ollama pull {model}` first"
-            ))));
-        }
+//         let show_args = vec![OsString::from("show"), OsString::from(model)];
+//         if !site.status_success(&site.root, "ollama", &show_args)? {
+//             return Err(Box::new(SiteError::new(format!(
+//                 "Ollama model {model:?} is not available locally; run `ollama pull {model}` first"
+//             ))));
+//         }
 
-        println!("photo describer: ollama ({model})");
+//         println!("photo describer: ollama ({model})");
 
-        Ok(Self {
-            model: model.to_string(),
-            prompt: prompt.to_string(),
-        })
-    }
+//         Ok(Self {
+//             model: model.to_string(),
+//             prompt: prompt.to_string(),
+//         })
+//     }
 
-    fn describe(&self, site: &Site, image: &Path) -> Result<PhotoClassification> {
-        let args = vec![
-            OsString::from("run"),
-            OsString::from(&self.model),
-            image.as_os_str().to_os_string(),
-            OsString::from(&self.prompt),
-        ];
-        let output = site
-            .output_optional(&site.root, "ollama", &args)?
-            .ok_or_else(|| {
-                SiteError::new(format!(
-                    "Ollama failed to describe {}; check that {} is a local vision model",
-                    image.display(),
-                    self.model
-                ))
-            })?;
+//     fn describe(&self, site: &Site, image: &Path) -> Result<PhotoClassification> {
+//         let args = vec![
+//             OsString::from("run"),
+//             OsString::from(&self.model),
+//             image.as_os_str().to_os_string(),
+//             OsString::from(&self.prompt),
+//         ];
+//         let output = site
+//             .output_optional(&site.root, "ollama", &args)?
+//             .ok_or_else(|| {
+//                 SiteError::new(format!(
+//                     "Ollama failed to describe {}; check that {} is a local vision model",
+//                     image.display(),
+//                     self.model
+//                 ))
+//             })?;
 
-        parse_generated_photo_description(&output)
-    }
-}
+//         parse_generated_photo_description(&output)
+//     }
+// }
 
-fn validate_photo_describer(value: &str) -> Result<()> {
-    match value.to_ascii_lowercase().as_str() {
-        "ollama" => Ok(()),
-        _ => Err(Box::new(SiteError::new(format!(
-            "unknown photo describer {value:?}; only ollama is supported"
-        )))),
-    }
-}
+// fn validate_photo_describer(value: &str) -> Result<()> {
+//     match value.to_ascii_lowercase().as_str() {
+//         "ollama" => Ok(()),
+//         _ => Err(Box::new(SiteError::new(format!(
+//             "unknown photo describer {value:?}; only ollama is supported"
+//         )))),
+//     }
+// }
 
-fn process_photo_file(
-    site: &Site,
-    input: &Path,
-    output: &Path,
-    quality: u8,
-    describer: &OllamaPhotoDescriber,
-) -> Result<(u32, u32, PhotoClassification)> {
+fn process_photo_file(input: &Path, output: &Path, quality: u8) -> Result<(u32, u32)> {
     let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
     let source = image.to_rgba8();
-    let classification = describer.describe(site, input)?;
     let (width, height) = publish_photo(&source, output, quality)?;
-
-    Ok((width, height, classification))
+    Ok((width, height))
 }
 
 fn publish_photo(source: &RgbaImage, output: &Path, quality: u8) -> Result<(u32, u32)> {
@@ -942,308 +919,307 @@ fn sanitize_file_stem(stem: &str) -> String {
 //     }
 // }
 
-fn parse_generated_photo_description(output: &str) -> Result<PhotoClassification> {
-    let cleaned_output = interpret_terminal_controls(output);
-    let (raw_title, raw_description, raw_tags) = parse_labeled_photo_description(&cleaned_output)
-        .ok_or_else(|| {
-        SiteError::new(format!(
-            "photo describer did not return Title, Description, and Tags fields: {}",
-            output.trim()
-        ))
-    })?;
-    let description = clean_generated_text(&raw_description).unwrap_or_default();
-    let title = clean_generated_text(&raw_title)
-        .or_else(|| title_from_description(&description))
-        .unwrap_or_else(|| "Untitled photo".to_string());
-    let tags = raw_tags
-        .split(',')
-        .filter_map(|tag| clean_generated_tag(tag))
-        .take(MAX_GENERATED_PHOTO_TAGS)
-        .collect::<Vec<_>>();
+// fn parse_generated_photo_description(output: &str) -> Result<PhotoClassification> {
+//     let cleaned_output = interpret_terminal_controls(output);
+//     let raw_description = parse_labeled_photo_description(&cleaned_output).ok_or_else(|| {
+//         SiteError::new(format!(
+//             "photo describer did not return Title, Description, and Tags fields: {}",
+//             output.trim()
+//         ))
+//     })?;
+//     // let description = clean_generated_text(&raw_description).unwrap_or_default();
+//     // let title = clean_generated_text(&raw_title)
+//     //     .or_else(|| title_from_description(&description))
+//     //     .unwrap_or_else(|| "Untitled photo".to_string());
+//     // let tags = raw_tags
+//     //     .split(',')
+//     //     .filter_map(|tag| clean_generated_tag(tag))
+//     //     .take(MAX_GENERATED_PHOTO_TAGS)
+//     //     .collect::<Vec<_>>();
 
-    Ok(PhotoClassification {
-        title,
-        description,
-        tags,
-    })
-}
+//     Ok(PhotoClassification {
+//         // title,
+//         description,
+//         // tags,
+//     })
+// }
 
-fn parse_labeled_photo_description(output: &str) -> Option<(String, String, String)> {
-    let mut title = String::new();
-    let mut description = String::new();
-    let mut tags = String::new();
-    let mut current = None;
+// fn parse_labeled_photo_description(output: &str) -> Option<(String, String, String)> {
+//     let mut title = String::new();
+//     let mut description = String::new();
+//     let mut tags = String::new();
+//     let mut current = None;
 
-    for line in strip_code_fence(output).lines() {
-        let line = line.trim();
-        if line.is_empty() {
-            continue;
-        }
+//     for line in strip_code_fence(output).lines() {
+//         let line = line.trim();
+//         if line.is_empty() {
+//             continue;
+//         }
 
-        if let Some((field, value)) = parse_labeled_line(line) {
-            current = Some(field);
-            append_generated_field(
-                match field {
-                    Field::Title => &mut title,
-                    Field::Description => &mut description,
-                    Field::Tags => &mut tags,
-                },
-                value,
-            );
-            continue;
-        }
+//         if let Some((field, value)) = parse_labeled_line(line) {
+//             current = Some(field);
+//             append_generated_field(
+//                 match field {
+//                     Field::Title => &mut title,
+//                     Field::Description => &mut description,
+//                     Field::Tags => &mut tags,
+//                 },
+//                 value,
+//             );
+//             continue;
+//         }
 
-        if let Some(field) = current {
-            append_generated_field(
-                match field {
-                    Field::Title => &mut title,
-                    Field::Description => &mut description,
-                    Field::Tags => &mut tags,
-                },
-                line,
-            );
-        }
-    }
+//         if let Some(field) = current {
+//             append_generated_field(
+//                 match field {
+//                     Field::Title => &mut title,
+//                     Field::Description => &mut description,
+//                     Field::Tags => &mut tags,
+//                 },
+//                 line,
+//             );
+//         }
+//     }
 
-    (!title.trim().is_empty() || !description.trim().is_empty() || !tags.trim().is_empty())
-        .then_some((title, description, tags))
-}
+//     (!title.trim().is_empty() || !description.trim().is_empty() || !tags.trim().is_empty())
+//         .then_some((title, description, tags))
+// }
 
-fn parse_labeled_line(line: &str) -> Option<(Field, &str)> {
-    let line = line
-        .trim_start_matches(|ch: char| matches!(ch, '-' | '*'))
-        .trim();
-    let (label, value) = line.split_once(':')?;
-    let field = match label.trim().to_ascii_lowercase().as_str() {
-        "title" => Field::Title,
-        "description" | "caption" => Field::Description,
-        "tags" => Field::Tags,
-        _ => return None,
-    };
+// fn parse_labeled_line(line: &str) -> Option<(Field, &str)> {
+//     let line = line
+//         .trim_start_matches(|ch: char| matches!(ch, '-' | '*'))
+//         .trim();
+//     let (label, value) = line.split_once(':')?;
+//     let field = match label.trim().to_ascii_lowercase().as_str() {
+//         "title" => Field::Title,
+//         "description" | "caption" => Field::Description,
+//         "tags" => Field::Tags,
+//         _ => return None,
+//     };
 
-    Some((field, value.trim()))
-}
+//     Some((field, value.trim()))
+// }
 
-#[derive(Clone, Copy)]
-enum Field {
-    Title,
-    Description,
-    Tags,
-}
+// #[derive(Clone, Copy)]
+// enum Field {
+//     Title,
+//     Description,
+//     Tags,
+// }
 
-fn append_generated_field(target: &mut String, value: &str) {
-    if value.trim().is_empty() {
-        return;
-    }
-    if !target.is_empty() {
-        target.push(' ');
-    }
-    target.push_str(value.trim());
-}
+// fn append_generated_field(target: &mut String, value: &str) {
+//     if value.trim().is_empty() {
+//         return;
+//     }
+//     if !target.is_empty() {
+//         target.push(' ');
+//     }
+//     target.push_str(value.trim());
+// }
 
-fn strip_code_fence(output: &str) -> &str {
-    let trimmed = output.trim();
-    let without_start = trimmed
-        .strip_prefix("```text")
-        .or_else(|| trimmed.strip_prefix("```"))
-        .unwrap_or(trimmed)
-        .trim();
+// fn strip_code_fence(output: &str) -> &str {
+//     let trimmed = output.trim();
+//     let without_start = trimmed
+//         .strip_prefix("```text")
+//         .or_else(|| trimmed.strip_prefix("```"))
+//         .unwrap_or(trimmed)
+//         .trim();
 
-    without_start
-        .strip_suffix("```")
-        .unwrap_or(without_start)
-        .trim()
-}
+//     without_start
+//         .strip_suffix("```")
+//         .unwrap_or(without_start)
+//         .trim()
+// }
 
-fn clean_generated_text(value: &str) -> Option<String> {
-    let cleaned = collapse_rewritten_fragments(&interpret_terminal_controls(value))
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ")
-        .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`'))
-        .trim()
-        .to_string();
+// fn clean_generated_text(value: &str) -> Option<String> {
+//     let cleaned = collapse_rewritten_fragments(&interpret_terminal_controls(value))
+//         .split_whitespace()
+//         .collect::<Vec<_>>()
+//         .join(" ")
+//         .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`'))
+//         .trim()
+//         .to_string();
 
-    (!cleaned.is_empty()).then_some(cleaned)
-}
+//     (!cleaned.is_empty()).then_some(cleaned)
+// }
 
-fn clean_generated_tag(value: &str) -> Option<String> {
-    let tag = collapse_rewritten_fragments(&interpret_terminal_controls(value))
-        .trim()
-        .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`' | '.' | ',' | ';' | ':'))
-        .to_ascii_lowercase()
-        .chars()
-        .filter(|ch| ch.is_ascii_alphanumeric() || matches!(ch, ' ' | '-' | '_'))
-        .collect::<String>()
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ");
+// fn clean_generated_tag(value: &str) -> Option<String> {
+//     let tag = collapse_rewritten_fragments(&interpret_terminal_controls(value))
+//         .trim()
+//         .trim_matches(|ch: char| matches!(ch, '"' | '\'' | '`' | '.' | ',' | ';' | ':'))
+//         .to_ascii_lowercase()
+//         .chars()
+//         .filter(|ch| ch.is_ascii_alphanumeric() || matches!(ch, ' ' | '-' | '_'))
+//         .collect::<String>()
+//         .split_whitespace()
+//         .collect::<Vec<_>>()
+//         .join(" ");
 
-    (!tag.is_empty()).then_some(tag)
-}
+//     (!tag.is_empty()).then_some(tag)
+// }
 
-fn interpret_terminal_controls(value: &str) -> String {
-    let chars = value.chars().collect::<Vec<_>>();
-    let mut output = Vec::<char>::new();
-    let mut cursor = 0_usize;
-    let mut index = 0_usize;
+// fn interpret_terminal_controls(value: &str) -> String {
+//     let chars = value.chars().collect::<Vec<_>>();
+//     let mut output = Vec::<char>::new();
+//     let mut cursor = 0_usize;
+//     let mut index = 0_usize;
 
-    while index < chars.len() {
-        if chars[index] == '\u{1b}' {
-            if let Some((next_index, command, amount)) = parse_csi(&chars, index + 1) {
-                apply_terminal_command(&mut output, &mut cursor, command, amount);
-                index = next_index;
-                continue;
-            }
+//     while index < chars.len() {
+//         if chars[index] == '\u{1b}' {
+//             if let Some((next_index, command, amount)) = parse_csi(&chars, index + 1) {
+//                 apply_terminal_command(&mut output, &mut cursor, command, amount);
+//                 index = next_index;
+//                 continue;
+//             }
 
-            index += 1;
-            continue;
-        }
+//             index += 1;
+//             continue;
+//         }
 
-        if chars[index] == '[' {
-            if let Some((next_index, command, amount)) = parse_csi(&chars, index) {
-                apply_terminal_command(&mut output, &mut cursor, command, amount);
-                index = next_index;
-                continue;
-            }
-        }
+//         if chars[index] == '[' {
+//             if let Some((next_index, command, amount)) = parse_csi(&chars, index) {
+//                 apply_terminal_command(&mut output, &mut cursor, command, amount);
+//                 index = next_index;
+//                 continue;
+//             }
+//         }
 
-        write_terminal_char(&mut output, &mut cursor, chars[index]);
-        index += 1;
-    }
+//         write_terminal_char(&mut output, &mut cursor, chars[index]);
+//         index += 1;
+//     }
 
-    output.into_iter().collect()
-}
+//     output.into_iter().collect()
+// }
 
-fn parse_csi(chars: &[char], start: usize) -> Option<(usize, char, usize)> {
-    if chars.get(start) != Some(&'[') {
-        return None;
-    }
+// fn parse_csi(chars: &[char], start: usize) -> Option<(usize, char, usize)> {
+//     if chars.get(start) != Some(&'[') {
+//         return None;
+//     }
 
-    let mut index = start + 1;
-    let digits_start = index;
-    while index < chars.len() && matches!(chars[index], '0'..='9' | ';' | '?') {
-        index += 1;
-    }
+//     let mut index = start + 1;
+//     let digits_start = index;
+//     while index < chars.len() && matches!(chars[index], '0'..='9' | ';' | '?') {
+//         index += 1;
+//     }
 
-    let command = *chars.get(index)?;
-    if !matches!(
-        command,
-        'A' | 'B' | 'C' | 'D' | 'G' | 'H' | 'J' | 'K' | 'f' | 'h' | 'l' | 'm'
-    ) {
-        return None;
-    }
+//     let command = *chars.get(index)?;
+//     if !matches!(
+//         command,
+//         'A' | 'B' | 'C' | 'D' | 'G' | 'H' | 'J' | 'K' | 'f' | 'h' | 'l' | 'm'
+//     ) {
+//         return None;
+//     }
 
-    let has_parameters = index > digits_start;
-    if !has_parameters && !matches!(command, 'J' | 'K' | 'm') {
-        return None;
-    }
+//     let has_parameters = index > digits_start;
+//     if !has_parameters && !matches!(command, 'J' | 'K' | 'm') {
+//         return None;
+//     }
 
-    let amount = chars[digits_start..index]
-        .iter()
-        .take_while(|ch| ch.is_ascii_digit())
-        .collect::<String>()
-        .parse::<usize>()
-        .unwrap_or(1);
+//     let amount = chars[digits_start..index]
+//         .iter()
+//         .take_while(|ch| ch.is_ascii_digit())
+//         .collect::<String>()
+//         .parse::<usize>()
+//         .unwrap_or(1);
 
-    Some((index + 1, command, amount))
-}
+//     Some((index + 1, command, amount))
+// }
 
-fn apply_terminal_command(
-    output: &mut Vec<char>,
-    cursor: &mut usize,
-    command: char,
-    amount: usize,
-) {
-    match command {
-        'C' => *cursor = (*cursor + amount).min(output.len()),
-        'D' => *cursor = cursor.saturating_sub(amount),
-        'G' => *cursor = amount.saturating_sub(1).min(output.len()),
-        'J' | 'K' => output.truncate(*cursor),
-        _ => {}
-    }
-}
+// fn apply_terminal_command(
+//     output: &mut Vec<char>,
+//     cursor: &mut usize,
+//     command: char,
+//     amount: usize,
+// ) {
+//     match command {
+//         'C' => *cursor = (*cursor + amount).min(output.len()),
+//         'D' => *cursor = cursor.saturating_sub(amount),
+//         'G' => *cursor = amount.saturating_sub(1).min(output.len()),
+//         'J' | 'K' => output.truncate(*cursor),
+//         _ => {}
+//     }
+// }
 
-fn write_terminal_char(output: &mut Vec<char>, cursor: &mut usize, ch: char) {
-    if *cursor < output.len() {
-        output[*cursor] = ch;
-    } else {
-        output.push(ch);
-    }
+// fn write_terminal_char(output: &mut Vec<char>, cursor: &mut usize, ch: char) {
+//     if *cursor < output.len() {
+//         output[*cursor] = ch;
+//     } else {
+//         output.push(ch);
+//     }
 
-    *cursor += 1;
-}
+//     *cursor += 1;
+// }
 
-fn collapse_rewritten_fragments(value: &str) -> String {
-    let mut words = Vec::<String>::new();
+// fn collapse_rewritten_fragments(value: &str) -> String {
+//     let mut words = Vec::<String>::new();
 
-    for word in value.split_whitespace() {
-        if let Some(previous) = words.last_mut() {
-            if is_rewritten_prefix(previous, word) {
-                *previous = word.to_string();
-                continue;
-            }
-        }
+//     for word in value.split_whitespace() {
+//         if let Some(previous) = words.last_mut() {
+//             if is_rewritten_prefix(previous, word) {
+//                 *previous = word.to_string();
+//                 continue;
+//             }
+//         }
 
-        words.push(word.to_string());
-    }
+//         words.push(word.to_string());
+//     }
 
-    words.join(" ")
-}
+//     words.join(" ")
+// }
 
-fn is_rewritten_prefix(previous: &str, current: &str) -> bool {
-    let previous = comparable_word(previous);
-    let current = comparable_word(current);
+// fn is_rewritten_prefix(previous: &str, current: &str) -> bool {
+//     let previous = comparable_word(previous);
+//     let current = comparable_word(current);
 
-    if previous.is_empty() || current.is_empty() || previous == current {
-        return previous == current && !previous.is_empty();
-    }
+//     if previous.is_empty() || current.is_empty() || previous == current {
+//         return previous == current && !previous.is_empty();
+//     }
 
-    let long_enough_fragment = previous.len() >= 2 || !matches!(previous.as_str(), "a" | "i");
-    long_enough_fragment && current.starts_with(&previous)
-}
+//     let long_enough_fragment = previous.len() >= 2 || !matches!(previous.as_str(), "a" | "i");
+//     long_enough_fragment && current.starts_with(&previous)
+// }
 
-fn comparable_word(value: &str) -> String {
-    value
-        .trim_matches(|ch: char| !ch.is_alphanumeric())
-        .to_ascii_lowercase()
-}
+// fn comparable_word(value: &str) -> String {
+//     value
+//         .trim_matches(|ch: char| !ch.is_alphanumeric())
+//         .to_ascii_lowercase()
+// }
 
-fn title_from_description(description: &str) -> Option<String> {
-    let words = description
-        .split_whitespace()
-        .take(7)
-        .map(|word| {
-            word.trim_matches(|ch: char| !ch.is_alphanumeric())
-                .to_string()
-        })
-        .filter(|word| !word.is_empty())
-        .collect::<Vec<_>>();
+// fn title_from_description(description: &str) -> Option<String> {
+//     let words = description
+//         .split_whitespace()
+//         .take(7)
+//         .map(|word| {
+//             word.trim_matches(|ch: char| !ch.is_alphanumeric())
+//                 .to_string()
+//         })
+//         .filter(|word| !word.is_empty())
+//         .collect::<Vec<_>>();
 
-    (!words.is_empty()).then(|| titleize_tag(&words.join(" ")))
-}
+//     (!words.is_empty()).then(|| titleize_tag(&words.join(" ")))
+// }
 
-fn titleize_tag(tag: &str) -> String {
-    tag.split_whitespace()
-        .map(|word| {
-            if word.eq_ignore_ascii_case("tv") {
-                return "TV".to_string();
-            }
+// fn titleize_tag(tag: &str) -> String {
+//     tag.split_whitespace()
+//         .map(|word| {
+//             if word.eq_ignore_ascii_case("tv") {
+//                 return "TV".to_string();
+//             }
 
-            let mut chars = word.chars();
-            match chars.next() {
-                Some(first) => {
-                    let mut title = String::new();
-                    title.push(first.to_ascii_uppercase());
-                    title.push_str(chars.as_str());
-                    title
-                }
-                None => String::new(),
-            }
-        })
-        .collect::<Vec<_>>()
-        .join(" ")
-}
+//             let mut chars = word.chars();
+//             match chars.next() {
+//                 Some(first) => {
+//                     let mut title = String::new();
+//                     title.push(first.to_ascii_uppercase());
+//                     title.push_str(chars.as_str());
+//                     title
+//                 }
+//                 None => String::new(),
+//             }
+//         })
+//         .collect::<Vec<_>>()
+//         .join(" ")
+// }
 
 fn write_gallery_manifest(path: &Path, entries: &[GalleryEntry]) -> Result<()> {
     if let Some(parent) = path.parent() {
