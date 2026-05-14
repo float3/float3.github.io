@@ -37,6 +37,8 @@ tags:
 [recursive-ji-note-splits.wav](/misc/media/recursive-ji-note-splits.wav) \
 [recursive-ji-progression.wav](/misc/media/recursive-ji-progression.wav) \
 [recursive-ji-sine-progression.wav](/misc/media/recursive-ji-sine-progression.wav) \
+[recursive-just-intonation-composition.musicxml](/misc/media/recursive-just-intonation-composition.musicxml) \
+[recursive-just-intonation-composition.wav](/misc/media/recursive-just-intonation-composition.wav) \
 [render.mp4](/misc/media/render.mp4) \
 [render.png](/misc/media/render.png) \
 [statue_with_child.mp4](/misc/media/statue_with_child.mp4) \
