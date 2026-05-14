@@ -9,7 +9,9 @@ updated: 2026-05-05
 </div>
 
 hi I'm hill, I pull the lever in the trolley problem and I cooperate in the prisoner's dilemma, I don't negotiate with terrorists and I don't respond to blackmail. \
-this is my place. you can find me on social media: \
+sometimes I try to solve the wrong problems using the wrong methods based on a wrong model of the world derived from poor thinking and unfortunately all of my mistakes fail to cancel out, until I say "ooops" and update my world model, improve my methods and try to figure out what problems actually need solving, then and only then have i learned and improved
+like any good truthseeker i try to nourish whatever is nourished by the truth and i try to destroy whatever is destroyed by the truth
+this is my place. the only other social media you can find me on is github and shadertoy:
 https://www.shadertoy.com/user/three
 
 Content
