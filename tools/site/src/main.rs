@@ -110,7 +110,10 @@ fn run_main() -> Result<()> {
     match args[0].as_str() {
         "build" => site.build(parse_mode(&args[1..], Mode::default_for(site.ci))?),
         "wasm" => site.wasm(parse_mode(&args[1..], Mode::default_for(site.ci))?),
-        "generate" => site.generate(),
+        "generate" => {
+            site.generate();
+            recursive_ji_core::generate(&site, &args[1..])
+        }
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
         "report" => {

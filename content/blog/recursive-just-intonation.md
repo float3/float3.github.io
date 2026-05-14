@@ -358,6 +358,11 @@ more audio examples:
   <figcaption>mozarts dies irae.</figcaption>
 </figure>
 
+<figure class="audio-figure" data-oscilloscope>
+  <audio controls src="/misc/media/recursive-just-intonation-composition.wav"></audio>
+  <figcaption>some composition I came up with for this blog post.</figcaption>
+</figure>
+
 Some of the generated split points:
 
 | chord context | note  |   fixed C JI | recursive JI |      difference |
