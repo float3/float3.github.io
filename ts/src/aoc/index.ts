@@ -1,6 +1,6 @@
 import { createTabs } from "./ui.js"
 
-import { main } from "wasm"
+import { main } from "wasm-aoc"
 
 main()
 

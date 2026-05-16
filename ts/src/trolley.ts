@@ -1,4 +1,4 @@
-import { trolley_media_src } from "wasm"
+import { trolley_media_src } from "wasm-trolley"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
 
 const MAX_INDEX = 63

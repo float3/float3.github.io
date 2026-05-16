@@ -1,5 +1,5 @@
 import * as abcjs from "abcjs"
-import { recursive_ji_chord_progression_abc, recursive_ji_note_splits_abc } from "wasm"
+import { recursive_ji_chord_progression_abc, recursive_ji_note_splits_abc } from "wasm-recursive_ji"
 
 type AbcRenderer = {
   renderAbc: (target: string, abc: string, options?: { responsive?: string }) => unknown

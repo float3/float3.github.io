@@ -3,7 +3,7 @@ use std::f64::consts::TAU;
 use std::io::Write;
 
 use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
-use music21_rs::TuningSystem;
+use music21_rs::{Pitch, TuningSystem};
 
 use crate::{GeneratedBinary, GeneratedText, Result, SAMPLE_RATE};
 
@@ -11,9 +11,9 @@ const MIDDLE_C_PITCH_SPACE: f64 = 60.0;
 const JUST_INTONATION: TuningSystem = TuningSystem::JustIntonation;
 const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
 const MOZART_DIES_IRAE_MIDI: &[u8] = include_bytes!("../../../content/misc/blobs/jm_mozdi.mid");
-const MASTERPIECE_TITLE: &str = "Twelve Rooms for One Piano";
-const MASTERPIECE_AUDIO_FILE: &str = "recursive-just-intonation-composition.wav";
-const MASTERPIECE_MUSICXML_FILE: &str = "recursive-just-intonation-composition.musicxml";
+const LONG2_TITLE: &str = "Twelve Rooms for One Piano";
+const LONG2_AUDIO_FILE: &str = "recursive-just-intonation-composition.wav";
+const LONG2_MUSICXML_FILE: &str = "recursive-just-intonation-composition.musicxml";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum LongToneColor {
@@ -22,7 +22,7 @@ enum LongToneColor {
     Bell,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Debug)]
 struct LongEvent {
     start: f64,
     duration: f64,
@@ -31,6 +31,8 @@ struct LongEvent {
     amplitude: f64,
     pan: f64,
     tone_color: LongToneColor,
+    #[allow(dead_code)]
+    pitch: Option<Pitch>,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -168,7 +170,7 @@ const RHYTHM_SUSPENSION: [RhythmPulse; 4] = [
     },
 ];
 
-const MASTERPIECE_SECTIONS: [CompositionSection; 12] = [
+const LONG2_SECTIONS: [CompositionSection; 12] = [
     CompositionSection {
         root_pc: 2,
         bass: 38,
@@ -276,8 +278,8 @@ const MASTERPIECE_SECTIONS: [CompositionSection; 12] = [
 pub(crate) fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
     Ok(vec![
         GeneratedBinary {
-            name: MASTERPIECE_AUDIO_FILE,
-            bytes: render_long_events_to_wav(&build_masterpiece_events(), 4.0, 0.78, 0.30)?,
+            name: LONG2_AUDIO_FILE,
+            bytes: render_long_events_to_wav(&build_long2_events(), 4.0, 0.78, 0.30)?,
         },
         GeneratedBinary {
             name: "mozart-dies-irae-recursive-just-intonation-piano.wav",
@@ -288,23 +290,28 @@ pub(crate) fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
 
 pub(crate) fn generated_media_text_files() -> Vec<GeneratedText> {
     vec![GeneratedText {
-        name: MASTERPIECE_MUSICXML_FILE,
-        text: build_masterpiece_musicxml(),
+        name: LONG2_MUSICXML_FILE,
+        text: build_long2_musicxml(),
     }]
 }
 
-fn build_masterpiece_events() -> Vec<LongEvent> {
+fn build_long2_events() -> Vec<LongEvent> {
     let mut events = Vec::new();
     let beat = 60.0 / 68.0;
 
     let mut cursor = 0.0;
     add_intro_resonance(&mut events, beat);
-    for (section_index, section) in MASTERPIECE_SECTIONS.iter().enumerate() {
+    for (section_index, section) in LONG2_SECTIONS.iter().enumerate() {
         add_composition_section(&mut events, cursor, beat, section_index, *section);
         cursor += section.beats as f64 * beat;
     }
 
-    add_masterpiece_coda(&mut events, cursor, beat);
+    add_long2_coda(&mut events, cursor, beat);
+    // Populate `pitch` for each event using MIDI -> pitch name -> `Pitch`
+    for event in events.iter_mut() {
+        event.pitch = midi_to_pitch(event.midi_note);
+    }
+
     events
 }
 
@@ -329,6 +336,7 @@ fn add_intro_resonance(events: &mut Vec<LongEvent>, beat: f64) {
             amplitude,
             pan,
             tone_color: LongToneColor::Pad,
+            pitch: None,
         });
     }
 }
@@ -403,6 +411,7 @@ fn add_bass_ostinato(
                 amplitude: amplitude * (0.82 + section.energy * 0.34),
                 pan: -0.42,
                 tone_color: LongToneColor::Piano,
+                pitch: None,
             });
         }
     }
@@ -428,6 +437,7 @@ fn add_pad_chords(
                 amplitude: (0.085 + section.energy * 0.060) / (voice as f64 + 1.0).sqrt(),
                 pan: -0.20 + voice as f64 * 0.12,
                 tone_color: LongToneColor::Pad,
+                pitch: None,
             });
         }
 
@@ -444,6 +454,7 @@ fn add_pad_chords(
                 amplitude: 0.038 + section.energy * 0.034,
                 pan: 0.42,
                 tone_color: LongToneColor::Bell,
+                pitch: None,
             });
         }
     }
@@ -487,6 +498,7 @@ fn add_inner_arpeggios(
             amplitude: 0.054 + section.energy * 0.060,
             pan,
             tone_color: LongToneColor::Piano,
+            pitch: None,
         });
     }
 }
@@ -528,6 +540,7 @@ fn add_melody(
                 }) * pulse.accent,
                 pan: 0.06,
                 tone_color: LongToneColor::Piano,
+                pitch: None,
             });
         }
     }
@@ -582,6 +595,7 @@ fn add_counter_line(
             } else {
                 LongToneColor::Piano
             },
+            pitch: None,
         });
     }
 }
@@ -609,6 +623,7 @@ fn add_recursive_branch(
         amplitude,
         pan,
         tone_color: LongToneColor::Bell,
+        pitch: None,
     });
 
     let child_span = span * 0.48;
@@ -660,11 +675,12 @@ fn add_transition_bells(
             amplitude: 0.060 + section.energy * 0.050,
             pan: 0.10 + index as f64 * 0.11,
             tone_color: LongToneColor::Bell,
+            pitch: None,
         });
     }
 }
 
-fn add_masterpiece_coda(events: &mut Vec<LongEvent>, coda_start: f64, beat: f64) {
+fn add_long2_coda(events: &mut Vec<LongEvent>, coda_start: f64, beat: f64) {
     for (index, midi_note) in [84, 81, 79, 77, 74, 72, 69, 65, 62, 60, 57, 53, 50, 45]
         .into_iter()
         .enumerate()
@@ -681,6 +697,7 @@ fn add_masterpiece_coda(events: &mut Vec<LongEvent>, coda_start: f64, beat: f64)
             } else {
                 LongToneColor::Piano
             },
+            pitch: None,
         });
     }
 
@@ -702,11 +719,12 @@ fn add_masterpiece_coda(events: &mut Vec<LongEvent>, coda_start: f64, beat: f64)
             amplitude,
             pan,
             tone_color: LongToneColor::Pad,
+            pitch: None,
         });
     }
 }
 
-fn build_masterpiece_musicxml() -> String {
+fn build_long2_musicxml() -> String {
     let mut score = String::new();
     score.push_str(r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?>"#);
     score.push('\n');
@@ -718,7 +736,7 @@ fn build_masterpiece_musicxml() -> String {
     score.push('\n');
     score.push_str(&format!(
         "  <work><work-title>{}</work-title></work>\n",
-        escape_xml(MASTERPIECE_TITLE)
+        escape_xml(LONG2_TITLE)
     ));
     score.push_str("  <identification>\n");
     score.push_str("    <creator type=\"composer\">Codex with music21-rs</creator>\n");
@@ -729,7 +747,7 @@ fn build_masterpiece_musicxml() -> String {
     score.push_str("  </defaults>\n");
     score.push_str(&format!(
         "  <credit page=\"1\"><credit-words justify=\"center\" valign=\"top\" font-size=\"22\">{}</credit-words></credit>\n",
-        escape_xml(MASTERPIECE_TITLE)
+        escape_xml(LONG2_TITLE)
     ));
     score.push_str("  <credit page=\"1\"><credit-words justify=\"center\" valign=\"top\" font-size=\"10\">Written pitch is approximate; the generated WAV retunes every section around the shown recursive just-intonation root.</credit-words></credit>\n");
     score.push_str("  <part-list>\n");
@@ -749,7 +767,7 @@ fn push_melody_part_musicxml(score: &mut String) {
     let mut measure_number = 1;
     let mut first_measure = true;
 
-    for (section_index, section) in MASTERPIECE_SECTIONS.into_iter().enumerate() {
+    for (section_index, section) in LONG2_SECTIONS.into_iter().enumerate() {
         let mut note_cursor = 0;
         for measure_index in 0..section.beats / 4 {
             push_measure_start(
@@ -789,7 +807,7 @@ fn push_harmony_part_musicxml(score: &mut String) {
     let mut measure_number = 1;
     let mut first_measure = true;
 
-    for section in MASTERPIECE_SECTIONS {
+    for section in LONG2_SECTIONS {
         for _ in 0..section.beats / 4 {
             push_measure_start(
                 score,
@@ -987,6 +1005,7 @@ fn build_mozart_dies_irae_events() -> Result<Vec<LongEvent>> {
             amplitude,
             pan,
             tone_color: LongToneColor::Piano,
+            pitch: midi_to_pitch(i32::from(note.note)),
         });
     }
 
@@ -1001,10 +1020,22 @@ fn build_mozart_dies_irae_events() -> Result<Vec<LongEvent>> {
             amplitude: 0.060,
             pan: -0.24,
             tone_color: LongToneColor::Pad,
+            pitch: None,
         });
     }
 
     Ok(events)
+}
+
+fn midi_to_pitch(midi_note: i32) -> Option<Pitch> {
+    // Convert MIDI note number to a simple sharp-based name (e.g., C#4)
+    let names = [
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+    ];
+    let pc = midi_note.rem_euclid(12) as usize;
+    let octave = midi_note.div_euclid(12) - 1; // MIDI 60 -> C4
+    let name = format!("{}{}", names[pc], octave);
+    Pitch::from_name(&name).ok()
 }
 
 fn parse_midi(data: &[u8]) -> Result<(u16, Vec<(u32, u32)>, Vec<MidiNote>)> {
@@ -1220,13 +1251,13 @@ fn render_long_events_to_wav(
     let mut right = vec![0.0_f64; sample_count];
 
     for event in events {
-        synthesize_event(&mut left, &mut right, *event, gain);
+        synthesize_event(&mut left, &mut right, event, gain);
     }
     add_room_echo(&mut left, &mut right, room_amount);
     stereo_wav_bytes(&left, &right)
 }
 
-fn synthesize_event(left: &mut [f64], right: &mut [f64], event: LongEvent, gain: f64) {
+fn synthesize_event(left: &mut [f64], right: &mut [f64], event: &LongEvent, gain: f64) {
     let frequency = recursive_frequency_from_midi(event.midi_note, event.root_pc);
     if !(0.0..f64::from(SAMPLE_RATE) * 0.47).contains(&frequency) {
         return;
@@ -1465,7 +1496,7 @@ mod tests {
 
     #[test]
     fn original_composition_has_a_long_recursive_arc() {
-        let events = build_masterpiece_events();
+        let events = build_long2_events();
         let duration = events
             .iter()
             .map(|event| event.start + event.duration)
@@ -1497,10 +1528,10 @@ mod tests {
     }
 
     #[test]
-    fn masterpiece_musicxml_tracks_the_recursive_root_plan() {
-        let score = build_masterpiece_musicxml();
+    fn long2_musicxml_tracks_the_recursive_root_plan() {
+        let score = build_long2_musicxml();
 
-        assert!(score.contains(MASTERPIECE_TITLE));
+        assert!(score.contains(LONG2_TITLE));
         assert!(score.contains("<part-name>Melody</part-name>"));
         assert!(score.contains("<part-name>Recursive harmony</part-name>"));
         assert!(score.contains("<divisions>12</divisions>"));

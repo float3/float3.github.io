@@ -40,18 +40,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
-name = "music21-rs"
-version = "0.2.1"
-source = "git+https://github.com/float3/music21-rs.git#9e8b5e8d124bf7b92c337590e0ec5ccf1ca5a140"
-dependencies = [
- "fraction",
- "itertools",
- "num",
- "num-traits",
- "ordered-float",
-]
-
-[[package]]
 name = "num"
 version = "0.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

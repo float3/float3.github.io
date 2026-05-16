@@ -9,7 +9,7 @@ import {
   retrieve_html,
   retrieve_problem,
   solve,
-} from "wasm"
+} from "wasm-aoc"
 
 export interface TabConfig {
   years: number

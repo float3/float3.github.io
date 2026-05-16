@@ -4,6 +4,7 @@ use crate::{
     InstallMode, Mode, Result, Site,
 };
 use std::fs;
+use std::path::Path;
 use std::time::Instant;
 
 impl Site {
@@ -38,31 +39,65 @@ impl Site {
 
     pub(crate) fn wasm(&self, mode: Mode) -> Result<()> {
         let wasm_dir = self.root.join("wasm/wasm");
-        let mut wasm_args = os_args(&["build", "--target", "bundler"]);
+        let mut base_args = os_args(&["build", "--target", "bundler"]);
 
         match mode {
             Mode::Prod => {
-                wasm_args.push("--release".into());
+                base_args.push("--release".into());
             }
             Mode::Dev => {
-                wasm_args.push("--dev".into());
+                base_args.push("--dev".into());
                 self.warn("building wasm in development mode");
             }
         }
 
-        wasm_args.extend(os_args(&["--features", "console_error_panic_hook"]));
+        // Build each tool's wasm package separately
+        let tools = [
+            ("aoc", "aoc"),
+            ("bayes", "bayes"),
+            ("chars", "chars"),
+            ("glsl", "glsl"),
+            ("movies", "movies"),
+            ("photography", "photography"),
+            ("polyrhythm", "polyrhythm"),
+            ("recursive_ji", "recursive_ji"),
+            ("textprocessing", "textprocessing"),
+            ("trolley", "trolley"),
+            ("pokemon", "pokemon"),
+            ("tuningplayground", "tuningplayground"),
+        ];
 
-        self.run_with_env(
-            &wasm_dir,
-            "wasm-pack",
-            &wasm_args,
-            &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
-        )?;
-        remove_file_if_exists(&wasm_dir.join("pkg/.gitignore"))?;
+        for (feature, name) in tools {
+            let mut args = base_args.clone();
+            args.extend(os_args(&["--out-dir", &format!("pkg/{}", name), "--"]));
+            args.extend(os_args(&[
+                "--features",
+                "console_error_panic_hook",
+                "--features",
+                feature,
+            ]));
+
+            self.run_with_env(
+                &wasm_dir,
+                "wasm-pack",
+                &args,
+                &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
+            )?;
+
+            self.patch_wasm_package_name(
+                &wasm_dir.join(format!("pkg/{}", name)),
+                &format!("wasm-{}", name),
+            )?;
+        }
+
+        // Clean up any leftover .gitignore files
+        for (_, name) in tools {
+            remove_file_if_exists(&wasm_dir.join(format!("pkg/{}/.gitignore", name)))?;
+        }
 
         let ts_dir = self.root.join("ts");
         self.bun_install(&ts_dir, InstallMode::Locked)?;
-        self.sync_wasm_package_dependency()?;
+        self.sync_wasm_packages_dependency()?;
         self.run_bun(&ts_dir, &os_args(&["run", "tsc"]))?;
         self.run_bun(
             &ts_dir,
@@ -100,33 +135,66 @@ impl Site {
         ])
     }
 
-    fn sync_wasm_package_dependency(&self) -> Result<()> {
+    fn sync_wasm_packages_dependency(&self) -> Result<()> {
         let source = self.root.join("wasm/wasm/pkg");
-        let target = self.root.join("ts/node_modules/wasm");
+        let target_base = self.root.join("ts/node_modules");
 
-        if !target.exists() {
-            fs::create_dir_all(&target)?;
-        }
+        let tools = [
+            "aoc",
+            "bayes",
+            "chars",
+            "glsl",
+            "movies",
+            "photography",
+            "polyrhythm",
+            "recursive_ji",
+            "textprocessing",
+            "trolley",
+            "tuningplayground",
+        ];
 
-        if fs::canonicalize(&source)? == fs::canonicalize(&target)? {
-            return Ok(());
-        }
+        for tool in tools {
+            let source_dir = source.join(tool);
+            let target_dir = target_base.join(format!("wasm-{}", tool));
 
-        for entry in fs::read_dir(&source)? {
-            let entry = entry?;
-            let file_type = entry.file_type()?;
-            if file_type.is_file() {
-                let source_path = entry.path();
-                let target_path = target.join(entry.file_name());
-                if target_path.exists() {
-                    fs::remove_file(&target_path)?;
+            if !target_dir.exists() {
+                fs::create_dir_all(&target_dir)?;
+            }
+
+            if fs::canonicalize(&source_dir).is_ok() && fs::canonicalize(&target_dir).is_ok() {
+                if fs::canonicalize(&source_dir)? == fs::canonicalize(&target_dir)? {
+                    continue;
                 }
-                fs::copy(source_path, target_path)?;
+            }
+
+            for entry in fs::read_dir(&source_dir)? {
+                let entry = entry?;
+                let file_type = entry.file_type()?;
+                if file_type.is_file() {
+                    let source_path = entry.path();
+                    let target_path = target_dir.join(entry.file_name());
+                    if target_path.exists() {
+                        fs::remove_file(&target_path)?;
+                    }
+                    fs::copy(source_path, target_path)?;
+                }
             }
         }
 
         Ok(())
     }
+
+    fn patch_wasm_package_name(&self, pkg_dir: &Path, package_name: &str) -> Result<()> {
+        let pkg_json = pkg_dir.join("package.json");
+        let contents = fs::read_to_string(&pkg_json)?;
+        let updated = contents.replace(
+            "\"name\": \"wasm\"",
+            &format!("\"name\": \"{}\"", package_name),
+        );
+        fs::write(pkg_json, updated)?;
+        Ok(())
+    }
+
     pub(crate) fn check(&self) -> Result<()> {
         let mut site_check_args = os_args(&[
             "check",

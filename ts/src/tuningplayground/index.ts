@@ -1,5 +1,5 @@
-export let wasm: typeof import("wasm")
-import("wasm")
+export let wasm: typeof import("wasm-tuningplayground")
+import("wasm-tuningplayground")
   .then((module) => {
     wasm = module
     wasm.main()

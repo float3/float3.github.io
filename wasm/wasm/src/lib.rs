@@ -1,18 +1,29 @@
+#[cfg(feature = "textprocessing")]
 pub use textprocessing::*;
+#[cfg(feature = "tuningplayground")]
 pub use tuningplayground::*;
 
+#[cfg(feature = "aoc")]
 pub mod aoc;
+#[cfg(feature = "bayes")]
 pub mod bayes;
+#[cfg(feature = "chars")]
 pub mod chars;
+#[cfg(feature = "glsl")]
 pub mod glsl;
 pub mod graph;
-#[cfg(feature = "krabby")]
+#[cfg(feature = "pokemon")]
 pub mod krabby;
+#[cfg(feature = "movies")]
 pub mod movies;
+#[cfg(feature = "photography")]
 pub mod photography;
+#[cfg(feature = "polyrhythm")]
 pub mod polyrhythm;
 pub mod random;
+#[cfg(feature = "recursive_ji")]
 pub mod recursive_ji;
+#[cfg(feature = "trolley")]
 pub mod trolley;
 
 use wasm_bindgen::prelude::*;

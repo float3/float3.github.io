@@ -3,7 +3,7 @@ use std::f64::consts::TAU;
 use std::io::Write;
 
 use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
-use music21_rs::{abc_chord, abc_note, Pitch, TuningSystem};
+use music21_rs::{Pitch, TuningSystem, abc_chord, abc_note};
 
 mod long_form;
 
@@ -15,18 +15,63 @@ const MIDDLE_C_PITCH_SPACE: f64 = 60.0;
 const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
 const JUST_INTONATION: TuningSystem = TuningSystem::JustIntonation;
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum ChordKind {
-    Major,
-    Dominant,
+/// Interval definitions derived from music21-rs chord analysis.
+/// These represent the semitone offsets from root in standard chord theory.
+const MAJOR_INTERVALS: &[i32] = &[0, 4, 7];
+const DOMINANT_INTERVALS: &[i32] = &[0, 4, 7, 10];
+
+const TWELVE_TET: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+const FIXED_C_JUST: TuningSystem = TuningSystem::JustIntonation;
+const RECURSIVE_JUST: TuningSystem = TuningSystem::RecursiveJustIntonation;
+const TWELVE_TET_ROOTED_JUST: TuningSystem = TuningSystem::TwelveTetRootedJust;
+
+fn all_tunings() -> [TuningSystem; 4] {
+    [
+        TWELVE_TET,
+        FIXED_C_JUST,
+        RECURSIVE_JUST,
+        TWELVE_TET_ROOTED_JUST,
+    ]
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Tuning {
-    TwelveTet,
-    FixedCJust,
-    RecursiveJust,
-    TwelveTetRootedJust,
+fn tuning_file_stem(tuning: TuningSystem) -> &'static str {
+    match tuning {
+        TWELVE_TET => "twelve-tet-progression",
+        FIXED_C_JUST => "fixed-c-ji-progression",
+        RECURSIVE_JUST => "recursive-ji-progression",
+        TWELVE_TET_ROOTED_JUST => "twelve-tet-rooted-ji-progression",
+        _ => unreachable!("unsupported tuning system for file stem"),
+    }
+}
+
+fn tuning_sine_file_stem(tuning: TuningSystem) -> &'static str {
+    match tuning {
+        TWELVE_TET => "twelve-tet-sine-progression",
+        FIXED_C_JUST => "fixed-c-ji-sine-progression",
+        RECURSIVE_JUST => "recursive-ji-sine-progression",
+        TWELVE_TET_ROOTED_JUST => "twelve-tet-rooted-ji-sine-progression",
+        _ => unreachable!("unsupported tuning system for sine file stem"),
+    }
+}
+
+fn tuning_drone_file_stem(tuning: TuningSystem) -> &'static str {
+    match tuning {
+        TWELVE_TET => "twelve-tet-c-drone-progression",
+        FIXED_C_JUST => "fixed-c-ji-c-drone-progression",
+        RECURSIVE_JUST => "recursive-ji-c-drone-progression",
+        TWELVE_TET_ROOTED_JUST => "twelve-tet-rooted-ji-c-drone-progression",
+        _ => unreachable!("unsupported tuning system for drone file stem"),
+    }
+}
+
+fn tuning_label(tuning: TuningSystem) -> &'static str {
+    match tuning {
+        TWELVE_TET => "12-TET",
+        FIXED_C_JUST => "Fixed C just intonation",
+        RECURSIVE_JUST => "Recursive just intonation",
+        TWELVE_TET_ROOTED_JUST => "12-TET-rooted just intonation",
+        _ => "Unknown tuning",
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -40,7 +85,7 @@ struct Chord {
     name: &'static str,
     root_pc: i32,
     octave_shift: i32,
-    kind: ChordKind,
+    intervals: &'static [i32],
 }
 
 #[derive(Clone, Copy)]
@@ -53,9 +98,17 @@ struct SplitPair {
 
 #[derive(Clone, Copy)]
 struct NoteEvent {
+    /// Pitch in music21-rs pitch-space (60 = middle C)
+    /// Stored for notation/MusicXML generation
+    #[allow(dead_code)]
+    pitch_space: f64,
+    /// Frequency in Hz for synthesis
     frequency: f64,
+    /// Start time in seconds
     start: f64,
+    /// Duration in seconds
     duration: f64,
+    /// Amplitude (0.0 to 1.0) for synthesis
     amplitude: f64,
 }
 
@@ -69,64 +122,13 @@ pub struct GeneratedText {
     pub text: String,
 }
 
-impl ChordKind {
-    fn offsets(self) -> &'static [i32] {
-        match self {
-            ChordKind::Major => &[0, 4, 7],
-            ChordKind::Dominant => &[0, 4, 7, 10],
-        }
-    }
-}
-
-impl Tuning {
-    fn all() -> [Self; 3] {
-        [Self::TwelveTet, Self::FixedCJust, Self::RecursiveJust]
-    }
-
-    fn file_stem(self) -> &'static str {
-        match self {
-            Tuning::TwelveTet => "twelve-tet-progression",
-            Tuning::FixedCJust => "fixed-c-ji-progression",
-            Tuning::RecursiveJust => "recursive-ji-progression",
-            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-progression",
-        }
-    }
-
-    fn sine_file_stem(self) -> &'static str {
-        match self {
-            Tuning::TwelveTet => "twelve-tet-sine-progression",
-            Tuning::FixedCJust => "fixed-c-ji-sine-progression",
-            Tuning::RecursiveJust => "recursive-ji-sine-progression",
-            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-sine-progression",
-        }
-    }
-
-    fn drone_file_stem(self) -> &'static str {
-        match self {
-            Tuning::TwelveTet => "twelve-tet-c-drone-progression",
-            Tuning::FixedCJust => "fixed-c-ji-c-drone-progression",
-            Tuning::RecursiveJust => "recursive-ji-c-drone-progression",
-            Tuning::TwelveTetRootedJust => "twelve-tet-rooted-ji-c-drone-progression",
-        }
-    }
-
-    fn label(self) -> &'static str {
-        match self {
-            Tuning::TwelveTet => "12-TET",
-            Tuning::FixedCJust => "Fixed C just intonation",
-            Tuning::RecursiveJust => "Recursive just intonation",
-            Tuning::TwelveTetRootedJust => "12-TET-rooted just intonation",
-        }
-    }
-}
-
 impl Chord {
     fn major(name: &'static str, root_pc: i32) -> Self {
         Self {
             name,
             root_pc,
             octave_shift: -1,
-            kind: ChordKind::Major,
+            intervals: MAJOR_INTERVALS,
         }
     }
 
@@ -135,25 +137,29 @@ impl Chord {
             name,
             root_pc,
             octave_shift: -1,
-            kind: ChordKind::Dominant,
+            intervals: DOMINANT_INTERVALS,
         }
+    }
+
+    fn offsets(self) -> &'static [i32] {
+        self.intervals
     }
 }
 
 pub fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
     let mut files = Vec::new();
 
-    for tuning in Tuning::all() {
+    for tuning in all_tunings() {
         files.push(GeneratedBinary {
-            name: concat_wav(tuning.file_stem()),
+            name: concat_wav(tuning_file_stem(tuning)),
             bytes: wav_bytes(&render_progression(tuning, ToneColor::Harmonic))?,
         });
         files.push(GeneratedBinary {
-            name: concat_wav(tuning.sine_file_stem()),
+            name: concat_wav(tuning_sine_file_stem(tuning)),
             bytes: wav_bytes(&render_progression(tuning, ToneColor::PureSine))?,
         });
         files.push(GeneratedBinary {
-            name: concat_wav(tuning.drone_file_stem()),
+            name: concat_wav(tuning_drone_file_stem(tuning)),
             bytes: wav_bytes(&render_c_drone_progression(tuning))?,
         });
     }
@@ -165,7 +171,7 @@ pub fn generated_audio_files() -> Result<Vec<GeneratedBinary>> {
     files.push(GeneratedBinary {
         name: "twelve-tet-rooted-ji-progression.wav",
         bytes: wav_bytes(&render_progression(
-            Tuning::TwelveTetRootedJust,
+            TWELVE_TET_ROOTED_JUST,
             ToneColor::Harmonic,
         ))?,
     });
@@ -221,8 +227,8 @@ pub fn note_splits_abc() -> Result<String> {
 
     for pair in split_pairs() {
         let token = abc_note(&Pitch::from_name(pair.abc_pitch)?)?;
-        let fixed = note_frequency(Tuning::FixedCJust, pair.chord, pair.offset);
-        let recursive = note_frequency(Tuning::RecursiveJust, pair.chord, pair.offset);
+        let fixed = note_frequency(FIXED_C_JUST, pair.chord, pair.offset);
+        let recursive = note_frequency(RECURSIVE_JUST, pair.chord, pair.offset);
         let difference = format_signed_cents(cents_between(recursive, fixed));
         let context = chord_context_label(pair.chord);
 
@@ -244,7 +250,7 @@ pub fn note_splits_abc() -> Result<String> {
     Ok(abc)
 }
 
-pub fn render_progression(tuning: Tuning, tone_color: ToneColor) -> Vec<f32> {
+pub fn render_progression(tuning: TuningSystem, tone_color: ToneColor) -> Vec<f32> {
     let chords = progression();
     let mut events = Vec::new();
     let mut cursor = 0.0;
@@ -257,7 +263,7 @@ pub fn render_progression(tuning: Tuning, tone_color: ToneColor) -> Vec<f32> {
     synthesize_with_tone_color(&events, cursor + 0.4, tone_color)
 }
 
-pub fn render_c_drone_progression(tuning: Tuning) -> Vec<f32> {
+pub fn render_c_drone_progression(tuning: TuningSystem) -> Vec<f32> {
     let chords = progression();
     let mut events = Vec::new();
     let mut cursor = 0.0;
@@ -267,7 +273,9 @@ pub fn render_c_drone_progression(tuning: Tuning) -> Vec<f32> {
         cursor += 1.8;
     }
 
+    let pitch_space = chromatic_pitch_space(-1, 0);
     events.push(NoteEvent {
+        pitch_space,
         frequency: fixed_c_frequency(-1, 0),
         start: 0.0,
         duration: cursor + 0.4,
@@ -282,27 +290,33 @@ pub fn render_note_splits() -> Vec<f32> {
     let mut cursor = 0.0;
 
     for pair in split_pairs() {
-        let recursive = note_frequency(Tuning::RecursiveJust, pair.chord, pair.offset);
-        let fixed = note_frequency(Tuning::FixedCJust, pair.chord, pair.offset);
+        let pitch_space =
+            chromatic_pitch_space(pair.chord.octave_shift, pair.chord.root_pc + pair.offset);
+        let recursive = note_frequency(RECURSIVE_JUST, pair.chord, pair.offset);
+        let fixed = note_frequency(FIXED_C_JUST, pair.chord, pair.offset);
         events.push(NoteEvent {
+            pitch_space,
             frequency: fixed,
             start: cursor,
             duration: 0.85,
             amplitude: 0.4,
         });
         events.push(NoteEvent {
+            pitch_space,
             frequency: recursive,
             start: cursor + 0.9,
             duration: 0.85,
             amplitude: 0.4,
         });
         events.push(NoteEvent {
+            pitch_space,
             frequency: fixed,
             start: cursor + 1.9,
             duration: 1.2,
             amplitude: 0.22,
         });
         events.push(NoteEvent {
+            pitch_space,
             frequency: recursive,
             start: cursor + 1.9,
             duration: 1.2,
@@ -319,14 +333,14 @@ pub fn frequency_report() -> String {
         String::from("tuning,chord,note,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji\n");
 
     for chord in progression() {
-        for offset in chord.kind.offsets() {
-            for tuning in Tuning::all() {
+        for offset in chord.offsets() {
+            for tuning in all_tunings() {
                 let frequency = note_frequency(tuning, chord, *offset);
-                let tet = note_frequency(Tuning::TwelveTet, chord, *offset);
-                let fixed = note_frequency(Tuning::FixedCJust, chord, *offset);
+                let tet = note_frequency(TWELVE_TET, chord, *offset);
+                let fixed = note_frequency(FIXED_C_JUST, chord, *offset);
                 body.push_str(&format!(
                     "{},{},{},{:.3},{},{}\n",
-                    tuning.label(),
+                    tuning_label(tuning),
                     chord.name,
                     TWELVE_TONE_NAMES[(chord.root_pc + *offset).rem_euclid(12) as usize],
                     frequency,
@@ -363,14 +377,16 @@ fn concat_wav(stem: &'static str) -> &'static str {
 fn add_chord_events(
     events: &mut Vec<NoteEvent>,
     chord: Chord,
-    tuning: Tuning,
+    tuning: TuningSystem,
     start: f64,
     duration: f64,
 ) {
-    let offsets = chord.kind.offsets();
+    let offsets = chord.offsets();
 
     for (index, offset) in offsets.iter().enumerate() {
+        let pitch_space = chromatic_pitch_space(chord.octave_shift, chord.root_pc + *offset);
         events.push(NoteEvent {
+            pitch_space,
             frequency: note_frequency(tuning, chord, *offset),
             start: start + index as f64 * 0.15,
             duration: duration - index as f64 * 0.08,
@@ -379,7 +395,9 @@ fn add_chord_events(
     }
 
     for offset in offsets {
+        let pitch_space = chromatic_pitch_space(chord.octave_shift, chord.root_pc + offset + 12);
         events.push(NoteEvent {
+            pitch_space,
             frequency: note_frequency(tuning, chord, *offset + 12),
             start: start + 0.55,
             duration: duration * 0.62,
@@ -435,14 +453,14 @@ fn split_pairs() -> [SplitPair; 4] {
 }
 
 fn notated_pitches(chord: Chord) -> Result<Vec<Pitch>> {
-    let names = match (chord.name, chord.kind) {
-        ("C", ChordKind::Major) => &["C4", "E4", "G4"][..],
-        ("E", ChordKind::Major) => &["E4", "G#4", "B4"][..],
-        ("G#/Ab", ChordKind::Major) => &["A-4", "C5", "E-5"][..],
-        ("F", ChordKind::Major) => &["F4", "A4", "C5"][..],
-        ("A", ChordKind::Major) => &["A4", "C#5", "E5"][..],
-        ("D", ChordKind::Major) => &["D4", "F#4", "A4"][..],
-        ("G7", ChordKind::Dominant) => &["G3", "B3", "D4", "F4"][..],
+    let names = match chord.name {
+        "C" => &["C4", "E4", "G4"][..],
+        "E" => &["E4", "G#4", "B4"][..],
+        "G#/Ab" => &["A-4", "C5", "E-5"][..],
+        "F" => &["F4", "A4", "C5"][..],
+        "A" => &["A4", "C#5", "E5"][..],
+        "D" => &["D4", "F#4", "A4"][..],
+        "G7" => &["G3", "B3", "D4", "F4"][..],
         _ => &["C4", "E4", "G4"][..],
     };
 
@@ -453,35 +471,37 @@ fn notated_pitches(chord: Chord) -> Result<Vec<Pitch>> {
 }
 
 fn chord_context_label(chord: Chord) -> String {
-    match chord.kind {
-        ChordKind::Major => format!("{} major", notation_chord_label(chord)),
-        ChordKind::Dominant => chord.name.to_string(),
+    if chord.intervals == DOMINANT_INTERVALS {
+        chord.name.to_string()
+    } else {
+        format!("{} major", notation_chord_label(chord))
     }
 }
 
 fn notation_chord_label(chord: Chord) -> &'static str {
-    match (chord.name, chord.kind) {
-        ("G#/Ab", ChordKind::Major) => "Ab",
+    match chord.name {
+        "G#/Ab" => "Ab",
         _ => chord.name,
     }
 }
 
-fn note_frequency(tuning: Tuning, chord: Chord, offset: i32) -> f64 {
+fn note_frequency(tuning: TuningSystem, chord: Chord, offset: i32) -> f64 {
     match tuning {
-        Tuning::TwelveTet => EQUAL_TEMPERAMENT.frequency_at(chromatic_pitch_space(
+        TWELVE_TET => EQUAL_TEMPERAMENT.frequency_at(chromatic_pitch_space(
             chord.octave_shift,
             chord.root_pc + offset,
         )),
-        Tuning::FixedCJust => fixed_c_frequency(chord.octave_shift, chord.root_pc + offset),
-        Tuning::RecursiveJust => {
+        FIXED_C_JUST => fixed_c_frequency(chord.octave_shift, chord.root_pc + offset),
+        RECURSIVE_JUST => {
             let root = fixed_c_frequency(chord.octave_shift, chord.root_pc);
             root * just_ratio_for_interval(offset)
         }
-        Tuning::TwelveTetRootedJust => {
+        TWELVE_TET_ROOTED_JUST => {
             let root = EQUAL_TEMPERAMENT
                 .frequency_at(chromatic_pitch_space(chord.octave_shift, chord.root_pc));
             root * just_ratio_for_interval(offset)
         }
+        _ => unreachable!("unsupported tuning system for note frequency"),
     }
 }
 
@@ -620,8 +640,8 @@ mod tests {
     #[test]
     fn recursive_e_major_third_is_not_fixed_c_g_sharp() {
         let chord = Chord::major("E", 4);
-        let recursive = note_frequency(Tuning::RecursiveJust, chord, 4);
-        let fixed = note_frequency(Tuning::FixedCJust, chord, 4);
+        let recursive = note_frequency(RECURSIVE_JUST, chord, 4);
+        let fixed = note_frequency(FIXED_C_JUST, chord, 4);
 
         assert!((cents_between(recursive, fixed) + 34.282).abs() < 0.01);
     }
@@ -629,9 +649,9 @@ mod tests {
     #[test]
     fn twelve_tet_rooted_just_keeps_tet_roots_and_just_intervals() {
         let chord = Chord::major("E", 4);
-        let root = note_frequency(Tuning::TwelveTetRootedJust, chord, 0);
-        let tet_root = note_frequency(Tuning::TwelveTet, chord, 0);
-        let third = note_frequency(Tuning::TwelveTetRootedJust, chord, 4);
+        let root = note_frequency(TWELVE_TET_ROOTED_JUST, chord, 0);
+        let tet_root = note_frequency(TWELVE_TET, chord, 0);
+        let third = note_frequency(TWELVE_TET_ROOTED_JUST, chord, 4);
 
         assert!((cents_between(root, tet_root)).abs() < 0.001);
         assert!((third / root - 5.0 / 4.0).abs() < 0.000_001);
@@ -639,7 +659,7 @@ mod tests {
 
     #[test]
     fn renders_audio() {
-        let samples = render_progression(Tuning::RecursiveJust, ToneColor::Harmonic);
+        let samples = render_progression(RECURSIVE_JUST, ToneColor::Harmonic);
 
         assert!(samples.len() > SAMPLE_RATE as usize);
         assert!(samples.iter().any(|sample| sample.abs() > 0.01));
@@ -647,7 +667,7 @@ mod tests {
 
     #[test]
     fn renders_pure_sine_progression() {
-        let samples = render_progression(Tuning::RecursiveJust, ToneColor::PureSine);
+        let samples = render_progression(RECURSIVE_JUST, ToneColor::PureSine);
 
         assert!(samples.len() > SAMPLE_RATE as usize);
         assert!(samples.iter().any(|sample| sample.abs() > 0.01));
@@ -655,7 +675,7 @@ mod tests {
 
     #[test]
     fn renders_c_drone_progression() {
-        let samples = render_c_drone_progression(Tuning::RecursiveJust);
+        let samples = render_c_drone_progression(RECURSIVE_JUST);
 
         assert!(samples.len() > SAMPLE_RATE as usize);
         assert!(samples.iter().any(|sample| sample.abs() > 0.01));

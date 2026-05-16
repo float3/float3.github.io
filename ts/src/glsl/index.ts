@@ -1,6 +1,6 @@
 import { DEFAULT_SHADER, DEFAULT_SHADER_SOURCE } from "./default_shader.js"
 
-import * as wasm from "wasm"
+import * as wasm from "wasm-glsl"
 
 wasm.main()
 

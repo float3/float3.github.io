@@ -1,4 +1,4 @@
-import { main, start_with_settings, stop } from "wasm"
+import { main, start_with_settings, stop } from "wasm-polyrhythm"
 
 type PolyrhythmSettings = {
   base: number

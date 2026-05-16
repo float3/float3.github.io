@@ -1,4 +1,4 @@
-import { random_n_pokemon, main } from "wasm"
+import { random_n_pokemon, main } from "wasm-pokemon"
 
 main()
 

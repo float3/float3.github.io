@@ -1,4 +1,4 @@
-import { bayes_number, solve_bayes_percent } from "wasm"
+import { bayes_number, solve_bayes_percent } from "wasm-bayes"
 
 type BayesMode = "computed-evidence" | "known-evidence"
 
@@ -402,7 +402,7 @@ function mathNumber(value: number, role: keyof typeof bayesColors) {
 
 function coloredMath(role: keyof typeof bayesColors, ...children: Array<Element | string>) {
   const element = mathElement("mrow", { mathcolor: bayesColors[role] }, ...children)
-  ;(element as HTMLElement).style.color = bayesColors[role]
+    ; (element as HTMLElement).style.color = bayesColors[role]
   return element
 }
 

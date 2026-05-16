@@ -1,4 +1,4 @@
-import { photo_caption, photo_count_label, photo_manifest_entry_is_valid } from "wasm"
+import { photo_caption, photo_count_label, photo_manifest_entry_is_valid } from "wasm-photography"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
 
 interface Photo extends GalleryItem {

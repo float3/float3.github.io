@@ -1,4 +1,4 @@
-import { movie_candidate_is_visible, random_index } from "wasm"
+import { movie_candidate_is_visible, random_index } from "wasm-movies"
 
 const timeout = 0.25
 
