@@ -1175,7 +1175,7 @@ dependencies = [
 [[package]]
 name = "music21-rs"
 version = "0.2.1"
-source = "git+https://github.com/float3/music21-rs.git#bb827cf89645890b856aa15d18aa7ff8a611a26a"
+source = "git+https://github.com/float3/music21-rs.git#f73af443d8993d4507e97a4d2623c2ce1fb406b2"
 dependencies = [
  "fraction",
  "itertools 0.14.0",
