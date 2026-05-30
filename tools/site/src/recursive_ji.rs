@@ -148,7 +148,7 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
     // header
     table.push_str("| local root |");
     for name in TWELVE_TONE_NAMES.iter() {
-        table.push_str(&format!(" {} |", format!("`{}`", name)));
+        table.push_str(&format!(" `{name}` |"));
     }
     table.push('\n');
     // separator

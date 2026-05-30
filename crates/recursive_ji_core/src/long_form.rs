@@ -608,6 +608,7 @@ fn add_counter_line(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn add_recursive_branch(
     events: &mut Vec<LongEvent>,
     start: f64,
@@ -1046,6 +1047,7 @@ fn midi_to_pitch(midi_note: i32) -> Option<Pitch> {
     Pitch::from_name(&name).ok()
 }
 
+#[allow(clippy::type_complexity)]
 fn parse_midi(data: &[u8]) -> Result<(u16, Vec<(u32, u32)>, Vec<MidiNote>)> {
     if data.get(0..4) != Some(b"MThd") {
         return Err("not a MIDI file".into());

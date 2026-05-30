@@ -24,7 +24,7 @@ pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
 
     let mut items: Vec<(String, u64)> = counts.into_iter().collect();
     items.sort();
-    items.sort_by(|a, b| b.1.cmp(&a.1));
+    items.sort_by_key(|b| std::cmp::Reverse(b.1));
 
     let mut data_entries = Vec::new();
     for (i, (word, count)) in items.iter().enumerate() {
