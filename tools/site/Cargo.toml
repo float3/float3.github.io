@@ -9,11 +9,16 @@ default = ["photos"]
 photos = ["dep:image", "dep:serde", "dep:serde_json"]
 
 [dependencies]
-image = { version = "0.25.8", default-features = false, features = ["jpeg", "png", "webp"], optional = true }
-music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+image = { version = "0.25.10", default-features = false, features = [
+    "jpeg",
+    "png",
+    "webp",
+], optional = true }
+music21-rs = { workspace = true }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }
 serde = { version = "1.0.228", features = ["derive"], optional = true }
-serde_json = { version = "1.0.145", optional = true }
+serde_json = { version = "1.0.150", optional = true }
+toml = "1.1.2"
 # zip = { version = "2.4.2", default-features = false, features = ["deflate"] }
 
 [[bin]]

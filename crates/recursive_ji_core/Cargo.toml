@@ -5,4 +5,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
-music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+music21-rs = { workspace = true }

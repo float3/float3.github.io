@@ -1,22 +1,11 @@
 use crate::{os_args, InstallMode, Result, Site, SiteError};
-use std::env;
-use std::path::Path;
+use std::collections::HashMap;
+use std::path::{Path, PathBuf};
+use std::{env, fs};
+use toml::Table;
 
 impl Site {
     pub(crate) fn update(&self) -> Result<()> {
-        self.run(
-            &self.root,
-            "git",
-            &os_args(&[
-                "submodule",
-                "update",
-                "--remote",
-                "--recursive",
-                "--",
-                "wasm/tuningplayground/music21",
-            ]),
-        )?;
-
         self.run_with_env(
             &self.root.join("wasm/wasm"),
             "wasm-pack",
@@ -170,4 +159,71 @@ impl Site {
         )?;
         self.run(&self.root, "git", &os_args(&["push"]))
     }
+}
+
+pub(crate) fn parse_cargo_toml(site: &Site) -> Result<()> {
+    // find all cargo.tomls
+    let mut cargo_tomls = Vec::new();
+    collect_files_with_name(&site.root, "Cargo.toml", &mut cargo_tomls)?;
+
+    // find all duplicate dependencies that are not using the workspace version
+    let mut dependencies: HashMap<String, Vec<PathBuf>> = HashMap::new();
+    for cargo_toml in cargo_tomls {
+        let content = fs::read_to_string(&cargo_toml)?;
+        let parsed = content.parse::<Table>()?;
+        let empty_table = Table::new();
+        let deps = parsed
+            .get("dependencies")
+            .and_then(|d| d.as_table())
+            .unwrap_or(&empty_table);
+        for (name, value) in deps {
+            if value.get("path").and_then(|v| v.as_str()).is_some() {
+                dependencies
+                    .entry(name.clone())
+                    .or_default()
+                    .push(cargo_toml.clone());
+            }
+        }
+    }
+
+    for (name, cargo_tomls) in dependencies {
+        if cargo_tomls.len() <= 1 {
+            continue;
+        }
+        println!(
+            "Dependency {name} is duplicated {} times in crates:",
+            cargo_tomls.len()
+        );
+        for cargo_toml in &cargo_tomls {
+            println!("  {}", display_path(site, cargo_toml.parent().unwrap()));
+        }
+    }
+
+    Ok(())
+}
+
+fn collect_files_with_name(
+    root: &std::path::PathBuf,
+    name: &str,
+    files: &mut Vec<PathBuf>,
+) -> Result<()> {
+    for entry in fs::read_dir(root)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_dir() {
+            collect_files_with_name(&path, name, files)?;
+        } else if path.file_name().and_then(|n| n.to_str()) == Some(name) {
+            files.push(path);
+        }
+    }
+    Ok(())
+}
+
+fn display_path(site: &Site, path: &Path) -> String {
+    let p = match site.relative_git_path(path) {
+        Ok(p) => p,
+        Err(_) => path.display().to_string(),
+    };
+
+    p.to_string().replace(r"\\?\", "")
 }

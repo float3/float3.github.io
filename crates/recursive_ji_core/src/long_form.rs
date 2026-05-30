@@ -441,7 +441,7 @@ fn add_pad_chords(
             });
         }
 
-        if section.energy > 0.54 && (phrase + section_index) % 2 == 0 {
+        if section.energy > 0.54 && (phrase + section_index).is_multiple_of(2) {
             events.push(LongEvent {
                 start: phrase_start + beat * 2.72,
                 duration: beat * 2.4,
@@ -480,7 +480,11 @@ fn add_inner_arpeggios(
             continue;
         }
 
-        let stride = if section_index % 3 == 0 { 4 } else { 5 };
+        let stride = if section_index.is_multiple_of(3) {
+            4
+        } else {
+            5
+        };
         let contour = match index % 12 {
             0 | 5 | 9 => 0,
             1 | 6 => 2,
@@ -576,7 +580,11 @@ fn add_counter_line(
     section_index: usize,
     section: CompositionSection,
 ) {
-    let delay = if section_index % 2 == 0 { 1.5 } else { 2.25 };
+    let delay = if section_index.is_multiple_of(2) {
+        1.5
+    } else {
+        2.25
+    };
     for (index, midi_note) in section.melody.iter().rev().step_by(2).enumerate() {
         let beat_position = delay + index as f64 * if index % 3 == 2 { 1.5 } else { 2.0 };
         if beat_position >= section.beats as f64 {
@@ -629,7 +637,7 @@ fn add_recursive_branch(
     let child_span = span * 0.48;
     for (branch, interval) in [7, 4, 12].into_iter().enumerate() {
         let child_start = start + span * (0.28 + branch as f64 * 0.18);
-        let fold = if branch == 2 && depth % 2 == 0 {
+        let fold = if branch == 2 && depth.is_multiple_of(2) {
             -12
         } else {
             0

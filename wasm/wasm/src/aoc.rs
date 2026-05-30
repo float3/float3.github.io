@@ -2,7 +2,11 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
 pub fn aoc_day_count_for_year(year: u32, default_days: u32) -> u32 {
-    if year == 2025 { 12 } else { default_days }
+    if year == 2025 {
+        12
+    } else {
+        default_days
+    }
 }
 
 #[wasm_bindgen]
@@ -16,11 +20,10 @@ pub fn aoc_problem_count_for_day(year: u32, day: u32, default_problems: u32) -> 
 
 #[wasm_bindgen]
 pub fn aoc_completion_percentage(complete_count: u32, total_problems: u32) -> u32 {
-    if total_problems == 0 {
-        0
-    } else {
-        complete_count.saturating_mul(100) / total_problems
-    }
+    complete_count
+        .saturating_mul(100)
+        .checked_div(total_problems)
+        .unwrap_or(0)
 }
 
 #[wasm_bindgen]

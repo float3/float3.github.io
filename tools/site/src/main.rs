@@ -24,6 +24,7 @@ mod photos {
 mod process;
 mod recursive_ji;
 mod report;
+mod zipf;
 mod tables;
 
 use std::env;
@@ -32,7 +33,7 @@ use std::fmt;
 use std::path::PathBuf;
 
 pub(crate) use fsutil::{
-    find_repo_root, remove_dir_if_exists, remove_file_if_exists, remove_license_files,
+    find_repo_root, remove_dir_if_exists, remove_file_if_exists, remove_files,
 };
 pub(crate) use process::{os_args, ChildGuard, InstallMode};
 
@@ -110,10 +111,7 @@ fn run_main() -> Result<()> {
     match args[0].as_str() {
         "build" => site.build(parse_mode(&args[1..], Mode::default_for(site.ci))?),
         "wasm" => site.wasm(parse_mode(&args[1..], Mode::default_for(site.ci))?),
-        "generate" => {
-            site.generate()?;
-            recursive_ji::generate(&site, &args[1..])
-        }
+        "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
         "report" => {
@@ -125,11 +123,13 @@ fn run_main() -> Result<()> {
             };
             report::write(&site, &site.root.join("public"), build_time)
         }
+        "zipf" => zipf::write(&site, &site.root.join("public")),
         "align-tables" => tables::align(&args[1..]),
         "recursive-ji-music" | "rji-music" => recursive_ji::generate(&site, &args[1..]),
         "aoc-problems" | "download-aoc-problems" => aoc::download_problem_text(&site, &args[1..]),
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
         "process-photos" => photos::process(&site, &args[1..]),
+        "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
         // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "check" => site.check(),
         "dates" => {

@@ -73,8 +73,8 @@ wasm.main()
 
 const wasmTransform =
   (index: number, leftToRight: boolean): Transform =>
-    (text) =>
-      wasm.transform_text(index, leftToRight, text)
+  (text) =>
+    wasm.transform_text(index, leftToRight, text)
 
 const transforms: TransformDefinition[] = [
   {
@@ -1651,9 +1651,7 @@ function renderTransform(definition: TransformDefinition): RenderedTransform {
   title.className = "transform-title"
 
   const titleText = document.createElement("span")
-  titleText.textContent = `${definition.leftLabel} ${definition.rightToLeft ? "↔" : "→"} ${definition.rightLabel
-    }`
-
+  titleText.textContent = `${definition.leftLabel} ${definition.rightToLeft ? "↔" : "→"} ${definition.rightLabel}`
   const direction = document.createElement("span")
   direction.className = "transform-direction"
   direction.textContent = definition.rightToLeft ? "two-way" : "one-way"

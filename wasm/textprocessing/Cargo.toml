@@ -7,9 +7,6 @@ description = "expose some text processing functions to wasm"
 license = "AGPL-3.0"
 repository = "https://github.com/float3/float3.github.io"
 
-[workspace]
-# members = ["hangeul_conversion"]
-
 [dependencies]
 base64 = "0.22.1"
 bpmf_py = "0.1.0"
@@ -23,5 +20,5 @@ num-traits = "0.2.19"
 pinyin = "0.11.0"
 pinyin_zhuyin = "0.2.0"
 roman = "0.1.6"
-wasm-bindgen = { version = "0.2.121" }
+wasm-bindgen = { workspace = true }
 hangeul_conversion = { path = "hangeul_conversion" }

@@ -79,17 +79,17 @@ pub fn random_n_pokemon(n: u8, padding: usize) -> Vec<String> {
         let h = sprite.lines.len();
         let diff = max_height - h;
         let top_offset = diff / 2;
-        for i in 0..max_height {
+        for (i, output_line) in output_lines.iter_mut().enumerate().take(max_height) {
             if i < top_offset || i >= top_offset + h {
-                output_lines[i].push_str(&" ".repeat(sprite.width));
+                output_line.push_str(&" ".repeat(sprite.width));
             } else {
                 let line_index = i - top_offset;
-                output_lines[i].push_str(&sprite.lines[line_index]);
-                output_lines[i].push_str(
+                output_line.push_str(&sprite.lines[line_index]);
+                output_line.push_str(
                     &" ".repeat(sprite.width.saturating_sub(sprite.line_widths[line_index])),
                 );
             }
-            output_lines[i].push_str(&padding);
+            output_line.push_str(&padding);
         }
     }
 
@@ -107,18 +107,18 @@ fn visible_text(line: &str) -> String {
     while i < line.len() {
         let rest = &line[i..];
 
-        if rest.starts_with("<style") {
-            if let Some(end) = rest.find("</style>") {
-                i += end + "</style>".len();
-                continue;
-            }
+        if rest.starts_with("<style")
+            && let Some(end) = rest.find("</style>")
+        {
+            i += end + "</style>".len();
+            continue;
         }
 
-        if rest.starts_with('<') {
-            if let Some(end) = rest.find('>') {
-                i += end + 1;
-                continue;
-            }
+        if rest.starts_with('<')
+            && let Some(end) = rest.find('>')
+        {
+            i += end + 1;
+            continue;
         }
 
         if rest.starts_with("&nbsp;") {

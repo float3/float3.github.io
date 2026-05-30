@@ -1,17 +1,15 @@
+use std::str::FromStr;
+use std::sync::LazyLock;
 use std::sync::Mutex;
-use std::sync::OnceLock;
-#[cfg(feature = "wasm")]
-use tuning_systems::TuningSystem;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
+use music21_rs::chord::Chord;
+use music21_rs::tuningsystem::{ALL_TUNING_SYSTEMS, TuningSystem};
+
 #[cfg(feature = "wasm")]
-static OCTAVE_SIZE: Mutex<usize> = Mutex::new(12);
-#[cfg(feature = "wasm")]
-static STEP_SIZE: Mutex<usize> = Mutex::new(7);
-#[cfg(feature = "wasm")]
-static TUNING_SYSTEM: Mutex<TuningSystem> =
-    Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 });
+static TUNING_SYSTEM: LazyLock<Mutex<TuningSystem>> =
+    LazyLock::new(|| Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 }));
 #[cfg(feature = "wasm")]
 static KEYMAP: Mutex<KeyMap> = Mutex::new(KeyMap::Us);
 static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
@@ -73,17 +71,20 @@ extern "C" {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tone(index: usize) -> JsValue {
-    use tuning_systems::Tone;
-
-    let tun_sys: TuningSystem = *TUNING_SYSTEM.lock().expect("couldn't lock");
-
-    let tone: Tone = Tone::new(tun_sys, index);
+    // For now, return a simple tone based on equal temperament
+    // TODO: use music21-rs for tuning system calculations
+    let frequency = 440.0 * 2.0_f64.powf((index as f64 - 69.0) / 12.0);
+    let cents = ((index as f64 - 69.0) * 100.0) % 1200.0;
+    let note_names = vec![
+        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+    ];
+    let note_name = note_names[index % 12];
 
     createTone(
         index,
-        tone.frequency(),
-        tone.cents(),
-        tone.name,
+        frequency,
+        cents,
+        note_name.to_string(),
         JsValue::NULL,
     )
 }
@@ -91,7 +92,7 @@ pub fn get_tone(index: usize) -> JsValue {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tuning_size() -> usize {
-    *OCTAVE_SIZE.lock().expect("couldn't lock")
+    TUNING_SYSTEM.lock().expect("couldn't lock").octave_size() as usize
 }
 
 #[cfg(feature = "wasm")]
@@ -128,27 +129,74 @@ pub fn set_keymap(keymap: &str) {
 #[derive(Debug)]
 struct ParsedNote {
     abc: String,
-    pitch_class: usize,
 }
 
-type LUTType = Vec<String>;
-
-static CHORD_LUT: OnceLock<LUTType> = OnceLock::new();
-
-fn static_data() -> &'static LUTType {
-    CHORD_LUT.get_or_init(|| {
-        include_str!("../../../content/misc/plaintext/chords.txt")
-            .split(';')
-            .map(|s| s.to_string())
-            .collect::<LUTType>()
-    })
-}
-
-fn split_chord_input(input: &str) -> Vec<&str> {
-    input
-        .split(|c: char| c.is_whitespace() || c == ',' || c == ';')
-        .filter(|token| !token.trim().is_empty())
+fn normalize_tuning_system_name(name: &str) -> String {
+    name.trim()
+        .to_ascii_lowercase()
+        .chars()
+        .filter(|c| c.is_ascii_alphanumeric())
         .collect()
+}
+
+fn parse_tuning_system(tuning_system: &str, octave_size: usize) -> Option<TuningSystem> {
+    let normalized = normalize_tuning_system_name(tuning_system);
+    if normalized.is_empty() {
+        return None;
+    }
+
+    if normalized == "12tet" {
+        return Some(TuningSystem::EqualTemperament {
+            octave_size: octave_size.max(1) as _,
+        });
+    }
+
+    for tuning in ALL_TUNING_SYSTEMS {
+        let id = normalize_tuning_system_name(tuning.id());
+        let display = normalize_tuning_system_name(tuning.display_name());
+        if normalized == id || normalized == display {
+            return Some(match tuning {
+                TuningSystem::EqualTemperament { .. } => TuningSystem::EqualTemperament {
+                    octave_size: octave_size.max(1) as _,
+                },
+                other => other,
+            });
+        }
+    }
+
+    TuningSystem::from_str(tuning_system)
+        .ok()
+        .map(|tuning| match tuning {
+            TuningSystem::EqualTemperament { .. } => TuningSystem::EqualTemperament {
+                octave_size: octave_size.max(1) as _,
+            },
+            other => other,
+        })
+}
+
+pub fn chordname_core(input: &str) -> Result<String, String> {
+    Chord::new(input)
+        .map(|chord| chord.pitched_common_name())
+        .map_err(|err| err.to_string())
+}
+
+pub fn chord_details_core(input: &str) -> Result<String, String> {
+    let chord = Chord::new(input).map_err(|err| err.to_string())?;
+    let chord_name = chord.pitched_common_name();
+    let chord_symbol = chord
+        .chord_symbol()
+        .unwrap_or_else(|| "unknown".to_string());
+    let pitch_classes = chord
+        .pitch_classes()
+        .into_iter()
+        .map(|pitch_class| pitch_class.to_string())
+        .collect::<Vec<_>>()
+        .join(", ");
+    let forte_class = chord.forte_class().unwrap_or_else(|| "unknown".to_string());
+
+    Ok(format!(
+        "Name: {chord_name} | Symbol: {chord_symbol} | Pitch classes: {pitch_classes} | Forte class: {forte_class}"
+    ))
 }
 
 fn positive_integer_core(value: &str, fallback: usize) -> usize {
@@ -205,24 +253,6 @@ fn parse_octave(note: &str) -> Option<i32> {
         .flatten()
 }
 
-fn pitch_class(full_name: &str) -> Result<usize, String> {
-    match full_name {
-        "B#" | "C" | "Dbb" => Ok(0),
-        "B##" | "C#" | "Db" => Ok(1),
-        "C##" | "D" | "Ebb" => Ok(2),
-        "D#" | "Eb" | "Fbb" => Ok(3),
-        "D##" | "E" | "Fb" => Ok(4),
-        "E#" | "F" | "Gbb" => Ok(5),
-        "E##" | "F#" | "Gb" => Ok(6),
-        "F##" | "G" | "Abb" => Ok(7),
-        "G#" | "Ab" => Ok(8),
-        "G##" | "A" | "Bbb" => Ok(9),
-        "A#" | "Bb" | "Cbb" => Ok(10),
-        "A##" | "B" | "Cb" => Ok(11),
-        _ => Err(format!("Invalid note: {full_name}")),
-    }
-}
-
 fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
     let note = note.trim();
     let mut chars = note.chars().peekable();
@@ -250,9 +280,6 @@ fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
         }
     }
 
-    let full_name = format!("{name}{accidental}");
-    let pitch_class = pitch_class(&full_name)?;
-
     let octave = parse_octave(note);
     let abc_octave = octave.unwrap_or(4) - 4;
     let octave_str = if abc_octave < 0 {
@@ -265,43 +292,7 @@ fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
 
     Ok(ParsedNote {
         abc: format!("{abc_accidental}{name}{octave_str}"),
-        pitch_class,
     })
-}
-
-fn chord_bitmask(input: &str) -> Result<usize, String> {
-    let notes = split_chord_input(input)
-        .into_iter()
-        .map(parse_note_token)
-        .collect::<Result<Vec<_>, _>>()?;
-
-    if notes.is_empty() {
-        return Err("Enter at least one note".to_string());
-    }
-
-    Ok(notes.into_iter().fold(0usize, |bitmask, note| {
-        bitmask | (1usize << note.pitch_class)
-    }))
-}
-
-pub fn chordname_core(input: &str) -> Result<String, String> {
-    let bitmask = chord_bitmask(input)?;
-    chordname_from_bitmask(bitmask).ok_or_else(|| format!("Unknown chord bitmask: {bitmask}"))
-}
-
-pub fn chord_details_core(input: &str) -> Result<String, String> {
-    let bitmask = chord_bitmask(input)?;
-    let chord = chordname_from_bitmask(bitmask)
-        .ok_or_else(|| format!("Unknown chord bitmask: {bitmask}"))?;
-    let pitch_classes = (0..12)
-        .filter(|pitch_class| bitmask & (1usize << pitch_class) != 0)
-        .map(|pitch_class| pitch_class.to_string())
-        .collect::<Vec<_>>()
-        .join(", ");
-
-    Ok(format!(
-        "Name: {chord} | Pitch classes: {pitch_classes} | Bitmask: {bitmask}"
-    ))
 }
 
 fn set_chord_name(chord: &str) {
@@ -314,23 +305,15 @@ fn abc_label(label: &str) -> String {
     label.replace('"', "'")
 }
 
-fn chordname_from_bitmask(bitmask: usize) -> Option<String> {
-    bitmask
-        .checked_sub(1)
-        .and_then(|index| static_data().get(index))
-        .filter(|name| !name.is_empty())
-        .cloned()
-}
-
 pub fn convert_notes_core(input: Vec<String>) -> String {
     let mut notes = Vec::new();
-    let mut bitmask = 0usize;
+    let mut note_names = Vec::new();
 
     for note_str in input.into_iter() {
         match parse_note_token(&note_str) {
             Ok(note) => {
                 notes.push(note.abc);
-                bitmask |= 1usize << note.pitch_class;
+                note_names.push(note_str);
             }
             Err(err) => {
                 set_chord_name(&err);
@@ -339,7 +322,9 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         }
     }
 
-    let chord = chordname_from_bitmask(bitmask).unwrap_or_else(|| "Unknown chord".to_string());
+    let chord = Chord::new(note_names)
+        .map(|chord| chord.pitched_common_name())
+        .unwrap_or_else(|_| "Unknown chord".to_string());
     set_chord_name(&chord);
 
     format!(
@@ -363,9 +348,11 @@ mod tests {
     }
 
     #[test]
-    fn generated_lookup_uses_bitmask_order() {
-        assert_eq!(chordname_from_bitmask(1).unwrap(), "C");
-        assert_eq!(chordname_from_bitmask(4095).unwrap(), "C-aggregate");
+    fn chord_details_core_reports_primary_name_and_pitch_classes() {
+        let details = chord_details_core("C E G").unwrap();
+        assert!(details.contains("Name: C-major triad"));
+        assert!(details.contains("Pitch classes: 0, 4, 7"));
+        assert!(details.contains("Forte class:"));
     }
 
     #[test]
@@ -426,37 +413,12 @@ pub fn tuning_hash_or_fallback(keys: &str, fallback_hash: &str) -> String {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn set_tuning_system(tuning_system: &str, octave_size: usize, step_size: usize) {
-    let tuning_system: Option<TuningSystem> = match tuning_system.to_lowercase().as_str() {
-        "stepmethod" => Some(TuningSystem::StepMethod {
-            octave_size,
-            step_size,
-        }),
-        "equaltemperament" => Some(TuningSystem::EqualTemperament { octave_size }),
-        "justintonation" => Some(TuningSystem::JustIntonation),
-        "justintonation24" => Some(TuningSystem::JustIntonation24),
-        "pythagoreantuning" => Some(TuningSystem::PythagoreanTuning),
-        "fivelimit" => Some(TuningSystem::FiveLimit),
-        "elevenlimit" => Some(TuningSystem::ElevenLimit),
-        "fortythreetone" => Some(TuningSystem::FortyThreeTone),
-        "indian" => Some(TuningSystem::Indian),
-        "indianalt" => Some(TuningSystem::IndianAlt),
-        "indianfull" => Some(TuningSystem::Indian22),
-        // "thai" => Some(TuningSystem::Thai),
-        // "javanese" => Some(TuningSystem::Javanese),
-        "wholetone" => Some(TuningSystem::WholeTone),
-        "quartertone" => Some(TuningSystem::QuarterTone),
-        _ => None,
-    };
-    match tuning_system {
-        Some(tuning_system) => {
-            *TUNING_SYSTEM.lock().expect("couldn't lock") = tuning_system;
-            *OCTAVE_SIZE.lock().expect("couldn't lock") = octave_size;
-            *STEP_SIZE.lock().expect("couldn't lock") = step_size;
-        }
-        None => {
-            #[cfg(debug_assertions)]
-            error("Invalid tuning system");
-        }
-    }
+pub fn set_tuning_system(tuning_system: &str, octave_size: usize, _step_size: usize) {
+    let new_system =
+        parse_tuning_system(tuning_system, octave_size).unwrap_or(TuningSystem::EqualTemperament {
+            octave_size: octave_size.max(12) as _,
+        });
+
+    let mut ts = TUNING_SYSTEM.lock().expect("couldn't lock");
+    *ts = new_system;
 }

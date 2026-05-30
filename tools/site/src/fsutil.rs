@@ -67,7 +67,7 @@ pub(crate) fn remove_file_if_exists(path: &Path) -> Result<()> {
     Ok(())
 }
 
-pub(crate) fn remove_license_files(path: &Path) -> Result<()> {
+pub(crate) fn remove_files(path: &Path) -> Result<()> {
     if !path.is_dir() {
         return Ok(());
     }

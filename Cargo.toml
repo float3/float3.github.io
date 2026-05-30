@@ -1,0 +1,21 @@
+[workspace]
+members = [
+    "tools/site",
+    "crates/recursive_ji_core",
+    "wasm/wasm",
+    "wasm/textprocessing",
+    "wasm/adventofcode",
+    "wasm/glsl2hlsl",
+    "wasm/tuningplayground",
+    "wasm/tuningplayground/keymapping",
+    "wasm/tuningplayground/chord_generator",
+    "wasm/textprocessing/hangeul_conversion",
+]
+resolver = "2"
+
+[workspace.dependencies]
+music21-rs = { git = "https://github.com/float3/music21-rs.git" }
+wasm-bindgen = { version = "0.2.122" }
+console_error_panic_hook = { version = "0.1.7" }
+mini-alloc = { version = "1.0.0" }
+recursive-ji-core = { path = "./crates/recursive_ji_core" }

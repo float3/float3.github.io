@@ -7,14 +7,11 @@ name = "tuningplayground"
 repository = "https://github.com/float3/tuningplayground"
 version = "1.0.0"
 
-[workspace]
-members = ["tuning_systems", "keymapping", "chord_generator"]
-
 [features]
 default = ["wasm"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
-wasm-bindgen = { version = "0.2.121", optional = true }
-tuning_systems = { path = "./tuning_systems" }
+wasm-bindgen = { workspace = true, optional = true }
+music21-rs = { workspace = true }
 keymapping = { path = "./keymapping" }

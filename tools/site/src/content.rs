@@ -5,6 +5,7 @@ use std::path::{Path, PathBuf};
 
 impl Site {
     pub(crate) fn generate(&self) -> Result<()> {
+        crate::recursive_ji::generate(self, &[])?;
         self.links()?;
         self.indices()?;
         self.generate_chords()?;

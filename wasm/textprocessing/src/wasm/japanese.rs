@@ -38,11 +38,10 @@ pub fn kana_to_romaji(text: String) -> String {
                             .and_then(|second| kana_digraph(*first, *second))
                     })
                 });
-            if let Some(next) = next {
-                if let Some(first) = next.chars().next().filter(|char| is_ascii_consonant(*char)) {
+            if let Some(next) = next
+                && let Some(first) = next.chars().next().filter(|char| is_ascii_consonant(*char)) {
                     output.push(first);
                 }
-            }
             index += 1;
             continue;
         }
@@ -61,13 +60,12 @@ pub fn kana_to_romaji(text: String) -> String {
             continue;
         }
 
-        if let (Some(first), Some(second)) = (kana.get(index), kana.get(index + 1)) {
-            if let Some(digraph) = kana_digraph(*first, *second) {
+        if let (Some(first), Some(second)) = (kana.get(index), kana.get(index + 1))
+            && let Some(digraph) = kana_digraph(*first, *second) {
                 output.push_str(digraph);
                 index += 2;
                 continue;
             }
-        }
 
         if let Some(single) = kana_single(char) {
             output.push_str(single);

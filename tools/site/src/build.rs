@@ -1,7 +1,7 @@
 use crate::report;
 use crate::{
-    os_args, remove_dir_if_exists, remove_file_if_exists, remove_license_files, ChildGuard,
-    InstallMode, Mode, Result, Site,
+    os_args, remove_dir_if_exists, remove_file_if_exists, remove_files, ChildGuard, InstallMode,
+    Mode, Result, Site,
 };
 use std::fs;
 use std::path::Path;
@@ -17,7 +17,7 @@ impl Site {
 
         remove_dir_if_exists(&self.root.join("content/js"))?;
         self.wasm(mode)?;
-        remove_license_files(&self.root.join("content/js"))?;
+        remove_files(&self.root.join("content/js"))?;
 
         self.bun_install(&self.root, InstallMode::Locked)?;
 
@@ -161,10 +161,11 @@ impl Site {
                 fs::create_dir_all(&target_dir)?;
             }
 
-            if fs::canonicalize(&source_dir).is_ok() && fs::canonicalize(&target_dir).is_ok() {
-                if fs::canonicalize(&source_dir)? == fs::canonicalize(&target_dir)? {
-                    continue;
-                }
+            if fs::canonicalize(&source_dir).is_ok()
+                && fs::canonicalize(&target_dir).is_ok()
+                && fs::canonicalize(&source_dir)? == fs::canonicalize(&target_dir)?
+            {
+                continue;
             }
 
             for entry in fs::read_dir(&source_dir)? {
