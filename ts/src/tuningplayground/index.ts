@@ -1,9 +1,34 @@
+import { Tone, createTone } from "./Tone.js"
+import { requestMIDI } from "./MIDI.js"
+import { keydown, keyup, visibilityChange, onload } from "./events.js"
+import {
+  playingTonesChanged,
+  keyActive,
+  DOMContentLoaded,
+  setTuningPlaygroundStatus,
+  addEvents,
+  playButton,
+  play,
+  soundMethod,
+  tranposeValue,
+  volumeValue,
+  // linkInputChange,
+} from "./UI.js"
+
 export let wasm: typeof import("wasm-tuningplayground")
 import("wasm-tuningplayground")
   .then((module) => {
     wasm = module
     wasm.main()
-    DOMContentLoaded()
+    // populate tuning options from wasm before initializing UI
+    // (populateTuningSelect is exported from UI.ts)
+    import("./UI.js")
+      .then((ui) => {
+        if (ui.populateTuningSelect) ui.populateTuningSelect()
+      })
+      .then(() => DOMContentLoaded())
+  })
+  .then(() => {
 
     //make sure do anything that can call wasm after wasm has finished importing
     requestMIDI()
@@ -25,22 +50,6 @@ import("wasm-tuningplayground")
     }, 0)
   })
 
-import { Tone, createTone } from "./Tone.js"
-import { requestMIDI } from "./MIDI.js"
-import { keydown, keyup, visibilityChange, onload } from "./events.js"
-import {
-  playingTonesChanged,
-  keyActive,
-  DOMContentLoaded,
-  setTuningPlaygroundStatus,
-  addEvents,
-  playButton,
-  play,
-  soundMethod,
-  tranposeValue,
-  volumeValue,
-  // linkInputChange,
-} from "./UI.js"
 
 document.addEventListener("DOMContentLoaded", DOMContentLoaded)
 document.addEventListener("visibilitychange", visibilityChange)

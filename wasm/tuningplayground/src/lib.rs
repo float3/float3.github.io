@@ -78,15 +78,15 @@ pub fn get_tone(index: usize) -> JsValue {
     let note_names = vec![
         "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
     ];
-    let note_name = note_names[index % 12];
+    let pitch_class = note_names[index % 12];
 
-    createTone(
-        index,
-        frequency,
-        cents,
-        note_name.to_string(),
-        JsValue::NULL,
-    )
+    // Calculate octave: A4 (MIDI 69) is in octave 4, so octave changes at C.
+    // C is MIDI 0 (octave -1), C1 is MIDI 12, C4 is MIDI 60, etc.
+    // Octave = (MIDI note - 12) / 12, then round down (floor)
+    let octave = (index as i32 - 12) / 12;
+    let note_name = format!("{}N{}", pitch_class, octave);
+
+    createTone(index, frequency, cents, note_name, JsValue::NULL)
 }
 
 #[cfg(feature = "wasm")]
@@ -290,8 +290,18 @@ fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
 
     let abc_accidental = accidental.replace('#', "^").replace('b', "_");
 
+    // ABC notation uses case to indicate octave ranges. Use lowercase
+    // letters for notes at or above the reference octave (abc_octave >= 0),
+    // and uppercase for notes below it. This lets ABC render ledger lines
+    // and notes outside the single visible octave correctly.
+    let note_letter = if abc_octave >= 0 {
+        name.to_ascii_lowercase().to_string()
+    } else {
+        name.to_string()
+    };
+
     Ok(ParsedNote {
-        abc: format!("{abc_accidental}{name}{octave_str}"),
+        abc: format!("{abc_accidental}{note_letter}{octave_str}"),
     })
 }
 
@@ -313,7 +323,12 @@ pub fn convert_notes_core(input: Vec<String>) -> String {
         match parse_note_token(&note_str) {
             Ok(note) => {
                 notes.push(note.abc);
-                note_names.push(note_str);
+                // Normalize the note string for chord recognition:
+                // some callers use an internal 'N' separator for octave
+                // (e.g. "C#N4"). The chord parser expects formats like
+                // "C#4", so remove a single 'N' if present.
+                let normalized = note_str.replace("N", "");
+                note_names.push(normalized);
             }
             Err(err) => {
                 set_chord_name(&err);
@@ -421,4 +436,21 @@ pub fn set_tuning_system(tuning_system: &str, octave_size: usize, _step_size: us
 
     let mut ts = TUNING_SYSTEM.lock().expect("couldn't lock");
     *ts = new_system;
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn available_tuning_systems() -> js_sys::Array {
+    let arr = js_sys::Array::new();
+
+    for tuning in ALL_TUNING_SYSTEMS {
+        let obj = js_sys::Object::new();
+        let id = JsValue::from_str(tuning.id());
+        let display = JsValue::from_str(tuning.display_name());
+        js_sys::Reflect::set(&obj, &JsValue::from_str("id"), &id).unwrap();
+        js_sys::Reflect::set(&obj, &JsValue::from_str("display"), &display).unwrap();
+        arr.push(&obj);
+    }
+
+    arr
 }

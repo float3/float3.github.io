@@ -15,3 +15,4 @@ wasm = ["dep:wasm-bindgen"]
 wasm-bindgen = { workspace = true, optional = true }
 music21-rs = { workspace = true }
 keymapping = { path = "./keymapping" }
+js-sys = "0.3.99"

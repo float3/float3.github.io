@@ -220,6 +220,25 @@ export function handleTuningSelectChange(): void {
   stopAllTones()
 }
 
+export function populateTuningSelect(): void {
+  if (!wasm) return
+  const systems = wasm.available_tuning_systems()
+  // `systems` is a JS Array of objects with `id` and `display` properties
+  // Clear existing options
+  tuningSelect.innerHTML = ""
+  for (let i = 0; i < systems.length; i++) {
+    const s: any = systems[i]
+    const option = document.createElement("option")
+    option.value = s.id || s["id"]
+    option.textContent = s.display || s["display"]
+    tuningSelect.appendChild(option)
+  }
+  // Select the first option as default if nothing else is selected
+  if (tuningSelect.options.length > 0 && !tuningSelect.value) {
+    tuningSelect.selectedIndex = 0
+  }
+}
+
 function adjustOutputSize(): void {
   output.style.width = "300px"
   output.style.height = "200px"

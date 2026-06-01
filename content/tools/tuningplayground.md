@@ -22,19 +22,7 @@ tags:
 <p>
   <label for="tuningSelect">Select Tuning System:</label>
   <select id="tuningSelect" name="tuningSelect">
-    <option value="JustIntonation">Just Intonation</option>
-    <option value="JustIntonation24">Just Intonation 24</option>
-    <option value="StepMethod">Just Intonated Step Method</option>
-    <option value="EqualTemperament">Equal Temperament</option>
-    <option value="WholeTone">WholeTone</option>
-    <option value="QuarterTone">QuarterTone</option>
-    <option value="PythagoreanTuning">Pythagorean Tuning</option>
-    <option value="FiveLimit">Five Limit</option>
-    <option value="ElevenLimit">Eleven Limit</option>
-    <option value="FortythreeTone">Fortythree tone tuning</option>
-    <option value="Indian">Indian</option>
-    <option value="IndianAlt">Indian Alt</option>
-    <option value="IndianFull">Indian Full</option>
+    <!-- populated dynamically from wasm available_tuning_systems() -->
   </select>
 </p>
 <p>

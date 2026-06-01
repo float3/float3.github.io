@@ -17,14 +17,17 @@ type MidiAccessLike = {
 }
 
 export function requestMIDI(): void {
-  if (navigator.requestMIDIAccess) {
-    navigator
-      .requestMIDIAccess()
-      .then((midiAccess: unknown) => onMIDISuccess(midiAccess), onMIDIFailure)
-  } else {
-    alert("WebMIDI is not supported in this browser.")
+  if (!navigator.requestMIDIAccess) {
+    alert("WebMIDI is not supported in this browser.");
+    return;
   }
+
+  navigator
+    .requestMIDIAccess()
+    .then(onMIDISuccess)
+    .catch(onMIDIFailure);
 }
+
 
 function onMIDISuccess(midiAccess: unknown): void {
   const input = firstMidiInput(midiAccess)
