@@ -2,8 +2,9 @@ use std::error::Error;
 use std::f64::consts::TAU;
 use std::io::Write;
 
-use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
-use music21_rs::{Pitch, TuningSystem, abc_chord, abc_note};
+use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
+use music21_rs::tuningsystem::{AnyTuningSystem, TWELVE_TONE_NAMES};
+use music21_rs::{abc_chord, abc_note, Pitch, TuningSystem};
 
 mod long_form;
 
@@ -20,12 +21,20 @@ const JUST_INTONATION: TuningSystem = TuningSystem::JustIntonation;
 const MAJOR_INTERVALS: &[i32] = &[0, 4, 7];
 const DOMINANT_INTERVALS: &[i32] = &[0, 4, 7, 10];
 
-const TWELVE_TET: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
-const FIXED_C_JUST: TuningSystem = TuningSystem::JustIntonation;
-const RECURSIVE_JUST: TuningSystem = TuningSystem::RecursiveJustIntonation;
-const TWELVE_TET_ROOTED_JUST: TuningSystem = TuningSystem::TwelveTetRootedJust;
+const TWELVE_TET: AnyTuningSystem =
+    AnyTuningSystem::Fixed(TuningSystem::EqualTemperament { octave_size: 12 });
 
-fn all_tunings() -> [TuningSystem; 4] {
+const FIXED_C_JUST: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::JustIntonation);
+
+const RECURSIVE_JUST: AnyTuningSystem = AnyTuningSystem::Adaptive(RECURSIVE_JI);
+
+const TWELVE_TET_ROOTED_JUST: AnyTuningSystem =
+    AnyTuningSystem::Adaptive(AdaptiveTuningSystem::Recursive {
+        root_tuning_system: TuningSystem::EqualTemperament { octave_size: 12 },
+        local_tuning_system: TuningSystem::JustIntonation,
+    });
+
+fn all_tunings() -> [AnyTuningSystem; 4] {
     [
         TWELVE_TET,
         FIXED_C_JUST,
@@ -34,7 +43,7 @@ fn all_tunings() -> [TuningSystem; 4] {
     ]
 }
 
-fn tuning_file_stem(tuning: TuningSystem) -> &'static str {
+fn tuning_file_stem(tuning: AnyTuningSystem) -> &'static str {
     match tuning {
         TWELVE_TET => "twelve-tet-progression",
         FIXED_C_JUST => "fixed-c-ji-progression",
@@ -44,7 +53,7 @@ fn tuning_file_stem(tuning: TuningSystem) -> &'static str {
     }
 }
 
-fn tuning_sine_file_stem(tuning: TuningSystem) -> &'static str {
+fn tuning_sine_file_stem(tuning: AnyTuningSystem) -> &'static str {
     match tuning {
         TWELVE_TET => "twelve-tet-sine-progression",
         FIXED_C_JUST => "fixed-c-ji-sine-progression",
@@ -54,7 +63,7 @@ fn tuning_sine_file_stem(tuning: TuningSystem) -> &'static str {
     }
 }
 
-fn tuning_drone_file_stem(tuning: TuningSystem) -> &'static str {
+fn tuning_drone_file_stem(tuning: AnyTuningSystem) -> &'static str {
     match tuning {
         TWELVE_TET => "twelve-tet-c-drone-progression",
         FIXED_C_JUST => "fixed-c-ji-c-drone-progression",
@@ -64,7 +73,7 @@ fn tuning_drone_file_stem(tuning: TuningSystem) -> &'static str {
     }
 }
 
-fn tuning_label(tuning: TuningSystem) -> &'static str {
+fn tuning_label(tuning: AnyTuningSystem) -> &'static str {
     match tuning {
         TWELVE_TET => "12-TET",
         FIXED_C_JUST => "Fixed C just intonation",
@@ -250,7 +259,7 @@ pub fn note_splits_abc() -> Result<String> {
     Ok(abc)
 }
 
-pub fn render_progression(tuning: TuningSystem, tone_color: ToneColor) -> Vec<f32> {
+pub fn render_progression(tuning: AnyTuningSystem, tone_color: ToneColor) -> Vec<f32> {
     let chords = progression();
     let mut events = Vec::new();
     let mut cursor = 0.0;
@@ -263,7 +272,7 @@ pub fn render_progression(tuning: TuningSystem, tone_color: ToneColor) -> Vec<f3
     synthesize_with_tone_color(&events, cursor + 0.4, tone_color)
 }
 
-pub fn render_c_drone_progression(tuning: TuningSystem) -> Vec<f32> {
+pub fn render_c_drone_progression(tuning: AnyTuningSystem) -> Vec<f32> {
     let chords = progression();
     let mut events = Vec::new();
     let mut cursor = 0.0;
@@ -329,29 +338,59 @@ pub fn render_note_splits() -> Vec<f32> {
 }
 
 pub fn frequency_report() -> String {
-    let mut body =
-        String::from("tuning,chord,note,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji\n");
+    let mut body = String::from(
+        "tuning,local_root,local_root_ratio,local_interval,note,note_ratio,combined_ratio,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji\n",
+    );
 
-    for chord in progression() {
-        for offset in chord.offsets() {
-            for tuning in all_tunings() {
-                let frequency = note_frequency(tuning, chord, *offset);
-                let tet = note_frequency(TWELVE_TET, chord, *offset);
-                let fixed = note_frequency(FIXED_C_JUST, chord, *offset);
-                body.push_str(&format!(
-                    "{},{},{},{:.3},{},{}\n",
-                    tuning_label(tuning),
-                    chord.name,
-                    TWELVE_TONE_NAMES[(chord.root_pc + *offset).rem_euclid(12) as usize],
-                    frequency,
-                    format_cents(cents_between(frequency, tet)),
-                    format_cents(cents_between(frequency, fixed)),
-                ));
-            }
+    for root_pc in 0..12 {
+        for note_pc in 0..12 {
+            let local_interval = (note_pc as i32 - root_pc as i32).rem_euclid(12);
+
+            let root_name = TWELVE_TONE_NAMES[root_pc];
+            let note_name = TWELVE_TONE_NAMES[note_pc];
+
+            let root_ratio = just_ratio_for_degree(root_pc as i32);
+            let note_ratio = just_ratio_for_degree(local_interval);
+            let combined_ratio = root_ratio * note_ratio;
+
+            let chord = Chord {
+                name: root_name,
+                root_pc: root_pc as i32,
+                octave_shift: -1,
+                intervals: &[],
+            };
+
+            let frequency = note_frequency(RECURSIVE_JUST, chord, local_interval);
+            let tet = note_frequency(TWELVE_TET, chord, local_interval);
+            let fixed = note_frequency(FIXED_C_JUST, chord, local_interval);
+
+            body.push_str(&format!(
+                "{},{},{},{},{},{},{},{:.3},{},{}\n",
+                tuning_label(RECURSIVE_JUST),
+                root_name,
+                format_ratio(root_ratio),
+                local_interval,
+                note_name,
+                format_ratio(note_ratio),
+                format_ratio(combined_ratio),
+                frequency,
+                format_cents(cents_between(frequency, tet)),
+                format_cents(cents_between(frequency, fixed)),
+            ));
         }
     }
 
     body
+}
+
+fn just_ratio_for_degree(degree: i32) -> f64 {
+    let base = JUST_INTONATION.frequency_at(MIDDLE_C_PITCH_SPACE);
+    let target = JUST_INTONATION.frequency_at(MIDDLE_C_PITCH_SPACE + f64::from(degree));
+    target / base
+}
+
+fn format_ratio(value: f64) -> String {
+    format!("{value:.9}")
 }
 
 fn concat_wav(stem: &'static str) -> &'static str {
@@ -377,7 +416,7 @@ fn concat_wav(stem: &'static str) -> &'static str {
 fn add_chord_events(
     events: &mut Vec<NoteEvent>,
     chord: Chord,
-    tuning: TuningSystem,
+    tuning: AnyTuningSystem,
     start: f64,
     duration: f64,
 ) {
@@ -485,7 +524,7 @@ fn notation_chord_label(chord: Chord) -> &'static str {
     }
 }
 
-fn note_frequency(tuning: TuningSystem, chord: Chord, offset: i32) -> f64 {
+fn note_frequency(tuning: AnyTuningSystem, chord: Chord, offset: i32) -> f64 {
     match tuning {
         TWELVE_TET => EQUAL_TEMPERAMENT.frequency_at(chromatic_pitch_space(
             chord.octave_shift,

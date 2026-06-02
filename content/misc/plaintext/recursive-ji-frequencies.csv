@@ -1,149 +1,145 @@
-tuning,chord,note,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji
-12-TET,C,C,130.813,0.000,0.000
-Fixed C just intonation,C,C,130.813,0.000,0.000
-Recursive just intonation,C,C,130.813,0.000,0.000
-12-TET-rooted just intonation,C,C,130.813,0.000,0.000
-12-TET,C,E,164.814,0.000,13.686
-Fixed C just intonation,C,E,163.516,-13.686,0.000
-Recursive just intonation,C,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,C,E,163.516,-13.686,0.000
-12-TET,C,G,195.998,0.000,-1.955
-Fixed C just intonation,C,G,196.219,1.955,0.000
-Recursive just intonation,C,G,196.219,1.955,0.000
-12-TET-rooted just intonation,C,G,196.219,1.955,0.000
-12-TET,E,E,164.814,0.000,13.686
-Fixed C just intonation,E,E,163.516,-13.686,0.000
-Recursive just intonation,E,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,E,E,164.814,0.000,13.686
-12-TET,E,G#/Ab,207.652,0.000,-40.528
-Fixed C just intonation,E,G#/Ab,212.571,40.528,0.000
-Recursive just intonation,E,G#/Ab,204.395,-27.373,-67.900
-12-TET-rooted just intonation,E,G#/Ab,206.017,-13.686,-54.214
-12-TET,E,B,246.942,0.000,11.731
-Fixed C just intonation,E,B,245.274,-11.731,0.000
-Recursive just intonation,E,B,245.274,-11.731,0.000
-12-TET-rooted just intonation,E,B,247.221,1.955,13.686
-12-TET,G#/Ab,G#/Ab,207.652,0.000,-40.528
-Fixed C just intonation,G#/Ab,G#/Ab,212.571,40.528,0.000
-Recursive just intonation,G#/Ab,G#/Ab,212.571,40.528,0.000
-12-TET-rooted just intonation,G#/Ab,G#/Ab,207.652,0.000,-40.528
-12-TET,G#/Ab,C,261.626,0.000,0.000
-Fixed C just intonation,G#/Ab,C,261.626,0.000,0.000
-Recursive just intonation,G#/Ab,C,265.714,26.841,26.841
-12-TET-rooted just intonation,G#/Ab,C,259.565,-13.686,-13.686
-12-TET,G#/Ab,D#/Eb,311.127,0.000,2.487
-Fixed C just intonation,G#/Ab,D#/Eb,310.680,-2.487,0.000
-Recursive just intonation,G#/Ab,D#/Eb,318.856,42.483,44.970
-12-TET-rooted just intonation,G#/Ab,D#/Eb,311.479,1.955,4.442
-12-TET,C,C,130.813,0.000,0.000
-Fixed C just intonation,C,C,130.813,0.000,0.000
-Recursive just intonation,C,C,130.813,0.000,0.000
-12-TET-rooted just intonation,C,C,130.813,0.000,0.000
-12-TET,C,E,164.814,0.000,13.686
-Fixed C just intonation,C,E,163.516,-13.686,0.000
-Recursive just intonation,C,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,C,E,163.516,-13.686,0.000
-12-TET,C,G,195.998,0.000,-1.955
-Fixed C just intonation,C,G,196.219,1.955,0.000
-Recursive just intonation,C,G,196.219,1.955,0.000
-12-TET-rooted just intonation,C,G,196.219,1.955,0.000
-12-TET,F,F,174.614,0.000,29.219
-Fixed C just intonation,F,F,171.692,-29.219,0.000
-Recursive just intonation,F,F,171.692,-29.219,0.000
-12-TET-rooted just intonation,F,F,174.614,0.000,29.219
-12-TET,F,A,220.000,0.000,-5.865
-Fixed C just intonation,F,A,220.747,5.865,0.000
-Recursive just intonation,F,A,214.615,-42.905,-48.770
-12-TET-rooted just intonation,F,A,218.268,-13.686,-19.551
-12-TET,F,C,261.626,0.000,0.000
-Fixed C just intonation,F,C,261.626,0.000,0.000
-Recursive just intonation,F,C,257.538,-27.264,-27.264
-12-TET-rooted just intonation,F,C,261.921,1.955,1.955
-12-TET,A,A,220.000,0.000,-5.865
-Fixed C just intonation,A,A,220.747,5.865,0.000
-Recursive just intonation,A,A,220.747,5.865,0.000
-12-TET-rooted just intonation,A,A,220.000,0.000,-5.865
-12-TET,A,C#/Db,277.183,0.000,-4.955
-Fixed C just intonation,A,C#/Db,277.977,4.955,0.000
-Recursive just intonation,A,C#/Db,275.933,-7.821,-12.777
-12-TET-rooted just intonation,A,C#/Db,275.000,-13.686,-18.642
-12-TET,A,E,329.628,0.000,13.686
-Fixed C just intonation,A,E,327.032,-13.686,0.000
-Recursive just intonation,A,E,331.120,7.820,21.506
-12-TET-rooted just intonation,A,E,330.000,1.955,15.641
-12-TET,D,D,146.832,0.000,-3.910
-Fixed C just intonation,D,D,147.164,3.910,0.000
-Recursive just intonation,D,D,147.164,3.910,0.000
-12-TET-rooted just intonation,D,D,146.832,0.000,-3.910
-12-TET,D,F#/Gb,184.997,0.000,48.682
-Fixed C just intonation,D,F#/Gb,179.868,-48.682,0.000
-Recursive just intonation,D,F#/Gb,183.956,-9.776,38.906
-12-TET-rooted just intonation,D,F#/Gb,183.541,-13.686,34.996
-12-TET,D,A,220.000,0.000,-5.865
-Fixed C just intonation,D,A,220.747,5.865,0.000
-Recursive just intonation,D,A,220.747,5.865,0.000
-12-TET-rooted just intonation,D,A,220.249,1.955,-3.910
-12-TET,G7,G,195.998,0.000,-1.955
-Fixed C just intonation,G7,G,196.219,1.955,0.000
-Recursive just intonation,G7,G,196.219,1.955,0.000
-12-TET-rooted just intonation,G7,G,195.998,0.000,-1.955
-12-TET,G7,B,246.942,0.000,11.731
-Fixed C just intonation,G7,B,245.274,-11.731,0.000
-Recursive just intonation,G7,B,245.274,-11.731,0.000
-12-TET-rooted just intonation,G7,B,244.997,-13.686,-1.955
-12-TET,G7,D,293.665,0.000,-3.910
-Fixed C just intonation,G7,D,294.329,3.910,0.000
-Recursive just intonation,G7,D,294.329,3.910,0.000
-12-TET-rooted just intonation,G7,D,293.997,1.955,-1.955
-12-TET,G7,F,349.228,0.000,29.219
-Fixed C just intonation,G7,F,343.384,-29.219,0.000
-Recursive just intonation,G7,F,343.384,-29.219,0.000
-12-TET-rooted just intonation,G7,F,342.996,-31.174,-1.955
-12-TET,C,C,130.813,0.000,0.000
-Fixed C just intonation,C,C,130.813,0.000,0.000
-Recursive just intonation,C,C,130.813,0.000,0.000
-12-TET-rooted just intonation,C,C,130.813,0.000,0.000
-12-TET,C,E,164.814,0.000,13.686
-Fixed C just intonation,C,E,163.516,-13.686,0.000
-Recursive just intonation,C,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,C,E,163.516,-13.686,0.000
-12-TET,C,G,195.998,0.000,-1.955
-Fixed C just intonation,C,G,196.219,1.955,0.000
-Recursive just intonation,C,G,196.219,1.955,0.000
-12-TET-rooted just intonation,C,G,196.219,1.955,0.000
-12-TET,E,E,164.814,0.000,13.686
-Fixed C just intonation,E,E,163.516,-13.686,0.000
-Recursive just intonation,E,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,E,E,164.814,0.000,13.686
-12-TET,E,G#/Ab,207.652,0.000,-40.528
-Fixed C just intonation,E,G#/Ab,212.571,40.528,0.000
-Recursive just intonation,E,G#/Ab,204.395,-27.373,-67.900
-12-TET-rooted just intonation,E,G#/Ab,206.017,-13.686,-54.214
-12-TET,E,B,246.942,0.000,11.731
-Fixed C just intonation,E,B,245.274,-11.731,0.000
-Recursive just intonation,E,B,245.274,-11.731,0.000
-12-TET-rooted just intonation,E,B,247.221,1.955,13.686
-12-TET,F,F,174.614,0.000,29.219
-Fixed C just intonation,F,F,171.692,-29.219,0.000
-Recursive just intonation,F,F,171.692,-29.219,0.000
-12-TET-rooted just intonation,F,F,174.614,0.000,29.219
-12-TET,F,A,220.000,0.000,-5.865
-Fixed C just intonation,F,A,220.747,5.865,0.000
-Recursive just intonation,F,A,214.615,-42.905,-48.770
-12-TET-rooted just intonation,F,A,218.268,-13.686,-19.551
-12-TET,F,C,261.626,0.000,0.000
-Fixed C just intonation,F,C,261.626,0.000,0.000
-Recursive just intonation,F,C,257.538,-27.264,-27.264
-12-TET-rooted just intonation,F,C,261.921,1.955,1.955
-12-TET,C,C,130.813,0.000,0.000
-Fixed C just intonation,C,C,130.813,0.000,0.000
-Recursive just intonation,C,C,130.813,0.000,0.000
-12-TET-rooted just intonation,C,C,130.813,0.000,0.000
-12-TET,C,E,164.814,0.000,13.686
-Fixed C just intonation,C,E,163.516,-13.686,0.000
-Recursive just intonation,C,E,163.516,-13.686,0.000
-12-TET-rooted just intonation,C,E,163.516,-13.686,0.000
-12-TET,C,G,195.998,0.000,-1.955
-Fixed C just intonation,C,G,196.219,1.955,0.000
-Recursive just intonation,C,G,196.219,1.955,0.000
-12-TET-rooted just intonation,C,G,196.219,1.955,0.000
+tuning,local_root,local_root_ratio,local_interval,note,note_ratio,combined_ratio,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji
+Recursive just intonation,C,1.000000000,0,C,1.000000000,1.000000000,130.813,0.000,0.000
+Recursive just intonation,C,1.000000000,1,C#/Db,1.062500000,1.062500000,138.989,4.955,0.000
+Recursive just intonation,C,1.000000000,2,D,1.125000000,1.125000000,147.164,3.910,0.000
+Recursive just intonation,C,1.000000000,3,D#/Eb,1.187500000,1.187500000,155.340,-2.487,0.000
+Recursive just intonation,C,1.000000000,4,E,1.250000000,1.250000000,163.516,-13.686,0.000
+Recursive just intonation,C,1.000000000,5,F,1.312500000,1.312500000,171.692,-29.219,0.000
+Recursive just intonation,C,1.000000000,6,F#/Gb,1.375000000,1.375000000,179.868,-48.682,0.000
+Recursive just intonation,C,1.000000000,7,G,1.500000000,1.500000000,196.219,1.955,0.000
+Recursive just intonation,C,1.000000000,8,G#/Ab,1.625000000,1.625000000,212.571,40.528,0.000
+Recursive just intonation,C,1.000000000,9,A,1.687500000,1.687500000,220.747,5.865,0.000
+Recursive just intonation,C,1.000000000,10,A#/Bb,1.750000000,1.750000000,228.922,-31.174,0.000
+Recursive just intonation,C,1.000000000,11,B,1.875000000,1.875000000,245.274,-11.731,0.000
+Recursive just intonation,C#/Db,1.062500000,11,C,1.875000000,1.992187500,260.604,-6.776,-6.776
+Recursive just intonation,C#/Db,1.062500000,0,C#/Db,1.000000000,1.062500000,138.989,4.955,0.000
+Recursive just intonation,C#/Db,1.062500000,1,D,1.062500000,1.128906250,147.675,9.911,6.001
+Recursive just intonation,C#/Db,1.062500000,2,D#/Eb,1.125000000,1.195312500,156.362,8.865,11.352
+Recursive just intonation,C#/Db,1.062500000,3,E,1.187500000,1.261718750,165.049,2.468,16.155
+Recursive just intonation,C#/Db,1.062500000,4,F,1.250000000,1.328125000,173.736,-8.731,20.488
+Recursive just intonation,C#/Db,1.062500000,5,F#/Gb,1.312500000,1.394531250,182.423,-24.264,24.418
+Recursive just intonation,C#/Db,1.062500000,6,G,1.375000000,1.460937500,191.109,-43.727,-45.682
+Recursive just intonation,C#/Db,1.062500000,7,G#/Ab,1.500000000,1.593750000,208.483,6.910,-33.617
+Recursive just intonation,C#/Db,1.062500000,8,A,1.625000000,1.726562500,225.856,45.483,39.618
+Recursive just intonation,C#/Db,1.062500000,9,A#/Bb,1.687500000,1.792968750,234.543,10.820,41.995
+Recursive just intonation,C#/Db,1.062500000,10,B,1.750000000,1.859375000,243.230,-26.219,-14.487
+Recursive just intonation,D,1.125000000,10,C,1.750000000,1.968750000,257.538,-27.264,-27.264
+Recursive just intonation,D,1.125000000,11,C#/Db,1.875000000,2.109375000,275.933,-7.821,-12.777
+Recursive just intonation,D,1.125000000,0,D,1.000000000,1.125000000,147.164,3.910,0.000
+Recursive just intonation,D,1.125000000,1,D#/Eb,1.062500000,1.195312500,156.362,8.865,11.352
+Recursive just intonation,D,1.125000000,2,E,1.125000000,1.265625000,165.560,7.820,21.506
+Recursive just intonation,D,1.125000000,3,F,1.187500000,1.335937500,174.758,1.423,30.642
+Recursive just intonation,D,1.125000000,4,F#/Gb,1.250000000,1.406250000,183.956,-9.776,38.906
+Recursive just intonation,D,1.125000000,5,G,1.312500000,1.476562500,193.153,-25.309,-27.264
+Recursive just intonation,D,1.125000000,6,G#/Ab,1.375000000,1.546875000,202.351,-44.772,-85.300
+Recursive just intonation,D,1.125000000,7,A,1.500000000,1.687500000,220.747,5.865,0.000
+Recursive just intonation,D,1.125000000,8,A#/Bb,1.625000000,1.828125000,239.142,44.438,75.612
+Recursive just intonation,D,1.125000000,9,B,1.687500000,1.898437500,248.340,9.775,21.506
+Recursive just intonation,D#/Eb,1.187500000,9,C,1.687500000,2.003906250,262.137,3.378,3.378
+Recursive just intonation,D#/Eb,1.187500000,10,C#/Db,1.750000000,2.078125000,271.845,-33.661,-38.616
+Recursive just intonation,D#/Eb,1.187500000,11,D,1.875000000,2.226562500,291.263,-14.218,-18.128
+Recursive just intonation,D#/Eb,1.187500000,0,D#/Eb,1.000000000,1.187500000,155.340,-2.487,0.000
+Recursive just intonation,D#/Eb,1.187500000,1,E,1.062500000,1.261718750,165.049,2.468,16.155
+Recursive just intonation,D#/Eb,1.187500000,2,F,1.125000000,1.335937500,174.758,1.423,30.642
+Recursive just intonation,D#/Eb,1.187500000,3,F#/Gb,1.187500000,1.410156250,184.466,-4.974,43.708
+Recursive just intonation,D#/Eb,1.187500000,4,G,1.250000000,1.484375000,194.175,-16.173,-18.128
+Recursive just intonation,D#/Eb,1.187500000,5,G#/Ab,1.312500000,1.558593750,203.884,-31.706,-72.234
+Recursive just intonation,D#/Eb,1.187500000,6,A,1.375000000,1.632812500,213.593,-51.169,-57.034
+Recursive just intonation,D#/Eb,1.187500000,7,A#/Bb,1.500000000,1.781250000,233.010,-0.532,30.642
+Recursive just intonation,D#/Eb,1.187500000,8,B,1.625000000,1.929687500,252.428,38.041,49.772
+Recursive just intonation,E,1.250000000,8,C,1.625000000,2.031250000,265.714,26.841,26.841
+Recursive just intonation,E,1.250000000,9,C#/Db,1.687500000,2.109375000,275.933,-7.821,-12.777
+Recursive just intonation,E,1.250000000,10,D,1.750000000,2.187500000,286.153,-44.860,-48.770
+Recursive just intonation,E,1.250000000,11,D#/Eb,1.875000000,2.343750000,306.593,-25.418,-22.931
+Recursive just intonation,E,1.250000000,0,E,1.000000000,1.250000000,163.516,-13.686,0.000
+Recursive just intonation,E,1.250000000,1,F,1.062500000,1.328125000,173.736,-8.731,20.488
+Recursive just intonation,E,1.250000000,2,F#/Gb,1.125000000,1.406250000,183.956,-9.776,38.906
+Recursive just intonation,E,1.250000000,3,G,1.187500000,1.484375000,194.175,-16.173,-18.128
+Recursive just intonation,E,1.250000000,4,G#/Ab,1.250000000,1.562500000,204.395,-27.373,-67.900
+Recursive just intonation,E,1.250000000,5,A,1.312500000,1.640625000,214.615,-42.905,-48.770
+Recursive just intonation,E,1.250000000,6,A#/Bb,1.375000000,1.718750000,224.835,-62.368,-31.194
+Recursive just intonation,E,1.250000000,7,B,1.500000000,1.875000000,245.274,-11.731,0.000
+Recursive just intonation,F,1.312500000,7,C,1.500000000,1.968750000,257.538,-27.264,-27.264
+Recursive just intonation,F,1.312500000,8,C#/Db,1.625000000,2.132812500,278.999,11.309,6.353
+Recursive just intonation,F,1.312500000,9,D,1.687500000,2.214843750,289.730,-23.354,-27.264
+Recursive just intonation,F,1.312500000,10,D#/Eb,1.750000000,2.296875000,300.461,-60.393,-57.906
+Recursive just intonation,F,1.312500000,11,E,1.875000000,2.460937500,321.922,-40.950,-27.264
+Recursive just intonation,F,1.312500000,0,F,1.000000000,1.312500000,171.692,-29.219,0.000
+Recursive just intonation,F,1.312500000,1,F#/Gb,1.062500000,1.394531250,182.423,-24.264,24.418
+Recursive just intonation,F,1.312500000,2,G,1.125000000,1.476562500,193.153,-25.309,-27.264
+Recursive just intonation,F,1.312500000,3,G#/Ab,1.187500000,1.558593750,203.884,-31.706,-72.234
+Recursive just intonation,F,1.312500000,4,A,1.250000000,1.640625000,214.615,-42.905,-48.770
+Recursive just intonation,F,1.312500000,5,A#/Bb,1.312500000,1.722656250,225.345,-58.438,-27.264
+Recursive just intonation,F,1.312500000,6,B,1.375000000,1.804687500,236.076,-77.901,-66.170
+Recursive just intonation,F#/Gb,1.375000000,6,C,1.375000000,1.890625000,247.318,-97.364,-97.364
+Recursive just intonation,F#/Gb,1.375000000,7,C#/Db,1.500000000,2.062500000,269.801,-46.727,-51.682
+Recursive just intonation,F#/Gb,1.375000000,8,D,1.625000000,2.234375000,292.285,-8.154,-12.064
+Recursive just intonation,F#/Gb,1.375000000,9,D#/Eb,1.687500000,2.320312500,303.527,-42.817,-40.330
+Recursive just intonation,F#/Gb,1.375000000,10,E,1.750000000,2.406250000,314.768,-79.856,-66.170
+Recursive just intonation,F#/Gb,1.375000000,11,F,1.875000000,2.578125000,337.252,-60.413,-31.194
+Recursive just intonation,F#/Gb,1.375000000,0,F#/Gb,1.000000000,1.375000000,179.868,-48.682,0.000
+Recursive just intonation,F#/Gb,1.375000000,1,G,1.062500000,1.460937500,191.109,-43.727,-45.682
+Recursive just intonation,F#/Gb,1.375000000,2,G#/Ab,1.125000000,1.546875000,202.351,-44.772,-85.300
+Recursive just intonation,F#/Gb,1.375000000,3,A,1.187500000,1.632812500,213.593,-51.169,-57.034
+Recursive just intonation,F#/Gb,1.375000000,4,A#/Bb,1.250000000,1.718750000,224.835,-62.368,-31.194
+Recursive just intonation,F#/Gb,1.375000000,5,B,1.312500000,1.804687500,236.076,-77.901,-66.170
+Recursive just intonation,G,1.500000000,5,C,1.312500000,1.968750000,257.538,-27.264,-27.264
+Recursive just intonation,G,1.500000000,6,C#/Db,1.375000000,2.062500000,269.801,-46.727,-51.682
+Recursive just intonation,G,1.500000000,7,D,1.500000000,2.250000000,294.329,3.910,0.000
+Recursive just intonation,G,1.500000000,8,D#/Eb,1.625000000,2.437500000,318.856,42.483,44.970
+Recursive just intonation,G,1.500000000,9,E,1.687500000,2.531250000,331.120,7.820,21.506
+Recursive just intonation,G,1.500000000,10,F,1.750000000,2.625000000,343.384,-29.219,0.000
+Recursive just intonation,G,1.500000000,11,F#/Gb,1.875000000,2.812500000,367.911,-9.776,38.906
+Recursive just intonation,G,1.500000000,0,G,1.000000000,1.500000000,196.219,1.955,0.000
+Recursive just intonation,G,1.500000000,1,G#/Ab,1.062500000,1.593750000,208.483,6.910,-33.617
+Recursive just intonation,G,1.500000000,2,A,1.125000000,1.687500000,220.747,5.865,0.000
+Recursive just intonation,G,1.500000000,3,A#/Bb,1.187500000,1.781250000,233.010,-0.532,30.642
+Recursive just intonation,G,1.500000000,4,B,1.250000000,1.875000000,245.274,-11.731,0.000
+Recursive just intonation,G#/Ab,1.625000000,4,C,1.250000000,2.031250000,265.714,26.841,26.841
+Recursive just intonation,G#/Ab,1.625000000,5,C#/Db,1.312500000,2.132812500,278.999,11.309,6.353
+Recursive just intonation,G#/Ab,1.625000000,6,D,1.375000000,2.234375000,292.285,-8.154,-12.064
+Recursive just intonation,G#/Ab,1.625000000,7,D#/Eb,1.500000000,2.437500000,318.856,42.483,44.970
+Recursive just intonation,G#/Ab,1.625000000,8,E,1.625000000,2.640625000,345.428,81.055,94.742
+Recursive just intonation,G#/Ab,1.625000000,9,F,1.687500000,2.742187500,358.713,46.393,75.612
+Recursive just intonation,G#/Ab,1.625000000,10,F#/Gb,1.750000000,2.843750000,371.999,9.354,58.036
+Recursive just intonation,G#/Ab,1.625000000,11,G,1.875000000,3.046875000,398.570,28.796,26.841
+Recursive just intonation,G#/Ab,1.625000000,0,G#/Ab,1.000000000,1.625000000,212.571,40.528,0.000
+Recursive just intonation,G#/Ab,1.625000000,1,A,1.062500000,1.726562500,225.856,45.483,39.618
+Recursive just intonation,G#/Ab,1.625000000,2,A#/Bb,1.125000000,1.828125000,239.142,44.438,75.612
+Recursive just intonation,G#/Ab,1.625000000,3,B,1.187500000,1.929687500,252.428,38.041,49.772
+Recursive just intonation,A,1.687500000,3,C,1.187500000,2.003906250,262.137,3.378,3.378
+Recursive just intonation,A,1.687500000,4,C#/Db,1.250000000,2.109375000,275.933,-7.821,-12.777
+Recursive just intonation,A,1.687500000,5,D,1.312500000,2.214843750,289.730,-23.354,-27.264
+Recursive just intonation,A,1.687500000,6,D#/Eb,1.375000000,2.320312500,303.527,-42.817,-40.330
+Recursive just intonation,A,1.687500000,7,E,1.500000000,2.531250000,331.120,7.820,21.506
+Recursive just intonation,A,1.687500000,8,F,1.625000000,2.742187500,358.713,46.393,75.612
+Recursive just intonation,A,1.687500000,9,F#/Gb,1.687500000,2.847656250,372.510,11.730,60.412
+Recursive just intonation,A,1.687500000,10,G,1.750000000,2.953125000,386.307,-25.309,-27.264
+Recursive just intonation,A,1.687500000,11,G#/Ab,1.875000000,3.164062500,413.900,-5.866,-46.394
+Recursive just intonation,A,1.687500000,0,A,1.000000000,1.687500000,220.747,5.865,0.000
+Recursive just intonation,A,1.687500000,1,A#/Bb,1.062500000,1.792968750,234.543,10.820,41.995
+Recursive just intonation,A,1.687500000,2,B,1.125000000,1.898437500,248.340,9.775,21.506
+Recursive just intonation,A#/Bb,1.750000000,2,C,1.125000000,1.968750000,257.538,-27.264,-27.264
+Recursive just intonation,A#/Bb,1.750000000,3,C#/Db,1.187500000,2.078125000,271.845,-33.661,-38.616
+Recursive just intonation,A#/Bb,1.750000000,4,D,1.250000000,2.187500000,286.153,-44.860,-48.770
+Recursive just intonation,A#/Bb,1.750000000,5,D#/Eb,1.312500000,2.296875000,300.461,-60.393,-57.906
+Recursive just intonation,A#/Bb,1.750000000,6,E,1.375000000,2.406250000,314.768,-79.856,-66.170
+Recursive just intonation,A#/Bb,1.750000000,7,F,1.500000000,2.625000000,343.384,-29.219,0.000
+Recursive just intonation,A#/Bb,1.750000000,8,F#/Gb,1.625000000,2.843750000,371.999,9.354,58.036
+Recursive just intonation,A#/Bb,1.750000000,9,G,1.687500000,2.953125000,386.307,-25.309,-27.264
+Recursive just intonation,A#/Bb,1.750000000,10,G#/Ab,1.750000000,3.062500000,400.614,-62.348,-102.876
+Recursive just intonation,A#/Bb,1.750000000,11,A,1.875000000,3.281250000,429.230,-42.905,-48.770
+Recursive just intonation,A#/Bb,1.750000000,0,A#/Bb,1.000000000,1.750000000,228.922,-31.174,0.000
+Recursive just intonation,A#/Bb,1.750000000,1,B,1.062500000,1.859375000,243.230,-26.219,-14.487
+Recursive just intonation,B,1.875000000,1,C,1.062500000,1.992187500,260.604,-6.776,-6.776
+Recursive just intonation,B,1.875000000,2,C#/Db,1.125000000,2.109375000,275.933,-7.821,-12.777
+Recursive just intonation,B,1.875000000,3,D,1.187500000,2.226562500,291.263,-14.218,-18.128
+Recursive just intonation,B,1.875000000,4,D#/Eb,1.250000000,2.343750000,306.593,-25.418,-22.931
+Recursive just intonation,B,1.875000000,5,E,1.312500000,2.460937500,321.922,-40.950,-27.264
+Recursive just intonation,B,1.875000000,6,F,1.375000000,2.578125000,337.252,-60.413,-31.194
+Recursive just intonation,B,1.875000000,7,F#/Gb,1.500000000,2.812500000,367.911,-9.776,38.906
+Recursive just intonation,B,1.875000000,8,G,1.625000000,3.046875000,398.570,28.796,26.841
+Recursive just intonation,B,1.875000000,9,G#/Ab,1.687500000,3.164062500,413.900,-5.866,-46.394
+Recursive just intonation,B,1.875000000,10,A,1.750000000,3.281250000,429.230,-42.905,-48.770
+Recursive just intonation,B,1.875000000,11,A#/Bb,1.875000000,3.515625000,459.889,-23.463,7.712
+Recursive just intonation,B,1.875000000,0,B,1.000000000,1.875000000,245.274,-11.731,0.000

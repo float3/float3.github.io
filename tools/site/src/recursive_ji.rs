@@ -106,52 +106,57 @@ Text files:
 fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
     let csv_text = fs::read_to_string(csv)?;
 
-    // Parse CSV: tuning,chord,note,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji
+    // New CSV schema:
+    // tuning,local_root,local_root_ratio,local_interval,note,note_ratio,combined_ratio,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji
     let mut map: HashMap<(String, String), (String, String)> = HashMap::new();
+
     for (i, line) in csv_text.lines().enumerate() {
         if i == 0 || line.trim().is_empty() {
             continue;
         }
-        let parts: Vec<&str> = line.split(',').collect();
-        if parts.len() < 6 {
+
+        let parts: Vec<&str> = line.split(',').map(str::trim).collect();
+
+        if parts.len() < 10 {
             continue;
         }
+
         let tuning = parts[0].to_string();
-        let chord = parts[1].to_string();
-        let note = parts[2].to_string();
-        let freq = parts[3].to_string();
-        let cents_vs_tet = parts[4].to_string();
+        let local_root = parts[1].to_string();
+        let note = parts[4].to_string();
+        let frequency = parts[7].to_string();
+        let cents_vs_tet = parts[8].to_string();
+
         map.insert(
-            (tuning, format!("{}|{}", chord, note)),
-            (freq, cents_vs_tet),
+            (tuning, format!("{local_root}|{note}")),
+            (frequency, cents_vs_tet),
         );
     }
 
     let source = fs::read_to_string(post)?;
     let lines: Vec<&str> = source.lines().collect();
 
-    // Find the start of the table (line that contains "| local root |")
-    let start_idx = lines.iter().position(|l| l.contains("| local root |"));
-    let start_idx = match start_idx {
-        Some(i) => i,
+    let start_idx = match lines
+        .iter()
+        .position(|line| line.contains("| local root |"))
+    {
+        Some(index) => index,
         None => return Ok(()),
     };
 
-    // Find the end of the table: first line after start that does NOT start with '|'
     let mut end_idx = start_idx + 1;
     while end_idx < lines.len() && lines[end_idx].trim_start().starts_with('|') {
         end_idx += 1;
     }
 
-    // Build new table: columns = TWELVE_TONE_NAMES, rows = TWELVE_TONE_NAMES
     let mut table = String::new();
-    // header
+
     table.push_str("| local root |");
     for name in TWELVE_TONE_NAMES.iter() {
         table.push_str(&format!(" `{name}` |"));
     }
     table.push('\n');
-    // separator
+
     table.push_str("| ---------- |");
     for _ in TWELVE_TONE_NAMES.iter() {
         table.push_str(" -------------------------------------------------------------------------------------------------------------------------------------------: |");
@@ -159,40 +164,49 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
     table.push('\n');
 
     for root in TWELVE_TONE_NAMES.iter() {
-        table.push_str(&format!("| {root} |", root = root));
+        table.push_str(&format!("| {root} |"));
+
         for col in TWELVE_TONE_NAMES.iter() {
             let key = (
                 "Recursive just intonation".to_string(),
-                format!("{}|{}", root, col),
+                format!("{root}|{col}"),
             );
+
             let (freq, cents) = map
                 .get(&key)
                 .cloned()
-                .unwrap_or(("".to_string(), "".to_string()));
-            let class = note_to_class(col);
-            let data_note = html_escape(col);
+                .unwrap_or_else(|| ("".to_string(), "".to_string()));
+
             let cell = if freq.is_empty() {
                 " ".to_string()
             } else {
-                format!("<span class=\"recursive-note-cell {class}\" data-note=\"{data_note}\"><code>{freq} Hz</code><small class=\"tet-cents\">{cents} cents</small></span>", class=class, data_note=data_note, freq=freq, cents=cents)
+                let class = note_to_class(col);
+                let data_note = html_escape(col);
+
+                format!(
+                    "<span class=\"recursive-note-cell {class}\" data-note=\"{data_note}\"><code>{freq} Hz</code><small class=\"tet-cents\">{cents} cents</small></span>"
+                )
             };
-            table.push_str(&format!(" {cell} |", cell = cell));
+
+            table.push_str(&format!(" {cell} |"));
         }
+
         table.push('\n');
     }
 
-    // Replace lines[start_idx..end_idx] with table
     let prefix = lines[..start_idx].join("\n");
     let suffix = if end_idx < lines.len() {
         lines[end_idx..].join("\n")
     } else {
-        "".to_string()
+        String::new()
     };
+
     let final_text = if suffix.is_empty() {
-        format!("{}\n{}", prefix, table)
+        format!("{prefix}\n{table}")
     } else {
-        format!("{}\n{}\n{}", prefix, table, suffix)
+        format!("{prefix}\n{table}\n{suffix}")
     };
+
     fs::write(post, final_text)?;
     Ok(())
 }
