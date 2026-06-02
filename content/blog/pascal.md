@@ -1,7 +1,7 @@
 ---
 title: Pascal my friend
-date: 2026-05-09
-updated: 2026-05-09
+date: 2026-06-02
+updated: 2026-06-02
 tags:
   - philosophy
 ---

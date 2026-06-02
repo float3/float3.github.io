@@ -1,7 +1,7 @@
 ---
 title: life without you
 date: 2026-05-14
-updated: 2026-05-14
+updated: 2026-06-02
 tags:
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: what does free will look like?
 date: 2025-07-17
-updated: 2025-07-17
+updated: 2026-06-02
 tags:
   - philosophy
 ---
