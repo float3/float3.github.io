@@ -16,20 +16,18 @@ import {
 } from "./UI.js"
 
 export let wasm: typeof import("wasm-tuningplayground")
-import("wasm-tuningplayground")
-  .then((module) => {
-    wasm = module
+
+void (async () => {
+  try {
+    wasm = await import("wasm-tuningplayground")
     wasm.main()
+
     // populate tuning options from wasm before initializing UI
     // (populateTuningSelect is exported from UI.ts)
-    import("./UI.js")
-      .then((ui) => {
-        if (ui.populateTuningSelect) ui.populateTuningSelect()
-      })
-      .then(() => DOMContentLoaded())
-  })
-  .then(() => {
-    //make sure do anything that can call wasm after wasm has finished importing
+    const ui = await import("./UI.js")
+    ui.populateTuningSelect?.()
+
+    // make sure do anything that can call wasm after wasm has finished importing
     requestMIDI()
     playButton.onclick = play
     document.addEventListener("keydown", keydown)
@@ -41,13 +39,16 @@ import("wasm-tuningplayground")
     playingTonesChanged()
     setTuningPlaygroundStatus("", "ready")
     // linkInputChange();
-  })
-  .catch((error: unknown) => {
-    setTuningPlaygroundStatus(`Could not start tuning playground: ${formatError(error)}`, "error")
+  } catch (error: unknown) {
+    setTuningPlaygroundStatus(
+      `Could not start tuning playground: ${formatError(error)}`,
+      "error",
+    )
     window.setTimeout(() => {
       throw error
     }, 0)
-  })
+  }
+})()
 
 document.addEventListener("DOMContentLoaded", DOMContentLoaded)
 document.addEventListener("visibilitychange", visibilityChange)

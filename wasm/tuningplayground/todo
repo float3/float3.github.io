@@ -1,6 +1,4 @@
 # TODO
-// TODO: unused tables: just_intonation_24, indian_scale, indian_scale_full, five_limit
-// TODO: different equal temeperaments?
 // TODO: arabic scales
 // TODO: visualise keyboard
 // TODO: japanese/chinese scales
@@ -12,9 +10,6 @@
 // TODO: turkish tuning
 // TODO: implement Midi player
 // TODO: implement TONE.js
-// TODO: usize vs u32
-// TODO: add bass clef
-// TODO: Fix visibility pub(crate) and fix tests maybe inline them per file
 // TODO: make better tests
 // TOOD: extend keymapping library
 // TODO: fix the keyboard numbers, for now using offset hack
@@ -25,7 +20,3 @@
 // TODO: link to source code and to dev/master version of site
 // TODO: cache volume
 // TODO: generate embeds
-
-
-// TODO: LUT binary format, no hashmap just array
-// TODO: remove std

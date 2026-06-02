@@ -71,13 +71,16 @@ extern "C" {
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn get_tone(index: usize) -> JsValue {
-    // For now, return a simple tone based on equal temperament
-    // TODO: use music21-rs for tuning system calculations
-    let frequency = 440.0 * 2.0_f64.powf((index as f64 - 69.0) / 12.0);
-    let cents = ((index as f64 - 69.0) * 100.0) % 1200.0;
-    let note_names = vec![
-        "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
-    ];
+    // Get the current tuning system and calculate frequency using it
+    let tuning_system = TUNING_SYSTEM.lock().expect("couldn't lock");
+    let frequency = tuning_system.frequency_at(index as f64);
+    let octave_size = tuning_system.octave_size() as f64;
+
+    // Calculate cents relative to the tuning system's octave
+    let cents =
+        ((index as f64 - 69.0) * 100.0 * 12.0 / octave_size) % (1200.0 * 12.0 / octave_size);
+
+    let note_names = music21_rs::tuningsystem::TWELVE_TONE_NAMES_SHARP;
     let pitch_class = note_names[index % 12];
 
     // Calculate octave: A4 (MIDI 69) is in octave 4, so octave changes at C.
