@@ -29,7 +29,6 @@ import("wasm-tuningplayground")
       .then(() => DOMContentLoaded())
   })
   .then(() => {
-
     //make sure do anything that can call wasm after wasm has finished importing
     requestMIDI()
     playButton.onclick = play
@@ -49,7 +48,6 @@ import("wasm-tuningplayground")
       throw error
     }, 0)
   })
-
 
 document.addEventListener("DOMContentLoaded", DOMContentLoaded)
 document.addEventListener("visibilitychange", visibilityChange)

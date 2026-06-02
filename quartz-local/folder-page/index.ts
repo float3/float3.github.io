@@ -9,7 +9,12 @@ import type {
 } from "../../quartz/components/types"
 import type { QuartzPageTypePlugin, VirtualPage } from "../../quartz/plugins/types"
 import type { QuartzPluginData } from "../../quartz/plugins/vfile"
-import { type FullSlug, isFolderPath, joinSegments, resolveRelative } from "../../quartz/util/path.ts"
+import {
+  type FullSlug,
+  isFolderPath,
+  joinSegments,
+  resolveRelative,
+} from "../../quartz/util/path.ts"
 import type { Root } from "hast"
 
 type SortFn = (f1: PageEntry, f2: PageEntry) => number
@@ -83,7 +88,9 @@ li.section-li > .section .meta {
 function concatenateResources(
   ...resources: Array<string | string[] | undefined>
 ): string | string[] | undefined {
-  const result = resources.filter((resource): resource is string | string[] => resource !== undefined).flat()
+  const result = resources
+    .filter((resource): resource is string | string[] => resource !== undefined)
+    .flat()
   return result.length === 0 ? undefined : result
 }
 
@@ -339,18 +346,11 @@ const FolderContent = ((userOpts?: Partial<FolderContentOptions>) => {
     const cssClasses = fileData.frontmatter?.cssclasses
     const classes = Array.isArray(cssClasses) ? cssClasses.join(" ") : ""
     const hastRoot = tree as Root
-    const content =
-      hastRoot.children.length === 0
-        ? fileData.description
-        : htmlToJsx(hastRoot)
+    const content = hastRoot.children.length === 0 ? fileData.description : htmlToJsx(hastRoot)
     const pageListContent = renderPageList(cfg, slug, allPagesInFolder, options.sort)
     const count =
       options.showFolderCount && allPagesInFolder.length > 0
-        ? h(
-            "p",
-            null,
-            itemsUnderFolder(allPagesInFolder.length),
-          )
+        ? h("p", null, itemsUnderFolder(allPagesInFolder.length))
         : null
 
     return h(
@@ -407,8 +407,14 @@ export const FolderPage: QuartzPageTypePlugin<FolderPageOptions> = (opts) => {
         const relativePath = (file as { relativePath?: string } | undefined)?.relativePath
         if (!relativePath) continue
 
-        const slugParts = path.dirname(slug).split("/").filter((part) => part !== ".")
-        const pathParts = path.dirname(relativePath).split("/").filter((part) => part !== ".")
+        const slugParts = path
+          .dirname(slug)
+          .split("/")
+          .filter((part) => part !== ".")
+        const pathParts = path
+          .dirname(relativePath)
+          .split("/")
+          .filter((part) => part !== ".")
         for (let index = 0; index < slugParts.length && index < pathParts.length; index++) {
           const slugPart = slugParts[index]
           const pathPart = pathParts[index]
@@ -450,9 +456,7 @@ export const FolderPage: QuartzPageTypePlugin<FolderPageOptions> = (opts) => {
         const slug = joinSegments(folder, "index") as FullSlug
         const slugSegment = folder.split("/").pop() ?? folder
         const folderName = folderDisplayNames.get(slugSegment) ?? slugSegment
-        const title = opts?.prefixFolders
-          ? `${folderLabel()}: ${folderName}`
-          : folderName
+        const title = opts?.prefixFolders ? `${folderLabel()}: ${folderName}` : folderName
 
         virtualPages.push({
           slug,

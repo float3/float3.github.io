@@ -1,6 +1,6 @@
 function createUnityInstance(t, n, c) {
   function s(e, t) {
-    if (!s.aborted && n.showBanner) return "error" == t && (s.aborted = !0), n.showBanner(e, t)
+    if (!s.aborted && n.showBanner) return ("error" == t && (s.aborted = !0), n.showBanner(e, t))
     switch (t) {
       case "error":
         console.error(e)
@@ -51,10 +51,10 @@ function createUnityInstance(t, n, c) {
       intervals: {},
       setInterval: function (e, t) {
         e = window.setInterval(e, t)
-        return (this.intervals[e] = !0), e
+        return ((this.intervals[e] = !0), e)
       },
       clearInterval: function (e) {
-        delete this.intervals[e], window.clearInterval(e)
+        ;(delete this.intervals[e], window.clearInterval(e))
       },
       preRun: [],
       postRun: [],
@@ -62,7 +62,7 @@ function createUnityInstance(t, n, c) {
         console.log(e)
       },
       printErr: function (e) {
-        console.error(e),
+        ;(console.error(e),
           "string" == typeof e &&
             -1 != e.indexOf("wasm streaming compile failed") &&
             (-1 != e.toLowerCase().indexOf("mime")
@@ -77,7 +77,7 @@ function createUnityInstance(t, n, c) {
                     l.codeUrl +
                     ", but the file is not pre-compressed on disk (or vice versa). Check the Network tab in browser Devtools to debug server header configuration.",
                   "warning",
-                ))
+                )))
       },
       locateFile: function (e) {
         return "build.wasm" == e ? this.codeUrl : e
@@ -94,11 +94,11 @@ function createUnityInstance(t, n, c) {
   function i(e) {
     e.preventDefault()
   }
-  a.forEach(function (e) {
+  ;(a.forEach(function (e) {
     t.addEventListener(e, i)
   }),
     window.addEventListener("error", r),
-    window.addEventListener("unhandledrejection", r)
+    window.addEventListener("unhandledrejection", r))
   var u = "",
     d = ""
   function h(e) {
@@ -110,7 +110,7 @@ function createUnityInstance(t, n, c) {
         (t.style.height = "100%"))
       : u && ((t.style.width = u), (t.style.height = d), (d = u = ""))
   }
-  document.addEventListener("webkitfullscreenchange", h),
+  ;(document.addEventListener("webkitfullscreenchange", h),
     l.deinitializers.push(function () {
       for (var e in (l.disableAccessToMediaDevices(),
       a.forEach(function (e) {
@@ -125,8 +125,8 @@ function createUnityInstance(t, n, c) {
     }),
     (l.QuitCleanup = function () {
       for (var e = 0; e < l.deinitializers.length; e++) l.deinitializers[e]()
-      ;(l.deinitializers = []), "function" == typeof l.onQuit && l.onQuit()
-    })
+      ;((l.deinitializers = []), "function" == typeof l.onQuit && l.onQuit())
+    }))
   var f,
     p,
     m,
@@ -148,7 +148,7 @@ function createUnityInstance(t, n, c) {
       },
       Quit: function () {
         return new Promise(function (e, t) {
-          ;(l.shouldQuit = !0), (l.onQuit = e)
+          ;((l.shouldQuit = !0), (l.onQuit = e))
         })
       },
       GetMemoryInfo: function () {
@@ -213,30 +213,30 @@ function createUnityInstance(t, n, c) {
         s = 0
       for (e in l.downloadProgress) {
         if (!(n = l.downloadProgress[e]).started) return
-        a++, n.lengthComputable ? ((r += n.loaded), (o += n.total), i++) : n.finished || s++
+        ;(a++, n.lengthComputable ? ((r += n.loaded), (o += n.total), i++) : n.finished || s++)
       }
       c(0.9 * (a ? (a - s - (o ? (i * (o - r)) / o : 0)) / a : 0))
     }
   }
   function x() {
     var e = this
-    ;(this.isConnected = this.connect().then(function () {
+    ;((this.isConnected = this.connect().then(function () {
       return e.cleanUpCache()
     })),
       this.isConnected.catch(function (e) {
-        ;(e = "Error when initializing cache: " + e), console.log("[UnityCache] " + e)
-      })
+        ;((e = "Error when initializing cache: " + e), console.log("[UnityCache] " + e))
+      }))
   }
   function E(e) {
     console.log("[UnityCache] " + e)
   }
   function U(e) {
-    return (U.link = U.link || document.createElement("a")), (U.link.href = e), U.link.href
+    return ((U.link = U.link || document.createElement("a")), (U.link.href = e), U.link.href)
   }
   function T() {
     new Promise(function (a, e) {
       var i = document.createElement("script")
-      ;(i.src = l.frameworkUrl),
+      ;((i.src = l.frameworkUrl),
         (i.onload = function () {
           if ("undefined" == typeof unityFramework || !unityFramework) {
             var e,
@@ -286,7 +286,7 @@ function createUnityInstance(t, n, c) {
             )
           }
           var o = unityFramework
-          ;(unityFramework = null), (i.onload = null), a(o)
+          ;((unityFramework = null), (i.onload = null), a(o))
         }),
         (i.onerror = function (e) {
           s(
@@ -299,15 +299,15 @@ function createUnityInstance(t, n, c) {
         document.body.appendChild(i),
         l.deinitializers.push(function () {
           document.body.removeChild(i)
-        })
+        }))
     }).then(function (e) {
       e(l)
     })
-    P((n = "dataUrl")),
+    ;(P((n = "dataUrl")),
       (e = l.cacheControl(l[n])),
       (t = l.companyName && l.productName ? l.cachedFetch : l.fetchWithProgress),
       (r = l[n]),
-      (r = /file:\/\//.exec(r) ? "same-origin" : void 0)
+      (r = /file:\/\//.exec(r) ? "same-origin" : void 0))
     var n,
       e,
       t,
@@ -337,7 +337,7 @@ function createUnityInstance(t, n, c) {
             : console.error(t)
         })
     l.preRun.push(function () {
-      l.addRunDependency("dataUrl"),
+      ;(l.addRunDependency("dataUrl"),
         o.then(function (e) {
           var t = new DataView(e.buffer, e.byteOffset, e.byteLength),
             n = 0,
@@ -356,7 +356,7 @@ function createUnityInstance(t, n, c) {
             l.FS_createDataFile(c, null, e.subarray(a, a + i), !0, !0, !0)
           }
           l.removeRunDependency("dataUrl")
-        })
+        }))
     })
   }
   return (
@@ -386,8 +386,8 @@ function createUnityInstance(t, n, c) {
           e = a[s][1]
           break
         }
-      "Safari" == e && (t = i("Version/(.*?) ", o, 1)),
-        "Internet Explorer" == e && (t = i("rv:(.*?)\\)? ", o, 1) || t)
+      ;("Safari" == e && (t = i("Version/(.*?) ", o, 1)),
+        "Internet Explorer" == e && (t = i("rv:(.*?)\\)? ", o, 1) || t))
       for (
         var c = [
             ["Windows (.*?)[;)]", "Windows"],
@@ -405,7 +405,7 @@ function createUnityInstance(t, n, c) {
         ++u
       )
         if ((d = i(c[u][0], o, 1))) {
-          ;(n = c[u][1]), (d = d.replace(/_/g, "."))
+          ;((n = c[u][1]), (d = d.replace(/_/g, ".")))
           break
         }
       var d =
@@ -450,7 +450,7 @@ function createUnityInstance(t, n, c) {
       }
     })()),
     (l.abortHandler = function (e) {
-      return D(e, "", 0), !0
+      return (D(e, "", 0), !0)
     }),
     (Error.stackTraceLimit = Math.max(Error.stackTraceLimit || 0, 50)),
     (l.readBodyWithProgress = function (a, i, s) {
@@ -499,7 +499,7 @@ function createUnityInstance(t, n, c) {
                   if (h === u) return d
                   if (h < u) return d.slice(0, h)
                   for (var t = new Uint8Array(h), n = (t.set(d, 0), f), r = 0; r < l.length; ++r)
-                    t.set(l[r], n), (n += l[r].length)
+                    (t.set(l[r], n), (n += l[r].length))
                   return t
                 }
                 return (
@@ -608,8 +608,8 @@ function createUnityInstance(t, n, c) {
       (x.prototype.close = function () {
         return this.isConnected.then(
           function () {
-            this.database && (this.database.close(), (this.database = null)),
-              this.cache && (this.cache = null)
+            ;(this.database && (this.database.close(), (this.database = null)),
+              this.cache && (this.cache = null))
           }.bind(this),
         )
       }),
@@ -629,18 +629,18 @@ function createUnityInstance(t, n, c) {
                       n(new Error("Could not connect to cache: Database timeout."))
                   }, 2e4)
                   var e = b.open(f.name, f.version)
-                  ;(e.onupgradeneeded = o.upgradeDatabase.bind(o)),
+                  ;((e.onupgradeneeded = o.upgradeDatabase.bind(o)),
                     (e.onsuccess = function (e) {
-                      r(), (o.database = e.target.result), t()
+                      ;(r(), (o.database = e.target.result), t())
                     }),
                     (e.onerror = function (e) {
-                      r(), (o.database = null), n(new Error("Could not connect to database."))
-                    })
+                      ;(r(), (o.database = null), n(new Error("Could not connect to database.")))
+                    }))
                 } catch (e) {
-                  r(),
+                  ;(r(),
                     (o.database = null),
                     (o.cache = null),
-                    n(new Error("Could not connect to cache: Could not connect to database."))
+                    n(new Error("Could not connect to cache: Could not connect to database.")))
                 }
               })
                 .then(function () {
@@ -654,13 +654,13 @@ function createUnityInstance(t, n, c) {
       (x.prototype.upgradeDatabase = function (e) {
         var t,
           e = e.target.result
-        e.objectStoreNames.contains(p.name) ||
+        ;(e.objectStoreNames.contains(p.name) ||
           ((t = e.createObjectStore(p.name, { keyPath: "url" })),
           ["accessedAt", "updatedAt"].forEach(function (e) {
             t.createIndex(e, e)
           })),
           e.objectStoreNames.contains(m) && e.deleteObjectStore(m),
-          e.objectStoreNames.contains(g) && e.deleteObjectStore(g)
+          e.objectStoreNames.contains(g) && e.deleteObjectStore(g))
       }),
       (x.prototype.execute = function (a, i, s) {
         return this.isConnected.then(
@@ -694,7 +694,7 @@ function createUnityInstance(t, n, c) {
           a = []
         return new Promise(function (t, n) {
           var e = r.database.transaction([p.name], "readonly").objectStore(p.name).openCursor()
-          ;(e.onsuccess = function (e) {
+          ;((e.onsuccess = function (e) {
             e = e.target.result
             e
               ? ((o += e.value.size), a.push(e.value), e.continue())
@@ -702,7 +702,7 @@ function createUnityInstance(t, n, c) {
           }),
             (e.onerror = function (e) {
               n(e)
-            })
+            }))
         })
       }),
       (x.prototype.cleanUpCache = function () {
@@ -713,7 +713,8 @@ function createUnityInstance(t, n, c) {
           o.sort(function (e, t) {
             return e.accessedAt - t.accessedAt
           })
-          for (a = 0; a < o.length && !(n < x.MaximumCacheSize); ++a) r.push(o[a]), (n -= o[a].size)
+          for (a = 0; a < o.length && !(n < x.MaximumCacheSize); ++a)
+            (r.push(o[a]), (n -= o[a].size))
           return (function e() {
             var t
             return 0 === r.length
@@ -727,7 +728,7 @@ function createUnityInstance(t, n, c) {
                         (r = t.url),
                         new Promise(function (e, t) {
                           var n = i.database.transaction([p.name], "readwrite")
-                          n.objectStore(p.name).delete(r), (n.oncomplete = e), (n.onerror = t)
+                          ;(n.objectStore(p.name).delete(r), (n.oncomplete = e), (n.onerror = t))
                         })
                       )
                     var r
@@ -901,7 +902,7 @@ function createUnityInstance(t, n, c) {
             ? ((l.startupErrorHandler = t),
               c(0),
               l.postRun.push(function () {
-                c(1), delete l.startupErrorHandler, e(C)
+                ;(c(1), delete l.startupErrorHandler, e(C))
               }),
               T())
             : t("Your browser does not support WebAssembly.")

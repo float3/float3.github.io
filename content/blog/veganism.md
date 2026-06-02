@@ -7,9 +7,9 @@ tags:
   - philosophy
 ---
 
-> *"This book can never be popular. It is not for the many, but for the few. The reader must already be at odds with the world and disillusioned with its apparent order."*
+> _"This book can never be popular. It is not for the many, but for the few. The reader must already be at odds with the world and disillusioned with its apparent order."_
 >
-> **Arthur Schopenhauer**, *Parerga and Paralipomena*
+> **Arthur Schopenhauer**, _Parerga and Paralipomena_
 
 Schopenhauer began with a prediction: only those who already suspect he's right will find his work meaningful. I feel similarly about this post. I'm confident this will not convince anyone. This is not meant to shock or provoke for its own sake, but to clarify inconsistencies in how we treat animals, ethics, and ourselves.
 
@@ -24,7 +24,6 @@ To quantify the scale of suffering: if we conservatively assume each shrimp expe
 [1]: https://en.wikipedia.org/wiki/Shrimp_farming "Shrimp farming"
 [2]: https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth "How Many People Have Ever Lived on Earth? - PRB"
 [3]: https://www.lesswrong.com/posts/5JB4dn7hEvZCYDvCe/a-very-simple-case-for-giving-to-shrimp "A Very Simple Case For Giving To Shrimp - LessWrong"
-
 
 ## Let's talk about facts vs belief
 
@@ -46,11 +45,11 @@ I can wear second-hand leather. I don't go to the zoo. If supply and demand of a
 
 - I'm more than 50% certain that animals deserve moral consideration.
 - I'm reasonably confident that future generations will look back on the animal industry like we now look back on the slave trade. Though I admit this is a weak argument, since future societies might be as well be aliens from our perspective.
-	- I compare animal farming to slavery to highlight a pattern: societies often recognize the moral standing of one group before others, sometimes for reasons that do not survive reflection. The analogy is about the structure of moral exclusion, not about claiming identical harms or identical remedies.
+  - I compare animal farming to slavery to highlight a pattern: societies often recognize the moral standing of one group before others, sometimes for reasons that do not survive reflection. The analogy is about the structure of moral exclusion, not about claiming identical harms or identical remedies.
 - I try to live morally consistently. Lots of people are disgusted by the idea of eating a dog or cat, yet think nothing of eating calves, pigs, or birds. That's inconsistent.
 - Most people think raping an animal is immoral, but eating one is fine. That's also inconsistent. You can argue that one correlates with sociopathy while the other doesn't, but I'm not interested in reasons for why we should allow one but not the other, but instead in their moral value.
-    - If you think both are acceptable, I respect your consistency even though we disagree.
-    - If you think one is okay and the other isn't, I think you're being hypocritical.
+  - If you think both are acceptable, I respect your consistency even though we disagree.
+  - If you think one is okay and the other isn't, I think you're being hypocritical.
 - also Health and Environment reasons, but I want to explore moral reasoning here
 
 ## The "animals eat animals, so why can't I?" argument
@@ -70,10 +69,12 @@ Yes, most of my friends are not vegan and for lots of them I'm the only exposure
 If you become more consistent by deciding that no animals matter at all, you have increased logical coherence but, in my view, produced a worse world. My aim is not abstract consistency alone. My aim is to invite you to take the concern you already show to a few animals and apply it where the morally relevant differences are weak or absent.
 
 one person who read this blog post said the following:
+
 > As a meat-eater, I am definitely much more open to being "proselytized" by vegetarians who think I am committing an atrocity, for two connected reasons:
+>
 > 1. I am committing an atrocity, if they are right, so saying anything else seems incoherent to me.
 > 2. "I am vegetarian, but I accept that others are not" is a local maximum of coolness and virtue-signalling in today's society, so anyone proselytizing me about it is (maybe unconsciously) simultaneously earning cool points, which disincentivizes truth-seeking.
-> Similarly, anyone proselytizing me about "Eating meat is an atrocity, no excuses" is losing social points in doing so, so they are incentivized to find refutations for their arguments.
+>    Similarly, anyone proselytizing me about "Eating meat is an atrocity, no excuses" is losing social points in doing so, so they are incentivized to find refutations for their arguments.
 
 I agree with this. I have to spend social points and likeability by repeatedly talking about veganism and add friction to behaviour that I believe is Immoral anything else would be incoherent.
 I don't like meat-eating but I also don't like vegetarianism or naive veganism.
@@ -144,31 +145,32 @@ this was sent to me as feedback:
 I didn't plan on diving into the details of factory farming, but since more than one person responded to me with blatantly wrong factual statements, I felt the need to talk about it, if you already know about this or you just care about the moral philosophy feel free to skip this part.
 
 let's address each claim:
+
 - They live in pens:
-	- Ok idk why living in pens is listed like it's a positive, seems like a negative to me.
-	- pigs housed in barren, crowded pens often resort to fighting and tail-biting, inflicting wounds on their pen-mates out of stress and boredom
--  They have no predators:
-	- Yes, the absence of predators is a real benefit, but it does not settle welfare. Removing one danger can still leave an animal in an environment full of chronic stress, pain, confinement, and early death.
-	- A protected prison would also have no predators. That fact alone would not make it good.
-	- If you don't think the comparison between humans and animals is valid, consider the narrower point: animals can experience chronic stress in captivity even when predators are absent.
-	- 556 million chickens in the USA die annually prematurely, without ever reaching slaughter because of holding conditions. https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
+  - Ok idk why living in pens is listed like it's a positive, seems like a negative to me.
+  - pigs housed in barren, crowded pens often resort to fighting and tail-biting, inflicting wounds on their pen-mates out of stress and boredom
+- They have no predators:
+  - Yes, the absence of predators is a real benefit, but it does not settle welfare. Removing one danger can still leave an animal in an environment full of chronic stress, pain, confinement, and early death.
+  - A protected prison would also have no predators. That fact alone would not make it good.
+  - If you don't think the comparison between humans and animals is valid, consider the narrower point: animals can experience chronic stress in captivity even when predators are absent.
+  - 556 million chickens in the USA die annually prematurely, without ever reaching slaughter because of holding conditions. https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
 - They are able to fuck:
-	- Most livestock animals are bred through artificial insemination. Turkeys bred for very large bodies often cannot mate naturally at all.
-	- only about 3% of female pigs ever breed through direct contact with a male. 
-	- 80% of dairy cows in the US are bred through artificial insemination, bulls are usually not kept on-site. https://pmc.ncbi.nlm.nih.gov/articles/PMC4095965
+  - Most livestock animals are bred through artificial insemination. Turkeys bred for very large bodies often cannot mate naturally at all.
+  - only about 3% of female pigs ever breed through direct contact with a male.
+  - 80% of dairy cows in the US are bred through artificial insemination, bulls are usually not kept on-site. https://pmc.ncbi.nlm.nih.gov/articles/PMC4095965
 - They get fed:
-	- Not all farm animals are allowed to eat freely. Breeding animals, in particular, often have their feed intentionally restricted, leaving them in a constant state of hunger. https://pubmed.ncbi.nlm.nih.gov/12782235
-	- Similarly, pregnant sows in industrial systems are typically fed a restricted diet to avoid excessive weight gain. Studies and welfare audits report that gestating sows on farms exhibit physiological and behavioral signs of hunger, such as aggression at feeding time and sham chewing, because they are not given enough bulk food to feel satiated https://www.thepigsite.com/articles/welfare-issues-resulting-from-feed-restriction-in-pregnant-sows
-	- https://pubmed.ncbi.nlm.nih.gov/9464910
-	- many animals cannot cope with the rapid growth that their diet causes, resulting in heart failures, leg deformities and other issues https://awionline.org/content/inhumane-practices-factory-farms
+  - Not all farm animals are allowed to eat freely. Breeding animals, in particular, often have their feed intentionally restricted, leaving them in a constant state of hunger. https://pubmed.ncbi.nlm.nih.gov/12782235
+  - Similarly, pregnant sows in industrial systems are typically fed a restricted diet to avoid excessive weight gain. Studies and welfare audits report that gestating sows on farms exhibit physiological and behavioral signs of hunger, such as aggression at feeding time and sham chewing, because they are not given enough bulk food to feel satiated https://www.thepigsite.com/articles/welfare-issues-resulting-from-feed-restriction-in-pregnant-sows
+  - https://pubmed.ncbi.nlm.nih.gov/9464910
+  - many animals cannot cope with the rapid growth that their diet causes, resulting in heart failures, leg deformities and other issues https://awionline.org/content/inhumane-practices-factory-farms
 - They get good treatment:
-	- workers do not attempt to treat ill chickens – they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
-	- hundreds of thousands of animals (pigs, cows, sheep, etc.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
+  - workers do not attempt to treat ill chickens – they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
+  - hundreds of thousands of animals (pigs, cows, sheep, etc.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
 - They are free of diseases:
-	- factory farms are "breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health
-	- The practice of administering sub-therapeutic antibiotics has fostered drug-resistant pathogens that can spread to humans. this 2023 study links 1 Million human deaths per year to antibiotic resistance stemming from factory farm antibiotic abuse https://www.aspca.org/protecting-farm-animals/factory-farming-hurts-people-and-communities ---------- https://www.prnewswire.com/news-releases/one-million-human-deaths-linked-to-factory-farming-set-to-double-by-2050-301792539.html
--  They live better lives than many humans:
-	- ...
+  - factory farms are "breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health
+  - The practice of administering sub-therapeutic antibiotics has fostered drug-resistant pathogens that can spread to humans. this 2023 study links 1 Million human deaths per year to antibiotic resistance stemming from factory farm antibiotic abuse https://www.aspca.org/protecting-farm-animals/factory-farming-hurts-people-and-communities ---------- https://www.prnewswire.com/news-releases/one-million-human-deaths-linked-to-factory-farming-set-to-double-by-2050-301792539.html
+- They live better lives than many humans:
+  - ...
 
 now if you read all this and say "well, I just won't eat factory farmed meat" then I refer you to the rest of my blog post
 

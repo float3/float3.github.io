@@ -154,7 +154,10 @@ function initializeSortableTables(): void {
       const button = document.createElement("button")
       button.type = "button"
       button.className = "sortable-table-header"
-      button.setAttribute("aria-label", `Sort by ${cellText(header) || `column ${columnIndex + 1}`}`)
+      button.setAttribute(
+        "aria-label",
+        `Sort by ${cellText(header) || `column ${columnIndex + 1}`}`,
+      )
 
       while (header.firstChild) {
         button.appendChild(header.firstChild)

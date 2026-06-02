@@ -62,16 +62,16 @@ body[data-slug="notes/craft"] {
   & li:has(> img, > video) {
     list-style-type: none;
 
-    &>img,
-    &>video {
+    & > img,
+    & > video {
       margin: 1rem 0;
     }
   }
 
-  article>ul {
+  article > ul {
     padding-left: 0;
 
-    &>li {
+    & > li {
       list-style-type: none;
       margin: 1rem 0;
     }
@@ -103,7 +103,6 @@ body[data-slug="notes/craft"] {
 }
 
 @media all and not ($mobile) {
-
   .sidebar.left .explorer,
   .sidebar.left .explorer-content,
   .sidebar.left .explorer-content .overflow {
@@ -468,10 +467,12 @@ pre.poetry {
 }
 
 .audio-oscilloscope-button[data-playing="true"]::before {
-  background: linear-gradient(to right,
-      currentColor 0 35%,
-      transparent 35% 65%,
-      currentColor 65% 100%);
+  background: linear-gradient(
+    to right,
+    currentColor 0 35%,
+    transparent 35% 65%,
+    currentColor 65% 100%
+  );
   clip-path: none;
   height: 38%;
   margin-left: 0;
@@ -580,7 +581,7 @@ body.animation-ready #quartz-body {
 
   @for $i from 1 through 4 {
     @for $j from 1 through 8 {
-      &>*:nth-child(#{$i})>*:nth-child(#{$j}) {
+      & > *:nth-child(#{$i}) > *:nth-child(#{$j}) {
         animation: var(--animation-name) 2s ease 1 normal backwards;
         animation-delay: #{0.1 * $j + 0.4 * $i}s;
       }
@@ -588,7 +589,7 @@ body.animation-ready #quartz-body {
   }
 
   @media all and ($mobile) {
-    &>*>* {
+    & > * > * {
       animation: none;
     }
   }
@@ -640,28 +641,32 @@ body.animation-ready #quartz-body {
     background-color: var(--night);
   }
 
-  &>#progressive-blur {
+  & > #progressive-blur {
     position: absolute;
     height: 100%;
     width: 100%;
     contain: paint;
 
-    &>div {
+    & > div {
       position: absolute;
       height: 100%;
       width: 100%;
       -webkit-backdrop-filter: blur(var(--blur-amount));
       backdrop-filter: blur(var(--blur-amount));
-      -webkit-mask-image: linear-gradient(252deg,
-          transparent,
-          transparent var(--stop1),
-          black var(--stop2),
-          black);
-      mask-image: linear-gradient(252deg,
-          transparent,
-          transparent var(--stop1),
-          black var(--stop2),
-          black);
+      -webkit-mask-image: linear-gradient(
+        252deg,
+        transparent,
+        transparent var(--stop1),
+        black var(--stop2),
+        black
+      );
+      mask-image: linear-gradient(
+        252deg,
+        transparent,
+        transparent var(--stop1),
+        black var(--stop2),
+        black
+      );
 
       &:nth-child(1) {
         --blur-amount: 8px;
@@ -689,7 +694,7 @@ body.animation-ready #quartz-body {
     }
   }
 
-  body.is-scrolling &>#progressive-blur>div:nth-child(n + 3) {
+  body.is-scrolling & > #progressive-blur > div:nth-child(n + 3) {
     display: none;
   }
 
@@ -715,7 +720,7 @@ body.animation-ready #quartz-body {
     animation: outside-light-bounce 47s ease-in-out infinite;
   }
 
-  &>.perspective {
+  & > .perspective {
     position: absolute;
     transition:
       transform 1.7s var(--timing-fn),
@@ -782,7 +787,7 @@ body.animation-ready #quartz-body {
       }
     }
 
-    &>.vertical {
+    & > .vertical {
       top: 0;
       position: absolute;
       height: 100%;
@@ -790,7 +795,7 @@ body.animation-ready #quartz-body {
       display: flex;
       justify-content: space-around;
 
-      &>.bar {
+      & > .bar {
         width: 12px;
         height: 100%;
       }
@@ -801,7 +806,7 @@ body.animation-ready #quartz-body {
     contain: layout paint style;
     opacity: 0.7;
 
-    &>#progressive-blur {
+    & > #progressive-blur {
       display: none;
     }
 
@@ -817,7 +822,7 @@ body.animation-ready #quartz-body {
       opacity: 0.18;
     }
 
-    &>.perspective {
+    & > .perspective {
       top: -16vh;
       right: -24vw;
       width: 105vw;
@@ -863,16 +868,14 @@ body.animation-ready #quartz-body {
         }
       }
 
-      &>.vertical>.bar {
+      & > .vertical > .bar {
         width: 8px;
       }
     }
   }
 
-  @media (prefers-reduced-motion: reduce),
-  (prefers-reduced-transparency: reduce),
-  (update: slow) {
-    &>#progressive-blur {
+  @media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (update: slow) {
+    & > #progressive-blur {
       display: none;
     }
 
@@ -885,7 +888,6 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-light {
-
   0%,
   100% {
     opacity: 0.38;
@@ -909,7 +911,6 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-light-bounce {
-
   0%,
   100% {
     opacity: 0.24;
@@ -928,7 +929,6 @@ body.animation-ready #quartz-body {
 }
 
 @keyframes outside-shadow {
-
   0%,
   100% {
     opacity: 0.82;
@@ -969,7 +969,6 @@ body.animation-ready #quartz-body {
 }
 
 [saved-theme="dark"] {
-
   #interactiveSvg path:hover,
   #interactiveSvg rect:hover {
     filter: brightness(1.7);
@@ -981,7 +980,6 @@ body.animation-ready #quartz-body {
 }
 
 [saved-theme="light"] {
-
   #interactiveSvg path:hover,
   #interactiveSvg rect:hover {
     filter: brightness(0.5);

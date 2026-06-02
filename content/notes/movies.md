@@ -444,7 +444,7 @@ Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_
 - [x] Mad Max: Furiosa (2024) (2024-05-30)
 - [x] El Camino: A Breaking Bad Movie (2019) (2025-01-08)
 - [x] Tick, Tick... Boom! (2021) (2025-01-30)
-- [x] Mickey 17 (2025) (2025-03-19) 
+- [x] Mickey 17 (2025) (2025-03-19)
 
 # Scruffy
 

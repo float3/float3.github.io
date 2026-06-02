@@ -220,14 +220,18 @@ export function handleTuningSelectChange(): void {
   stopAllTones()
 }
 
+type TuningSystemOption = {
+  id: string
+  display: string
+}
+
 export function populateTuningSelect(): void {
   if (!wasm) return
-  const systems = wasm.available_tuning_systems()
+  const systems = wasm.available_tuning_systems() as TuningSystemOption[]
   // `systems` is a JS Array of objects with `id` and `display` properties
   // Clear existing options
   tuningSelect.innerHTML = ""
-  for (let i = 0; i < systems.length; i++) {
-    const s: any = systems[i]
+  for (const s of systems) {
     const option = document.createElement("option")
     option.value = s.id || s["id"]
     option.textContent = s.display || s["display"]

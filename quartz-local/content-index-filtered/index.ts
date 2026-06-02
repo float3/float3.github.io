@@ -114,8 +114,7 @@ function generateRSSFeed(
   const base = cfg.baseUrl ?? ""
   const pageTitle = cfg.pageTitle ?? ""
   const recentNotesText = options.rssRecentNotesText ?? "Recent notes"
-  const lastFewNotesText =
-    options.rssLastFewNotesText ?? ((count: number) => `Last ${count} notes`)
+  const lastFewNotesText = options.rssLastFewNotesText ?? ((count: number) => `Last ${count} notes`)
 
   const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => `<item>
     <title>${escapeHTML(content.title)}</title>
@@ -174,8 +173,7 @@ export const ContentIndexFiltered: QuartzEmitterPlugin<Partial<Options>> = (opts
           links: (data.links as SimpleSlug[] | undefined) ?? [],
           tags: (frontmatter.tags as string[] | undefined) ?? [],
           content: text ?? "",
-          richContent:
-            options.rssFullHtml && !isEncrypted && text ? escapeHTML(text) : undefined,
+          richContent: options.rssFullHtml && !isEncrypted && text ? escapeHTML(text) : undefined,
           date,
           description: (data.description as string | undefined) ?? "",
         })
