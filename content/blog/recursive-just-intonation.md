@@ -223,6 +223,7 @@ octave, multiply or divide the whole row by `2`.
 
 
 
+
 We now have a chord-contextual tuning system. Pitch classes split according to harmonic function.
 
 ### What It Sounds Like
