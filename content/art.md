@@ -1,7 +1,7 @@
 ---
 title: "art"
 date: 2024-04-15
-updated: 2026-06-02
+updated: 2026-07-30
 sort_by: "title"
 ---
 
