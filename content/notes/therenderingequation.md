@@ -126,6 +126,8 @@ tags:
 
 <div class="container">
 
+### Full formulation
+
 $$
 \begin{equation}
 \textcolor{#0466e7}{L_o(\mathbf{x}, \omega_o)} =
@@ -138,6 +140,21 @@ $$
 \end{equation}
 $$
 
+### Simplified Formulation
+
+$$
+\begin{equation}
+\textcolor{#0466e7}{L_o}
+=
+\textcolor{#ffbc3f}{L_e}
++
+\textcolor{#7be9ff}{\int_{\Omega}}
+\textcolor{#fe7fb3}{f_r}
+\textcolor{#dd6fff}{L_i}
+\textcolor{#9dc141}{\cos(\theta)}
+\textcolor{#7be9ff}{\, d\,\omega}
+\end{equation}
+$$
 </div>
 
 To find
@@ -148,7 +165,27 @@ To find
 <span style="color:#fe7fb3">the chances of such light rays bouncing towards the viewer</span><sup><span style="color:#4d8dc3">1</span></sup> and also by
 <span style="color:#9dc141">the cosine term/irradiance factor over the normal at the point</span>.<sup><span style="color:#4d8dc3">2</span></sup>
 <br></br>
-Note that <span style="color:#dd6fff">incoming light</span> is <span style="color:#0466e7">outgoing light</span> from a previous point, making the domain of the integral infinite and the equation recursive.
+Note that <span style="color:#dd6fff">incoming light</span> is <span style="color:#0466e7">outgoing light</span> from a previous point, making the domain of the integral infinite and the equation recursive. That's why we cannot analytically solve the rendering equation but instead use Monte Carlo.
+
+### Legend (Full formulation)
+
+- $\textcolor{#0466e7}{L_o(\mathbf{x},\omega_o)}$ — Light leaving point $\mathbf{x}$ toward the viewer.
+- $\textcolor{#ffbc3f}{L_e(\mathbf{x},\omega_o)}$ — Light emitted at $\mathbf{x}$.
+- $\textcolor{#7be9ff}{\Omega}$ — Hemisphere of directions around the surface normal.
+- $\textcolor{#fe7fb3}{f_r(\mathbf{x},\omega_i,\omega_o)}$ — BRDF.
+- $\textcolor{#dd6fff}{L_i(\mathbf{x},\omega_i)}$ — Incoming light.
+- $\textcolor{#9dc141}{(\omega_i\cdot\mathbf{n})}$ — Cosine term.
+- $\textcolor{#7be9ff}{d\omega_i}$ — Differential solid angle.
+
+### Legend (Simplified formulation)
+
+- $\textcolor{#0466e7}{L_o}$ — Outgoing light.
+- $\textcolor{#ffbc3f}{L_e}$ — Emitted light.
+- $\textcolor{#7be9ff}{\Omega}$ — Hemisphere of directions around the normal.
+- $\textcolor{#fe7fb3}{f_r}$ — BRDF; fraction of incoming light reflected toward the viewer.
+- $\textcolor{#dd6fff}{L_i}$ — Incoming light.
+- $\textcolor{#9dc141}{\cos(\theta)}$ — Cosine term.
+- $\textcolor{#7be9ff}{d\omega}$ — Differential solid angle.
 
 <span style="color:#4d8dc3">
 1. <a href="https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function">Bidirectional reflectance distribution function</a> <br>

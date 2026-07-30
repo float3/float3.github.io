@@ -17,7 +17,7 @@ In this blog post, I talk about bestiality, not because I've practised it or hav
 
 ## Intro：What the hell is shrimp welfare, why should I care and why the hell do people donate money for shrimp?
 
-Shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being—recognizing that decapod crustaceans possess nociceptors and can experience distress. Each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). In recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). Organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
+Shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being; recognizing that decapod crustaceans possess nociceptors and can experience distress. Each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). In recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). Organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
 
 To quantify the scale of suffering: if we conservatively assume each shrimp experiences 1/100,000th the suffering of a human, then 440 billion shrimp × 0.00001 human-suffering units per shrimp yields 4.4 million human-equivalent suffering units every year. (the 1/100,000th is a number I made up) ([PRB][2]).
 
@@ -83,9 +83,9 @@ I don't like meat-eating but I also don't like vegetarianism or naive veganism.
 
 ### Moral Duties do not require unlimited sacrifice
 
-Most moral theories acknowledge that duties have boundaries—agents are not required to sacrifice their well-being or personal resources without limit. In utilitarianism, for example, the principle of diminishing marginal utility implies that beyond a point, additional sacrifice yields negligible overall benefit. Deontological ethics recognizes agent-relative permissions: obligations must be balanced against other duties, including self-preservation and commitments to family or community.
+Most moral theories acknowledge that duties have boundaries; agents are not required to sacrifice their well-being or personal resources without limit. In utilitarianism, for example, the principle of diminishing marginal utility implies that beyond a point, additional sacrifice yields negligible overall benefit. Deontological ethics recognizes agent-relative permissions: obligations must be balanced against other duties, including self-preservation and commitments to family or community.
 
-In practice, we accept that extraordinary heroism—risking one's life to save another—is laudable but not morally obligatory for everyone. We recognize that our capacity for empathy and action is finite: time, health, emotional energy, and social bonds constrain how much we can give. Thus, choosing to reduce meat consumption can be seen as a reasonable calibration of moral concern rather than an all-or-nothing demand that would erode one's ability to function and fulfill other responsibilities.
+In practice, we accept that extraordinary heroism, risking one's life to save another, is laudable but not morally obligatory for everyone. We recognize that our capacity for empathy and action is finite: time, health, emotional energy, and social bonds constrain how much we can give. Thus, choosing to reduce meat consumption can be seen as a reasonable calibration of moral concern rather than an all-or-nothing demand that would erode one's ability to function and fulfill other responsibilities.
 
 ### I want to eat animal products
 
@@ -135,7 +135,7 @@ Ok. I can empathise with this viewpoint because I held it since I started thinki
 
 ### animal suffering is real but matters less than my enjoyment of life
 
-I believe that causing harm without need is very simply wrong. There's clear evidence that animals suffer under current systems of animal agriculture—and equally clear evidence that I don't need to participate in those systems to live well. So choosing veganism is a natural expression of my values. Make sure your values allow for what you do.
+I believe that causing harm without need is very simply wrong. There's clear evidence that animals suffer under current systems of animal agriculture, and equally clear evidence that I don't need to participate in those systems to live well. So choosing veganism is a natural expression of my values. Make sure your values allow for what you do.
 
 ### animals are happy in captivity.
 

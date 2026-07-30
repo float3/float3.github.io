@@ -14,9 +14,7 @@ you can also find all these links [here](/plaintext/blogs.txt)
 
 blogs I like
 
-## Misc
-
-https://www.wheresyoured.at/
+https://ciechanow.ski/archives/
 
 ## Friends
 
