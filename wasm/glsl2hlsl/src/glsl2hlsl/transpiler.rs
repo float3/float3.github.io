@@ -1693,6 +1693,34 @@ where
     }
 }
 
+/// Recursively translate GLSL identifiers in an expression tree,
+/// applying translate_glsl_id to all variable references at all nesting levels
+fn translate_expr_ids(expr: &Expr) -> Expr {
+    match expr {
+        Expr::Variable(id) => Expr::Variable(Identifier(translate_glsl_id(id.0.as_str()).to_owned())),
+        Expr::Unary(op, e) => Expr::Unary(op.clone(), Box::new(translate_expr_ids(e))),
+        Expr::Binary(op, l, r) => Expr::Binary(
+            op.clone(),
+            Box::new(translate_expr_ids(l)),
+            Box::new(translate_expr_ids(r)),
+        ),
+        Expr::Ternary(c, s, e) => Expr::Ternary(
+            Box::new(translate_expr_ids(c)),
+            Box::new(translate_expr_ids(s)),
+            Box::new(translate_expr_ids(e)),
+        ),
+        Expr::Assignment(v, op, e) => Expr::Assignment(v.clone(), op.clone(), Box::new(translate_expr_ids(e))),
+        Expr::Bracket(e, a) => Expr::Bracket(Box::new(translate_expr_ids(e)), a.clone()),
+        Expr::FunCall(fun, args) => Expr::FunCall(fun.clone(), args.iter().map(translate_expr_ids).collect()),
+        Expr::Dot(e, i) => Expr::Dot(Box::new(translate_expr_ids(e)), i.clone()),
+        Expr::PostInc(e) => Expr::PostInc(Box::new(translate_expr_ids(e))),
+        Expr::PostDec(e) => Expr::PostDec(Box::new(translate_expr_ids(e))),
+        Expr::Comma(a, b) => Expr::Comma(Box::new(translate_expr_ids(a)), Box::new(translate_expr_ids(b))),
+        // Leaf nodes that don't need translation
+        other => other.clone(),
+    }
+}
+
 fn show_preprocessor_define<F>(f: &mut F, pd: &PreprocessorDefine)
 where
     F: Write,
@@ -1714,14 +1742,9 @@ where
             if let Some(ty) = get_expr_type(&expr) {
                 add_sym(ident.0.clone(), ty);
             }
-            // TODO: This should be recursive
-            match expr {
-                Expr::Variable(id) => show_expr(
-                    &mut res,
-                    &Expr::Variable(Identifier(translate_glsl_id(id.0.as_str()).to_owned())),
-                ),
-                _ => show_expr(&mut res, &expr),
-            };
+            // Recursively translate all identifiers in the expression tree
+            let translated = translate_expr_ids(&expr);
+            show_expr(&mut res, &translated);
         }
         if paren { format!("({})", res) } else { res }
     };

@@ -270,8 +270,10 @@ pub fn replace_macros(s: String, defs: HashMap<usize, String>) -> String {
                 .parse()
                 .unwrap();
 
-            // TODO: Keep preceeding whitespace
+            // Preserve leading whitespace from original line
+            let indent_len = line.len() - trimmed.len();
             if let Some(rep) = defs.get(&num) {
+                buff.push_str(&line[..indent_len]);
                 buff.push_str(rep.as_str().trim_start());
             }
         } else {

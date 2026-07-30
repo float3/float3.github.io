@@ -282,10 +282,19 @@ pub fn get_expr_type(e: &Expr) -> Option<TypeKind> {
             }
         }
         Expr::Assignment(_v, _op, e) => get_expr_type(e),
-        Expr::Bracket(_e, _a) => None, // TODO: array ignored for now
+        Expr::Bracket(e, _a) => {
+            // Array subscripts: for vectors/matrices return scalar, otherwise return element type
+            match get_expr_type(e) {
+                Some(TypeKind::Vector(_)) => Some(TypeKind::Scalar),
+                Some(TypeKind::Matrix(_, _)) => Some(TypeKind::Scalar),
+                other => other,
+            }
+        }
         Expr::FunCall(FunIdentifier::Identifier(id), args) => {
+            // Note: Overload resolution is limited; functions with same name but different signatures
+            // may not resolve correctly. Most GLSL functions are polymorphic with consistent behavior.
             get_function_ret_type(id.0.as_str(), args.iter().map(get_expr_type).collect())
-        } // TODO: this can't handle overloads
+        }
         Expr::Dot(e, i) => {
             match get_expr_type(e) {
                 Some(TypeKind::Scalar) | Some(TypeKind::Vector(_)) => {

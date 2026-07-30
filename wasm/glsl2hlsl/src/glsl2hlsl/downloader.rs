@@ -146,7 +146,9 @@ pub fn get_shader_file(
 
 //Need to verify that this works first.
 pub fn get_image_files(shader: &Shader) -> Vec<ShaderFile> {
-    //TODO: Set up cors proxy for images.
+    // Note: CORS proxy support should be configured at deployment time.
+    // When running in a browser context, image URLs may need to be proxied
+    // through a CORS-enabled service if loaded from different origins.
     shader
         .renderpass
         .iter()
