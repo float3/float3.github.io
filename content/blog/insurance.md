@@ -1,7 +1,7 @@
 ---
 title: when to buy insurance
 date: 2026-07-17
-updated: 2026-07-17
+updated: 2026-07-30
 tags:
   - economics
 ---
@@ -109,3 +109,6 @@ If the loss would be catastrophic and you can't comfortably absorb it, buy the i
 If the loss is merely inconvenient and you can comfortably cover it yourself, decline the insurance.
 
 The second argument is that insurance companies want to pay as little claims as possible, and in many parts of the world they employ, full-time, huge stables of employees that make it harder or try to prevent you from getting your money and huge stables of lawyers that will try to deter you from going to and beat you in court.
+
+
+ That said some people I've talked to seem to deal with very severe anxiety regarding all sorts of things, these insurances can give them peace of mind, which might be a worth tradeoff, depending on someone's priorities. Of course you are responsible for your own financial decision, while the above text is my opinion, and it is advice, common financial wisdom, please don't sue me for any damages you suffer from not having insurance.
