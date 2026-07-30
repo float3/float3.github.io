@@ -38,8 +38,17 @@ To find <span style="color:#fe7fb3">how much light is reflected by a surface</sp
 - $\textcolor{#9dc141}{\cos(\theta_i)}$ - Cosine term. 
 - $\textcolor{#7be9ff}{d\omega_i}$ - Differential solid angle.
 
-A perfectly diffuse surface has the same BRDF regardless of direction, while glossy or metallic materials produce much larger values around their preferred reflection directions. Different BRDFs therefore produce different material appearances while still fitting into the same rendering equation. For a given incoming ray, the surface may absorb some energy, reflect the ray in some direction or transmit it through the material (transmission is not handled by the BRDF). The rendering equation multiplies the incoming radiance by the BRDF because not every incoming photon contributes equally to what the viewer ultimately sees. 
+A perfectly diffuse surface has the same BRDF regardless of direction, while glossy or metallic materials produce much larger values around their preferred reflection directions. . For a given incoming ray, the surface may absorb some energy, reflect the ray in some direction or transmit it through the material (transmission is not handled by the BRDF). The rendering equation multiplies the incoming radiance by the BRDF because not every incoming photon contributes equally to what the viewer ultimately sees. 
 
+any physically realistic brdf will have these properties:
+
+the reflected light is positive
+$$
+\textcolor{#fe7fb3}{f_r}(
+\textcolor{#7be9ff}{\omega_i},
+\textcolor{#0466e7}{\omega_o}
+) \ge 0
+$$
 A BRDF cannot reflect more light than it receives,
 $$
 {\textcolor{#7be9ff}{\int_\Omega}}
@@ -63,15 +72,9 @@ $$
 )
 $$
 
-
-The simplest possible BRDF is the Lambertian model.
-
-$$
-\textcolor{#fe7fb3}{f_r}
-=
-\frac{\textcolor{#f39c12}{\rho}}{\pi}
-$$
-where
-
-- $\textcolor{#f39c12}{\rho}$ is the surface albedo
-
+Diffuse:
+![[diffuse.png]]
+Glossy:
+![[glossy.png]]
+Mirror:
+![[mirror.png]]
