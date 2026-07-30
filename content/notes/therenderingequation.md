@@ -169,23 +169,23 @@ Note that <span style="color:#dd6fff">incoming light</span> is <span style="colo
 
 ### Legend (Full formulation)
 
-- $\textcolor{#0466e7}{L_o(\mathbf{x},\omega_o)}$ — Light leaving point $\mathbf{x}$ toward the viewer.
-- $\textcolor{#ffbc3f}{L_e(\mathbf{x},\omega_o)}$ — Light emitted at $\mathbf{x}$.
-- $\textcolor{#7be9ff}{\Omega}$ — Hemisphere of directions around the surface normal.
-- $\textcolor{#fe7fb3}{f_r(\mathbf{x},\omega_i,\omega_o)}$ — BRDF.
-- $\textcolor{#dd6fff}{L_i(\mathbf{x},\omega_i)}$ — Incoming light.
-- $\textcolor{#9dc141}{(\omega_i\cdot\mathbf{n})}$ — Cosine term.
-- $\textcolor{#7be9ff}{d\omega_i}$ — Differential solid angle.
+- $\textcolor{#0466e7}{L_o(\mathbf{x},\omega_o)}$ - Light leaving point $\mathbf{x}$ toward the viewer.
+- $\textcolor{#ffbc3f}{L_e(\mathbf{x},\omega_o)}$ - Light emitted at $\mathbf{x}$.
+- $\textcolor{#7be9ff}{\Omega}$ - Hemisphere of directions around the surface normal.
+- $\textcolor{#fe7fb3}{f_r(\mathbf{x},\omega_i,\omega_o)}$ - BRDF.
+- $\textcolor{#dd6fff}{L_i(\mathbf{x},\omega_i)}$ - Incoming light.
+- $\textcolor{#9dc141}{(\omega_i\cdot\mathbf{n})}$ - Cosine term.
+- $\textcolor{#7be9ff}{d\omega_i}$ - Differential solid angle.
 
 ### Legend (Simplified formulation)
 
-- $\textcolor{#0466e7}{L_o}$ — Outgoing light.
-- $\textcolor{#ffbc3f}{L_e}$ — Emitted light.
-- $\textcolor{#7be9ff}{\Omega}$ — Hemisphere of directions around the normal.
-- $\textcolor{#fe7fb3}{f_r}$ — BRDF; fraction of incoming light reflected toward the viewer.
-- $\textcolor{#dd6fff}{L_i}$ — Incoming light.
-- $\textcolor{#9dc141}{\cos(\theta)}$ — Cosine term.
-- $\textcolor{#7be9ff}{d\omega}$ — Differential solid angle.
+- $\textcolor{#0466e7}{L_o}$ - Outgoing light.
+- $\textcolor{#ffbc3f}{L_e}$ - Emitted light.
+- $\textcolor{#7be9ff}{\Omega}$ - Hemisphere of directions around the normal.
+- $\textcolor{#fe7fb3}{f_r}$ - BRDF; fraction of incoming light reflected toward the viewer.
+- $\textcolor{#dd6fff}{L_i}$ - Incoming light.
+- $\textcolor{#9dc141}{\cos(\theta)}$ - Cosine term.
+- $\textcolor{#7be9ff}{d\omega}$ - Differential solid angle.
 
 <span style="color:#4d8dc3">
 1. <a href="https://en.wikipedia.org/wiki/Bidirectional_reflectance_distribution_function">Bidirectional reflectance distribution function</a> <br>
