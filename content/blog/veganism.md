@@ -15,7 +15,7 @@ Schopenhauer began with a prediction: only those who already suspect he's right 
 
 In this blog post, I talk about bestiality, not because I've practised it or have any personal interest in it,but because I believe it's important to bring up in order to make a point about moral consistency. If you don't like to think about bestiality then imagine that every time I mention it that I'm instead talking about kicking puppies.
 
-## Intro：What the hell is shrimp welfare, why should I care and why the hell do people donate money for shrimp?
+## What the hell is shrimp welfare, why should I care and why the hell do people donate money for shrimp?
 
 Shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being; recognizing that decapod crustaceans possess nociceptors and can experience distress. Each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). In recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). Organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
 
