@@ -40,10 +40,7 @@ void (async () => {
     setTuningPlaygroundStatus("", "ready")
     // linkInputChange();
   } catch (error: unknown) {
-    setTuningPlaygroundStatus(
-      `Could not start tuning playground: ${formatError(error)}`,
-      "error",
-    )
+    setTuningPlaygroundStatus(`Could not start tuning playground: ${formatError(error)}`, "error")
     window.setTimeout(() => {
       throw error
     }, 0)

@@ -82,7 +82,6 @@ function updateCalculator() {
         </span>
         <br><br>
 
-        <b>Probability of Ruin:</b> ${(100 * (1 - p)).toFixed(1)}%<br>
         <b>Break-even Reward:</b> ${
             Number.isFinite(breakEvenReward)
                 ? money(breakEvenReward)
