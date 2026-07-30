@@ -9,9 +9,6 @@ tags:
   - statistics
   - teaching
 ---
-# Bidirectional Reflectance Distribution Function (BRDF)
-
-
 $$
 \begin{equation}
 \textcolor{#fe7fb3}{f_r(\omega_i,\omega_r)}
