@@ -83,7 +83,8 @@
     "@types/yargs": "^17.0.35",
     "esbuild": "^0.28.1",
     "prettier": "^3.9.6",
-    "typescript": "^7.0.2"
+    "@typescript/native": "npm:typescript@^7.0.2",
+    "typescript": "npm:@typescript/typescript6@^6.0.2"
   },
   "overrides": {
     "brace-expansion": "5.0.6"
