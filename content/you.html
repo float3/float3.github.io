@@ -620,29 +620,31 @@
         }
 
         async function getPublicIP() {
-            const urls = [
-                'https://api.ipify.org?format=json',
-                'https://ifconfig.me/all.json'
+            const services = [
+                "https://api.ipify.org?format=json",
+                "https://api64.ipify.org?format=json",
+                "https://api.ip.sb/jsonip"
             ];
 
-            for (const url of urls) {
+            for (const url of services) {
                 try {
-                    const res = await fetch(url, { cache: 'no-store' });
-                    if (!res.ok) continue;
-                    const txt = await res.text();
-                    try {
-                        return JSON.parse(txt);
-                    } catch {
-                        return { responseText: txt.trim() };
-                    }
-                } catch {
-                    // try next endpoint
+                    const r = await fetch(url, {
+                        cache: "no-store"
+                    });
+
+                    if (!r.ok) continue;
+
+                    return await r.json();
+
+                } catch (e) {
+                    console.log(url, e);
                 }
             }
 
-            return { error: 'Unavailable (blocked, offline, or CORS restricted)' };
+            return {
+                error: "Unable to determine public IP"
+            };
         }
-
         async function getBatteryInfo() {
             if (!navigator.getBattery) return 'Unavailable';
             try {
