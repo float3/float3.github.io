@@ -16,9 +16,9 @@ image = { version = "0.25.10", default-features = false, features = [
 ], optional = true }
 music21-rs = { workspace = true }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }
-serde = { version = "1.0.228", features = ["derive"], optional = true }
-serde_json = { version = "1.0.150", optional = true }
-toml = "1.1.2"
+serde = { version = "1.0.229", features = ["derive"], optional = true }
+serde_json = { version = "1.0.151", optional = true }
+toml = "1.1.4"
 # zip = { version = "2.4.2", default-features = false, features = ["deflate"] }
 
 [[bin]]

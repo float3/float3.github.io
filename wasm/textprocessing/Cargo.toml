@@ -8,17 +8,17 @@ license = "AGPL-3.0"
 repository = "https://github.com/float3/float3.github.io"
 
 [dependencies]
-base64 = "0.22.1"
+base64 = "0.23.0"
 bpmf_py = "0.1.0"
 character_converter = "2.1.5"
-chinese-number = "0.7.8"
+chinese-number = "0.8.2"
 hanja = "0.1.1"
 japanese = "0.1.2"
 japanese_number_converter = "0.1.0"
-num-bigint = "0.4.6"
+num-bigint = "0.5.1"
 num-traits = "0.2.19"
 pinyin = "0.11.0"
 pinyin_zhuyin = "0.2.0"
-roman = "0.1.6"
+roman = "0.2.1"
 wasm-bindgen = { workspace = true }
 hangeul_conversion = { path = "hangeul_conversion" }

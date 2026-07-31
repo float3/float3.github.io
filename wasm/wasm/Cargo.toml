@@ -38,13 +38,13 @@ glsl2hlsl = { path = "../glsl2hlsl", optional = true }
 adventofcode = { path = "../adventofcode/", optional = true }
 textprocessing = { path = "../textprocessing/", optional = true }
 recursive-ji-core = { workspace = true, optional = true }
-web-sys = { version = "0.3.99", features = [
+web-sys = { version = "0.3.103", features = [
     "Window",
     "Document",
     "CanvasRenderingContext2d",
     "HtmlCanvasElement",
 ] }
-getrandom = { version = "0.4.2", features = ["wasm_js"] }
+getrandom = { version = "0.4.3", features = ["wasm_js"] }
 krabby = { git = "https://github.com/float3/krabby/", features = [
     "debug-embed",
     "html",
@@ -59,7 +59,7 @@ getrandom_03 = { package = "getrandom", version = "0.3.4", features = [
 ] }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.72"
+wasm-bindgen-test = "0.3.76"
 
 [profile.release]
 codegen-units = 1
