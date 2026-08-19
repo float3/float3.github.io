@@ -26,6 +26,9 @@ jobs:
         uses: actions/checkout@v7.0.1
         with:
           submodules: recursive
+          # Page created/updated dates and version counts are read from git history
+          # at build time, so the default shallow clone would flatten them all.
+          fetch-depth: 0
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31

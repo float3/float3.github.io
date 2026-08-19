@@ -61,6 +61,11 @@ plugins:
         - frontmatter
         - filesystem
     order: 10
+  # Overrides the dates above with git history (bot commits excluded) and adds a
+  # per-page version count. Frontmatter dates stay as the fallback for untracked files.
+  - source: ./quartz-local/git-history
+    enabled: true
+    order: 15
   - source: github:quartz-community/syntax-highlighting
     enabled: true
     options:
@@ -178,7 +183,7 @@ plugins:
     layout:
       position: beforeBody
       priority: 10
-  - source: github:quartz-community/content-meta
+  - source: ./quartz-local/content-meta
     enabled: true
     layout:
       position: beforeBody

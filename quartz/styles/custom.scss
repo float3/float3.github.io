@@ -179,9 +179,11 @@ pre.poetry {
   position: unset;
 }
 
+// The handwriting face is for poetry only; date/version metadata is small enough
+// that it needs the plain body font to stay legible.
 .meta,
 .content-meta {
-  font-family: biro_script_standardRgus, var(--bodyFont);
+  font-family: var(--bodyFont);
 }
 
 .wasm-credit {

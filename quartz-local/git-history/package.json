@@ -1,0 +1,16 @@
+{
+  "name": "@hill/quartz-git-history",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "quartz": {
+    "name": "git-history",
+    "displayName": "Git History",
+    "description": "Derive created/updated dates and a version count from git at build time, ignoring bot commits.",
+    "version": "1.0.0",
+    "category": "transformer",
+    "defaultOrder": 15
+  }
+}

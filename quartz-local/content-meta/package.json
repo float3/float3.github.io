@@ -1,0 +1,26 @@
+{
+  "name": "@hill/quartz-content-meta",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components.ts"
+  },
+  "quartz": {
+    "name": "content-meta",
+    "displayName": "Content Meta",
+    "description": "Render the created/updated dates, version count parsed from git history, and estimated reading time.",
+    "version": "1.0.0",
+    "category": "component",
+    "components": {
+      "ContentMeta": {
+        "name": "ContentMeta",
+        "displayName": "Content Meta",
+        "description": "Shows created/updated dates, version count, and reading time.",
+        "version": "1.0.0",
+        "defaultPosition": "beforeBody",
+        "defaultPriority": 20
+      }
+    }
+  }
+}
