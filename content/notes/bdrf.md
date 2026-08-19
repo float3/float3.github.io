@@ -71,8 +71,9 @@ $$
 $$
 
 Diffuse:
-![[diffuse.png]]
+![](/misc/media/diffuse.png)
 Glossy:
-![[glossy.png]]
+![](/misc/media/glossy.png)
 Mirror:
-![[mirror.png]]
+![](/misc/media/mirror.png)
+ 

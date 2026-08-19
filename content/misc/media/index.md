@@ -4,8 +4,6 @@ tags:
   - list
 ---
 
-[volumetrics.mp4](volumetrics.mp4) \
-[volumetricsnanmarching.mp4](volumetricsnanmarching.mp4) \
 [PXL_20241016_102737105.RESTORED.jpg](/misc/media/PXL_20241016_102737105.RESTORED.jpg) \
 [a1.wav](/misc/media/a1.wav) \
 [banner-dark.png](/misc/media/banner-dark.png) \
@@ -15,9 +13,11 @@ tags:
 [chinese_sounds.png](/misc/media/chinese_sounds.png) \
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
+[diffuse.png](/misc/media/diffuse.png) \
 [fixed-c-ji-c-drone-progression.wav](/misc/media/fixed-c-ji-c-drone-progression.wav) \
 [fixed-c-ji-progression.wav](/misc/media/fixed-c-ji-progression.wav) \
 [fixed-c-ji-sine-progression.wav](/misc/media/fixed-c-ji-sine-progression.wav) \
+[glossy.png](/misc/media/glossy.png) \
 [helmet_guy.mp4](/misc/media/helmet_guy.mp4) \
 [hiragana-1.png](/misc/media/hiragana-1.png) \
 [hiragana-2.png](/misc/media/hiragana-2.png) \
@@ -29,6 +29,7 @@ tags:
 [katakana-gogen.pdf](/misc/media/katakana-gogen.pdf) \
 [kneeling_statue.mp4](/misc/media/kneeling_statue.mp4) \
 [laughing_buddha.mp4](/misc/media/laughing_buddha.mp4) \
+[mirror.png](/misc/media/mirror.png) \
 [mozart-dies-irae-recursive-just-intonation-piano.wav](/misc/media/mozart-dies-irae-recursive-just-intonation-piano.wav) \
 [pontius.png](/misc/media/pontius.png) \
 [rat.png](/misc/media/rat.png) \
@@ -48,6 +49,8 @@ tags:
 [twelve-tet-rooted-ji-progression.wav](/misc/media/twelve-tet-rooted-ji-progression.wav) \
 [twelve-tet-rooted-ji-sine-progression.wav](/misc/media/twelve-tet-rooted-ji-sine-progression.wav) \
 [twelve-tet-sine-progression.wav](/misc/media/twelve-tet-sine-progression.wav) \
+[volumetrics.mp4](/misc/media/volumetrics.mp4) \
+[volumetricsnanmarching.mp4](/misc/media/volumetricsnanmarching.mp4) \
 [yeshua.png](/misc/media/yeshua.png) \
 [ㄱ.png](/misc/media/ㄱ.png) \
 [ㄴ.png](/misc/media/ㄴ.png) \
