@@ -33,7 +33,19 @@
   "dependencies": {
     "@tonejs/midi": "^2.0.28",
     "@types/webmidi": "^3.0.1",
-    "abcjs": "^6.6.4"
+    "abcjs": "^6.6.4",
+    "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
+    "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
+    "wasm-chars": "file:../wasm/wasm/pkg/chars",
+    "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
+    "wasm-movies": "file:../wasm/wasm/pkg/movies",
+    "wasm-photography": "file:../wasm/wasm/pkg/photography",
+    "wasm-pokemon": "file:../wasm/wasm/pkg/pokemon",
+    "wasm-polyrhythm": "file:../wasm/wasm/pkg/polyrhythm",
+    "wasm-recursive_ji": "file:../wasm/wasm/pkg/recursive_ji",
+    "wasm-textprocessing": "file:../wasm/wasm/pkg/textprocessing",
+    "wasm-trolley": "file:../wasm/wasm/pkg/trolley",
+    "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -48,7 +60,7 @@
     "jiti": "^2.7.0",
     "prettier": "^3.9.6",
     "terser-webpack-plugin": "^5.6.1",
-    "typescript": "^7.0.2",
+    "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
     "webpack": "^5.109.2",
     "webpack-cli": "^7.2.2",
