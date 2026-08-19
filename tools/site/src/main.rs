@@ -132,10 +132,6 @@ fn run_main() -> Result<()> {
         "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
         // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "check" => site.check(),
-        "dates" => {
-            let target = args.get(1).map_or("content", String::as_str);
-            site.dates(target)
-        }
         "update" | "update-and-lint" => site.update(),
         "commit" => {
             let message = (!args[1..].is_empty()).then(|| args[1..].join(" "));
@@ -185,7 +181,7 @@ Commands:
   build [--dev|--prod]       build wasm assets and the Quartz site
                              --dev also watches TypeScript bundles
   wasm [--dev|--prod]        build only the wasm and TypeScript bundle
-  generate                   regenerate link lists, indices, chords, and dates
+  generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
   report [seconds]           write public/report.html build report
@@ -197,7 +193,6 @@ Commands:
   process-photos [INPUT] [OUTPUT]
                              classify and publish source photos
   check                      run Rust, TypeScript, and lint checks
-  dates [path]               refresh markdown date metadata
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files
 "

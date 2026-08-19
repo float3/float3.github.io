@@ -71,18 +71,6 @@ impl Site {
         )))
     }
 
-    pub(crate) fn git_iso_date(&self, args: &[OsString]) -> Result<Option<String>> {
-        let Some(output) = self.output_optional(&self.root, "git", args)? else {
-            return Ok(None);
-        };
-
-        Ok(output
-            .split('T')
-            .next()
-            .filter(|value| !value.is_empty())
-            .map(str::to_string))
-    }
-
     pub(crate) fn relative_git_path(&self, path: &Path) -> Result<String> {
         Ok(path
             .strip_prefix(&self.root)?

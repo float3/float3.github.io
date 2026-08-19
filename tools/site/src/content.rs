@@ -1,15 +1,12 @@
 use crate::{os_args, Result, Site};
-use std::ffi::OsStr;
 use std::fs;
-use std::path::{Path, PathBuf};
 
 impl Site {
     pub(crate) fn generate(&self) -> Result<()> {
         crate::recursive_ji::generate(self, &[])?;
         self.links()?;
         self.indices()?;
-        self.generate_chords()?;
-        self.dates("content")
+        self.generate_chords()
     }
 
     pub(crate) fn links(&self) -> Result<()> {
@@ -74,13 +71,7 @@ impl Site {
 
         entries.sort();
 
-        let existing_dates = existing_date_metadata(&base.join("index.md"))?;
-        let mut body = format!("---\ntitle: {title}\n");
-        for line in existing_dates {
-            body.push_str(&line);
-            body.push('\n');
-        }
-        body.push_str("tags:\n  - list\n---\n\n");
+        let mut body = format!("---\ntitle: {title}\ntags:\n  - list\n---\n\n");
         for (index, entry) in entries.iter().enumerate() {
             let continuation = if index + 1 == entries.len() {
                 ""
@@ -98,113 +89,6 @@ impl Site {
         let dir = self.root.join("wasm/tuningplayground");
         self.run(&dir, "cargo", &os_args(&["run", "-p", "chord_generator"]))
     }
-    pub(crate) fn dates(&self, target: &str) -> Result<()> {
-        if self.ci {
-            let shallow = self.output_optional(
-                &self.root,
-                "git",
-                &os_args(&["rev-parse", "--is-shallow-repository"]),
-            )?;
-            if shallow.as_deref() == Some("true") {
-                self.run(&self.root, "git", &os_args(&["fetch", "--unshallow"]))?;
-            }
-        }
-
-        let mut files = Vec::new();
-        collect_markdown_files(&self.root.join(target), &mut files)?;
-        files.sort();
-
-        for file in files {
-            self.update_dates_for_file(&file)?;
-        }
-
-        Ok(())
-    }
-
-    fn update_dates_for_file(&self, file: &Path) -> Result<()> {
-        let relative = self.relative_git_path(file)?;
-        let created = self.git_iso_date(&os_args(&[
-            "log",
-            "--diff-filter=A",
-            "--follow",
-            "--format=%aI",
-            "-1",
-            "--",
-            relative.as_str(),
-        ]))?;
-
-        let Some(created) = created else {
-            self.warn(&format!("skipping untracked markdown file: {relative}"));
-            return Ok(());
-        };
-
-        let updated = self
-            .git_iso_date(&os_args(&[
-                "log",
-                "--invert-grep",
-                "--grep=generate",
-                "-1",
-                "--format=%aI",
-                "--",
-                relative.as_str(),
-            ]))?
-            .unwrap_or_else(|| created.clone());
-
-        let source = fs::read_to_string(file)?;
-        let mut body = String::new();
-        let mut inserted = false;
-
-        for line in source.lines() {
-            if line.starts_with("date:") || line.starts_with("updated:") {
-                continue;
-            }
-
-            body.push_str(line);
-            body.push('\n');
-
-            if !inserted && line.starts_with("title:") {
-                body.push_str(&format!("date: {created}\nupdated: {updated}\n"));
-                inserted = true;
-            }
-        }
-
-        if !inserted {
-            body = format!("date: {created}\nupdated: {updated}\n\n{body}");
-        }
-
-        fs::write(file, body)?;
-        Ok(())
-    }
-}
-
-fn existing_date_metadata(path: &Path) -> Result<Vec<String>> {
-    if !path.exists() {
-        return Ok(Vec::new());
-    }
-
-    let source = fs::read_to_string(path)?;
-    Ok(source
-        .lines()
-        .filter(|line| line.starts_with("date:") || line.starts_with("updated:"))
-        .map(str::to_string)
-        .collect())
-}
-
-fn collect_markdown_files(dir: &Path, files: &mut Vec<PathBuf>) -> Result<()> {
-    for entry in fs::read_dir(dir)? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_markdown_files(&path, files)?;
-        } else if path
-            .extension()
-            .is_some_and(|extension| extension == OsStr::new("md"))
-        {
-            files.push(path);
-        }
-    }
-
-    Ok(())
 }
 
 fn extract_urls(source: &str) -> Vec<String> {
