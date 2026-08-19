@@ -1,7 +1,5 @@
 ---
 title: "books"
-date: 2022-11-29
-updated: 2024-12-09
 tags:
   - list
   - reading
@@ -9,10 +7,12 @@ tags:
 
 Books I'm currently reading
 
+Books I'm currently reading
+
 ### Misc:
 
 - [-] How to Win Friends & Influence People
-- [ ] [Riichi 1](https://github.com/dainachiba/RiichiBooks)
+- [x] [Riichi 1](https://github.com/dainachiba/RiichiBooks)
 - [ ] A new kind of Science
 - [ ] The Educated Mind
 - [ ] How to Lie with Statistics
@@ -30,10 +30,36 @@ Books I'm currently reading
 - [ ] Outliers
 - [ ] Real Analysis
 - [ ] Little World
+- [ ] The Scout Mindset (Julia Galef)
+- [ ] Rationality: From AI to Zombies (Eliezer Yudkowsky)
+- [ ] Inadequate Equilibria (Eliezer Yudkowsky)
+- [ ] Thinking, Fast and Slow (Daniel Kahneman)
+- [ ] The Elephant in the Brain (Kevin Simler & Robin Hanson)
+- [ ] The Precipice (Toby Ord)
+- [ ] Doing Good Better (William MacAskill)
+- [ ] The Life You Can Save (Peter Singer)
+- [ ] What We Owe the Future (William MacAskill)
+- [ ] The Most Good You Can Do (Peter Singer)
+- [ ] Moral Uncertainty (William MacAskill et al.)
+- [ ] Superintelligence (Nick Bostrom)
+- [ ] Human Compatible (Stuart Russell)
+- [ ] The Alignment Problem (Brian Christian)
+- [ ] Algorithms to Live By (Brian Christian & Tom Griffiths)
+- [ ] The Intelligence Trap (David Robson)
+- [ ] The Knowledge Illusion (Steven Sloman & Philip Fernbach)
+- [ ] The Constitution of Knowledge (Jonathan Rauch)
+- [ ] Calling Bullshit (Carl Bergstrom & Jevin West)
+- [ ] Factfulness (Hans Rosling)
+- [ ] The Undoing Project (Michael Lewis)
+- [ ] The Signal and the Noise (Nate Silver)
+- [ ] Fooled by Randomness (Nassim Nicholas Taleb)
+- [ ] The Black Swan (Nassim Nicholas Taleb)
+- [ ] Antifragile (Nassim Nicholas Taleb)
+- [ ] Skin in the Game (Nassim Nicholas Taleb)
 
 ### (Computer) Science:
 
-- [-] Goedel Escher Bach
+- [x] Goedel Escher Bach
 - [ ] Algorithms Data Structures Programs
 - [ ] the mythical man-month
 - [ ] Flow based programming
@@ -49,14 +75,14 @@ Books I'm currently reading
 
 ### Physics:
 
-- [-] Six Easy Pieces
-- [-] Six Not-So-Easy Pieces
+- [x] Six Easy Pieces
+- [x] Six Not-So-Easy Pieces
 - [ ] defining wind
 - [ ] Surely You're Joking, Mr. Feynman!
 
 ### Music:
 
-- [ ] New Musical Resources
+- [x] New Musical Resources
 
 ### Philosophy:
 
@@ -71,12 +97,12 @@ Books I'm currently reading
 - [x] A Girl corrupted by the Internet is the Summoned Hero
 - [x] The Waves, Arisen
 - [ ] Unsong
-- [-] There is no Antimemetics Department
+- [x] There is no Antimemetics Department
 - [ ] Flatland
 - [ ] Blood Meridian
 - [ ] The Book of Five Rings
-- [-] The Lathe of Heaven
+- [x] The Lathe of Heaven
 - [ ] East of Eden
-- [ ] American Psycho
 - [ ] Rules of Attraction
 - [ ] Less than Zero
+- [ ] 
