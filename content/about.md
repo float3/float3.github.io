@@ -1,12 +1,14 @@
 ---
 title: "about"
-date: 2024-03-19
-updated: 2024-12-07
 ---
 
-you can find me here
-please contact me if you're reading this, i would love to chat.
+please contact me if you're reading this, if you have made it to my website, i think the chance of me wanting to hear whatever you have to say is incredibly high. 
+don't worry about crafting the perfect first message, don't waste your time and just send me a cold message. 
+
+i read every message
 
 - [mail](mailto:contact%40hilll.dev)
-- [github://float3](https://github.com/float3)
-- [gitlab://float3](https://gitlab.com/float3)
+
+if you would rather have a call:
+
+https://cal.com/hill-123123/1-on-1
