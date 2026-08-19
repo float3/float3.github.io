@@ -10,6 +10,7 @@ tags:
 [banner-light.png](/misc/media/banner-light.png) \
 [beating_sir_aloone_damageless.webm](/misc/media/beating_sir_aloone_damageless.webm) \
 [beijing_tones.png](/misc/media/beijing_tones.png) \
+[cats](/misc/media/cats) \
 [chinese_sounds.png](/misc/media/chinese_sounds.png) \
 [darkside-of-the-moon.png](/misc/media/darkside-of-the-moon.png) \
 [depth_parallax.mp4](/misc/media/depth_parallax.mp4) \
