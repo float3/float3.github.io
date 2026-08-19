@@ -186,3 +186,40 @@
 .browser-report canvas {
   display: none;
 }
+
+/* Narrow screens: the 280px key column leaves almost nothing for the value,
+   so stack each row instead of trying to fit two columns side by side. */
+@media (max-width: 720px) {
+  .browser-report {
+    padding: 12px;
+  }
+
+  .browser-report .section-body {
+    padding: 10px 12px 12px;
+  }
+
+  .browser-report table,
+  .browser-report tbody,
+  .browser-report tr,
+  .browser-report td {
+    display: block;
+    width: 100%;
+  }
+
+  .browser-report tr {
+    border-top: 1px solid var(--line);
+    padding: 10px 0;
+  }
+
+  .browser-report td {
+    border-top: 0;
+    padding: 0;
+  }
+
+  .browser-report td.key {
+    width: auto;
+    padding-right: 0;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+}
