@@ -1,7 +1,5 @@
 ---
 title: "trolley"
-date: 2024-12-21
-updated: 2026-05-10
 tags:
   - trolley
 ---
@@ -9,7 +7,7 @@ tags:
 <link href="/photography.css" rel="stylesheet">
 <script type="module" src="/js/trolley.js"></script>
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 <div class="photo-page trolley-page">
 <section class="photo-gallery-section" aria-labelledby="trolley-heading">

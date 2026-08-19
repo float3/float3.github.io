@@ -1,7 +1,5 @@
 ---
 title: polyrhythm
-date: 2025-02-19
-updated: 2026-05-05
 tags:
   - wasm
   - tools
@@ -11,7 +9,7 @@ tags:
 
 <link href="./polyrhythm.css" rel="stylesheet" type="text/css">
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 <section class="polyrhythm-tool" aria-labelledby="polyrhythm-heading">
   <h2 id="polyrhythm-heading">polyrhythm</h2>

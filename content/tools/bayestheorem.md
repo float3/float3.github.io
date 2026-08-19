@@ -1,7 +1,5 @@
 ---
 title: bayes theorem
-date: 2024-11-29
-updated: 2026-05-05
 tags:
   - math
   - statistics
@@ -14,7 +12,7 @@ tags:
 <link href="/notes/math_stuff.css" rel="stylesheet" type="text/css">
 <script type="module" src="/js/bayestheorem.js"></script>
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 <div class="container">
 

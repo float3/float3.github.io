@@ -1,7 +1,5 @@
 ---
 title: advent of code
-date: 2024-12-20
-updated: 2026-05-05
 tags:
   - programming
   - wasm
@@ -9,7 +7,7 @@ tags:
   - rust
 ---
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 <script src="/js/adventofcode.js"></script>
 <link href="./adventofcode.css" rel="stylesheet" type="text/css">

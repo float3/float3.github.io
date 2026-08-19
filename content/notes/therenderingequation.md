@@ -1,7 +1,5 @@
 ---
 title: the rendering equation
-date: 2024-11-26
-updated: 2026-07-30
 tags:
   - graphics
   - math
@@ -13,7 +11,7 @@ tags:
 <link href="./math_stuff.css" rel="stylesheet" type="text/css">
 <script src="/js/therenderingequation.js"></script>
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 <svg id="interactiveSvg" width="701" height="761" viewBox="0 0 960 761" fill="none"
     xmlns="http://www.w3.org/2000/svg">

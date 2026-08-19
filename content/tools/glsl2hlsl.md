@@ -1,7 +1,5 @@
 ---
 title: glsl2hlsl
-date: 2024-12-12
-updated: 2026-05-05
 tags:
   - shaders
   - wasm
@@ -12,7 +10,7 @@ tags:
   - rust
 ---
 
-<p class="wasm-credit">made with love and rust (compiled to wasm)</p>
+<p class="wasm-credit">made with rust ccompiled to wasm</p>
 
 written by pema99 https://github.com/pema99/glsl2hlsl/ \
 merged changes by Kit https://github.com/cutesthypnotist/glsl2hlsl/ \
