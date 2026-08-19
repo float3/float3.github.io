@@ -1,11 +1,16 @@
 use crate::report;
 use crate::{
     os_args, remove_dir_if_exists, remove_file_if_exists, remove_files, ChildGuard, InstallMode,
-    Mode, Result, Site,
+    Mode, Result, Site, SiteError,
 };
+use serde_json::Value as JsonValue;
 use std::fs;
 use std::path::Path;
 use std::time::Instant;
+use toml::{Table, Value};
+
+/// Features of `wasm/wasm` that configure the build rather than name a tool.
+const NON_TOOL_FEATURES: [&str; 3] = ["default", "console_error_panic_hook", "mini-alloc"];
 
 impl Site {
     pub(crate) fn build(&self, mode: Mode) -> Result<()> {
@@ -51,30 +56,18 @@ impl Site {
             }
         }
 
-        // Build each tool's wasm package separately
-        let tools = [
-            ("aoc", "aoc"),
-            ("bayes", "bayes"),
-            ("chars", "chars"),
-            ("glsl", "glsl"),
-            ("movies", "movies"),
-            ("photography", "photography"),
-            ("polyrhythm", "polyrhythm"),
-            ("recursive_ji", "recursive_ji"),
-            ("textprocessing", "textprocessing"),
-            ("trolley", "trolley"),
-            ("pokemon", "pokemon"),
-            ("tuningplayground", "tuningplayground"),
-        ];
+        // One package per tool, where "the tools" is whatever `wasm/wasm` says it is.
+        let tools = self.wasm_tools(&wasm_dir)?;
+        self.check_wasm_tool_wiring(&tools)?;
 
-        for (feature, name) in tools {
+        for tool in &tools {
             let mut args = base_args.clone();
-            args.extend(os_args(&["--out-dir", &format!("pkg/{}", name), "--"]));
+            args.extend(os_args(&["--out-dir", &format!("pkg/{tool}"), "--"]));
             args.extend(os_args(&[
                 "--features",
                 "console_error_panic_hook",
                 "--features",
-                feature,
+                tool,
             ]));
 
             self.run_with_env(
@@ -84,20 +77,14 @@ impl Site {
                 &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
             )?;
 
-            self.patch_wasm_package_name(
-                &wasm_dir.join(format!("pkg/{}", name)),
-                &format!("wasm-{}", name),
-            )?;
-        }
+            self.patch_wasm_package_name(&wasm_dir.join(format!("pkg/{tool}")), tool)?;
 
-        // Clean up any leftover .gitignore files
-        for (_, name) in tools {
-            remove_file_if_exists(&wasm_dir.join(format!("pkg/{}/.gitignore", name)))?;
+            // wasm-pack drops a .gitignore in every output directory
+            remove_file_if_exists(&wasm_dir.join(format!("pkg/{tool}/.gitignore")))?;
         }
 
         let ts_dir = self.root.join("ts");
         self.bun_install(&ts_dir, InstallMode::Locked)?;
-        self.sync_wasm_packages_dependency()?;
         self.run_bun(&ts_dir, &os_args(&["run", "tsc"]))?;
         self.run_bun(
             &ts_dir,
@@ -135,64 +122,84 @@ impl Site {
         ])
     }
 
-    fn sync_wasm_packages_dependency(&self) -> Result<()> {
-        let source = self.root.join("wasm/wasm/pkg");
-        let target_base = self.root.join("ts/node_modules");
+    /// The interactive tools are exactly the Cargo features of `wasm/wasm` that aren't
+    /// build knobs, so adding a tool means adding a feature and an entry point — never
+    /// remembering to also edit a list in here.
+    fn wasm_tools(&self, wasm_dir: &Path) -> Result<Vec<String>> {
+        let manifest = fs::read_to_string(wasm_dir.join("Cargo.toml"))?.parse::<Table>()?;
 
-        let tools = [
-            "aoc",
-            "bayes",
-            "chars",
-            "glsl",
-            "movies",
-            "photography",
-            "polyrhythm",
-            "recursive_ji",
-            "textprocessing",
-            "trolley",
-            "tuningplayground",
-        ];
+        let features = manifest
+            .get("features")
+            .and_then(Value::as_table)
+            .ok_or_else(|| SiteError::new("wasm/wasm/Cargo.toml has no [features] table"))?;
 
+        let mut tools: Vec<String> = features
+            .keys()
+            .filter(|feature| !NON_TOOL_FEATURES.contains(&feature.as_str()))
+            .cloned()
+            .collect();
+        tools.sort();
+
+        if tools.is_empty() {
+            return Err(Box::new(SiteError::new(
+                "wasm/wasm/Cargo.toml declares no tool features",
+            )));
+        }
+
+        Ok(tools)
+    }
+
+    /// A tool the bundler never depends on builds fine and then silently does nothing,
+    /// which is how `pokemon` stayed missing from `ts/package.json` while still being
+    /// imported — it only worked off a stale `node_modules`. Fail loudly instead.
+    fn check_wasm_tool_wiring(&self, tools: &[String]) -> Result<()> {
+        let ts_dir = self.root.join("ts");
+        let manifest = fs::read_to_string(ts_dir.join("package.json"))?.parse::<JsonValue>()?;
+        let dependencies = manifest.get("dependencies").and_then(JsonValue::as_object);
+        let sources = read_sources(&ts_dir.join("src"))?;
+
+        let mut problems = Vec::new();
         for tool in tools {
-            let source_dir = source.join(tool);
-            let target_dir = target_base.join(format!("wasm-{}", tool));
+            let package = format!("wasm-{tool}");
+            let expected = format!("../wasm/wasm/pkg/{tool}");
 
-            if !target_dir.exists() {
-                fs::create_dir_all(&target_dir)?;
+            match dependencies.and_then(|dependencies| dependencies.get(&package)) {
+                None => problems.push(format!("ts/package.json is missing \"{package}\"")),
+                Some(JsonValue::String(spec)) if spec != &format!("file:{expected}") => problems
+                    .push(format!("\"{package}\" points at {spec}, expected file:{expected}")),
+                Some(_) => {}
             }
 
-            if fs::canonicalize(&source_dir).is_ok()
-                && fs::canonicalize(&target_dir).is_ok()
-                && fs::canonicalize(&source_dir)? == fs::canonicalize(&target_dir)?
-            {
-                continue;
-            }
-
-            for entry in fs::read_dir(&source_dir)? {
-                let entry = entry?;
-                let file_type = entry.file_type()?;
-                if file_type.is_file() {
-                    let source_path = entry.path();
-                    let target_path = target_dir.join(entry.file_name());
-                    if target_path.exists() {
-                        fs::remove_file(&target_path)?;
-                    }
-                    fs::copy(source_path, target_path)?;
-                }
+            if !sources.contains(&format!("\"{package}\"")) {
+                problems.push(format!("nothing under ts/src imports \"{package}\""));
             }
         }
 
-        Ok(())
+        if problems.is_empty() {
+            return Ok(());
+        }
+
+        Err(Box::new(SiteError::new(format!(
+            "wasm tools declared in wasm/wasm/Cargo.toml are not wired into ts/:\n  {}",
+            problems.join("\n  ")
+        ))))
     }
 
-    fn patch_wasm_package_name(&self, pkg_dir: &Path, package_name: &str) -> Result<()> {
+    /// wasm-pack names every package after the crate; each per-tool copy needs its own
+    /// name so `ts/` can depend on them side by side.
+    fn patch_wasm_package_name(&self, pkg_dir: &Path, tool: &str) -> Result<()> {
         let pkg_json = pkg_dir.join("package.json");
-        let contents = fs::read_to_string(&pkg_json)?;
-        let updated = contents.replace(
-            "\"name\": \"wasm\"",
-            &format!("\"name\": \"{}\"", package_name),
-        );
-        fs::write(pkg_json, updated)?;
+        let mut manifest = fs::read_to_string(&pkg_json)?.parse::<JsonValue>()?;
+
+        manifest
+            .as_object_mut()
+            .ok_or_else(|| SiteError::new(format!("{} is not a JSON object", pkg_json.display())))?
+            .insert(
+                "name".to_string(),
+                JsonValue::String(format!("wasm-{tool}")),
+            );
+
+        fs::write(pkg_json, serde_json::to_string_pretty(&manifest)?)?;
         Ok(())
     }
 
@@ -265,5 +272,55 @@ impl Site {
                 target_dir.as_str(),
             ]),
         )
+    }
+}
+
+/// Every `.ts` file under `dir`, concatenated — enough to answer "does anything import
+/// this package" without teaching the build system to parse TypeScript.
+fn read_sources(dir: &Path) -> Result<String> {
+    let mut sources = String::new();
+
+    for entry in fs::read_dir(dir)? {
+        let path = entry?.path();
+        if path.is_dir() {
+            sources.push_str(&read_sources(&path)?);
+        } else if path.extension().is_some_and(|extension| extension == "ts") {
+            sources.push_str(&fs::read_to_string(&path)?);
+        }
+    }
+
+    Ok(sources)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn site() -> Site {
+        Site {
+            root: crate::find_repo_root().expect("tests run inside the repository"),
+            ci: false,
+        }
+    }
+
+    #[test]
+    fn derives_the_tool_list_from_the_wasm_crate() {
+        let site = site();
+        let tools = site.wasm_tools(&site.root.join("wasm/wasm")).unwrap();
+
+        assert!(tools.contains(&"tuningplayground".to_string()));
+        assert!(!tools.contains(&"default".to_string()));
+        assert!(!tools.contains(&"mini-alloc".to_string()));
+        assert!(!tools.contains(&"console_error_panic_hook".to_string()));
+    }
+
+    #[test]
+    fn every_wasm_tool_is_wired_into_the_bundle() {
+        let site = site();
+        let tools = site.wasm_tools(&site.root.join("wasm/wasm")).unwrap();
+
+        if let Err(error) = site.check_wasm_tool_wiring(&tools) {
+            panic!("{error}");
+        }
     }
 }
