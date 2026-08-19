@@ -1,7 +1,5 @@
 ---
 title: Recursive Tuning
-date: 2026-06-02
-updated: 2026-06-02
 tags:
   - music
   - programming

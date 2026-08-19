@@ -1,7 +1,5 @@
 ---
 title: "food"
-date: 2022-11-29
-updated: 2026-05-10
 tags:
   - list
 ---

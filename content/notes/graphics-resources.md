@@ -1,7 +1,5 @@
 ---
 title: graphics resources
-date: 2022-11-29
-updated: 2024-12-12
 tags:
   - graphics
   - programming

@@ -1,7 +1,5 @@
 ---
 title: unity shaders
-date: 2024-11-26
-updated: 2024-12-12
 tags:
   - graphics
   - programming

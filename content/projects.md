@@ -1,7 +1,5 @@
 ---
 title: "projects"
-date: 2024-04-15
-updated: 2026-05-04
 sort_by: "title"
 tags:
   - programming

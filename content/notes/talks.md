@@ -1,7 +1,5 @@
 ---
 title: "talks"
-date: 2022-11-29
-updated: 2024-12-07
 tags:
   - graphics
   - programming
