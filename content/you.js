@@ -1,0 +1,782 @@
+"use strict"
+
+const state = {
+  generatedAt: "",
+  data: {},
+}
+
+const report = document.querySelector(".browser-report")
+const summaryEl = document.getElementById("summary")
+const sectionsEl = document.getElementById("sections")
+const refreshBtn = document.getElementById("refreshBtn")
+const expandBtn = document.getElementById("expandBtn")
+const collapseBtn = document.getElementById("collapseBtn")
+const copyBtn = document.getElementById("copyBtn")
+
+const safe = (fn, fallback = "Unavailable") => {
+  try {
+    const v = fn()
+    return v === undefined || v === null || v === "" ? fallback : v
+  } catch (e) {
+    return `${fallback} (${e && e.message ? e.message : String(e)})`
+  }
+}
+
+const safeAsync = async (fn, fallback = "Unavailable") => {
+  try {
+    const v = await fn()
+    return v === undefined || v === null || v === "" ? fallback : v
+  } catch (e) {
+    return `${fallback} (${e && e.message ? e.message : String(e)})`
+  }
+}
+
+const toPlain = (value) => {
+  if (value instanceof Error) {
+    return { name: value.name, message: value.message, stack: value.stack }
+  }
+  if (value instanceof Map) return Object.fromEntries(value.entries())
+  if (value instanceof Set) return Array.from(value.values())
+  if (Array.isArray(value)) return value.map(toPlain)
+  if (value && typeof value === "object") {
+    const out = {}
+    for (const [k, v] of Object.entries(value)) out[k] = toPlain(v)
+    return out
+  }
+  return value
+}
+
+const simpleHash = (str) => {
+  let h = 0
+  for (let i = 0; i < str.length; i++) {
+    h = (h * 31 + str.charCodeAt(i)) >>> 0
+  }
+  return "0x" + h.toString(16).padStart(8, "0")
+}
+
+function addSummary(label, value) {
+  const card = document.createElement("div")
+  card.className = "card"
+
+  const l = document.createElement("div")
+  l.className = "label"
+  l.textContent = label
+
+  const v = document.createElement("div")
+  v.className = "value"
+  v.textContent = String(value)
+
+  card.appendChild(l)
+  card.appendChild(v)
+  summaryEl.appendChild(card)
+}
+
+function addSection(title, obj) {
+  const details = document.createElement("details")
+  details.open = true
+
+  const summary = document.createElement("summary")
+  summary.textContent = title
+
+  const body = document.createElement("div")
+  body.className = "section-body"
+
+  if (Array.isArray(obj)) {
+    const pre = document.createElement("pre")
+    pre.textContent = JSON.stringify(toPlain(obj), null, 2)
+    body.appendChild(pre)
+  } else if (obj && typeof obj === "object") {
+    const table = document.createElement("table")
+    for (const [key, value] of Object.entries(obj)) {
+      const tr = document.createElement("tr")
+
+      const tdKey = document.createElement("td")
+      tdKey.className = "key"
+      tdKey.textContent = key
+
+      const tdVal = document.createElement("td")
+      const pre = document.createElement("pre")
+      pre.textContent = typeof value === "string" ? value : JSON.stringify(toPlain(value), null, 2)
+      tdVal.appendChild(pre)
+
+      tr.appendChild(tdKey)
+      tr.appendChild(tdVal)
+      table.appendChild(tr)
+    }
+    body.appendChild(table)
+  } else {
+    const pre = document.createElement("pre")
+    pre.textContent = String(obj)
+    body.appendChild(pre)
+  }
+
+  details.appendChild(summary)
+  details.appendChild(body)
+  sectionsEl.appendChild(details)
+}
+
+function getNavigatorInfo() {
+  return {
+    userAgent: navigator.userAgent,
+    platform: navigator.platform,
+    vendor: navigator.vendor,
+    product: navigator.product,
+    productSub: navigator.productSub,
+    appCodeName: navigator.appCodeName,
+    appName: navigator.appName,
+    appVersion: navigator.appVersion,
+    language: navigator.language,
+    languages: navigator.languages,
+    cookieEnabled: navigator.cookieEnabled,
+    onLine: navigator.onLine,
+    doNotTrack: navigator.doNotTrack,
+    hardwareConcurrency: navigator.hardwareConcurrency,
+    deviceMemory: navigator.deviceMemory,
+    maxTouchPoints: navigator.maxTouchPoints,
+    webdriver: navigator.webdriver,
+    pdfViewerEnabled: navigator.pdfViewerEnabled,
+    userActivation: navigator.userActivation
+      ? {
+          hasBeenActive: navigator.userActivation.hasBeenActive,
+          isActive: navigator.userActivation.isActive,
+        }
+      : "Unavailable",
+    clipboard: !!navigator.clipboard,
+    geolocation: !!navigator.geolocation,
+    storage: !!navigator.storage,
+    serviceWorker: "serviceWorker" in navigator,
+    share: !!navigator.share,
+    wakeLock: !!navigator.wakeLock,
+    bluetooth: !!navigator.bluetooth,
+    usb: !!navigator.usb,
+    serial: !!navigator.serial,
+    hid: !!navigator.hid,
+    gpu: !!navigator.gpu,
+    mediaDevices: !!navigator.mediaDevices,
+    permissions: !!navigator.permissions,
+    connection: navigator.connection
+      ? {
+          effectiveType: navigator.connection.effectiveType,
+          downlink: navigator.connection.downlink,
+          rtt: navigator.connection.rtt,
+          saveData: navigator.connection.saveData,
+          type: navigator.connection.type,
+        }
+      : "Unavailable",
+  }
+}
+
+function getScreenInfo() {
+  return {
+    screenWidth: screen.width,
+    screenHeight: screen.height,
+    availableWidth: screen.availWidth,
+    availableHeight: screen.availHeight,
+    colorDepth: screen.colorDepth,
+    pixelDepth: screen.pixelDepth,
+    devicePixelRatio: window.devicePixelRatio,
+    innerWidth: window.innerWidth,
+    innerHeight: window.innerHeight,
+    outerWidth: window.outerWidth,
+    outerHeight: window.outerHeight,
+    orientation: screen.orientation ? screen.orientation.type : "Unavailable",
+    orientationAngle: screen.orientation ? screen.orientation.angle : "Unavailable",
+  }
+}
+
+function getLocaleInfo() {
+  const ro = new Intl.DateTimeFormat().resolvedOptions()
+  return {
+    language: navigator.language,
+    languages: navigator.languages,
+    locale: ro.locale,
+    timeZone: ro.timeZone,
+    calendar: ro.calendar,
+    numberingSystem: ro.numberingSystem,
+    hourCycle: ro.hourCycle,
+    dateTimeResolvedOptions: ro,
+    supportedCalendars:
+      typeof Intl.supportedValuesOf === "function"
+        ? Intl.supportedValuesOf("calendar").slice(0, 40)
+        : "Unavailable",
+    supportedCollations:
+      typeof Intl.supportedValuesOf === "function"
+        ? Intl.supportedValuesOf("collation").slice(0, 40)
+        : "Unavailable",
+    supportedTimeZonesCount:
+      typeof Intl.supportedValuesOf === "function"
+        ? Intl.supportedValuesOf("timeZone").length
+        : "Unavailable",
+  }
+}
+
+function getWindowInfo() {
+  return {
+    isSecureContext,
+    crossOriginIsolated,
+    historyLength: history.length,
+    screenX: window.screenX,
+    screenY: window.screenY,
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+    pageXOffset: window.pageXOffset,
+    pageYOffset: window.pageYOffset,
+    locationHref: location.href,
+    origin: location.origin,
+    protocol: location.protocol,
+    host: location.host,
+    hostname: location.hostname,
+    port: location.port,
+    pathname: location.pathname,
+    search: location.search,
+    hash: location.hash,
+    referrer: document.referrer,
+    title: document.title,
+    visibilityState: document.visibilityState,
+    prerendering: !!document.prerendering,
+  }
+}
+
+function getCSSFeatureInfo() {
+  const queries = [
+    ["prefers-color-scheme: dark", "(prefers-color-scheme: dark)"],
+    ["prefers-color-scheme: light", "(prefers-color-scheme: light)"],
+    ["prefers-reduced-motion: reduce", "(prefers-reduced-motion: reduce)"],
+    ["hover: hover", "(hover: hover)"],
+    ["any-hover: hover", "(any-hover: hover)"],
+    ["pointer: fine", "(pointer: fine)"],
+    ["pointer: coarse", "(pointer: coarse)"],
+    ["forced-colors: active", "(forced-colors: active)"],
+  ]
+  const out = {}
+  for (const [k, q] of queries) out[k] = matchMedia(q).matches
+  out.touchEvents = "ontouchstart" in window
+  out.pointerEvent = "PointerEvent" in window
+  out.matchMedia = typeof window.matchMedia === "function"
+  out.localStorage = (() => {
+    try {
+      return !!window.localStorage
+    } catch {
+      return false
+    }
+  })()
+  out.sessionStorage = (() => {
+    try {
+      return !!window.sessionStorage
+    } catch {
+      return false
+    }
+  })()
+  out.indexedDB = !!window.indexedDB
+  out.broadcastChannel = !!window.BroadcastChannel
+  out.offscreenCanvas = "OffscreenCanvas" in window
+  out.sharedArrayBuffer = typeof SharedArrayBuffer !== "undefined"
+  out.audioContext = "AudioContext" in window || "webkitAudioContext" in window
+  out.webAssembly = "WebAssembly" in window
+  out.webSocket = "WebSocket" in window
+  out.webRTC = "RTCPeerConnection" in window
+  return out
+}
+
+function getPerformanceInfo() {
+  const nav = performance.getEntriesByType ? performance.getEntriesByType("navigation") : []
+  return {
+    timeOrigin: performance.timeOrigin,
+    now: performance.now(),
+    memory: performance.memory ? toPlain(performance.memory) : "Unavailable",
+    navigationEntries: nav.map((e) => ({
+      name: e.name,
+      entryType: e.entryType,
+      startTime: e.startTime,
+      duration: e.duration,
+      type: e.type,
+      domContentLoadedEventEnd: e.domContentLoadedEventEnd,
+      loadEventEnd: e.loadEventEnd,
+      transferSize: e.transferSize,
+      encodedBodySize: e.encodedBodySize,
+      decodedBodySize: e.decodedBodySize,
+    })),
+  }
+}
+
+async function getHighEntropyHints() {
+  const uaData = navigator.userAgentData
+  if (!uaData || typeof uaData.getHighEntropyValues !== "function") return "Unavailable"
+  try {
+    return await uaData.getHighEntropyValues([
+      "architecture",
+      "bitness",
+      "brands",
+      "fullVersionList",
+      "mobile",
+      "model",
+      "platform",
+      "platformVersion",
+      "uaFullVersion",
+      "wow64",
+    ])
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getClientHints() {
+  return {
+    userAgentData: navigator.userAgentData
+      ? {
+          mobile: navigator.userAgentData.mobile,
+          platform: navigator.userAgentData.platform,
+          brands: navigator.userAgentData.brands,
+        }
+      : "Unavailable",
+    highEntropyHints: await getHighEntropyHints(),
+  }
+}
+
+function getWebGLInfo() {
+  const canvas = document.createElement("canvas")
+  const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl")
+  if (!gl) return "Unavailable"
+
+  const debugInfo = gl.getExtension("WEBGL_debug_renderer_info")
+
+  return {
+    version: gl.getParameter(gl.VERSION),
+    shadingLanguageVersion: gl.getParameter(gl.SHADING_LANGUAGE_VERSION),
+    vendor: debugInfo ? gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL) : "Hidden",
+    renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Hidden",
+    maxTextureSize: gl.getParameter(gl.MAX_TEXTURE_SIZE),
+    maxCubeMapTextureSize: gl.getParameter(gl.MAX_CUBE_MAP_TEXTURE_SIZE),
+    maxViewportDims: gl.getParameter(gl.MAX_VIEWPORT_DIMS),
+    aliasedLineWidthRange: gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE),
+    aliasedPointSizeRange: gl.getParameter(gl.ALIASED_POINT_SIZE_RANGE),
+  }
+}
+
+function canvasFingerprint() {
+  const canvas = document.getElementById("fingerprintCanvas")
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return "Unavailable"
+
+  ctx.textBaseline = "top"
+  ctx.font = "16px Arial"
+  ctx.fillStyle = "#f60"
+  ctx.fillRect(10, 10, 100, 40)
+  ctx.fillStyle = "#069"
+  ctx.fillText("Browser fingerprint sample", 12, 18)
+  ctx.strokeStyle = "#0f0"
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.arc(140, 40, 20, 0, Math.PI * 1.7)
+  ctx.stroke()
+  ctx.fillStyle = "rgba(255,0,0,0.6)"
+  ctx.fillText("AaBbCc123", 12, 56)
+
+  const dataURL = canvas.toDataURL()
+  return {
+    hash: simpleHash(dataURL),
+    length: dataURL.length,
+  }
+}
+
+async function audioFingerprint() {
+  const AC = window.OfflineAudioContext || window.webkitOfflineAudioContext
+  if (!AC) return "Unavailable"
+
+  try {
+    const ctx = new AC(1, 44100, 44100)
+    const osc = ctx.createOscillator()
+    const compressor = ctx.createDynamicsCompressor()
+    osc.type = "triangle"
+    osc.frequency.value = 1000
+
+    compressor.threshold.value = -50
+    compressor.knee.value = 40
+    compressor.ratio.value = 12
+    compressor.attack.value = 0
+    compressor.release.value = 0.25
+
+    osc.connect(compressor)
+    compressor.connect(ctx.destination)
+
+    osc.start(0)
+    const rendered = await ctx.startRendering()
+    const channel = rendered.getChannelData(0).slice(4500, 4600)
+
+    return {
+      sampleCount: channel.length,
+      hash: simpleHash(
+        Array.from(channel)
+          .map((n) => n.toFixed(6))
+          .join(","),
+      ),
+    }
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getPublicIP() {
+  const services = [
+    "https://api.ipify.org?format=json",
+    "https://api64.ipify.org?format=json",
+    "https://api.ip.sb/jsonip",
+  ]
+
+  for (const url of services) {
+    try {
+      const r = await fetch(url, {
+        cache: "no-store",
+      })
+
+      if (!r.ok) continue
+
+      return await r.json()
+    } catch (e) {
+      console.log(url, e)
+    }
+  }
+
+  return {
+    error: "Unable to determine public IP",
+  }
+}
+async function getBatteryInfo() {
+  if (!navigator.getBattery) return "Unavailable"
+  try {
+    const b = await navigator.getBattery()
+    return {
+      charging: b.charging,
+      level: b.level,
+      chargingTime: b.chargingTime,
+      dischargingTime: b.dischargingTime,
+    }
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getStorageInfo() {
+  if (!navigator.storage || !navigator.storage.estimate) return "Unavailable"
+  try {
+    return await navigator.storage.estimate()
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getPermissionsInfo() {
+  if (!navigator.permissions || !navigator.permissions.query) return "Unavailable"
+
+  const names = [
+    "geolocation",
+    "notifications",
+    "camera",
+    "microphone",
+    "clipboard-read",
+    "clipboard-write",
+    "midi",
+    "background-sync",
+    "persistent-storage",
+    "screen-wake-lock",
+    "payment",
+  ]
+
+  const out = {}
+  for (const name of names) {
+    try {
+      const p = await navigator.permissions.query({ name })
+      out[name] = p.state
+    } catch {
+      out[name] = "unsupported"
+    }
+  }
+  return out
+}
+
+async function getMediaDevices() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return "Unavailable"
+  try {
+    const devices = await navigator.mediaDevices.enumerateDevices()
+    return devices.map((d, i) => ({
+      index: i,
+      kind: d.kind,
+      label: d.label || "(label hidden until permission granted)",
+      deviceId: d.deviceId ? d.deviceId.slice(0, 12) + "…" : "",
+      groupId: d.groupId ? d.groupId.slice(0, 12) + "…" : "",
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getMIDIInfo() {
+  if (!navigator.requestMIDIAccess) return "Unavailable"
+  try {
+    const access = await navigator.requestMIDIAccess({ sysex: false })
+    const inputs = []
+    const outputs = []
+
+    access.inputs.forEach((v, k) =>
+      inputs.push({
+        id: k,
+        name: v.name,
+        manufacturer: v.manufacturer,
+        state: v.state,
+      }),
+    )
+
+    access.outputs.forEach((v, k) =>
+      outputs.push({
+        id: k,
+        name: v.name,
+        manufacturer: v.manufacturer,
+        state: v.state,
+      }),
+    )
+
+    return {
+      sysexEnabled: access.sysexEnabled,
+      inputs,
+      outputs,
+    }
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getGamepads() {
+  try {
+    const pads = navigator.getGamepads ? Array.from(navigator.getGamepads()) : []
+    return pads.filter(Boolean).map((g, i) => ({
+      index: i,
+      id: g.id,
+      mapping: g.mapping,
+      connected: g.connected,
+      buttons: g.buttons.length,
+      axes: g.axes.length,
+      vibrationActuator: !!g.vibrationActuator,
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getWebGPUInfo() {
+  if (!navigator.gpu || !navigator.gpu.requestAdapter) return "Unavailable"
+  try {
+    const adapter = await navigator.gpu.requestAdapter()
+    if (!adapter) return { available: false }
+    return {
+      available: true,
+      isFallbackAdapter: !!adapter.isFallbackAdapter,
+      features: Array.from(adapter.features),
+      limits: toPlain(adapter.limits),
+    }
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+async function getVoices() {
+  if (!window.speechSynthesis) return "Unavailable"
+  try {
+    let voices = speechSynthesis.getVoices()
+    if (!voices.length) {
+      voices = await new Promise((resolve) => {
+        const timeout = setTimeout(() => resolve(speechSynthesis.getVoices()), 1200)
+        speechSynthesis.onvoiceschanged = () => {
+          clearTimeout(timeout)
+          resolve(speechSynthesis.getVoices())
+        }
+      })
+    }
+    return voices.map((v) => ({
+      name: v.name,
+      lang: v.lang,
+      default: v.default,
+      localService: v.localService,
+      voiceURI: v.voiceURI,
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+function getFonts() {
+  if (!document.fonts) return "Unavailable"
+  try {
+    return Array.from(document.fonts).map((f) => ({
+      family: f.family,
+      style: f.style,
+      weight: f.weight,
+      stretch: f.stretch,
+      status: f.status,
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+function getPluginInfo() {
+  try {
+    return Array.from(navigator.plugins || []).map((p) => ({
+      name: p.name,
+      filename: p.filename,
+      description: p.description,
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+function getMimeInfo() {
+  try {
+    return Array.from(navigator.mimeTypes || []).map((m) => ({
+      type: m.type,
+      suffixes: m.suffixes,
+      description: m.description,
+      enabledPlugin: m.enabledPlugin ? m.enabledPlugin.name : null,
+    }))
+  } catch (e) {
+    return { error: e.message || String(e) }
+  }
+}
+
+function getInstalledCapabilities() {
+  return {
+    localStorage: (() => {
+      try {
+        return !!window.localStorage
+      } catch {
+        return false
+      }
+    })(),
+    sessionStorage: (() => {
+      try {
+        return !!window.sessionStorage
+      } catch {
+        return false
+      }
+    })(),
+    indexedDB: !!window.indexedDB,
+    webSQL: !!window.openDatabase,
+    broadcastChannel: !!window.BroadcastChannel,
+    serviceWorker: "serviceWorker" in navigator,
+    share: !!navigator.share,
+    clipboard: !!navigator.clipboard,
+    wakeLock: !!navigator.wakeLock,
+    bluetooth: !!navigator.bluetooth,
+    usb: !!navigator.usb,
+    serial: !!navigator.serial,
+    hid: !!navigator.hid,
+    gpu: !!navigator.gpu,
+    mediaDevices: !!navigator.mediaDevices,
+    webRTC: "RTCPeerConnection" in window,
+    webSocket: "WebSocket" in window,
+    webAssembly: "WebAssembly" in window,
+    offscreenCanvas: "OffscreenCanvas" in window,
+    sharedArrayBuffer: typeof SharedArrayBuffer !== "undefined",
+  }
+}
+
+async function buildReport() {
+  summaryEl.innerHTML = ""
+  sectionsEl.innerHTML = ""
+
+  state.generatedAt = new Date().toISOString()
+
+  const clientHints = await getClientHints()
+  const publicIP = await getPublicIP()
+  const battery = await getBatteryInfo()
+  const storage = await getStorageInfo()
+  const permissions = await getPermissionsInfo()
+  const mediaDevices = await getMediaDevices()
+  const midi = await getMIDIInfo()
+  const gamepads = await getGamepads()
+  const webgpu = await getWebGPUInfo()
+  const voices = await getVoices()
+
+  state.data = {
+    generatedAt: state.generatedAt,
+    navigator: getNavigatorInfo(),
+    clientHints,
+    screen: getScreenInfo(),
+    locale: getLocaleInfo(),
+    window: getWindowInfo(),
+    cssFeatures: getCSSFeatureInfo(),
+    capabilities: getInstalledCapabilities(),
+    performance: getPerformanceInfo(),
+    publicIP,
+    battery,
+    storage,
+    permissions,
+    mediaDevices,
+    midi,
+    gamepads,
+    webgpu,
+    voices,
+    webgl: getWebGLInfo(),
+    canvasFingerprint: canvasFingerprint(),
+    audioFingerprint: await audioFingerprint(),
+    plugins: getPluginInfo(),
+    mimeTypes: getMimeInfo(),
+    fonts: getFonts(),
+  }
+
+  addSummary("Generated at", state.generatedAt)
+  addSummary("Locale", state.data.locale.locale || navigator.language || "Unknown")
+  addSummary("Time zone", state.data.locale.timeZone || "Unknown")
+  addSummary("Screen", `${state.data.screen.screenWidth} × ${state.data.screen.screenHeight}`)
+  addSummary("Touch", navigator.maxTouchPoints > 0 ? `Yes (${navigator.maxTouchPoints})` : "No")
+  addSummary("Public IP", publicIP.ip || publicIP.responseText || publicIP.error || "Unknown")
+
+  addSection("Navigator", state.data.navigator)
+  addSection("Client Hints", state.data.clientHints)
+  addSection("Screen", state.data.screen)
+  addSection("Locale and Time", state.data.locale)
+  addSection("Window and Location", state.data.window)
+  addSection("CSS and Feature Detection", state.data.cssFeatures)
+  addSection("Capabilities", state.data.capabilities)
+  addSection("Performance", state.data.performance)
+  addSection("Public IP", state.data.publicIP)
+  addSection("Battery", state.data.battery)
+  addSection("Storage", state.data.storage)
+  addSection("Permissions", state.data.permissions)
+  addSection("Media Devices", state.data.mediaDevices)
+  addSection("MIDI", state.data.midi)
+  addSection("Gamepads", state.data.gamepads)
+  addSection("WebGPU", state.data.webgpu)
+  addSection("Speech Voices", state.data.voices)
+  addSection("WebGL", state.data.webgl)
+  addSection("Canvas Fingerprint", state.data.canvasFingerprint)
+  addSection("Audio Fingerprint", state.data.audioFingerprint)
+  addSection("Plugins", state.data.plugins)
+  addSection("MIME Types", state.data.mimeTypes)
+  addSection("Loaded Fonts", state.data.fonts)
+}
+
+function expandAll() {
+  report.querySelectorAll("details").forEach((d) => (d.open = true))
+}
+
+function collapseAll() {
+  report.querySelectorAll("details").forEach((d) => (d.open = false))
+}
+
+async function copyJSON() {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(state.data, null, 2))
+    copyBtn.textContent = "Copied"
+    setTimeout(() => (copyBtn.textContent = "Copy JSON"), 1200)
+  } catch (e) {
+    alert("Copy failed: " + (e.message || e))
+  }
+}
+
+refreshBtn.addEventListener("click", buildReport)
+expandBtn.addEventListener("click", expandAll)
+collapseBtn.addEventListener("click", collapseAll)
+copyBtn.addEventListener("click", copyJSON)
+
+buildReport()

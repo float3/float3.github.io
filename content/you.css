@@ -1,0 +1,188 @@
+/* Scoped to .browser-report so the report's dark palette cannot leak onto
+   the surrounding Quartz layout. Custom properties are declared on the
+   container and inherit to every descendant. */
+
+.browser-report {
+  color-scheme: dark;
+  --bg: #0f1115;
+  --panel: #151922;
+  --panel2: #10141b;
+  --text: #e7edf7;
+  --muted: #9aa7b8;
+  --accent: #7dd3fc;
+  --line: #2a3342;
+  --good: #86efac;
+  --warn: #fbbf24;
+  --bad: #fca5a5;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --sans:
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  padding: 20px;
+  border-radius: 16px;
+}
+
+.browser-report * {
+  box-sizing: border-box;
+}
+
+.browser-report .wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.browser-report h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+}
+
+.browser-report .sub {
+  margin: 0 0 18px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.browser-report .toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 18px 0 22px;
+}
+
+.browser-report button {
+  appearance: none;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #1a2030, #121723);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.browser-report button:hover {
+  border-color: #42506a;
+}
+
+.browser-report .summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.browser-report .card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  min-height: 92px;
+}
+
+.browser-report .card .label {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.browser-report .card .value {
+  font-family: var(--mono);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.browser-report details {
+  background: var(--panel2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.browser-report summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 14px 16px;
+  font-weight: 700;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0));
+  border-bottom: 1px solid var(--line);
+}
+
+.browser-report summary::-webkit-details-marker {
+  display: none;
+}
+
+.browser-report .section-body {
+  padding: 12px 16px 16px;
+}
+
+.browser-report table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.browser-report td {
+  border-top: 1px solid var(--line);
+  padding: 8px 8px 8px 0;
+  vertical-align: top;
+  word-break: break-word;
+}
+
+.browser-report td.key {
+  width: 280px;
+  color: var(--accent);
+  padding-right: 12px;
+}
+
+.browser-report pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  font-family: var(--mono);
+}
+
+.browser-report .footer {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.browser-report .pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: rgba(125, 211, 252, 0.08);
+  color: var(--text);
+  font-size: 12px;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.browser-report .ok {
+  color: var(--good);
+}
+
+.browser-report .warn {
+  color: var(--warn);
+}
+
+.browser-report .bad {
+  color: var(--bad);
+}
+
+.browser-report canvas {
+  display: none;
+}
