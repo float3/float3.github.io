@@ -7,7 +7,7 @@ tags:
 
 <script src="/js/movies.js"></script>
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 Special thanks to [the Legion of Decency](https://en.wikipedia.org/wiki/List_of_films_condemned_by_the_Legion_of_Decency)
 

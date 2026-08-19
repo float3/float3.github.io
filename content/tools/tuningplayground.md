@@ -8,7 +8,7 @@ tags:
 ---
 
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 <noscript> hey this page needs javascript</noscript> use your computer keyboard, a midi device, or provide a midi file for example <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid"> this one </a> or <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irea.mid"> or this one in case the other site goes down </a>
 <div id="tuningPlaygroundStatus" role="status">Loading tuning playground...</div>
 <div style="display: block">

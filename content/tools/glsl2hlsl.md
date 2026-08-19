@@ -10,7 +10,7 @@ tags:
   - rust
 ---
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 written by pema99 https://github.com/pema99/glsl2hlsl/ \
 merged changes by Kit https://github.com/cutesthypnotist/glsl2hlsl/ \

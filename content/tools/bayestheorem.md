@@ -12,7 +12,7 @@ tags:
 <link href="/notes/math_stuff.css" rel="stylesheet" type="text/css">
 <script type="module" src="/js/bayestheorem.js"></script>
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 <div class="container">
 

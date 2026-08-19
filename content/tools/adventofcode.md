@@ -7,7 +7,7 @@ tags:
   - rust
 ---
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 <script src="/js/adventofcode.js"></script>
 <link href="./adventofcode.css" rel="stylesheet" type="text/css">

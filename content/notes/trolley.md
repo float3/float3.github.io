@@ -7,7 +7,7 @@ tags:
 <link href="/photography.css" rel="stylesheet">
 <script type="module" src="/js/trolley.js"></script>
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 <div class="photo-page trolley-page">
 <section class="photo-gallery-section" aria-labelledby="trolley-heading">

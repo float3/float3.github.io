@@ -8,7 +8,7 @@ tags:
   - rust
 ---
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 <script type="module" src="/js/textprocessing.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">

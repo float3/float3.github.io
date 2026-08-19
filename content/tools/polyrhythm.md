@@ -9,7 +9,7 @@ tags:
 
 <link href="./polyrhythm.css" rel="stylesheet" type="text/css">
 
-<p class="wasm-credit">made with rust ccompiled to wasm</p>
+<p class="wasm-credit">made with rust compiled to wasm</p>
 
 <section class="polyrhythm-tool" aria-labelledby="polyrhythm-heading">
   <h2 id="polyrhythm-heading">polyrhythm</h2>
