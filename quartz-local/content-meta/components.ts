@@ -5,8 +5,7 @@ import type {
   QuartzComponentConstructor,
   QuartzComponentProps,
 } from "../../quartz/components/types"
-import { formatDate } from "@quartz-community/utils/date"
-import { classNames } from "@quartz-community/utils/lang"
+import { classNames, formatDate } from "@quartz-community/utils"
 import { i18n } from "../../quartz/i18n"
 
 const styles = `
