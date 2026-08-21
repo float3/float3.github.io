@@ -29,6 +29,7 @@ const config = {
     photography: "./dist/photography.js",
     audiooscilloscope: "./dist/audiooscilloscope.js",
     abcnotation: "./dist/abcnotation.js",
+    background: "./dist/background.js",
   },
   output: {
     path: path.resolve(contentJsDir),
