@@ -128,14 +128,13 @@ function titleFor(page: RecentNotePage): string {
   return page.frontmatter?.title ?? normalizeSlug(page.slug).split("/").pop() ?? "Untitled"
 }
 
+// Creation, not last modification. These lists answer "what have I written
+// lately", and ordering by last touch means a typo fix on a three-year-old
+// post jumps it above something written yesterday. Modification stays as a
+// last resort so a page with no creation date still sorts somewhere sane.
 function dateFor(page: RecentNotePage): Date | undefined {
   const value =
-    page.frontmatter?.updated ??
-    page.frontmatter?.modified ??
-    page.dates?.modified ??
-    page.frontmatter?.date ??
-    page.dates?.created ??
-    page.dates?.published
+    page.frontmatter?.date ?? page.dates?.created ?? page.dates?.published ?? page.dates?.modified
 
   if (!value) return undefined
   const date = value instanceof Date ? value : new Date(value)
