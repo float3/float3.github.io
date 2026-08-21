@@ -304,6 +304,12 @@ export function renderPage(
     <html lang={lang} dir={direction}>
       <Head {...componentData} />
       <body data-slug={slug} data-basepath={basePath} class="animation-ready">
+        {/* The shader canvas and the picker's host are emitted on every page,
+            in a fixed position, because the SPA router pairs the old and new
+            body's children by index — a node the incoming page lacks shifts
+            every sibling and the morph tears the page down. js/background.js
+            adopts these two rather than creating them. */}
+        <canvas id="shader-bg" aria-hidden="true"></canvas>
         <DappledLight />
         {frame.css && <style dangerouslySetInnerHTML={{ __html: frame.css }} />}
         <div id="quartz-root" class="page" data-frame={frame.name}>
@@ -323,10 +329,15 @@ export function renderPage(
             ]}
           </Body>
         </div>
+        <div id="bg-menu" data-open="false"></div>
       </body>
       {pageResources.js
         .filter((resource) => resource.loadTime === "afterDOMReady")
         .map((res) => JSResourceToScriptElement(res, true))}
+      {/* Background shader engine and picker. Deferred so it never blocks
+          first paint: the CSS DappledLight above is already on screen, and the
+          canvas only takes over once this has decided what to draw. */}
+      <script src={`${basePath}/js/background.js`} defer></script>
     </html>
   )
 

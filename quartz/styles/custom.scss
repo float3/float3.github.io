@@ -991,3 +991,331 @@ body.animation-ready #quartz-body {
     filter: brightness(0.6);
   }
 }
+
+// ---------------------------------------------------------------------------
+// Background shader canvas and picker
+//
+// The canvas sits at the same layer the DappledLight div occupies, so swapping
+// between them is a display toggle and never a reflow. Both stay behind
+// #quartz-root, which owns its own background colours.
+// ---------------------------------------------------------------------------
+
+#shader-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  // Hidden until the engine picks a GPU background, so DappledLight owns the
+  // screen on first paint and wherever JavaScript never runs.
+  display: none;
+  z-index: -1;
+  pointer-events: none;
+  // Painted before the engine decides what to draw, so it must never flash a
+  // colour that fights the theme.
+  background-color: var(--light);
+  opacity: var(--bg-opacity, 1);
+  transition: opacity 400ms ease;
+}
+
+// Which of the two backgrounds is live is an attribute on <html>, not an
+// inline style: the SPA router rewrites everything inside <body> against the
+// incoming page and would drop the choice on the first navigation.
+html[data-bg="gl"] {
+  #shader-bg {
+    display: block;
+  }
+
+  #dappled-light {
+    display: none;
+  }
+}
+
+#bg-menu {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  font-size: 0.85rem;
+  color: var(--dark);
+
+  .bg-menu-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    border: 1px solid var(--lightgray);
+    background: color-mix(in srgb, var(--light) 84%, transparent);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: var(--dark);
+    cursor: pointer;
+    transition:
+      transform 200ms ease,
+      background-color 200ms ease;
+
+    &:hover {
+      transform: rotate(35deg);
+      background: var(--light);
+    }
+  }
+
+  .bg-menu-panel {
+    position: absolute;
+    right: 0;
+    bottom: 3rem;
+    width: min(24rem, calc(100vw - 2rem));
+    max-height: min(34rem, calc(100vh - 6rem));
+    overflow-y: auto;
+    padding: 0.9rem;
+    border-radius: 0.7rem;
+    border: 1px solid var(--lightgray);
+    background: color-mix(in srgb, var(--light) 94%, transparent);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 12px 40px rgb(0 0 0 / 18%);
+    display: none;
+  }
+
+  &[data-open="true"] .bg-menu-panel {
+    display: block;
+  }
+
+  .bg-menu-header {
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .bg-menu-subheader {
+    font-weight: 600;
+    margin: 0.9rem 0 0.35rem;
+    opacity: 0.8;
+  }
+
+  .bg-menu-list {
+    display: grid;
+    gap: 0.3rem;
+  }
+
+  .bg-menu-item {
+    position: relative;
+    display: grid;
+    gap: 0.15rem;
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.45rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    font: inherit;
+
+    &:hover {
+      background: var(--lightgray);
+    }
+
+    &[aria-pressed="true"] {
+      border-color: var(--secondary);
+      background: color-mix(in srgb, var(--secondary) 12%, transparent);
+    }
+  }
+
+  .bg-menu-item-name {
+    font-weight: 600;
+  }
+
+  .bg-menu-item-blurb {
+    opacity: 0.72;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .bg-menu-item-tags {
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 0.15rem;
+
+    em {
+      font-style: normal;
+      font-size: 0.68rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.25rem;
+      background: var(--lightgray);
+      opacity: 0.85;
+    }
+  }
+
+  .bg-menu-delete {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.5;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .bg-menu-row {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr 2.6rem;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0.1rem;
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--secondary);
+    }
+  }
+
+  .bg-menu-row-value {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.7;
+    font-size: 0.78rem;
+  }
+
+  .bg-menu-check {
+    grid-template-columns: auto 1fr;
+  }
+
+  .bg-menu-globals {
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--lightgray);
+  }
+
+  .bg-menu-reset {
+    margin-top: 0.4rem;
+    border: 1px solid var(--lightgray);
+    border-radius: 0.35rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: 0.78rem;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--lightgray);
+    }
+  }
+
+  .bg-menu-custom {
+    margin-top: 0.9rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--lightgray);
+
+    summary {
+      cursor: pointer;
+      font-weight: 600;
+    }
+  }
+
+  .bg-menu-notice {
+    margin: 0 0 0.6rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.35rem;
+    border: 1px solid color-mix(in srgb, #b4322c 45%, transparent);
+    background: color-mix(in srgb, #b4322c 12%, transparent);
+    font-size: 0.75rem;
+    line-height: 1.4;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  .bg-menu-note {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    opacity: 0.72;
+    margin: 0.5rem 0;
+  }
+
+  .bg-menu-input,
+  .bg-menu-textarea {
+    width: 100%;
+    margin-bottom: 0.4rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--lightgray);
+    background: var(--light);
+    color: var(--dark);
+    font: inherit;
+  }
+
+  .bg-menu-textarea {
+    font-family: var(--codeFont, monospace);
+    font-size: 0.75rem;
+    line-height: 1.45;
+    resize: vertical;
+    white-space: pre;
+    overflow-wrap: normal;
+    overflow-x: auto;
+  }
+
+  .bg-menu-add {
+    border: 1px solid var(--secondary);
+    border-radius: 0.35rem;
+    background: color-mix(in srgb, var(--secondary) 14%, transparent);
+    color: inherit;
+    font: inherit;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+
+    &:hover {
+      background: color-mix(in srgb, var(--secondary) 24%, transparent);
+    }
+  }
+
+  .bg-menu-status {
+    margin: 0.5rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 9rem;
+    overflow-y: auto;
+
+    &[data-state="error"] {
+      color: #b4322c;
+    }
+
+    &[data-state="ok"] {
+      opacity: 0.7;
+    }
+  }
+}
+
+// Someone who asked for less motion gets the panel but no surprise animation.
+@media (prefers-reduced-motion: reduce) {
+  #bg-menu .bg-menu-toggle {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  #shader-bg {
+    transition: none;
+  }
+}
+
+@media print {
+  #shader-bg,
+  #bg-menu {
+    display: none !important;
+  }
+}
