@@ -19,6 +19,9 @@ export interface ShaderParam {
 
 export type BackgroundKind = "dom" | "glsl" | "fluid"
 
+/** Which set of display and seed passes a fluid background runs. */
+export type FluidStyle = "ink" | "taiji"
+
 export interface BackgroundDef {
   id: string
   name: string
@@ -31,6 +34,8 @@ export interface BackgroundDef {
   mouseReactive: boolean
   /** GLSL ES 3.00 body. Omitted for `dom` and `fluid`. */
   fragment?: string
+  /** Which set of passes a `fluid` background runs. Ignored by other kinds. */
+  fluidStyle?: FluidStyle
   params: ShaderParam[]
   /** True for user-pasted shaders, which the menu lets you delete. */
   custom?: boolean

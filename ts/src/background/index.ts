@@ -12,7 +12,7 @@ import { BackgroundMenu } from "./menu.js"
 import { buildFragmentSource, linkProgram, supportsWebGPU, UniformCache } from "./renderer.js"
 import { BUILTIN_BACKGROUNDS } from "./shaders.js"
 import { loadSettings, saveSettings } from "./store.js"
-import { BackgroundDef, BackgroundSettings } from "./types.js"
+import { BackgroundDef, BackgroundSettings, FluidStyle } from "./types.js"
 
 const DOM_BACKGROUND_ID = "dappled-light"
 
@@ -35,6 +35,7 @@ class BackgroundController {
   private themeTarget = 0
   private themeCurrent = 0
   private reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+  private inkParity = false
 
   constructor() {
     this.settings = loadSettings()
@@ -152,7 +153,7 @@ class BackgroundController {
     }
 
     if (background.kind === "fluid") {
-      this.fluid = new FluidSimulation(gl)
+      this.fluid = new FluidSimulation(gl, background.fluidStyle)
       if (this.fluid.unavailable) {
         this.fluid = null
         this.fallback("Fluid needs float render targets, which this GPU does not expose.")
@@ -266,7 +267,14 @@ class BackgroundController {
     })
     window.addEventListener("pointerdown", (event) => {
       this.pointer.down = 1
+      // Start the drag from a standstill. Carrying the delta from wherever the
+      // pointer last was would fire one enormous splat on the first frame.
       update(event.clientX, event.clientY)
+      this.pointer.px = this.pointer.x
+      this.pointer.py = this.pointer.y
+      this.pointer.moved = false
+      // Alternate the ink so a two-tone field can be fed from both sides.
+      this.inkParity = !this.inkParity
     })
     window.addEventListener("pointerup", () => {
       this.pointer.down = 0
@@ -344,6 +352,19 @@ class BackgroundController {
     cancelAnimationFrame(this.rafHandle)
   }
 
+  /**
+   * The colour a drag injects.
+   *
+   * The taiji field is one signed channel — positive is white ink, negative is
+   * black — so its two inks are the same splat with the sign flipped, chosen
+   * per drag rather than per frame so a single stroke stays one colour.
+   */
+  private ink(style: FluidStyle | undefined): [number, number, number] {
+    if (style !== "taiji") return hueToRgb((performance.now() / 3000) % 1)
+    const value = this.inkParity ? 0.9 : -0.9
+    return [value, 0, 0]
+  }
+
   /** Draws exactly one frame, for the backgrounds that are not animating. */
   private renderOnce(): void {
     const now = performance.now()
@@ -411,22 +432,24 @@ class BackgroundController {
     const force = value("force", 5200)
     const radius = value("radius", 0.3)
 
-    if (this.pointer.moved) {
+    // Only while the pointer is held down. A background that reacts to every
+    // stray mouse move is exhausting to read text in front of, and it means
+    // the image can be left alone once you have one you like.
+    if (this.pointer.moved && this.pointer.down === 1) {
       const dx = (this.pointer.x - this.pointer.px) / window.innerWidth
       const dy = (this.pointer.y - this.pointer.py) / window.innerHeight
       if (Math.abs(dx) > 1e-5 || Math.abs(dy) > 1e-5) {
-        const hue = (performance.now() / 3000) % 1
         this.fluid.splat(
           this.pointer.x / window.innerWidth,
           this.pointer.y / window.innerHeight,
           dx * force,
           dy * force,
-          hueToRgb(hue),
+          this.ink(background?.fluidStyle),
           radius,
         )
       }
-      this.pointer.moved = false
     }
+    this.pointer.moved = false
 
     this.fluid.step(delta * 60, {
       dissipation: value("dissipation", 0.985),

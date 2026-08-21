@@ -15,6 +15,7 @@
  */
 
 import { buildFragmentSource, linkProgram } from "./renderer.js"
+import { FluidStyle } from "./types.js"
 
 const ADVECT = `
 uniform sampler2D uSource;
@@ -132,6 +133,65 @@ export interface FluidOptions {
   radius: number
 }
 
+/**
+ * Seeds the dye with a taijitu.
+ *
+ * One signed channel carries the whole image: +1 is white ink, -1 is black,
+ * and 0 is bare page. That is what lets the sim smear the two inks through
+ * each other and still know which is which — a three-channel colour would go
+ * muddy grey at the boundary instead of staying a boundary.
+ */
+const SEED_TAIJI = `
+float taijiAt(vec2 p) {
+  float r = 0.30;
+  if (length(p) > r) return 0.0;
+
+  float upper = length(p - vec2(0.0, r * 0.5));
+  float lower = length(p + vec2(0.0, r * 0.5));
+
+  // Split the disc down the middle, let two half-radius circles carry each
+  // half back across the seam, then punch the two eyes.
+  float v = p.x > 0.0 ? 1.0 : -1.0;
+  if (upper < r * 0.5) v = 1.0;
+  if (lower < r * 0.5) v = -1.0;
+  if (upper < r * 0.16) v = -1.0;
+  if (lower < r * 0.16) v = 1.0;
+  return v;
+}
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 p = (fragCoord - 0.5 * iResolution.xy) / min(iResolution.x, iResolution.y);
+  // Supersampled, because every edge here is a hard step and this pass runs
+  // once — the cost is nothing and the jaggies would advect around for ever.
+  vec2 e = vec2(0.5) / min(iResolution.x, iResolution.y);
+  float v = 0.25 * (taijiAt(p + vec2(-e.x, -e.y)) + taijiAt(p + vec2(e.x, -e.y)) +
+                    taijiAt(p + vec2(-e.x, e.y)) + taijiAt(p + vec2(e.x, e.y)));
+  fragColor = vec4(v, 0.0, 0.0, 1.0);
+}
+`
+
+const DISPLAY_TAIJI = `
+uniform sampler2D uDye;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  float v = texture(uDye, uv).r;
+
+  // Magnitude is how much ink is here, sign is which ink.
+  float coverage = smoothstep(0.10, 0.38, abs(v));
+  float tone = smoothstep(-0.10, 0.10, v);
+
+  vec3 page = themed(vec3(0.97, 0.96, 0.94), vec3(0.04, 0.05, 0.07));
+  vec3 col = mix(page, mix(vec3(0.03), vec3(0.97), tone), coverage);
+
+  // A hairline where the two inks meet, so the boundary stays readable however
+  // far the flow has pulled it out of shape.
+  float seam = coverage * (1.0 - smoothstep(0.0, 0.14, abs(v)));
+  col = mix(col, themed(vec3(0.45), vec3(0.55)), seam * 0.6);
+  fragColor = vec4(col, 1.0);
+}
+`
+
 export class FluidSimulation {
   private programs = new Map<string, WebGLProgram>()
   private velocity!: DoubleBuffer
@@ -145,7 +205,10 @@ export class FluidSimulation {
   private failed = false
   private sized = false
 
-  constructor(private gl: WebGL2RenderingContext) {
+  constructor(
+    private gl: WebGL2RenderingContext,
+    style: FluidStyle = "ink",
+  ) {
     // Float render targets are what make the sim stable; without them the
     // velocity field quantises and the flow visibly stair-steps.
     if (!gl.getExtension("EXT_color_buffer_float")) {
@@ -154,14 +217,17 @@ export class FluidSimulation {
     }
     gl.getExtension("OES_texture_float_linear")
 
-    for (const [name, body] of [
+    const passes: [string, string][] = [
       ["advect", ADVECT],
       ["divergence", DIVERGENCE],
       ["pressure", PRESSURE],
       ["gradient", GRADIENT_SUBTRACT],
       ["splat", SPLAT],
-      ["display", DISPLAY],
-    ] as const) {
+      ["display", style === "taiji" ? DISPLAY_TAIJI : DISPLAY],
+    ]
+    if (style === "taiji") passes.push(["seed", SEED_TAIJI])
+
+    for (const [name, body] of passes) {
       const program = this.build(body)
       if (!program) {
         this.failed = true
@@ -205,6 +271,21 @@ export class FluidSimulation {
     )
     this.pressure = this.createDouble(this.simWidth, this.simHeight, gl.R16F, gl.RED, gl.HALF_FLOAT)
     this.sized = true
+    this.seed()
+  }
+
+  /**
+   * Draws the starting image into the dye, if this style has one.
+   *
+   * Runs on every resize because the buffers are new — which also means a
+   * window resize hands back a fresh, unsmeared taijitu.
+   */
+  private seed(): void {
+    const program = this.programs.get("seed")
+    if (!program) return
+    this.gl.useProgram(program)
+    this.draw(this.dye.write, program)
+    this.dye.swap()
   }
 
   /** Frees every render target, leaving the compiled programs in place. */
