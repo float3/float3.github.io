@@ -20,8 +20,6 @@ tags:
     <div class="summary-grid" id="summary"></div>
     <div id="sections"></div>
     <div class="footer">
-      Not available to normal page JavaScript: installed browser extensions, private IPs in modern browsers,
-      passwords, browsing history, serial numbers, and most hardware inventory.
     </div>
   </div>
   <canvas id="fingerprintCanvas" width="480" height="180"></canvas>
