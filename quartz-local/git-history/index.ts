@@ -4,6 +4,7 @@ import { styleText } from "util"
 import type { Root } from "mdast"
 import type { VFile } from "vfile"
 import type { QuartzTransformerPlugin } from "../../quartz/plugins/types"
+import { excludedKeepPaths, excludedShas, isExcluded } from "./excluded-commits"
 
 declare module "vfile" {
   interface DataMap {
@@ -13,8 +14,11 @@ declare module "vfile" {
 }
 
 type Commit = {
+  sha: string
   date: Date
   human: boolean
+  /** This commit created the file, under this name or one it was renamed from. */
+  added: boolean
 }
 
 type Repo = {
@@ -81,12 +85,13 @@ const isBotAuthor = (email: string) =>
 function readHistory(cwd: string): Map<string, Commit[]> {
   const output = execFileSync(
     "git",
-    ["log", "--format=%x00%aI%x1f%ae", "--name-status", "-M", "--no-show-signature"],
+    ["log", "--format=%x00%H%x1f%aI%x1f%ae", "--name-status", "-M", "--no-show-signature"],
     { cwd, encoding: "utf8", maxBuffer: 512 * 1024 * 1024 },
   )
 
   const history = new Map<string, Commit[]>()
   const renamedTo = new Map<string, string>()
+  const seen = new Set<string>()
 
   // git log is newest-first, so every rename is recorded before we reach the older
   // commits that still refer to the previous name.
@@ -103,12 +108,13 @@ function readHistory(cwd: string): Map<string, Commit[]> {
     if (block.trim() === "") continue
 
     const [header, ...entries] = block.split("\n")
-    const separator = header.indexOf("\x1f")
-    if (separator < 0) continue
+    const [sha, authored, email] = header.split("\x1f")
+    if (sha === undefined || authored === undefined || email === undefined) continue
 
-    const date = new Date(header.slice(0, separator))
+    const date = new Date(authored)
     if (Number.isNaN(date.getTime())) continue
-    const commit: Commit = { date, human: !isBotAuthor(header.slice(separator + 1)) }
+    const shared = { sha, date, human: !isBotAuthor(email) }
+    seen.add(sha)
 
     for (const entry of entries) {
       if (entry === "") continue
@@ -125,13 +131,43 @@ function readHistory(cwd: string): Map<string, Commit[]> {
         file = currentName(fields[1])
       }
 
+      // Per file rather than per commit: one commit adds some paths and merely
+      // touches others, and only the add means authorship of this page.
+      const record: Commit = { ...shared, added: fields[0].startsWith("A") }
+
       const commits = history.get(file)
       if (commits) {
-        commits.push(commit)
+        commits.push(record)
       } else {
-        history.set(file, [commit])
+        history.set(file, [record])
       }
     }
+  }
+
+  // A listed SHA that history no longer contains excludes nothing, silently.
+  // That happens after a rebase, or from a typo, and either way the list has
+  // rotted rather than done its job.
+  const strayPaths = excludedKeepPaths().filter((file) => !history.has(file))
+  if (strayPaths.length > 0) {
+    console.log(
+      styleText(
+        "yellow",
+        `
+Warning: excluded-commits.ts keeps ${strayPaths.length} path(s) no file has: ` +
+          strayPaths.join(", "),
+      ),
+    )
+  }
+
+  const missing = excludedShas().filter((sha) => !seen.has(sha))
+  if (missing.length > 0) {
+    console.log(
+      styleText(
+        "yellow",
+        `\nWarning: excluded-commits.ts lists ${missing.length} commit(s) not in this history: ` +
+          missing.map((sha) => sha.slice(0, 8)).join(", "),
+      ),
+    )
   }
 
   return history
@@ -194,7 +230,14 @@ export const GitHistory: QuartzTransformerPlugin = () => ({
         }
 
         const mine = commits.filter((commit) => commit.human)
-        file.data.versions = mine.length
+        // Sweeps stay in `commits` and go on feeding the created date below;
+        // they just do not count as revisions of this page, or move its
+        // updated date to whenever the find-and-replace happened to run.
+        // A commit that created the page is authorship by definition, never a
+        // sweep, however many other files it swept on the way past. Without
+        // this a page written during a migration reports zero versions.
+        const edits = mine.filter((commit) => commit.added || !isExcluded(commit.sha, relative))
+        file.data.versions = edits.length
 
         if (repo !== undefined) {
           file.data.historyUrl = `${repo.base}/commits/${repo.branch}/${encodePath(relative)}`
@@ -203,10 +246,13 @@ export const GitHistory: QuartzTransformerPlugin = () => ({
         // Pages that only automation has ever touched (generated indices) still
         // deserve real dates, so fall back to the unfiltered history for those.
         const dated = mine.length > 0 ? mine : commits
+        // A page every one of whose edits was a sweep has no meaningful
+        // "updated" left, so it falls back rather than reporting nothing.
+        const touched = edits.length > 0 ? edits : dated
         file.data.dates = {
           created: dated[dated.length - 1].date,
-          modified: dated[0].date,
-          published: file.data.dates?.published ?? dated[0].date,
+          modified: touched[0].date,
+          published: file.data.dates?.published ?? touched[0].date,
         }
       },
     ]
