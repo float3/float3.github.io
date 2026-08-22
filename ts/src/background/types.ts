@@ -19,8 +19,8 @@ export interface ShaderParam {
 
 export type BackgroundKind = "dom" | "glsl" | "fluid"
 
-/** Which set of display and seed passes a fluid background runs. */
-export type FluidStyle = "ink" | "taiji"
+/** Which set of display, seed and transport passes a fluid background runs. */
+export type FluidStyle = "ink" | "taiji" | "convection"
 
 export interface BackgroundDef {
   id: string

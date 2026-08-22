@@ -360,6 +360,9 @@ class BackgroundController {
    * per drag rather than per frame so a single stroke stays one colour.
    */
   private ink(style: FluidStyle | undefined): [number, number, number] {
+    // Convection carries heat in the same single channel, but only ever
+    // upward: a cold smear would sink and read as nothing having happened.
+    if (style === "convection") return [0.9, 0, 0]
     if (style !== "taiji") return hueToRgb((performance.now() / 3000) % 1)
     const value = this.inkParity ? 0.9 : -0.9
     return [value, 0, 0]
@@ -455,6 +458,9 @@ class BackgroundController {
       dissipation: value("dissipation", 0.985),
       force,
       radius,
+      restore: value("restore", 0.014),
+      buoyancy: value("buoyancy", 0.05),
+      heat: value("heat", 1),
     })
     this.fluid.render(this.themeCurrent)
   }

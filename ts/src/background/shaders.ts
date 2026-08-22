@@ -479,6 +479,27 @@ export const BUILTIN_BACKGROUNDS: BackgroundDef[] = [
     params: [],
   },
   {
+    id: "convection",
+    name: "Convection",
+    blurb: "A hot floor under a cold ceiling. Plumes rise where they please.",
+    kind: "fluid",
+    fluidStyle: "convection",
+    themeReactive: true,
+    mouseReactive: true,
+    params: [
+      // Heat is the temperature difference between the plates, which is what
+      // actually decides whether the layer overturns. Buoyancy is small
+      // because velocity here is in texels per step: much above 0.1 and a
+      // parcel jumps the whole grid in one step, every sample lands on a
+      // clamped edge and the cell floods with whichever plate it hit.
+      { key: "heat", label: "Heat", min: 0, max: 1.5, step: 0.02, value: 1 },
+      { key: "buoyancy", label: "Buoyancy", min: 0, max: 0.2, step: 0.002, value: 0.05 },
+      { key: "dissipation", label: "Damping", min: 0.9, max: 1, step: 0.002, value: 0.996 },
+      { key: "force", label: "Force", min: 100, max: 12000, step: 100, value: 3000 },
+      { key: "radius", label: "Brush size", min: 0.05, max: 1.2, step: 0.01, value: 0.3 },
+    ],
+  },
+  {
     id: "fluid",
     name: "Fluid",
     blurb: "Navier-Stokes ink. Hold the pointer down and drag to stir it.",
@@ -494,15 +515,17 @@ export const BUILTIN_BACKGROUNDS: BackgroundDef[] = [
   {
     id: "taiji",
     name: "Taiji",
-    blurb: "A taijitu in wet ink. Hold and drag to pull it apart.",
+    blurb: "A taijitu in wet ink. Hold and drag to pull it apart; it re-forms.",
     kind: "fluid",
     fluidStyle: "taiji",
     themeReactive: true,
     mouseReactive: true,
     params: [
-      // Fades far slower than the colour sim by default: the shape is the
-      // point, and it should stay on screen long enough to ruin deliberately.
-      { key: "dissipation", label: "Fade", min: 0.9, max: 1.0, step: 0.002, value: 0.998 },
+      // Return pulls the ink back toward the taijitu; Settle drains the motion
+      // that is smearing it. Both are needed — without the second the field
+      // goes on stirring itself and never arrives.
+      { key: "restore", label: "Return", min: 0, max: 0.08, step: 0.002, value: 0.014 },
+      { key: "dissipation", label: "Settle", min: 0.9, max: 1.0, step: 0.002, value: 0.97 },
       { key: "force", label: "Force", min: 100, max: 12000, step: 100, value: 4200 },
       { key: "radius", label: "Brush size", min: 0.05, max: 1.2, step: 0.01, value: 0.25 },
     ],
