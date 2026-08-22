@@ -32,7 +32,7 @@ export function loadSettings(): BackgroundSettings {
     params: isParamMap(record.params) ? record.params : {},
     enabled: typeof record.enabled === "boolean" ? record.enabled : true,
     speed: clamp(numberOr(record.speed, 1), 0, 2),
-    opacity: clamp(numberOr(record.opacity, 1), 0, 1),
+    opacity: clamp(numberOr(record.opacity, DEFAULT_SETTINGS.opacity), 0, 1),
     custom: Array.isArray(record.custom) ? record.custom.filter(isCustomRecord) : [],
   }
 }

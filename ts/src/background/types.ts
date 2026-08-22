@@ -68,6 +68,8 @@ export const DEFAULT_SETTINGS: BackgroundSettings = {
   params: {},
   enabled: true,
   speed: 1,
-  opacity: 1,
+  // Low by default: a shader is meant to sit under the text, not compete with
+  // it, and anyone who wants it louder has the slider.
+  opacity: 0.2,
   custom: [],
 }

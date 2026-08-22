@@ -1013,7 +1013,7 @@ body.animation-ready #quartz-body {
   // Painted before the engine decides what to draw, so it must never flash a
   // colour that fights the theme.
   background-color: var(--light);
-  opacity: var(--bg-opacity, 1);
+  opacity: var(--bg-opacity, 0.2);
   transition: opacity 400ms ease;
 }
 
