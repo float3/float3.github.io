@@ -1173,6 +1173,10 @@ html[data-bg="gl"] {
 
     input[type="range"] {
       width: 100%;
+      // Browsers give range inputs a couple of pixels of margin of their own,
+      // which is enough to leave the checkbox above sitting fractionally to
+      // the left of the slider tracks. The row's gap does the spacing.
+      margin: 0;
       accent-color: var(--secondary);
     }
   }
@@ -1185,7 +1189,13 @@ html[data-bg="gl"] {
   }
 
   .bg-menu-check {
-    grid-template-columns: auto 1fr;
+    // Inherits .bg-menu-row's columns rather than overriding them, so "Animate"
+    // sits in the same label column as "Opacity" and "Global speed".
+    input[type="checkbox"] {
+      justify-self: start;
+      margin: 0;
+      accent-color: var(--secondary);
+    }
   }
 
   .bg-menu-globals {

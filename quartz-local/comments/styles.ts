@@ -286,6 +286,10 @@ mark.comment-mark {
   text-transform: lowercase;
 }
 
+/* Width is left to the flex column that holds it, which stretches its children.
+   A textarea carries an intrinsic width from its cols attribute, and pinning it
+   to 100% instead measured against the content box while its own padding and
+   border sat outside that, so it hung over the edge of the composer. */
 .comment-input {
   background: var(--light);
   border: 1px solid var(--gray);
@@ -294,7 +298,7 @@ mark.comment-mark {
   font-family: inherit;
   font-size: 0.9rem;
   padding: 0.4rem 0.5rem;
-  width: 100%;
+  width: auto;
 }
 
 .comment-text {

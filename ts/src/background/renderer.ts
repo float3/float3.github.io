@@ -6,8 +6,7 @@
  * is available essentially everywhere, and — more importantly — the shader
  * ecosystem people actually paste from (Shadertoy, oimo.io) is GLSL. Accepting
  * a pasted shader is a headline feature, so GLSL is the format that has to work
- * first. `supportsWebGPU()` is exported only so the menu can say when the newer
- * path is available; nothing renders through it.
+ * first.
  *
  * Everything renders as a single full-screen triangle. The vertex stage never
  * changes, so switching backgrounds only recompiles a fragment shader.
@@ -141,11 +140,6 @@ export function linkProgram(
     return { program: null, error: log }
   }
   return { program, error: null }
-}
-
-/** Reports whether this browser exposes WebGPU at all. */
-export function supportsWebGPU(): boolean {
-  return typeof navigator !== "undefined" && "gpu" in navigator
 }
 
 /** Caches uniform locations so the draw loop does no string lookups. */

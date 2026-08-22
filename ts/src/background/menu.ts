@@ -32,7 +32,6 @@ export class BackgroundMenu {
     private backgrounds: () => BackgroundDef[],
     private settings: () => BackgroundSettings,
     private callbacks: MenuCallbacks,
-    private webgpuAvailable: boolean,
   ) {
     this.root = adoptHost()
     this.mount()
@@ -130,14 +129,6 @@ export class BackgroundMenu {
       this.buildCustomSection(),
     )
     this.renderNotice()
-
-    if (this.webgpuAvailable) {
-      const note = document.createElement("p")
-      note.className = "bg-menu-note"
-      note.textContent =
-        "WebGPU is available in this browser. Shaders still render through WebGL2 so that pasted GLSL works everywhere."
-      this.panel.appendChild(note)
-    }
   }
 
   /**
@@ -306,13 +297,19 @@ export class BackgroundMenu {
   private checkbox(label: string, value: boolean, onChange: (value: boolean) => void): HTMLElement {
     const row = document.createElement("label")
     row.className = "bg-menu-row bg-menu-check"
+
+    // Label first, in the same column the sliders put theirs, so the box lines
+    // up with the slider tracks rather than sitting out on its own margin.
+    const text = document.createElement("span")
+    text.className = "bg-menu-row-label"
+    text.textContent = label
+
     const input = document.createElement("input")
     input.type = "checkbox"
     input.checked = value
     input.addEventListener("change", () => onChange(input.checked))
-    const text = document.createElement("span")
-    text.textContent = label
-    row.append(input, text)
+
+    row.append(text, input)
     return row
   }
 

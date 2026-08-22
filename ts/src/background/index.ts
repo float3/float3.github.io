@@ -9,7 +9,7 @@
 
 import { FluidSimulation } from "./fluid.js"
 import { BackgroundMenu } from "./menu.js"
-import { buildFragmentSource, linkProgram, supportsWebGPU, UniformCache } from "./renderer.js"
+import { buildFragmentSource, linkProgram, UniformCache } from "./renderer.js"
 import { BUILTIN_BACKGROUNDS } from "./shaders.js"
 import { loadSettings, saveSettings } from "./store.js"
 import { BackgroundDef, BackgroundSettings, FluidStyle } from "./types.js"
@@ -71,7 +71,6 @@ class BackgroundController {
         onDeleteCustom: (id) => this.deleteCustom(id),
         validate: (source) => this.validate(source),
       },
-      supportsWebGPU(),
     )
 
     this.applyGlobals()
