@@ -131,6 +131,12 @@ export interface FluidOptions {
   dissipation: number
   force: number
   radius: number
+  /** taiji: how fast the dye is pulled back to the image it was seeded with. */
+  restore: number
+  /** convection: upward force per unit of heat. */
+  buoyancy: number
+  /** convection: strength of the hot floor and the cold ceiling. */
+  heat: number
 }
 
 /**
@@ -192,12 +198,135 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 }
 `
 
+/**
+ * Advects the dye, then pulls it back toward the image it was seeded with.
+ *
+ * The plain advect pass decays toward zero, which for a picture means it fades
+ * to blank. Decaying toward a stored target instead means the field has a rest
+ * state to fall into, so a taijitu left alone reassembles itself.
+ */
+const ADVECT_RESTORE = `
+uniform sampler2D uSource;
+uniform sampler2D uVelocity;
+uniform sampler2D uRest;
+uniform vec2 uTexelSize;
+uniform float uDt;
+uniform float uRestore;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  vec2 coord = uv - uDt * texture(uVelocity, uv).xy * uTexelSize;
+  float advected = texture(uSource, coord).r;
+  float settled = mix(advected, texture(uRest, uv).r, clamp(uRestore * uDt, 0.0, 1.0));
+  fragColor = vec4(settled, 0.0, 0.0, 1.0);
+}
+`
+
+/**
+ * Rayleigh-Benard convection: heat transported by the flow it is driving.
+ *
+ * The cell is heated along the floor and cooled along the ceiling, and nothing
+ * else pushes the fluid at all — every plume here is the fluid overturning
+ * under its own buoyancy.
+ */
+const ADVECT_HEAT = `
+uniform sampler2D uSource;
+uniform sampler2D uVelocity;
+uniform vec2 uTexelSize;
+uniform float uDt;
+uniform float uHeat;
+
+// Slow bulk cooling, so a plume gives its heat up to the fluid on the way and
+// the cell does not simply fill with warm.
+const float COOL = 0.01;
+
+// How fast a plate imposes its temperature on the fluid touching it. Fixed,
+// because above about a half it stops changing what the cell looks like — the
+// knob worth exposing is how hot the plate is, not how quickly it wins.
+const float PLATE_RATE = 0.5;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  vec2 coord = uv - uDt * texture(uVelocity, uv).xy * uTexelSize;
+  float heat = texture(uSource, coord).r;
+
+  // Plates held at a temperature, rather than plates that add heat without
+  // limit. The difference decides whether this convects at all: unbounded
+  // heating drives every column into the clamp, a floor that is uniformly at
+  // the clamp has no lateral variation left, and a buoyancy force with no
+  // lateral variation is curl-free — the projection removes all of it. What
+  // makes a plume is an *uneven* plate, not a hot one.
+  float bias = (0.75 + 0.5 * hash21(vec2(floor(uv.x * 48.0), 7.0))) * uHeat;
+  float floorBand = smoothstep(0.06, 0.0, uv.y);
+  float ceilBand = smoothstep(0.94, 1.0, uv.y);
+  float rate = clamp(PLATE_RATE * uDt, 0.0, 1.0);
+  heat = mix(heat, bias, floorBand * rate);
+  heat = mix(heat, -uHeat, ceilBand * rate);
+  heat -= heat * clamp(COOL * uDt, 0.0, 1.0);
+
+  fragColor = vec4(clamp(heat, -2.0, 2.0), 0.0, 0.0, 1.0);
+}
+`
+
+const BUOYANCY = `
+uniform sampler2D uVelocity;
+uniform sampler2D uHeat;
+uniform float uDt;
+uniform float uBuoyancy;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  vec2 velocity = texture(uVelocity, uv).xy;
+  // Boussinesq: density differences matter only through the force they exert,
+  // so warm fluid is simply pushed up in proportion to how warm it is.
+  velocity.y += texture(uHeat, uv).r * uBuoyancy * uDt;
+  fragColor = vec4(velocity, 0.0, 1.0);
+}
+`
+
+const SEED_HEAT = `
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  // Start with a warm, already uneven lower layer, so the first overturn
+  // happens within a second of the page opening instead of a minute later.
+  float base = smoothstep(0.55, 0.0, uv.y) * 0.6;
+  fragColor = vec4(base * (0.6 + 0.8 * noise(uv * 12.0)), 0.0, 0.0, 1.0);
+}
+`
+
+const DISPLAY_CONVECTION = `
+uniform sampler2D uDye;
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord) {
+  vec2 uv = fragCoord / iResolution.xy;
+  float level = clamp(texture(uDye, uv).r * 0.5 + 0.5, 0.0, 1.0);
+
+  vec3 cold = themed(vec3(0.95, 0.96, 0.98), vec3(0.02, 0.03, 0.06));
+  vec3 mid = themed(vec3(0.82, 0.83, 0.88), vec3(0.08, 0.11, 0.20));
+  vec3 warm = themed(vec3(0.86, 0.66, 0.46), vec3(0.30, 0.19, 0.26));
+  vec3 hot = themed(vec3(0.96, 0.85, 0.62), vec3(0.62, 0.42, 0.26));
+
+  vec3 col = level < 0.5
+    ? mix(cold, mid, level * 2.0)
+    : mix(mid, mix(warm, hot, smoothstep(0.72, 1.0, level)), (level - 0.5) * 2.0);
+  fragColor = vec4(col, 1.0);
+}
+`
+
+const DISPLAYS: Record<FluidStyle, string> = {
+  ink: DISPLAY,
+  taiji: DISPLAY_TAIJI,
+  convection: DISPLAY_CONVECTION,
+}
+
 export class FluidSimulation {
   private programs = new Map<string, WebGLProgram>()
   private velocity!: DoubleBuffer
   private dye!: DoubleBuffer
   private divergence!: Framebuffer
   private pressure!: DoubleBuffer
+  /** The image the taiji style relaxes back toward. Null for other styles. */
+  private rest: Framebuffer | null = null
   private simWidth = 0
   private simHeight = 0
   private dyeWidth = 0
@@ -207,7 +336,7 @@ export class FluidSimulation {
 
   constructor(
     private gl: WebGL2RenderingContext,
-    style: FluidStyle = "ink",
+    private style: FluidStyle = "ink",
   ) {
     // Float render targets are what make the sim stable; without them the
     // velocity field quantises and the flow visibly stair-steps.
@@ -223,9 +352,11 @@ export class FluidSimulation {
       ["pressure", PRESSURE],
       ["gradient", GRADIENT_SUBTRACT],
       ["splat", SPLAT],
-      ["display", style === "taiji" ? DISPLAY_TAIJI : DISPLAY],
+      ["display", DISPLAYS[style]],
     ]
-    if (style === "taiji") passes.push(["seed", SEED_TAIJI])
+    if (style === "taiji") passes.push(["seed", SEED_TAIJI], ["restore", ADVECT_RESTORE])
+    if (style === "convection")
+      passes.push(["seed", SEED_HEAT], ["heat", ADVECT_HEAT], ["buoyancy", BUOYANCY])
 
     for (const [name, body] of passes) {
       const program = this.build(body)
@@ -270,6 +401,15 @@ export class FluidSimulation {
       gl.HALF_FLOAT,
     )
     this.pressure = this.createDouble(this.simWidth, this.simHeight, gl.R16F, gl.RED, gl.HALF_FLOAT)
+    if (this.style === "taiji") {
+      this.rest = this.createSingle(
+        this.dyeWidth,
+        this.dyeHeight,
+        gl.RGBA16F,
+        gl.RGBA,
+        gl.HALF_FLOAT,
+      )
+    }
     this.sized = true
     this.seed()
   }
@@ -284,6 +424,9 @@ export class FluidSimulation {
     const program = this.programs.get("seed")
     if (!program) return
     this.gl.useProgram(program)
+    // Once into the rest target the restore pass pulls back toward, and once
+    // into the live dye so the page opens on the finished image.
+    if (this.rest !== null) this.draw(this.rest, program)
     this.draw(this.dye.write, program)
     this.dye.swap()
   }
@@ -303,6 +446,11 @@ export class FluidSimulation {
     ]) {
       gl.deleteTexture(target.texture)
       gl.deleteFramebuffer(target.fbo)
+    }
+    if (this.rest !== null) {
+      gl.deleteTexture(this.rest.texture)
+      gl.deleteFramebuffer(this.rest.fbo)
+      this.rest = null
     }
     this.sized = false
   }
@@ -426,6 +574,19 @@ export class FluidSimulation {
     this.draw(this.velocity.write, advect)
     this.velocity.swap()
 
+    // Buoyancy goes in before the projection, so the pressure solve gets to
+    // enforce incompressibility on a field that already knows about the heat.
+    if (this.style === "convection") {
+      const buoyancy = this.programs.get("buoyancy")!
+      gl.useProgram(buoyancy)
+      gl.uniform1f(gl.getUniformLocation(buoyancy, "uDt"), dt)
+      gl.uniform1f(gl.getUniformLocation(buoyancy, "uBuoyancy"), options.buoyancy)
+      this.bind(buoyancy, "uVelocity", this.velocity.read.texture, 0)
+      this.bind(buoyancy, "uHeat", this.dye.read.texture, 1)
+      this.draw(this.velocity.write, buoyancy)
+      this.velocity.swap()
+    }
+
     const divergence = this.programs.get("divergence")!
     gl.useProgram(divergence)
     gl.uniform2f(gl.getUniformLocation(divergence, "uTexelSize"), texelX, texelY)
@@ -452,12 +613,34 @@ export class FluidSimulation {
     this.draw(this.velocity.write, gradient)
     this.velocity.swap()
 
-    gl.useProgram(advect)
-    gl.uniform2f(gl.getUniformLocation(advect, "uTexelSize"), texelX, texelY)
-    gl.uniform1f(gl.getUniformLocation(advect, "uDissipation"), options.dissipation)
-    this.bind(advect, "uVelocity", this.velocity.read.texture, 0)
-    this.bind(advect, "uSource", this.dye.read.texture, 1)
-    this.draw(this.dye.write, advect)
+    // What the flow carries, which is the only part that differs by style.
+    if (this.style === "taiji") {
+      const restore = this.programs.get("restore")!
+      gl.useProgram(restore)
+      gl.uniform2f(gl.getUniformLocation(restore, "uTexelSize"), texelX, texelY)
+      gl.uniform1f(gl.getUniformLocation(restore, "uDt"), dt)
+      gl.uniform1f(gl.getUniformLocation(restore, "uRestore"), options.restore)
+      this.bind(restore, "uVelocity", this.velocity.read.texture, 0)
+      this.bind(restore, "uSource", this.dye.read.texture, 1)
+      this.bind(restore, "uRest", this.rest!.texture, 2)
+      this.draw(this.dye.write, restore)
+    } else if (this.style === "convection") {
+      const heat = this.programs.get("heat")!
+      gl.useProgram(heat)
+      gl.uniform2f(gl.getUniformLocation(heat, "uTexelSize"), texelX, texelY)
+      gl.uniform1f(gl.getUniformLocation(heat, "uDt"), dt)
+      gl.uniform1f(gl.getUniformLocation(heat, "uHeat"), options.heat)
+      this.bind(heat, "uVelocity", this.velocity.read.texture, 0)
+      this.bind(heat, "uSource", this.dye.read.texture, 1)
+      this.draw(this.dye.write, heat)
+    } else {
+      gl.useProgram(advect)
+      gl.uniform2f(gl.getUniformLocation(advect, "uTexelSize"), texelX, texelY)
+      gl.uniform1f(gl.getUniformLocation(advect, "uDissipation"), options.dissipation)
+      this.bind(advect, "uVelocity", this.velocity.read.texture, 0)
+      this.bind(advect, "uSource", this.dye.read.texture, 1)
+      this.draw(this.dye.write, advect)
+    }
     this.dye.swap()
   }
 
