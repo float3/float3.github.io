@@ -338,6 +338,9 @@ export function renderPage(
           first paint: the CSS DappledLight above is already on screen, and the
           canvas only takes over once this has decided what to draw. */}
       <script src={`${basePath}/js/background.js`} defer></script>
+      {/* Comment threads. Loaded everywhere and inert on pages without one,
+          which is cheaper than teaching the emitter which pages have comments. */}
+      <script src={`${basePath}/js/comments.js`} defer></script>
     </html>
   )
 

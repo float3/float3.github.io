@@ -1,0 +1,30 @@
+{
+  "name": "@hill/quartz-comments",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./components": "./components.ts"
+  },
+  "quartz": {
+    "name": "comments",
+    "displayName": "Comments",
+    "description": "Renders the `<page>.comment.<id>.md` files sitting next to each page as a thread, attributed to whoever opened the pull request that added them. New comments are composed in the page and submitted as pull requests; code in a comment runs in a sandboxed frame on request.",
+    "version": "1.0.0",
+    "category": [
+      "transformer",
+      "component"
+    ],
+    "defaultOrder": 18,
+    "components": {
+      "Comments": {
+        "name": "Comments",
+        "displayName": "Comments",
+        "description": "The comment thread and the compose box that turns a comment into a pull request.",
+        "version": "1.0.0",
+        "defaultPosition": "afterBody",
+        "defaultPriority": 5
+      }
+    }
+  }
+}

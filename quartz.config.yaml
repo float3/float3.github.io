@@ -11,6 +11,10 @@ configuration:
     - private
     - templates
     - .obsidian
+    # Comment files are read by the comments plugin and rendered into the page
+    # they belong to. Left in the pipeline they would each become a page of
+    # their own, and turn up in search, the graph and the RSS feed.
+    - "**/*.comment.*.md"
   theme:
     fontOrigin: googleFonts
     cdnCaching: true
@@ -66,6 +70,15 @@ plugins:
   - source: ./quartz-local/git-history
     enabled: true
     order: 15
+  # Reads the `<page>.comment.<id>.md` files sitting beside each page, takes
+  # each one's author from the commit that added it, and hands the thread to
+  # the component below.
+  - source: ./quartz-local/comments
+    enabled: true
+    order: 18
+    layout:
+      position: afterBody
+      priority: 5
   - source: github:quartz-community/syntax-highlighting
     enabled: true
     options:
