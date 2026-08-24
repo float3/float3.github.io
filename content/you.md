@@ -26,4 +26,4 @@ tags:
 </div>
 
 <link href="./you.css" rel="stylesheet" type="text/css">
-<script type="module" src="./you.js"></script>
+<script type="module" src="/js/you.js"></script>
