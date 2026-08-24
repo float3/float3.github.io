@@ -619,6 +619,30 @@ body.animation-ready #quartz-body {
 }
 
 // dappled light
+// dappled light
+//
+// Progressive blur: sharp along one edge, heavily blurred toward the opposite
+// corner. This was four stacked `backdrop-filter` layers over one animated
+// scene — the usual way to build the effect, and the reason the page crawled
+// in every browser but Safari. A backdrop filter is only cheap while its
+// backdrop holds still, because then the blur is rasterised once and cached.
+// This backdrop never held still: the glows, the leaves and the shadow all run
+// on infinite loops, so four blurs of up to 96px were recomputed across the
+// whole viewport every frame. Safari lowers `backdrop-filter` onto
+// CoreAnimation's own blur and absorbed that; Chromium and Firefox implement
+// it themselves, and the `mask-image` on top drops both off their fast path.
+//
+// It is a plain `filter` on copies of the scene now. Copies spend memory
+// instead of frames: each one blurs once and is a cached texture from then on,
+// because nothing inside a copy animates. What movement is left never
+// invalidates a raster — `billow` is a transform on the same element that
+// carries the blur, and transforms apply after filters, so it re-composites
+// the cached leaves rather than blurring them again, while the glows sit above
+// the stack and blur nothing at all.
+//
+// Two deliberate differences from the backdrop version: the two most heavily
+// blurred rungs hold still rather than billowing, which at 48px and 96px is
+// not visible, and the glows tint the blurred corner from above, not through it.
 #dappled-light {
   pointer-events: none;
   position: fixed;
@@ -643,61 +667,86 @@ body.animation-ready #quartz-body {
     background-color: var(--night);
   }
 
-  & > #progressive-blur {
+  // One rung of the blur. Opaque, because the backdrop layers these replaced
+  // covered whatever was beneath them — a translucent copy would add to it
+  // instead and darken the scene once per rung.
+  & > .blur-layer {
     position: absolute;
-    height: 100%;
-    width: 100%;
+    inset: 0;
+    overflow: hidden;
     contain: paint;
+    background-color: var(--day);
 
-    & > div {
-      position: absolute;
-      height: 100%;
-      width: 100%;
-      -webkit-backdrop-filter: blur(var(--blur-amount));
-      backdrop-filter: blur(var(--blur-amount));
-      -webkit-mask-image: linear-gradient(
-        252deg,
-        transparent,
-        transparent var(--stop1),
-        black var(--stop2),
-        black
-      );
-      mask-image: linear-gradient(
-        252deg,
-        transparent,
-        transparent var(--stop1),
-        black var(--stop2),
-        black
-      );
-
-      &:nth-child(1) {
-        --blur-amount: 8px;
-        --stop1: 0%;
-        --stop2: 0%;
-      }
-
-      &:nth-child(2) {
-        --blur-amount: 12px;
-        --stop1: 30%;
-        --stop2: 60%;
-      }
-
-      &:nth-child(3) {
-        --blur-amount: 48px;
-        --stop1: 40%;
-        --stop2: 70%;
-      }
-
-      &:nth-child(4) {
-        --blur-amount: 96px;
-        --stop1: 70%;
-        --stop2: 80%;
-      }
+    [saved-theme="dark"] & {
+      background-color: var(--night);
     }
   }
 
-  body.is-scrolling & > #progressive-blur > div:nth-child(n + 3) {
-    display: none;
+  // The base rung is unmasked: the old 8px layer carried a mask that was
+  // opaque everywhere, so it already covered the viewport whole. Which is also
+  // why no sharp copy of the scene exists here — one was never on screen.
+  & > .blur-layer--base {
+    --blur-amount: 8px;
+  }
+
+  & > .blur-layer--near {
+    --blur-amount: 12px;
+    --stop1: 30%;
+    --stop2: 60%;
+  }
+
+  & > .blur-layer--mid {
+    --blur-amount: 48px;
+    --stop1: 40%;
+    --stop2: 70%;
+  }
+
+  & > .blur-layer--far {
+    --blur-amount: 96px;
+    --stop1: 70%;
+    --stop2: 80%;
+  }
+
+  & > .blur-layer:not(.blur-layer--base) {
+    -webkit-mask-image: linear-gradient(
+      252deg,
+      transparent,
+      transparent var(--stop1),
+      black var(--stop2),
+      black
+    );
+    mask-image: linear-gradient(
+      252deg,
+      transparent,
+      transparent var(--stop1),
+      black var(--stop2),
+      black
+    );
+  }
+
+  // A belt-and-braces freeze on the two expensive rungs only.
+  //
+  // Nothing here should need it: `billow` is a transform on the element that
+  // carries the blur, so it re-composites a cached raster rather than blurring
+  // again, and `outside-shadow` animates opacity, which composites too. But
+  // that rests on the browser holding the filtered surface, and being wrong
+  // about it costs exactly what this rewrite set out to remove. 48px and 96px
+  // are where being wrong hurts, and they are also where a 4% wobble cannot be
+  // seen — so they hold still, and the 8px and 12px rungs still billow, which
+  // keeps the mildly-blurred band from ghosting against the base.
+  & > .blur-layer--mid .leaves,
+  & > .blur-layer--far .leaves {
+    animation: none;
+  }
+
+  // The blur sits on the two painted elements rather than on a wrapper around
+  // them, so that `billow` transforms an already-blurred leaf texture instead
+  // of invalidating it. `filter: blur()` fades out at its own box edges where
+  // `backdrop-filter` clamped, but every rung is backed by the one beneath it
+  // and the base rung by the page colour, so the fade has nothing to reveal.
+  .leaves,
+  .blinds {
+    filter: blur(var(--blur-amount));
   }
 
   #glow {
@@ -722,7 +771,7 @@ body.animation-ready #quartz-body {
     animation: outside-light-bounce 47s ease-in-out infinite;
   }
 
-  & > .perspective {
+  .perspective {
     position: absolute;
     transition:
       transform 1.7s var(--timing-fn),
@@ -743,7 +792,7 @@ body.animation-ready #quartz-body {
     }
   }
 
-  #leaves {
+  .leaves {
     position: absolute;
     background-size: cover;
     background-repeat: no-repeat;
@@ -758,7 +807,7 @@ body.animation-ready #quartz-body {
       outside-shadow 31s ease-in-out infinite;
   }
 
-  #blinds {
+  .blinds {
     position: relative;
     width: 100%;
 
@@ -808,23 +857,26 @@ body.animation-ready #quartz-body {
     contain: layout paint style;
     opacity: 0.7;
 
-    & > #progressive-blur {
+    & > .blur-layer:not(.blur-layer--base) {
       display: none;
+    }
+
+    .leaves,
+    .blinds {
+      filter: none;
     }
 
     #glow {
       animation: none;
-      filter: none;
       opacity: 0.24;
     }
 
     #glow-bounce {
       animation: none;
-      filter: none;
       opacity: 0.18;
     }
 
-    & > .perspective {
+    .perspective {
       top: -16vh;
       right: -24vw;
       width: 105vw;
@@ -837,9 +889,8 @@ body.animation-ready #quartz-body {
       }
     }
 
-    #leaves {
+    .leaves {
       animation: none;
-      filter: none;
       bottom: 0;
       right: -42vw;
       width: 128vw;
@@ -853,7 +904,7 @@ body.animation-ready #quartz-body {
       transform: none;
     }
 
-    #blinds {
+    .blinds {
       & .shutter {
         height: 28px;
 
@@ -877,13 +928,18 @@ body.animation-ready #quartz-body {
   }
 
   @media (prefers-reduced-motion: reduce), (prefers-reduced-transparency: reduce), (update: slow) {
-    & > #progressive-blur {
+    & > .blur-layer:not(.blur-layer--base) {
       display: none;
+    }
+
+    .leaves,
+    .blinds {
+      filter: none;
     }
 
     #glow,
     #glow-bounce,
-    #leaves {
+    .leaves {
       animation: none;
     }
   }
@@ -930,21 +986,23 @@ body.animation-ready #quartz-body {
   }
 }
 
+// Opacity alone, where this used to pair opacity with brightness/contrast.
+// `filter` is one property, and the leaves now carry the blur in it, so a
+// keyframe setting `filter` would drop the blur for the length of the
+// animation. On a dark silhouette held at 7% over a pale ground the two read
+// the same anyway, so the brightness range is folded into the opacity range.
 @keyframes outside-shadow {
   0%,
   100% {
-    opacity: 0.82;
-    filter: brightness(0.9) contrast(0.96);
+    opacity: 0.74;
   }
 
   45% {
     opacity: 1;
-    filter: brightness(1.08) contrast(1.05);
   }
 
   72% {
-    opacity: 0.9;
-    filter: brightness(0.98) contrast(1);
+    opacity: 0.88;
   }
 }
 

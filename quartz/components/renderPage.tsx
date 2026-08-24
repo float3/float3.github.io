@@ -25,23 +25,6 @@ interface RenderComponents {
 }
 
 const headerRegex = new RegExp(/h[1-6]/)
-const progressiveBlurScrollScript = `
-;(() => {
-  if (window.__progressiveBlurScrollListener) return
-  window.__progressiveBlurScrollListener = true
-
-  let timeout
-  const stopScrolling = () => document.body.classList.remove("is-scrolling")
-  const startScrolling = () => {
-    document.body.classList.add("is-scrolling")
-    window.clearTimeout(timeout)
-    timeout = window.setTimeout(stopScrolling, 140)
-  }
-
-  window.addEventListener("scroll", startScrolling, { passive: true })
-})()
-`
-
 export function pageResources(
   baseDir: FullSlug | RelativeURL,
   staticResources: StaticResources,
@@ -67,12 +50,6 @@ export function pageResources(
         contentType: "inline",
         spaPreserve: true,
         script: contentIndexScript,
-      },
-      {
-        loadTime: "afterDOMReady",
-        contentType: "inline",
-        spaPreserve: true,
-        script: progressiveBlurScrollScript,
       },
       ...staticResources.js,
     ],
@@ -347,31 +324,49 @@ export function renderPage(
   return "<!DOCTYPE html>\n" + render(doc)
 }
 
+/**
+ * The rungs of the progressive blur, sharpest first.
+ *
+ * Each one holds its own copy of the scene and blurs it by a plain `filter`,
+ * rather than the four `backdrop-filter` layers over a single scene this
+ * replaced — see the note above `#dappled-light` in `custom.scss` for why.
+ * `base` is unmasked and covers the viewport, so it is the one that shows
+ * through everywhere and the only one whose leaves are left animating.
+ */
+const BLUR_RUNGS = ["base", "near", "mid", "far"]
+
+function DappledScene() {
+  return (
+    <div class="perspective">
+      <div class="leaves"></div>
+      <div class="blinds">
+        <div class="shutters">
+          {Array.from({ length: 23 }, () => (
+            <div class="shutter"></div>
+          ))}
+        </div>
+        <div class="vertical">
+          <div class="bar"></div>
+          <div class="bar"></div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function DappledLight() {
   return (
     <div id="dappled-light">
+      {BLUR_RUNGS.map((rung) => (
+        <div class={`blur-layer blur-layer--${rung}`}>
+          <DappledScene />
+        </div>
+      ))}
+      {/* Above the stack rather than under it: these are smooth gradients, so
+          blurring them was doing nothing visible, and animating them beneath a
+          blur meant re-blurring the viewport on every frame of a 36s loop. */}
       <div id="glow"></div>
       <div id="glow-bounce"></div>
-      <div class="perspective">
-        <div id="leaves"></div>
-        <div id="blinds">
-          <div class="shutters">
-            {Array.from({ length: 23 }, () => (
-              <div class="shutter"></div>
-            ))}
-          </div>
-          <div class="vertical">
-            <div class="bar"></div>
-            <div class="bar"></div>
-          </div>
-        </div>
-      </div>
-      <div id="progressive-blur">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
     </div>
   )
 }
