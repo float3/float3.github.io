@@ -766,7 +766,11 @@ fn is_photo_file(path: &Path) -> bool {
 //     }
 // }
 
-fn process_photo_file(input: &Path, output: &Path, quality: u8) -> Result<(u32, u32)> {
+/// Decodes a picture and writes it back out as a JPEG.
+///
+/// Also used by `normalize-gallery`, which wants the re-encode for what it
+/// discards — an image rebuilt from its pixels keeps no EXIF.
+pub(crate) fn process_photo_file(input: &Path, output: &Path, quality: u8) -> Result<(u32, u32)> {
     let image = ImageReader::open(input)?.with_guessed_format()?.decode()?;
     let source = image.to_rgba8();
     let (width, height) = publish_photo(&source, output, quality)?;
@@ -788,7 +792,10 @@ fn publish_photo(source: &RgbaImage, output: &Path, quality: u8) -> Result<(u32,
     Ok((width, height))
 }
 
-fn rgba_to_rgb_on_white(source: &RgbaImage) -> RgbImage {
+/// Flattens transparency onto white, which is what JPEG needs and what the
+/// duplicate scan compares, so a picture saved with an alpha channel and the
+/// same picture saved without one fingerprint alike.
+pub(crate) fn rgba_to_rgb_on_white(source: &RgbaImage) -> RgbImage {
     let (width, height) = source.dimensions();
     let mut output = RgbImage::new(width, height);
 

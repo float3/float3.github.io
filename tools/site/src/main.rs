@@ -1,7 +1,9 @@
 mod aoc;
 mod build;
 mod content;
+mod duplicates;
 mod fsutil;
+mod gallery;
 mod maintenance;
 #[cfg(feature = "photos")]
 mod photos;
@@ -24,8 +26,8 @@ mod photos {
 mod process;
 mod recursive_ji;
 mod report;
-mod zipf;
 mod tables;
+mod zipf;
 
 use std::env;
 use std::error::Error;
@@ -114,6 +116,7 @@ fn run_main() -> Result<()> {
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
+        "normalize-gallery" | "normalize" => gallery::normalize(&site, &args[1..]),
         "report" => {
             let build_time = match args.get(1) {
                 Some(value) => value.parse::<u64>().map_err(|source| {
@@ -184,6 +187,9 @@ Commands:
   generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
+  normalize-gallery COLLECTION...
+                             renumber a misc gallery, re-encode its stills as
+                             JPEG, and strip their metadata
   report [seconds]           write public/report.html build report
   align-tables LEFT RIGHT SEP merge matching lines from two files
   recursive-ji-music [OUTPUT]

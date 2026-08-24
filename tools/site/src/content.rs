@@ -69,7 +69,21 @@ impl Site {
         Ok(())
     }
 
-    fn generate_index(&self, dir: &str, title: &str) -> Result<usize> {
+    /// The heading a listed directory gets, or `None` for a directory that is
+    /// not one of the galleries.
+    pub(crate) fn index_title(dir: &str) -> Option<&'static str> {
+        Self::INDICES
+            .iter()
+            .find_map(|(name, title)| (*name == dir).then_some(*title))
+    }
+
+    /// The listed directories, for an error message that names them rather than
+    /// leaving the reader to find this list.
+    pub(crate) fn index_names() -> Vec<&'static str> {
+        Self::INDICES.iter().map(|(name, _)| *name).collect()
+    }
+
+    pub(crate) fn generate_index(&self, dir: &str, title: &str) -> Result<usize> {
         let base = self.root.join("content/misc").join(dir);
         // A gallery gets listed here before its first file lands as often as
         // after, and an empty one is a page that says so rather than an error.
@@ -215,6 +229,14 @@ mod tests {
         assert!(!is_gallery_item("index.json"));
         assert!(!is_gallery_item(".normalize"));
         assert!(!is_gallery_item(".DS_Store"));
+    }
+
+    #[test]
+    fn finds_a_listed_gallery_by_its_directory() {
+        assert_eq!(Site::index_title("guesswedoing"), Some("guess we doing"));
+        assert_eq!(Site::index_title("trolley"), Some("trolley"));
+        assert_eq!(Site::index_title("not-a-gallery"), None);
+        assert!(Site::index_names().contains(&"trolley"));
     }
 
     #[test]
