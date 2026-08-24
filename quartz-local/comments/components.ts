@@ -417,9 +417,7 @@ function composer(target: CommentTarget): ComponentChildren {
     h("div", { class: "comment-fork-warning", hidden: true, role: "note" }, [
       h("p", {}, [
         h("strong", {}, "Fork it first. "),
-        "GitHub drops the file it was handed if it has to fork ",
-        repo,
-        " for you, and you would arrive at an empty editor with your comment gone.",
+        "Automatically forking the Repo on edit does not currently work (known issue according to support) and produces 'unknown error'.",
       ]),
       h("ol", {}, [
         h("li", {}, [
