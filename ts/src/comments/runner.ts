@@ -46,26 +46,68 @@ export function wireRunner(button: HTMLElement, onToggle: () => void): () => voi
   const source = button.dataset.run
   if (stage === undefined || stage === null || source === undefined) return () => {}
 
-  const label = button.textContent ?? "run this"
+  const label = button.textContent ?? "run it"
 
   const stop = () => {
     stage.replaceChildren()
     button.textContent = label
   }
 
+  const start = () => {
+    if (stage.firstChild !== null) return
+    stage.append(frameFor(source))
+    button.textContent = "stop"
+  }
+
   const click = () => {
-    if (stage.firstChild !== null) {
-      stop()
-    } else {
-      stage.append(frameFor(source))
-      button.textContent = "stop"
-    }
+    if (stage.firstChild !== null) stop()
+    else start()
     onToggle()
   }
 
   button.addEventListener("click", click)
 
+  // Started on sight rather than on a click: the reader should find the thing
+  // running, not a button promising it. Starting only what is on screen is what
+  // keeps a page of these from opening every frame at once.
+  const MARGIN = 128
+
+  const onScreen = () => {
+    const box = button.getBoundingClientRect()
+    return box.top < window.innerHeight + MARGIN && box.bottom > -MARGIN
+  }
+
+  const begin = () => {
+    if (stage.firstChild !== null) return
+    start()
+    onToggle()
+  }
+
+  // Measured directly for what is already in view, rather than waiting to be
+  // told. An observer is the right tool for the comment further down the page,
+  // but it reports nothing at all while the document is not being rendered, and
+  // a game that only runs in a foreground tab is a game that sometimes does not
+  // run. The measurement works either way.
+  if (onScreen()) begin()
+
+  const watcher = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue
+        begin()
+        watcher.disconnect()
+      }
+    },
+    { rootMargin: `${MARGIN}px` },
+  )
+  // The button, not the stage: the stage is an empty div until something is put
+  // in it, and an element with no height has no intersection to report — so
+  // observing it would mean waiting for a frame that only arrives once the
+  // frame is already there.
+  watcher.observe(button)
+
   return () => {
+    watcher.disconnect()
     button.removeEventListener("click", click)
     stop()
   }

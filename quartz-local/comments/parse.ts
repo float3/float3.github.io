@@ -14,7 +14,7 @@ import remarkRehype from "remark-rehype"
 import type { Root as HastRoot } from "hast"
 import { fromHtml } from "hast-util-from-html"
 import { hasExecutable, sanitize } from "./sanitize"
-import { serialize } from "./serialize"
+import { serialize, serializeRaw, withoutRaw } from "./serialize"
 import { runnableFromFences, runnableFromHtml } from "./runnable"
 import { authorFromIdentity, readCommentAuthors, type CommentCommit } from "./authors"
 import type { CommentRecord, CommentRevision } from "./types"
@@ -39,16 +39,22 @@ function renderBody(source: string): RenderedBody {
   // The author's HTML is still opaque `raw` text at this point, and unbalanced
   // wherever a tag opened in one node and closed in another. Writing the tree
   // back out and letting a real parser read it is what makes it a tree at all.
-  const html = serialize(mixed)
-  const parsed = fromHtml(html, { fragment: true })
+  const parsed = fromHtml(serialize(mixed), { fragment: true })
 
-  return {
-    body: sanitize(parsed),
-    // A comment that wrote a script runs as itself; one that pasted fenced code
-    // runs that. Checking the parsed tree rather than the source means a
-    // `<script>` shown inside a code fence does not count as one written.
-    runnable: hasExecutable(parsed) ? runnableFromHtml(html) : runnableFromFences(source),
+  // Checking the parsed tree rather than the source means a `<script>` shown
+  // inside a code fence does not count as one written.
+  if (!hasExecutable(parsed)) {
+    return { body: sanitize(parsed), runnable: runnableFromFences(source) }
   }
+
+  // A runnable comment is two things at once, and they are told apart by how
+  // they were written: the prose is markdown and belongs on the page, the HTML
+  // is the thing being built and belongs in the frame. Putting the whole
+  // comment in the frame renders the prose a second time inside the box, and
+  // leaves the markup it needs sitting dead on the page — a "new puzzle" button
+  // wired to nothing.
+  const prose = fromHtml(serialize(withoutRaw(mixed)), { fragment: true })
+  return { body: sanitize(prose), runnable: runnableFromHtml(serializeRaw(mixed)) }
 }
 
 function optionalString(value: unknown): string | undefined {

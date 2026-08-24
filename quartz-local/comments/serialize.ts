@@ -100,3 +100,30 @@ export function serialize(node: Node): string {
     }
   }
 }
+
+/**
+ * Only the author's own HTML, with the markdown-generated prose left out.
+ *
+ * This is the split between what a runnable comment shows on the page and what
+ * it shows in its frame: prose written as markdown stays on the page, and the
+ * markup written as HTML — which is the thing being built — goes in the frame.
+ * Serialising the whole comment into the frame instead renders the prose twice,
+ * once on the page and again inside the box.
+ */
+export function serializeRaw(node: Node): string {
+  if (node.type === "raw") return (node as unknown as { value: string }).value
+
+  const children = (node as Parent).children
+  return Array.isArray(children) ? children.map(serializeRaw).join("") : ""
+}
+
+/** The same tree with the author's HTML taken out, leaving the prose. */
+export function withoutRaw<T extends Node>(node: T): T {
+  const children = (node as unknown as Parent).children
+  if (!Array.isArray(children)) return node
+
+  return {
+    ...node,
+    children: children.filter((child) => child.type !== "raw").map(withoutRaw),
+  }
+}

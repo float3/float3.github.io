@@ -7,9 +7,7 @@ history:
   - date: "2026-08-24T13:10:00.000Z"
 ---
 
-Comments here can carry a `<script>`, so here is one carrying a whole game. Press **run this** — it opens in a sandboxed frame with no way back to this page.
-
-A note on flagging mistakes, since it is the only interesting decision in it: a square turns red when its digit **conflicts with another digit** in its row, column or box — not when it disagrees with a stored solution. Checking against a solution punishes you for finding a different valid one, and it is wrong the moment a puzzle has more than one. Conflict-checking is right whether or not the puzzle is unique. This generator does produce unique puzzles — it only removes a digit while one solution remains — but the rule holds either way.
+Comments here can carry a `<script>`, so here is one carrying a whole game.
 
 <div id="game"><div id="board"></div><div id="bar"><button id="again" type="button">new puzzle</button><span id="status"></span></div></div>
 <style>
@@ -36,7 +34,7 @@ A note on flagging mistakes, since it is the only interesting decision in it: a 
   // Counts up to `cap` solutions, so uniqueness costs no more than finding two.
   function count(g, cap = 2, i = 0) { if (i === 81) return 1; if (g[i]) return count(g, cap, i + 1); let total = 0; for (let v = 1; v <= 9 && total < cap; v++) { if (!fits(g, i, v)) continue; g[i] = v; total += count(g, cap - total, i + 1); g[i] = 0; } return total; }
   // Dig holes, keeping only the removals that leave the puzzle with one answer.
-  function puzzle(givens = 32) { const g = new Array(81).fill(0); fill(g); const p = g.slice(); let left = 81; for (const i of shuffled([...Array(81).keys()])) { if (left <= givens) break; const held = p[i]; p[i] = 0; if (count(p.slice()) === 1) left--; else p[i] = held; } return p; }
+  function puzzle(givens = 26) { const g = new Array(81).fill(0); fill(g); const p = g.slice(); let left = 81; for (const i of shuffled([...Array(81).keys()])) { if (left <= givens) break; const held = p[i]; p[i] = 0; if (count(p.slice()) === 1) left--; else p[i] = held; } return p; }
   const board = document.getElementById("board");
   const status = document.getElementById("status");
   const cells = [];
