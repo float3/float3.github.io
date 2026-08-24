@@ -922,6 +922,23 @@ mod tests {
     }
 
     #[test]
+    fn a_note_to_the_reader_before_the_marker_is_not_part_of_the_comment() {
+        // The compose box puts an HTML comment above the marker telling whoever
+        // is looking at the new-issue page which button to press. Everything
+        // before the marker is ignored, and it has to stay that way or the
+        // instruction ends up published as the first line of their comment.
+        let body = format!(
+            "<!-- press Create at the bottom right. -->
+{}",
+            issue_body(r#"{"parent":"blog/page.md"}"#, "the actual comment")
+        );
+        let parsed = parse_issue(&body).unwrap();
+
+        assert_eq!(parsed.body, "the actual comment");
+        assert_eq!(parsed.payload["parent"], "blog/page.md");
+    }
+
+    #[test]
     fn refuses_bodies_that_are_not_submissions() {
         assert!(parse_issue("just a normal issue").is_err());
         assert!(parse_issue(&format!("<!--{ISSUE_MARKER}\nnot json\n-->\n\nhi")).is_err());

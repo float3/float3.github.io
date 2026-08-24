@@ -214,6 +214,35 @@ a.comment-author:hover {
   font-size: 0.85rem;
 }
 
+/* Red because losing what you just wrote is the failure it prevents, and it
+   sits against the button rather than at the top of the box so it cannot be
+   scrolled past on the way to pressing it. */
+.comment-fork-warning {
+  border: 1px solid #b4553f;
+  border-radius: 4px;
+  background: color-mix(in srgb, #b4553f 10%, transparent);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  padding: 0.6rem 0.75rem;
+}
+
+.comment-fork-warning[hidden] {
+  display: none;
+}
+
+.comment-fork-warning p {
+  margin: 0;
+}
+
+.comment-fork-warning ol {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.comment-fork-warning li + li {
+  margin-top: 0.15rem;
+}
+
 /* ------------------------------------------------------------------ */
 /* The post button, split: the action, and the choice of action. */
 

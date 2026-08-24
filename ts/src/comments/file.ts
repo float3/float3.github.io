@@ -104,10 +104,25 @@ export function buildIssueBody(target: CommentTarget, draft: CommentDraft): stri
     editing: draft.editing,
   }
 
-  return [`<!--${ISSUE_MARKER}`, JSON.stringify(payload), "-->", "", draft.body.trim(), ""].join(
-    "\n",
-  )
+  return [
+    // Everything before the marker is ignored by the parser, so this is the one
+    // place a note to the reader can go without becoming part of their comment.
+    // An HTML comment rather than plain text because GitHub's compose box shows
+    // the raw markdown — so it is read exactly where it is useful — and renders
+    // nothing once the issue exists, where it would only be a stale instruction.
+    GUIDANCE,
+    `<!--${ISSUE_MARKER}`,
+    JSON.stringify(payload),
+    "-->",
+    "",
+    draft.body.trim(),
+    "",
+  ].join("\n")
 }
+
+const GUIDANCE =
+  "<!-- Nothing else to fill in: press the green Create button at the bottom right.\n" +
+  "     A workflow turns this issue into a pull request in your name and closes it. -->"
 
 function issueTitle(target: CommentTarget, draft: CommentDraft): string {
   const what = draft.editing !== undefined ? "Edit comment on" : "Comment on"

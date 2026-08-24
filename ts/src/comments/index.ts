@@ -412,6 +412,9 @@ class CommentUi {
     const { preview, previewLabel, url } = this.compose()
 
     this.previewLabel.textContent = previewLabel
+    // Only the pull-request route goes near GitHub's fork redirect, so only it
+    // needs the warning about what that redirect throws away.
+    this.require(".comment-fork-warning").hidden = this.route !== "pull-request"
 
     if (this.text.value.trim() === "") {
       this.preview.textContent = ""

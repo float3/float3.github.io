@@ -136,14 +136,14 @@ function history(comment: CommentRecord, repo: string, locale: string): Componen
       { key: revision.date },
       revision.issue !== undefined
         ? h(
-            "a",
-            {
-              href: `https://github.com/${repo}/issues/${revision.issue}`,
-              target: "_blank",
-              rel: "noopener noreferrer",
-            },
-            label,
-          )
+          "a",
+          {
+            href: `https://github.com/${repo}/issues/${revision.issue}`,
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+          label,
+        )
         : label,
     )
   }
@@ -215,19 +215,19 @@ function renderComment(
       // button that anyone can press costs nothing.
       comment.author?.login !== undefined
         ? h(
-            "button",
-            {
-              type: "button",
-              class: "comment-button comment-edit",
-              "data-editing": comment.id,
-              "data-author": comment.author.login,
-              "data-source": comment.source,
-              "data-quote": comment.quote,
-              "data-quote-heading": comment.quoteHeading,
-              "data-reply-to": comment.replyTo,
-            },
-            "edit",
-          )
+          "button",
+          {
+            type: "button",
+            class: "comment-button comment-edit",
+            "data-editing": comment.id,
+            "data-author": comment.author.login,
+            "data-source": comment.source,
+            "data-quote": comment.quote,
+            "data-quote-heading": comment.quoteHeading,
+            "data-reply-to": comment.replyTo,
+          },
+          "edit",
+        )
         : null,
     ]),
   ]
@@ -298,17 +298,17 @@ export const Comments: QuartzComponentConstructor = () => {
         ]),
         comments.length === 0
           ? h(
-              "p",
-              { class: "comments-empty" },
-              "Nothing here yet. Select any part of the page to quote it, or just start writing.",
-            )
+            "p",
+            { class: "comments-empty" },
+            "Nothing here yet. Select any part of the page to quote it, or just start writing.",
+          )
           : h(
-              "ol",
-              { class: "comment-list" },
-              roots.map((comment) =>
-                renderComment(comment, replies, filePath as FilePath, target.repo, cfg.locale, 0),
-              ),
+            "ol",
+            { class: "comment-list" },
+            roots.map((comment) =>
+              renderComment(comment, replies, filePath as FilePath, target.repo, cfg.locale, 0),
             ),
+          ),
         composer(target),
       ],
     )
@@ -343,7 +343,7 @@ function composer(target: CommentTarget): ComponentChildren {
     {
       route: "pull-request",
       label: "post using github pull request",
-      blurb: `Opens GitHub's file editor, forking ${repo} (there's a known issue: you have to the repository manually before this works https://github.com/float3/float3.github.io/fork).`,
+      blurb: `Opens GitHub's file editor, forking ${repo}.`,
     },
   ]
   if (target.email !== undefined) {
@@ -361,8 +361,8 @@ function composer(target: CommentTarget): ComponentChildren {
       "p",
       { class: "comment-composer-note" },
       "Comments are files in the repository. Writing one here opens a pull request against " +
-        repo +
-        ", and it appears on the page once that is merged",
+      repo +
+      ", and it appears on the page once that is merged",
     ),
 
     h("div", { class: "comment-editing", hidden: true }, [
@@ -409,6 +409,35 @@ function composer(target: CommentTarget): ComponentChildren {
     ]),
 
     h("p", { class: "comment-error", hidden: true, role: "status" }),
+
+    // Only for the pull-request route, and directly above the button it is
+    // about. GitHub loses the prefilled file when it has to fork the repository
+    // on the way through, so the fork has to exist first — and by the time the
+    // reader finds that out on their own, their comment is gone.
+    h("div", { class: "comment-fork-warning", hidden: true, role: "note" }, [
+      h("p", {}, [
+        h("strong", {}, "Fork it first. "),
+        "GitHub drops the file it was handed if it has to fork ",
+        repo,
+        " for you, and you would arrive at an empty editor with your comment gone.",
+      ]),
+      h("ol", {}, [
+        h("li", {}, [
+          h(
+            "a",
+            {
+              href: "https://github.com/" + repo + "/fork",
+              target: "_blank",
+              rel: "noopener noreferrer",
+            },
+            "Fork " + repo,
+          ),
+          ", in another tab.",
+        ]),
+        h("li", {}, "Come back here and press the button below."),
+        h("li", {}, "On GitHub's editor, commit the file and open the pull request."),
+      ]),
+    ]),
 
     // A split button: the action on the left, the choice of action behind the
     // caret. The default is the one almost everybody wants, so the alternatives
@@ -483,8 +512,8 @@ function composer(target: CommentTarget): ComponentChildren {
         "p",
         { class: "comment-hint" },
         "Commenting needs JavaScript, because the file is assembled in the browser. Without it, add a file named like the others next to this page in " +
-          repo +
-          " and open a pull request.",
+        repo +
+        " and open a pull request.",
       ),
     ),
 
@@ -497,4 +526,4 @@ function composer(target: CommentTarget): ComponentChildren {
 }
 
 export default Comments
-export function init(): void {}
+export function init(): void { }
