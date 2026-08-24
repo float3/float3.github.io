@@ -1,0 +1,134 @@
+# Turns a comment issue into a pull request.
+#
+# The compose box on the site builds a prefilled issue; this picks it up, writes
+# the comment file, commits it in the issue opener's name, opens a pull request
+# against the default branch and closes the issue. Merging that pull request is
+# what publishes the comment, so the review step is exactly where it was before
+# the issue route existed.
+name: Comment
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  comment:
+    # Keyed off the marker rather than a label: `?labels=` in a prefilled issue
+    # URL is silently dropped for anyone without triage permission on the
+    # repository, which is everyone this feature exists for.
+    if: contains(github.event.issue.body, 'hilll.dev:comment')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The workflow branches from the default branch and nothing here reads
+          # history, so the default shallow fetch is all it needs.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install --profile minimal stable
+
+      - name: Write the comment file
+        id: write
+        env:
+          # Passed as JSON rather than interpolated into the shell: an issue body
+          # is attacker-controlled text and has no business being parsed by bash.
+          ISSUE_JSON: ${{ toJSON(github.event.issue) }}
+          CONTENT_DIR: content
+        run: cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- comment-from-issue
+
+      - name: Say why it was refused
+        if: failure() && steps.write.outputs.rejected != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          REASON: ${{ steps.write.outputs.rejected }}
+        run: |
+          gh issue comment "$ISSUE" --body "This could not be turned into a comment: $REASON
+
+          Nothing has been changed. Edit the issue and reopen it, or write the file by hand — see \`quartz-local/comments/README.md\`."
+          gh issue close "$ISSUE" --reason "not planned"
+
+      # The writer already refuses to write anything but a comment file, and
+      # `git add` below names a single path. This checks the same fact a third
+      # way, against the working tree rather than against the code's intentions,
+      # because the cost of being wrong here is a stranger's issue changing a
+      # file that is not a comment.
+      - name: Refuse anything that is not a comment
+        env:
+          FILE: ${{ steps.write.outputs.file }}
+        run: |
+          set -euo pipefail
+
+          case "$FILE" in
+            *..*) echo "::error::$FILE climbs out of the tree"; exit 1 ;;
+            content/*.comment.*.md) ;;
+            *) echo "::error::$FILE is not a comment file under content/"; exit 1 ;;
+          esac
+
+          changed="$(git status --porcelain --untracked-files=all)"
+          printf 'changed:\n%s\n' "$changed"
+
+          if [ "$(printf '%s' "$changed" | grep -c .)" -ne 1 ]; then
+            echo "::error::expected exactly one changed file"
+            exit 1
+          fi
+          case "$changed" in
+            *"$FILE") ;;
+            *) echo "::error::the changed file is not the comment that was written"; exit 1 ;;
+          esac
+
+      - name: Commit it as the person who wrote it
+        id: commit
+        env:
+          # GitHub's private-email form for the account, which is what
+          # `quartz-local/comments/authors.ts` reads back when it needs to fall
+          # back to the commit. The commit is attributed to them, not signed by
+          # them — the issue they opened is what stands behind it.
+          AUTHOR_NAME: ${{ github.event.issue.user.login }}
+          AUTHOR_EMAIL: ${{ github.event.issue.user.id }}+${{ github.event.issue.user.login }}@users.noreply.github.com
+          BRANCH: comment/${{ github.event.issue.number }}
+          FILE: ${{ steps.write.outputs.file }}
+          ACTION: ${{ steps.write.outputs.action }}
+          PARENT: ${{ steps.write.outputs.parent }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          git switch -c "$BRANCH"
+          git add -- "$FILE"
+          git \
+            -c user.name="$AUTHOR_NAME" \
+            -c user.email="$AUTHOR_EMAIL" \
+            commit -m "$ACTION a comment on ${PARENT%.md}
+
+          Closes #${ISSUE}."
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.commit.outputs.branch }}
+          BASE: ${{ github.event.repository.default_branch }}
+          ACTION: ${{ steps.write.outputs.action }}
+          LOGIN: ${{ steps.write.outputs.login }}
+          PARENT: ${{ steps.write.outputs.parent }}
+          FILE: ${{ steps.write.outputs.file }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          gh pr create \
+            --base "$BASE" \
+            --head "$BRANCH" \
+            --title "$ACTION a comment on ${PARENT%.md} (@$LOGIN)" \
+            --body "From #${ISSUE}, opened by @${LOGIN}.
+
+          \`$FILE\`
+
+          Merging publishes the comment. Closing this without merging discards it."
+          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."

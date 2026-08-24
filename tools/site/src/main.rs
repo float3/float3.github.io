@@ -1,5 +1,6 @@
 mod aoc;
 mod build;
+mod comments;
 mod content;
 mod duplicates;
 mod fsutil;
@@ -134,6 +135,8 @@ fn run_main() -> Result<()> {
         "process-photos" => photos::process(&site, &args[1..]),
         "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
         // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
+        "comment-from-issue" => comments::from_issue(&site),
+        "check-comment-changes" => comments::check_pull_request(&site),
         "check" => site.check(),
         "update" | "update-and-lint" => site.update(),
         "commit" => {
@@ -198,6 +201,9 @@ Commands:
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
   process-photos [INPUT] [OUTPUT]
                              classify and publish source photos
+  comment-from-issue         CI-only: turn a comment issue into a comment file
+  check-comment-changes      CI-only: refuse a pull request that touches
+                             somebody else's comment
   check                      run Rust, TypeScript, and lint checks
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files

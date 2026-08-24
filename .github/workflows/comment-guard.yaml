@@ -1,0 +1,58 @@
+# Refuses a pull request that touches somebody else's comment.
+#
+# The issue route enforces this in `comment-from-issue.mjs`, which will not
+# rewrite a comment whose `author` is not the account that opened the issue. A
+# pull request opened by hand never goes near that script, so the same rule is
+# applied here to the other door.
+#
+# `pull_request` rather than `pull_request_target`: this checks out and reads a
+# fork's branch, so it must run with the read-only token and no access to
+# secrets. It needs neither.
+name: Comment guard
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "content/**/*.comment.*.md"
+
+jobs:
+  ownership:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Both sides of the comparison have to be present, and the merge-base
+          # can be arbitrarily far back on a long-running branch.
+          fetch-depth: 0
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install --profile minimal stable
+
+      - name: Check that the comments changed are the author's own
+        id: ownership
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          ACTOR: ${{ github.event.pull_request.user.login }}
+          ASSOCIATION: ${{ github.event.pull_request.author_association }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- check-comment-changes
+
+      - name: Say what was wrong with it
+        if: failure() && steps.ownership.outputs.refusals != ''
+        env:
+          REFUSALS: ${{ steps.ownership.outputs.refusals }}
+        run: |
+          {
+            echo "## This pull request changes comments that are not yours"
+            echo
+            echo "$REFUSALS"
+            echo
+            echo "A comment belongs to the account named in its \`author\` field."
+            echo "You can add your own, and edit or delete your own."
+            echo "The easiest way to do either is the compose box on the page itself."
+          } >> "$GITHUB_STEP_SUMMARY"
