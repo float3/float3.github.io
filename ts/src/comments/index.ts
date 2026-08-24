@@ -409,7 +409,7 @@ class CommentUi {
   }
 
   private render(): void {
-    const { preview, previewLabel, url } = this.compose()
+    const { preview, previewLabel, url, fallbackUrl, fallbackNote } = this.compose()
 
     this.previewLabel.textContent = previewLabel
     // Only the pull-request route goes near GitHub's fork redirect, so only it
@@ -425,9 +425,13 @@ class CommentUi {
     this.preview.textContent = preview
 
     if (url.length > MAX_URL_LENGTH) {
-      // Every route's fallback is to send the same thing by hand, and the copy
-      // button hands over exactly what is on screen for whichever route it is.
-      this.disable("Too long for the one-click route — copy it and send it by hand.")
+      // Not a dead end: the button still goes somewhere, just somewhere empty.
+      // The copy button already hands over exactly what is on screen, so the
+      // two together are copy, press, paste. Disabling it instead named a task
+      // — "send it by hand" — and no place to do it.
+      this.submit.href = fallbackUrl
+      this.submit.removeAttribute("aria-disabled")
+      this.say(fallbackNote, "note")
       return
     }
 

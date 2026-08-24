@@ -194,6 +194,18 @@ export interface Submission {
   /** The comment file, which is what the patch button hands over. */
   content: string
   path: string
+  /**
+   * The same destination with nothing prefilled, for when the whole thing is
+   * too long to put in a URL.
+   *
+   * A comment carrying a game runs to several kilobytes, and an edit has to
+   * carry the whole of it — so this is not an edge case, it is what happens the
+   * first time anyone edits something substantial. Sending them somewhere they
+   * can paste beats grey-ing the button out and naming no destination.
+   */
+  fallbackUrl: string
+  /** What to do once there, since it is now two steps rather than one. */
+  fallbackNote: string
 }
 
 export function buildSubmission(
@@ -208,6 +220,10 @@ export function buildSubmission(
     case "issue":
       return {
         url: issueUrl(target, draft),
+        fallbackUrl: `https://github.com/${target.repo}/issues/new?${new URLSearchParams({
+          title: issueTitle(target, draft),
+        }).toString()}`,
+        fallbackNote: "Too long to prefill — press copy, then paste it into the issue that opens.",
         explanation:
           "Opens an issue. A workflow turns it into a pull request in your name, and closes the issue.",
         // The issue, not the file. The workflow decides the filename, the date
@@ -222,6 +238,10 @@ export function buildSubmission(
     case "pull-request":
       return {
         url: pullRequestUrl(target, path, content),
+        fallbackUrl: `https://github.com/${target.repo}/new/${target.branch}?${new URLSearchParams({
+          filename: path,
+        }).toString()}`,
+        fallbackNote: "Too long to prefill — press copy, then paste it into the editor that opens.",
         explanation: `Opens GitHub's file editor at ${path}, forking ${target.repo} if you cannot push to it.`,
         // The one route where the browser really does decide the whole file.
         preview: `${path}\n\n${content}`,
@@ -232,6 +252,12 @@ export function buildSubmission(
     case "email":
       return {
         url: emailUrl(target, draft),
+        fallbackUrl: `mailto:${target.email}?${new URLSearchParams({
+          subject: issueTitle(target, draft),
+        })
+          .toString()
+          .replace(/\+/g, "%20")}`,
+        fallbackNote: "Too long to prefill — press copy, then paste it into the mail that opens.",
         explanation: `Opens your mail client. No GitHub account needed; it gets added by hand.`,
         preview: `To: ${target.email}\nSubject: ${issueTitle(target, draft)}\n\n${emailBody(target, draft)}`,
         previewLabel: "the email this will send",
