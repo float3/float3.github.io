@@ -16,8 +16,8 @@ import { fromHtml } from "hast-util-from-html"
 import { hasExecutable, sanitize } from "./sanitize"
 import { serialize } from "./serialize"
 import { runnableFromFences, runnableFromHtml } from "./runnable"
-import { readCommentAuthors, type CommentCommit } from "./authors"
-import type { CommentRecord } from "./types"
+import { authorFromIdentity, readCommentAuthors, type CommentCommit } from "./authors"
+import type { CommentRecord, CommentRevision } from "./types"
 
 const COMMENT_FILE = /^(.*)\.comment\.([A-Za-z0-9_-]{1,32})\.md$/
 const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/
@@ -53,6 +53,36 @@ function renderBody(source: string): RenderedBody {
 
 function optionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() !== "" ? value.trim() : undefined
+}
+
+function optionalNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined
+}
+
+/**
+ * The revision list, as the workflow appends it.
+ *
+ * A file written by hand has none, and gets a single implied revision from its
+ * own date so the page has something coherent to show either way.
+ */
+function readHistory(value: unknown, fallbackDate: string): CommentRevision[] {
+  if (!Array.isArray(value)) return [{ date: fallbackDate, edited: false }]
+
+  const revisions: CommentRevision[] = []
+  for (const entry of value) {
+    if (typeof entry !== "object" || entry === null) continue
+    const fields = entry as Record<string, unknown>
+    const date = optionalString(fields.date)
+    if (date === undefined || Number.isNaN(Date.parse(date))) continue
+    revisions.push({
+      date,
+      issue: optionalNumber(fields.issue),
+      // The first submission is not an edit however the file spells it.
+      edited: revisions.length > 0 && fields.edited !== false,
+    })
+  }
+
+  return revisions.length > 0 ? revisions : [{ date: fallbackDate, edited: false }]
 }
 
 const toPosix = (file: string) => file.split(path.sep).join("/")
@@ -91,23 +121,38 @@ function readComment(
 
   const commit = commits.get(toPosix(path.relative(repoRoot, file)))
 
-  // The commit's date is what the comment was actually written on. The date in
-  // the file is the browser's guess at the same moment, and only survives while
-  // the file is uncommitted — which, locally, is the whole time it is being
-  // tested.
-  const date = commit?.date ?? optionalString(fields.date)
+  // The file's own date is authoritative once the workflow is writing it, since
+  // an edit moves the commit but must not move the date the comment was made.
+  // A file with neither falls back to the commit, then gives up.
+  const date = optionalString(fields.date) ?? commit?.date
   if (date === undefined || Number.isNaN(Date.parse(date))) return undefined
+
+  const history = readHistory(fields.history, date)
+  const lastEdit = [...history].reverse().find((revision) => revision.edited)
+
+  // The identity the file records — a GitHub login, or an email address for a
+  // comment that arrived as mail. Only when the file claims nothing at all does
+  // the commit become the source.
+  const identity = optionalString(fields.author)
+  const author =
+    identity !== undefined
+      ? authorFromIdentity(identity, optionalNumber(fields.authorId))
+      : commit?.author
 
   return {
     parentPath,
     record: {
       id,
+      file: toPosix(path.relative(repoRoot, file)),
       parent: toPosix(path.relative(contentDir, parentPath)),
-      date,
-      author: commit?.author,
+      date: history[0]?.date ?? date,
+      edited: lastEdit?.date,
+      author,
+      history,
       replyTo: optionalString(fields.replyTo),
       quote: optionalString(fields.quote),
       quoteHeading: optionalString(fields.quoteHeading),
+      source: body,
       ...renderBody(body),
     },
   }

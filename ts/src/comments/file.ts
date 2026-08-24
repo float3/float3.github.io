@@ -1,13 +1,14 @@
 /**
  * Turning a filled-in form into the file a pull request would add, and into
- * the three ways of getting that file to the repository.
+ * the routes that get it there.
  *
- * There is no server anywhere in this. GitHub's web editor accepts a path and
- * a body as query parameters, forks the repository on the reader's behalf if
- * they cannot push to it, and offers to open the pull request — which covers
- * the entire round trip that the usual recipe for this spends a serverless
- * function on. It also settles who wrote the comment, since the commit it
- * makes is attributed to whichever account opened the pull request.
+ * There is no server in any of them. The default route opens a prefilled
+ * GitHub issue, and a workflow in the repository turns that into a branch, a
+ * commit in the issue opener's name, and a pull request — which is the part
+ * that settles who wrote the comment. The other two routes exist because the
+ * first one can fail for reasons the reader cannot fix: a pull request opened
+ * by hand for anyone who would rather see the diff, and an email for anyone
+ * without a GitHub account at all.
  */
 
 export interface CommentTarget {
@@ -17,6 +18,10 @@ export interface CommentTarget {
   path: string
   /** Content-relative path, which is what goes in the frontmatter. */
   parent: string
+  /** Where the email route sends to. Absent hides that option. */
+  email?: string
+  /** Web URL of the page, for the issue title and the mail subject. */
+  page: string
 }
 
 export interface CommentDraft {
@@ -26,7 +31,12 @@ export interface CommentDraft {
   replyTo?: string
   quote?: string
   quoteHeading?: string
+  /** id of the comment this replaces, when the reader pressed edit. */
+  editing?: string
 }
+
+/** The three ways a comment can be submitted, in the order the menu offers them. */
+export type Route = "issue" | "pull-request" | "email"
 
 /**
  * Where the comment file lands: beside the page, sharing its name.
@@ -44,9 +54,12 @@ export function commentPath(target: CommentTarget, id: string): string {
 const scalar = (value: string) => JSON.stringify(value)
 
 /**
- * Note what is *not* here: no name, no picture, nothing about who is writing.
- * All of that is read back off the commit at build time, where it cannot be
- * typed into a text box.
+ * The file as the pull-request route would add it.
+ *
+ * Note what is *not* here: no author and no history. Both are the workflow's to
+ * write, from the account that opened the issue — a browser cannot be trusted
+ * to say who is using it. A file submitted through the pull-request route
+ * therefore carries no author claim at all, and falls back to its commit.
  */
 export function buildCommentFile(target: CommentTarget, draft: CommentDraft): string {
   const lines = ["---", `parent: ${scalar(target.parent)}`, `date: ${scalar(draft.date)}`]
@@ -59,21 +72,135 @@ export function buildCommentFile(target: CommentTarget, draft: CommentDraft): st
   return lines.join("\n")
 }
 
+// ---------------------------------------------------------------------------
+// The issue route
+
+/**
+ * The marker the workflow looks for.
+ *
+ * It is an HTML comment, so GitHub renders the issue as just the comment's own
+ * text with the machine-readable part invisible — the issue reads as what it
+ * is. The workflow keys off this string rather than off a label, because a
+ * label set through `?labels=` is silently dropped for anyone without triage
+ * permission on the repository, which is everyone this feature is for.
+ */
+export const ISSUE_MARKER = "hilll.dev:comment"
+
+interface IssuePayload {
+  parent: string
+  replyTo?: string
+  quote?: string
+  quoteHeading?: string
+  /** Present for an edit; the workflow rewrites that file instead of adding one. */
+  editing?: string
+}
+
+export function buildIssueBody(target: CommentTarget, draft: CommentDraft): string {
+  const payload: IssuePayload = {
+    parent: target.parent,
+    replyTo: draft.replyTo,
+    quote: draft.quote,
+    quoteHeading: draft.quoteHeading,
+    editing: draft.editing,
+  }
+
+  return [`<!--${ISSUE_MARKER}`, JSON.stringify(payload), "-->", "", draft.body.trim(), ""].join(
+    "\n",
+  )
+}
+
+function issueTitle(target: CommentTarget, draft: CommentDraft): string {
+  const what = draft.editing !== undefined ? "Edit comment on" : "Comment on"
+  return `${what} ${target.parent.replace(/\.md$/, "")}`
+}
+
+// ---------------------------------------------------------------------------
+// Routes
+
+function issueUrl(target: CommentTarget, draft: CommentDraft): string {
+  const query = new URLSearchParams({
+    title: issueTitle(target, draft),
+    body: buildIssueBody(target, draft),
+    labels: "comment",
+  })
+  return `https://github.com/${target.repo}/issues/new?${query.toString()}`
+}
+
 /**
  * GitHub's "create a new file" editor, prefilled.
  *
  * Someone without push access gets offered a fork automatically, and the
- * editor's own commit form is what opens the pull request — so this one link
- * is the entire submission path.
+ * editor's own commit form is what opens the pull request.
  */
-export function newFileUrl(target: CommentTarget, path: string, content: string): string {
+function pullRequestUrl(target: CommentTarget, path: string, content: string): string {
   const query = new URLSearchParams({ filename: path, value: content })
   return `https://github.com/${target.repo}/new/${target.branch}?${query.toString()}`
 }
 
+function emailUrl(target: CommentTarget, draft: CommentDraft): string {
+  const body = [
+    draft.quote !== undefined ? `Quoting: ${draft.quote}` : undefined,
+    draft.editing !== undefined ? `This edits comment ${draft.editing}.` : undefined,
+    "",
+    draft.body.trim(),
+    "",
+    `— on ${target.page}`,
+  ]
+    .filter((line) => line !== undefined)
+    .join("\n")
+
+  const query = new URLSearchParams({ subject: issueTitle(target, draft), body })
+  // `mailto:` wants percent-encoded spaces, and URLSearchParams writes `+`,
+  // which mail clients paste through literally.
+  return `mailto:${target.email}?${query.toString().replace(/\+/g, "%20")}`
+}
+
+export interface Submission {
+  url: string
+  /** Shown under the button, so the reader knows what pressing it does. */
+  explanation: string
+  /** The file that would be added, for the preview and the copy button. */
+  content: string
+  path: string
+}
+
+export function buildSubmission(
+  route: Route,
+  target: CommentTarget,
+  draft: CommentDraft,
+): Submission {
+  const content = buildCommentFile(target, draft)
+  const path = commentPath(target, draft.id)
+
+  switch (route) {
+    case "issue":
+      return {
+        url: issueUrl(target, draft),
+        explanation:
+          "Opens an issue. A workflow turns it into a pull request in your name, and closes the issue.",
+        content,
+        path,
+      }
+    case "pull-request":
+      return {
+        url: pullRequestUrl(target, path, content),
+        explanation: `Opens GitHub's file editor at ${path}, forking ${target.repo} if you cannot push to it.`,
+        content,
+        path,
+      }
+    case "email":
+      return {
+        url: emailUrl(target, draft),
+        explanation: `Opens your mail client. No GitHub account needed; it gets added by hand.`,
+        content,
+        path,
+      }
+  }
+}
+
 /**
- * Past roughly this much, the prefilled URL stops being reliable — the limit
- * is GitHub's and it is not documented, so the number is a conservative guess
+ * Past roughly this much, a prefilled URL stops being reliable — the limit is
+ * GitHub's and it is not documented, so the number is a conservative guess
  * rather than a boundary anyone promised. Beyond it the copy-and-paste path is
  * offered instead of a link that would fail after the reader had committed to
  * clicking it.

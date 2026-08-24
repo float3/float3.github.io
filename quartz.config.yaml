@@ -76,6 +76,9 @@ plugins:
   - source: ./quartz-local/comments
     enabled: true
     order: 18
+    options:
+      # The third submission route, for anyone without a GitHub account.
+      email: comments@hilll.dev
     layout:
       position: afterBody
       priority: 5

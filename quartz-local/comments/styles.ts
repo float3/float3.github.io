@@ -175,7 +175,161 @@ a.comment-author:hover {
   margin-bottom: 0;
 }
 
-.comment-reply {
+.comment-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* The revision list is a footnote to the comment, not a feature of it: closed,
+   quiet, and only present at all once there is more than one version. */
+.comment-history {
+  font-size: 0.78rem;
+  margin-top: 0.4rem;
+}
+
+.comment-history summary {
+  color: var(--gray);
+  cursor: pointer;
+}
+
+.comment-history ol {
+  color: var(--darkgray);
+  margin: 0.3rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.comment-history-diffs {
+  display: inline-block;
+  margin-top: 0.3rem;
+}
+
+.comment-editing {
+  border-left: 3px solid var(--tertiary);
+  padding-left: 0.75rem;
+}
+
+.comment-editing-note {
+  font-size: 0.85rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* The post button, split: the action, and the choice of action. */
+
+.comment-post {
+  display: inline-flex;
+  position: relative;
+}
+
+/* The two halves are one control, so only the outer corners round and the
+   seam between them is a single shared line rather than two borders meeting. */
+.comment-post .comment-submit {
+  border-radius: 4px 0 0 4px;
+}
+
+.comment-post-toggle {
+  align-items: center;
+  background: var(--secondary);
+  border-color: var(--secondary);
+  border-left: 1px solid color-mix(in srgb, var(--light) 35%, transparent);
+  border-radius: 0 4px 4px 0;
+  color: var(--light);
+  display: flex;
+  margin-left: -1px;
+  padding: 0.3rem 0.5rem;
+}
+
+.comment-post-toggle:hover {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--light);
+}
+
+/* Disabled as a pair: the caret opening a menu of things that cannot be done
+   yet would be a menu that lies about what pressing it achieves. */
+.comment-post:has(.comment-submit[aria-disabled="true"]) .comment-post-toggle {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.comment-post-menu {
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 25%);
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  min-width: min(24rem, 80vw);
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  z-index: 6;
+}
+
+.comment-post-menu[hidden] {
+  display: none;
+}
+
+.comment-post-option {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--lightgray);
+  color: inherit;
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  gap: 0.5rem;
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+}
+
+.comment-post-option:last-child {
+  border-bottom: none;
+}
+
+.comment-post-option:hover,
+.comment-post-option:focus-visible {
+  background: var(--highlight);
+  outline: none;
+}
+
+/* The tick keeps its column whether or not it is showing, so the titles line
+   up down the menu instead of shifting by a character. */
+.comment-post-check {
+  color: var(--secondary);
+  flex: none;
+  visibility: hidden;
+  width: 1em;
+}
+
+.comment-post-option[aria-checked="true"] .comment-post-check {
+  visibility: visible;
+}
+
+.comment-post-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.comment-post-title {
+  font-weight: 600;
+}
+
+.comment-post-blurb {
+  color: var(--darkgray);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+/* Behind the same fold as the file they act on. */
+.comment-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
@@ -401,13 +555,15 @@ mark.comment-mark {
 }
 
 @media (max-width: 600px) {
-  .comment-actions {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .comment-actions .comment-button {
-    text-align: center;
+  /* Anchored to the button's left edge and capped at the viewport. Hanging it
+     off the right edge instead put it off the left of a narrow screen, because
+     the button it is measuring from is only as wide as its own label. */
+  .comment-post-menu {
+    left: 0;
+    max-width: calc(100vw - 2.5rem);
+    min-width: 0;
+    right: auto;
+    width: max-content;
   }
 }
 `

@@ -17,7 +17,7 @@ import type {
 import { htmlToJsx } from "../../quartz/util/jsx"
 import { classNames, formatDate } from "@quartz-community/utils"
 import type { FilePath } from "../../quartz/util/path"
-import type { CommentRecord } from "./types"
+import type { CommentRecord, CommentRevision, CommentTarget } from "./types"
 import { styles } from "./styles"
 
 function avatar(comment: CommentRecord): ComponentChildren {
@@ -53,8 +53,19 @@ function name(comment: CommentRecord): ComponentChildren {
   if (author === undefined) {
     return h("span", { class: "comment-author is-pending" }, "uncommitted")
   }
+  // An email author has no profile to link to, and the address itself is not
+  // printed — only the part before the `@`, so the page is not a place to
+  // harvest it from. The full address stays in the file, where an edit can be
+  // checked against it.
   if (author.profile === undefined) {
-    return h("span", { class: "comment-author" }, author.name)
+    return h(
+      "span",
+      {
+        class: "comment-author",
+        title: author.email !== undefined ? "sent by email" : undefined,
+      },
+      author.name,
+    )
   }
   return h(
     "a",
@@ -106,6 +117,59 @@ function runner(comment: CommentRecord): ComponentChildren {
   ])
 }
 
+/**
+ * When the comment was written, and every time it has been revised since.
+ *
+ * The list is the timeline only — each revision's date and the issue it arrived
+ * as. The text of an old revision is not duplicated into the file, because git
+ * already holds every one of them; the "all revisions" link goes there.
+ */
+function history(comment: CommentRecord, repo: string, locale: string): ComponentChildren {
+  if (comment.edited === undefined) return null
+
+  const when = (revision: CommentRevision) => formatDate(new Date(revision.date), locale as never)
+
+  const entry = (revision: CommentRevision, index: number) => {
+    const label = `${index === 0 ? "written" : "edited"} ${when(revision)}`
+    return h(
+      "li",
+      { key: revision.date },
+      revision.issue !== undefined
+        ? h(
+          "a",
+          {
+            href: `https://github.com/${repo}/issues/${revision.issue}`,
+            target: "_blank",
+            rel: "noopener noreferrer",
+          },
+          label,
+        )
+        : label,
+    )
+  }
+
+  return h("details", { class: "comment-history" }, [
+    h(
+      "summary",
+      {},
+      `edited ${when(comment.history[comment.history.length - 1])} · ${comment.history.length} versions`,
+    ),
+    h("ol", {}, comment.history.map(entry)),
+    h(
+      "a",
+      {
+        class: "comment-history-diffs",
+        href: `https://github.com/${repo}/commits/HEAD/${encodePath(comment.file)}`,
+        target: "_blank",
+        rel: "noopener noreferrer",
+      },
+      "all revisions, with their text",
+    ),
+  ])
+}
+
+const encodePath = (file: string) => file.split("/").map(encodeURIComponent).join("/")
+
 function quoteBlock(comment: CommentRecord): ComponentChildren {
   if (comment.quote === undefined) return null
   // The jump link is inert until the script has found the passage and given it
@@ -129,6 +193,7 @@ function renderComment(
   comment: CommentRecord,
   replies: Map<string, CommentRecord[]>,
   filePath: FilePath,
+  repo: string,
   locale: string,
   depth: number,
 ): ComponentChildren {
@@ -137,11 +202,34 @@ function renderComment(
     quoteBlock(comment),
     h("div", { class: "comment-body" }, htmlToJsx(filePath, comment.body)),
     runner(comment),
-    h(
-      "button",
-      { type: "button", class: "comment-button comment-reply", "data-reply-to": comment.id },
-      "reply",
-    ),
+    history(comment, repo, locale),
+    h("div", { class: "comment-tools" }, [
+      h(
+        "button",
+        { type: "button", class: "comment-button comment-reply", "data-reply-to": comment.id },
+        "reply",
+      ),
+      // The source rides along so the compose box can prefill it. Only the
+      // account named here can actually land the edit — the workflow checks the
+      // file's author against whoever opened the issue — so this being a plain
+      // button that anyone can press costs nothing.
+      comment.author?.login !== undefined
+        ? h(
+          "button",
+          {
+            type: "button",
+            class: "comment-button comment-edit",
+            "data-editing": comment.id,
+            "data-author": comment.author.login,
+            "data-source": comment.source,
+            "data-quote": comment.quote,
+            "data-quote-heading": comment.quoteHeading,
+            "data-reply-to": comment.replyTo,
+          },
+          "edit",
+        )
+        : null,
+    ]),
   ]
 
   // Threading stops a few levels down: past that the indentation costs more
@@ -152,7 +240,7 @@ function renderComment(
       h(
         "ol",
         { class: "comment-list comment-replies" },
-        answers.map((reply) => renderComment(reply, replies, filePath, locale, depth + 1)),
+        answers.map((reply) => renderComment(reply, replies, filePath, repo, locale, depth + 1)),
       ),
     )
   }
@@ -210,18 +298,18 @@ export const Comments: QuartzComponentConstructor = () => {
         ]),
         comments.length === 0
           ? h(
-              "p",
-              { class: "comments-empty" },
-              "Nothing here yet. Select any part of the page to quote it, or just start writing.",
-            )
+            "p",
+            { class: "comments-empty" },
+            "Nothing here yet. Select any part of the page to quote it, or just start writing.",
+          )
           : h(
-              "ol",
-              { class: "comment-list" },
-              roots.map((comment) =>
-                renderComment(comment, replies, filePath as FilePath, cfg.locale, 0),
-              ),
+            "ol",
+            { class: "comment-list" },
+            roots.map((comment) =>
+              renderComment(comment, replies, filePath as FilePath, target.repo, cfg.locale, 0),
             ),
-        composer(target.repo),
+          ),
+        composer(target),
       ],
     )
   }
@@ -236,9 +324,35 @@ export const Comments: QuartzComponentConstructor = () => {
  * It is real markup rather than something the script assembles, so the SPA
  * router has a stable tree to morph against on every navigation.
  */
-function composer(repo: string): ComponentChildren {
+function composer(target: CommentTarget): ComponentChildren {
+  const repo = target.repo
   const button = (className: string, text: string) =>
     h("button", { type: "button", class: "comment-button " + className }, text)
+
+  // Issue first, and the default: it is the only route that ends with the
+  // comment attributed to whoever wrote it without them having to do anything
+  // about it. The blurbs are here rather than in the client because they are
+  // words, and the client's job is behaviour — it reads the title back off
+  // whichever option was picked.
+  const routes: { route: string; label: string; blurb: string }[] = [
+    {
+      route: "issue",
+      label: "post using github issues",
+      blurb: "A workflow turns it into a pull request in your name, then closes the issue.",
+    },
+    {
+      route: "pull-request",
+      label: "post using github pull request",
+      blurb: `Opens GitHub's file editor, forking ${repo} (there's a known issue: you have to the repository manually before this works https://github.com/float3/float3.github.io/fork).`,
+    },
+  ]
+  if (target.email !== undefined) {
+    routes.push({
+      route: "email",
+      label: "post by email",
+      blurb: "Opens your mail client. No GitHub account needed; it gets added by hand. If you want to post it anonymously, put ANON at the end of the subject line.",
+    })
+  }
 
   return h("div", { class: "comment-composer" }, [
     h("h3", { class: "comment-composer-heading" }, "Add a comment"),
@@ -246,9 +360,15 @@ function composer(repo: string): ComponentChildren {
       "p",
       { class: "comment-composer-note" },
       "Comments are files in the repository. Writing one here opens a pull request against " +
-        repo +
-        ", and it appears on the page once that is merged",
+      repo +
+      ", and it appears on the page once that is merged",
     ),
+
+    h("div", { class: "comment-editing", hidden: true }, [
+      h("span", { class: "comment-label" }, "Editing"),
+      h("span", { class: "comment-editing-note" }),
+      button("comment-drop-edit", "start a new comment instead"),
+    ]),
 
     h("div", { class: "comment-replying", hidden: true }, [
       h("span", { class: "comment-label" }, "Replying to"),
@@ -271,27 +391,85 @@ function composer(repo: string): ComponentChildren {
       }),
     ]),
 
+    // The two buttons in here act on the file shown above them, and anyone who
+    // wants either already knows what a patch is — so they live behind the
+    // same fold as the file itself rather than beside the one button that
+    // everybody uses.
     h("details", { class: "comment-preview" }, [
       h("summary", {}, "the file this will add"),
       h("pre", { class: "comment-preview-body" }),
+      h("div", { class: "comment-preview-actions" }, [
+        button("comment-copy", "copy the file"),
+        button("comment-patch", "download a patch"),
+      ]),
     ]),
 
     h("p", { class: "comment-error", hidden: true, role: "status" }),
 
+    // A split button: the action on the left, the choice of action behind the
+    // caret. The default is the one almost everybody wants, so the alternatives
+    // cost a click to find and nothing to ignore — which is why there is no
+    // label sitting beside it explaining what the menu is for.
     h("div", { class: "comment-actions" }, [
-      h(
-        "a",
-        {
-          class: "comment-button comment-submit",
-          href: "#",
-          target: "_blank",
-          rel: "noopener noreferrer",
-          "aria-disabled": "true",
-        },
-        "open a pull request",
-      ),
-      button("comment-copy", "copy the file"),
-      button("comment-patch", "download a patch"),
+      h("div", { class: "comment-post", "data-open": "false" }, [
+        h(
+          "a",
+          {
+            class: "comment-button comment-submit",
+            href: "#",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            "aria-disabled": "true",
+          },
+          routes[0].label,
+        ),
+        h(
+          "button",
+          {
+            type: "button",
+            class: "comment-button comment-post-toggle",
+            "aria-haspopup": "menu",
+            "aria-expanded": "false",
+            "aria-label": "choose how to post this",
+          },
+          // A caret, drawn rather than typed: the glyph fonts have for this
+          // sits differently in each of them.
+          h(
+            "svg",
+            { viewBox: "0 0 16 16", width: "12", height: "12", "aria-hidden": "true" },
+            h("path", {
+              d: "M4 6l4 4 4-4",
+              fill: "none",
+              stroke: "currentColor",
+              "stroke-width": "2",
+            }),
+          ),
+        ),
+        h(
+          "div",
+          { class: "comment-post-menu", role: "menu", hidden: true },
+          routes.map((route, index) =>
+            h(
+              "button",
+              {
+                key: route.route,
+                type: "button",
+                role: "menuitemradio",
+                "aria-checked": index === 0 ? "true" : "false",
+                class: "comment-post-option",
+                "data-route": route.route,
+              },
+              [
+                h("span", { class: "comment-post-check", "aria-hidden": "true" }, "✓"),
+                h("span", { class: "comment-post-text" }, [
+                  h("span", { class: "comment-post-title" }, route.label),
+                  h("span", { class: "comment-post-blurb" }, route.blurb),
+                ]),
+              ],
+            ),
+          ),
+        ),
+      ]),
     ]),
 
     h(
@@ -301,8 +479,8 @@ function composer(repo: string): ComponentChildren {
         "p",
         { class: "comment-hint" },
         "Commenting needs JavaScript, because the file is assembled in the browser. Without it, add a file named like the others next to this page in " +
-          repo +
-          " and open a pull request.",
+        repo +
+        " and open a pull request.",
       ),
     ),
 
@@ -315,4 +493,4 @@ function composer(repo: string): ComponentChildren {
 }
 
 export default Comments
-export function init(): void {}
+export function init(): void { }

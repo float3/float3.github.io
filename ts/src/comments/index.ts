@@ -10,14 +10,13 @@
  */
 
 import {
-  buildCommentFile,
   buildPatch,
-  commentPath,
+  buildSubmission,
   MAX_URL_LENGTH,
   newCommentId,
-  newFileUrl,
   type CommentDraft,
   type CommentTarget,
+  type Route,
 } from "./file.js"
 import { captureSelection, linkQuotes, unlinkQuotes } from "./quotes.js"
 import { wireRunner } from "./runner.js"
@@ -31,6 +30,10 @@ interface DraftState {
   quote?: string
   quoteHeading?: string
   replyTo?: string
+  /** id of the comment being rewritten, when the reader pressed edit. */
+  editing?: string
+  /** Login the edited comment belongs to, for the warning if it is not theirs. */
+  editingAuthor?: string
 }
 
 class CommentUi {
@@ -45,6 +48,10 @@ class CommentUi {
   private readonly error: HTMLElement
   private readonly submit: HTMLAnchorElement
   private readonly toolbar: HTMLElement
+  private readonly post: HTMLElement
+  private readonly postToggle: HTMLElement
+  private readonly postMenu: HTMLElement
+  private route: Route = "issue"
 
   constructor(private readonly section: HTMLElement) {
     this.target = JSON.parse(section.dataset.commentTarget ?? "{}") as CommentTarget
@@ -55,6 +62,9 @@ class CommentUi {
     this.error = this.require(".comment-error")
     this.submit = this.require<HTMLAnchorElement>(".comment-submit")
     this.toolbar = this.require(".comment-selection-toolbar")
+    this.post = this.require(".comment-post")
+    this.postToggle = this.require(".comment-post-toggle")
+    this.postMenu = this.require(".comment-post-menu")
 
     this.state = { id: newCommentId(this.existingIds()) }
 
@@ -62,6 +72,7 @@ class CommentUi {
     this.wireRunners()
     this.wireThread()
     this.wireForm()
+    this.wirePostMenu()
     this.wireSelection()
     this.render()
   }
@@ -86,7 +97,7 @@ class CommentUi {
     if (this.article !== null) unlinkQuotes(this.article)
   }
 
-  private listen(element: EventTarget, type: string, handler: () => void): void {
+  private listen(element: EventTarget, type: string, handler: (event: Event) => void): void {
     element.addEventListener(type, handler)
     this.cleanup.push(() => element.removeEventListener(type, handler))
   }
@@ -200,6 +211,58 @@ class CommentUi {
       this.showReply()
       this.refresh()
     })
+
+    for (const button of this.section.querySelectorAll<HTMLElement>(".comment-edit")) {
+      this.listen(button, "click", () => {
+        // An edit is an ordinary submission carrying the old text and the id it
+        // replaces. The workflow rewrites that file rather than adding one, and
+        // refuses unless the account opening the issue owns the comment — so
+        // this button being pressable by anyone costs nothing.
+        this.state.editing = button.dataset.editing
+        this.state.editingAuthor = button.dataset.author
+        this.state.replyTo = button.dataset.replyTo
+        this.state.quote = button.dataset.quote
+        this.state.quoteHeading = button.dataset.quoteHeading
+        this.text.value = button.dataset.source ?? ""
+
+        // Only the issue route can say which comment it replaces.
+        const issue = this.postMenu.querySelector<HTMLElement>('[data-route="issue"]')
+        if (issue !== null) this.selectRoute(issue)
+
+        this.showEdit()
+        this.showReply()
+        this.showQuote()
+        this.text.focus()
+        this.text.scrollIntoView({ block: "center", behavior: "smooth" })
+        this.refresh()
+      })
+    }
+
+    this.listen(this.require(".comment-drop-edit"), "click", () => this.clearEdit())
+  }
+
+  private clearEdit(): void {
+    this.state.editing = undefined
+    this.state.editingAuthor = undefined
+    this.state.quote = undefined
+    this.state.quoteHeading = undefined
+    this.state.replyTo = undefined
+    this.text.value = ""
+    this.showEdit()
+    this.showReply()
+    this.showQuote()
+    this.refresh()
+  }
+
+  private showEdit(): void {
+    const block = this.require(".comment-editing")
+    block.hidden = this.state.editing === undefined
+    if (this.state.editing === undefined) return
+    // Said plainly rather than enforced here: the browser has no idea who is
+    // signed in to GitHub, and finding out would cost a request to them on
+    // every page load. The workflow is where the rule actually lives.
+    this.require(".comment-editing-note").textContent =
+      `this comment, which belongs to @${this.state.editingAuthor ?? "someone"} — the edit only lands if you open the issue as them`
   }
 
   private showReply(): void {
@@ -262,16 +325,78 @@ class CommentUi {
       replyTo: this.state.replyTo,
       quote: this.state.quote,
       quoteHeading: this.state.quoteHeading,
+      editing: this.state.editing,
     }
   }
 
-  /** The file exactly as the pull request would add it. */
-  private compose(): { content: string; path: string } {
-    const draft = this.draft()
-    return {
-      content: buildCommentFile(this.target, draft),
-      path: commentPath(this.target, draft.id),
+  // -------------------------------------------------------------------------
+  // The split button
+
+  private menuIsOpen(): boolean {
+    return this.post.dataset.open === "true"
+  }
+
+  private openMenu(open: boolean): void {
+    this.post.dataset.open = String(open)
+    this.postMenu.hidden = !open
+    this.postToggle.setAttribute("aria-expanded", String(open))
+  }
+
+  private selectRoute(option: HTMLElement): void {
+    const route = option.dataset.route as Route | undefined
+    if (route === undefined) return
+
+    this.route = route
+    for (const other of this.postMenu.querySelectorAll<HTMLElement>(".comment-post-option")) {
+      other.setAttribute("aria-checked", String(other === option))
     }
+
+    // The label comes off the option rather than from a table in here: the
+    // component owns the wording, this owns what happens when it is clicked.
+    const title = option.querySelector(".comment-post-title")?.textContent
+    if (title) this.submit.textContent = title
+
+    // Only the issue route can say which comment it replaces, so leaving it
+    // turns the draft back into a new comment rather than dropping the link
+    // to the comment being replaced without saying so.
+    if (route !== "issue" && this.state.editing !== undefined) {
+      this.state.editing = undefined
+      this.state.editingAuthor = undefined
+      this.showEdit()
+    }
+
+    this.openMenu(false)
+    this.render()
+  }
+
+  private wirePostMenu(): void {
+    this.listen(this.postToggle, "click", () => {
+      this.openMenu(!this.menuIsOpen())
+    })
+
+    for (const option of this.postMenu.querySelectorAll<HTMLElement>(".comment-post-option")) {
+      this.listen(option, "click", () => this.selectRoute(option))
+    }
+
+    // A menu that stays open after the page has moved on from it is a menu
+    // covering something the reader is trying to read.
+    this.listen(document, "pointerdown", (event) => {
+      const target = event.target
+      if (target instanceof Node && this.post.contains(target)) return
+      this.openMenu(false)
+    })
+
+    this.listen(document, "keydown", (event) => {
+      if (event instanceof KeyboardEvent && event.key === "Escape" && this.menuIsOpen()) {
+        this.openMenu(false)
+        this.postToggle.focus()
+      }
+    })
+  }
+
+  /** The file, and the link that submits it by whichever route is selected. */
+  private compose(): { content: string; path: string; url: string; explanation: string } {
+    return buildSubmission(this.route, this.target, this.draft())
   }
 
   private refresh(): void {
@@ -280,18 +405,22 @@ class CommentUi {
   }
 
   private render(): void {
+    const { content, path, url } = this.compose()
+
     if (this.text.value.trim() === "") {
       this.preview.textContent = ""
       this.disable("Write something first.")
       return
     }
 
-    const { content, path } = this.compose()
     this.preview.textContent = `${path}\n\n${content}`
 
-    const url = newFileUrl(this.target, path, content)
     if (url.length > MAX_URL_LENGTH) {
-      this.disable("Too long for the one-click route — copy the file and add it by hand.")
+      this.disable(
+        this.route === "email"
+          ? "Too long for a mail link — copy the file and paste it into a mail yourself."
+          : "Too long for the one-click route — copy the file and add it by hand.",
+      )
       return
     }
 

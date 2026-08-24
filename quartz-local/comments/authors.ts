@@ -1,12 +1,17 @@
 /**
- * Who wrote each comment, according to git.
+ * Who wrote each comment.
  *
- * The comment file carries no name, no picture and no key, because none of
- * those could be trusted: the file is composed by a stranger's browser and
- * anything in it is whatever they typed. What cannot be typed is the commit —
- * a comment only appears on the site once a pull request merges, and GitHub
- * records the pull request's author as the author of the commit that added the
- * file. So authorship is read from `git log` and never from the frontmatter.
+ * There are two sources and they agree by construction. The workflow that turns
+ * an issue into a pull request writes the opener's login into the file *and*
+ * makes the commit in their name, so the frontmatter is a convenience and the
+ * commit is the corroboration. Files written before the workflow existed, or by
+ * hand, carry no author at all and fall back to the commit alone.
+ *
+ * The frontmatter is what renders, because an edit changes the file's author
+ * field not at all while it does change who last touched the commit. What it
+ * cannot do is make an unreviewed claim true: a pull request opened by hand can
+ * put any login in the file, and the merge is what checks it — the same merge
+ * that has always been the only gate here.
  */
 
 import { execFileSync } from "child_process"
@@ -47,6 +52,43 @@ export interface CommentCommit {
   author: CommentAuthor
   /** The commit's author date, which is when the comment was actually written. */
   date: string
+}
+
+/**
+ * Builds an author from whatever identity the file records.
+ *
+ * That is a GitHub login for anything submitted through the issue or
+ * pull-request routes, and an email address for a comment that arrived as mail
+ * and was added by hand. The two are told apart by the `@`, which a GitHub
+ * login cannot contain.
+ */
+export function authorFromIdentity(identity: string, id?: number): CommentAuthor {
+  if (identity.includes("@")) return authorFromEmail(identity)
+
+  return {
+    login: identity,
+    name: identity,
+    // The id-based URL is stable across renames; the login-based one is all
+    // there is when the file records no id.
+    avatar:
+      id !== undefined
+        ? `https://avatars.githubusercontent.com/u/${id}?s=64&v=4`
+        : `https://github.com/${identity}.png?size=64`,
+    profile: `https://github.com/${identity}`,
+  }
+}
+
+/**
+ * An email author, shown by the part before the `@`.
+ *
+ * The whole address stays in the file, because that is the only thing an edit
+ * can be checked against later. It is not rendered: the file is public either
+ * way, but a page is what gets crawled, and printing an address into one is
+ * how it ends up on a list.
+ */
+function authorFromEmail(email: string): CommentAuthor {
+  const local = email.slice(0, email.indexOf("@")).trim()
+  return { email, name: local === "" ? "by email" : local }
 }
 
 /**

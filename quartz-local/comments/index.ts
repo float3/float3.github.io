@@ -24,6 +24,11 @@ interface Options {
   repo?: string
   /** Branch pull requests should target. Read from the remote's HEAD when omitted. */
   branch?: string
+  /**
+   * Where the email route sends. Omitted removes that option from the menu
+   * rather than sending mail into a void.
+   */
+  email?: string
 }
 
 interface Repo {
@@ -117,6 +122,10 @@ export const Comments: QuartzTransformerPlugin<Partial<Options>> = (userOptions)
             branch: repo.branch,
             path: repo.prefix === "" ? relative : `${repo.prefix}/${relative}`,
             parent: relative,
+            email: options.email,
+            // Named in the issue title and the mail subject, so a comment that
+            // arrives by either route says which page it is about.
+            page: `https://${ctx.cfg.configuration.baseUrl ?? ""}/${file.data.slug ?? ""}`,
           }
         },
       ]
