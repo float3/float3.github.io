@@ -136,14 +136,14 @@ function history(comment: CommentRecord, repo: string, locale: string): Componen
       { key: revision.date },
       revision.issue !== undefined
         ? h(
-          "a",
-          {
-            href: `https://github.com/${repo}/issues/${revision.issue}`,
-            target: "_blank",
-            rel: "noopener noreferrer",
-          },
-          label,
-        )
+            "a",
+            {
+              href: `https://github.com/${repo}/issues/${revision.issue}`,
+              target: "_blank",
+              rel: "noopener noreferrer",
+            },
+            label,
+          )
         : label,
     )
   }
@@ -215,19 +215,19 @@ function renderComment(
       // button that anyone can press costs nothing.
       comment.author?.login !== undefined
         ? h(
-          "button",
-          {
-            type: "button",
-            class: "comment-button comment-edit",
-            "data-editing": comment.id,
-            "data-author": comment.author.login,
-            "data-source": comment.source,
-            "data-quote": comment.quote,
-            "data-quote-heading": comment.quoteHeading,
-            "data-reply-to": comment.replyTo,
-          },
-          "edit",
-        )
+            "button",
+            {
+              type: "button",
+              class: "comment-button comment-edit",
+              "data-editing": comment.id,
+              "data-author": comment.author.login,
+              "data-source": comment.source,
+              "data-quote": comment.quote,
+              "data-quote-heading": comment.quoteHeading,
+              "data-reply-to": comment.replyTo,
+            },
+            "edit",
+          )
         : null,
     ]),
   ]
@@ -298,17 +298,17 @@ export const Comments: QuartzComponentConstructor = () => {
         ]),
         comments.length === 0
           ? h(
-            "p",
-            { class: "comments-empty" },
-            "Nothing here yet. Select any part of the page to quote it, or just start writing.",
-          )
+              "p",
+              { class: "comments-empty" },
+              "Nothing here yet. Select any part of the page to quote it, or just start writing.",
+            )
           : h(
-            "ol",
-            { class: "comment-list" },
-            roots.map((comment) =>
-              renderComment(comment, replies, filePath as FilePath, target.repo, cfg.locale, 0),
+              "ol",
+              { class: "comment-list" },
+              roots.map((comment) =>
+                renderComment(comment, replies, filePath as FilePath, target.repo, cfg.locale, 0),
+              ),
             ),
-          ),
         composer(target),
       ],
     )
@@ -350,7 +350,8 @@ function composer(target: CommentTarget): ComponentChildren {
     routes.push({
       route: "email",
       label: "post by email",
-      blurb: "Opens your mail client. No GitHub account needed; it gets added by hand. If you want to post it anonymously, put ANON at the end of the subject line.",
+      blurb:
+        "Opens your mail client. No GitHub account needed; it gets added by hand. If you want to post it anonymously, put ANON at the end of the subject line.",
     })
   }
 
@@ -360,8 +361,8 @@ function composer(target: CommentTarget): ComponentChildren {
       "p",
       { class: "comment-composer-note" },
       "Comments are files in the repository. Writing one here opens a pull request against " +
-      repo +
-      ", and it appears on the page once that is merged",
+        repo +
+        ", and it appears on the page once that is merged",
     ),
 
     h("div", { class: "comment-editing", hidden: true }, [
@@ -396,7 +397,10 @@ function composer(target: CommentTarget): ComponentChildren {
     // same fold as the file itself rather than beside the one button that
     // everybody uses.
     h("details", { class: "comment-preview" }, [
-      h("summary", {}, "the file this will add"),
+      // Named by the client, because what the button sends is a different
+      // thing on each route. The default matches the default route, so it reads
+      // correctly before any script has run.
+      h("summary", {}, h("span", { class: "comment-preview-label" }, "the issue this will open")),
       h("pre", { class: "comment-preview-body" }),
       h("div", { class: "comment-preview-actions" }, [
         button("comment-copy", "copy the file"),
@@ -479,8 +483,8 @@ function composer(target: CommentTarget): ComponentChildren {
         "p",
         { class: "comment-hint" },
         "Commenting needs JavaScript, because the file is assembled in the browser. Without it, add a file named like the others next to this page in " +
-        repo +
-        " and open a pull request.",
+          repo +
+          " and open a pull request.",
       ),
     ),
 
@@ -493,4 +497,4 @@ function composer(target: CommentTarget): ComponentChildren {
 }
 
 export default Comments
-export function init(): void { }
+export function init(): void {}

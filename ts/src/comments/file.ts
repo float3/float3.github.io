@@ -137,18 +137,26 @@ function pullRequestUrl(target: CommentTarget, path: string, content: string): s
   return `https://github.com/${target.repo}/new/${target.branch}?${query.toString()}`
 }
 
-function emailUrl(target: CommentTarget, draft: CommentDraft): string {
-  const body = [
+function emailBody(target: CommentTarget, draft: CommentDraft): string {
+  // The preamble only exists when there is something to put in it. Without the
+  // check, the blank line that separates it from the comment opens every mail
+  // that quotes nothing.
+  const preamble = [
     draft.quote !== undefined ? `Quoting: ${draft.quote}` : undefined,
     draft.editing !== undefined ? `This edits comment ${draft.editing}.` : undefined,
-    "",
+  ].filter((line) => line !== undefined)
+
+  return [
+    ...preamble,
+    ...(preamble.length > 0 ? [""] : []),
     draft.body.trim(),
     "",
     `— on ${target.page}`,
-  ]
-    .filter((line) => line !== undefined)
-    .join("\n")
+  ].join("\n")
+}
 
+function emailUrl(target: CommentTarget, draft: CommentDraft): string {
+  const body = emailBody(target, draft)
   const query = new URLSearchParams({ subject: issueTitle(target, draft), body })
   // `mailto:` wants percent-encoded spaces, and URLSearchParams writes `+`,
   // which mail clients paste through literally.
@@ -159,7 +167,16 @@ export interface Submission {
   url: string
   /** Shown under the button, so the reader knows what pressing it does. */
   explanation: string
-  /** The file that would be added, for the preview and the copy button. */
+  /**
+   * Exactly what pressing the button submits, for the preview and the copy
+   * button. On two of the three routes this is not the comment file: an issue
+   * carries a request that a workflow turns into a file, filling in the author,
+   * the date and the id itself, and an email carries none of that at all.
+   */
+  preview: string
+  /** What to call the above, since only one route is adding a file. */
+  previewLabel: string
+  /** The comment file, which is what the patch button hands over. */
   content: string
   path: string
 }
@@ -178,6 +195,12 @@ export function buildSubmission(
         url: issueUrl(target, draft),
         explanation:
           "Opens an issue. A workflow turns it into a pull request in your name, and closes the issue.",
+        // The issue, not the file. The workflow decides the filename, the date
+        // and the author, so a file previewed here would be wrong in every one
+        // of those lines. The marker is shown because it is what the workflow
+        // reads — anyone pasting this into a blank issue by hand needs it.
+        preview: `${issueTitle(target, draft)}\n\n${buildIssueBody(target, draft)}`,
+        previewLabel: "the issue this will open",
         content,
         path,
       }
@@ -185,6 +208,9 @@ export function buildSubmission(
       return {
         url: pullRequestUrl(target, path, content),
         explanation: `Opens GitHub's file editor at ${path}, forking ${target.repo} if you cannot push to it.`,
+        // The one route where the browser really does decide the whole file.
+        preview: `${path}\n\n${content}`,
+        previewLabel: "the file this will add",
         content,
         path,
       }
@@ -192,6 +218,8 @@ export function buildSubmission(
       return {
         url: emailUrl(target, draft),
         explanation: `Opens your mail client. No GitHub account needed; it gets added by hand.`,
+        preview: `To: ${target.email}\nSubject: ${issueTitle(target, draft)}\n\n${emailBody(target, draft)}`,
+        previewLabel: "the email this will send",
         content,
         path,
       }

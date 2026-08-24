@@ -15,6 +15,7 @@ import {
   MAX_URL_LENGTH,
   newCommentId,
   type CommentDraft,
+  type Submission,
   type CommentTarget,
   type Route,
 } from "./file.js"
@@ -45,6 +46,7 @@ class CommentUi {
 
   private readonly text: HTMLTextAreaElement
   private readonly preview: HTMLElement
+  private readonly previewLabel: HTMLElement
   private readonly error: HTMLElement
   private readonly submit: HTMLAnchorElement
   private readonly toolbar: HTMLElement
@@ -59,6 +61,7 @@ class CommentUi {
 
     this.text = this.require<HTMLTextAreaElement>(".comment-text")
     this.preview = this.require(".comment-preview-body")
+    this.previewLabel = this.require(".comment-preview-label")
     this.error = this.require(".comment-error")
     this.submit = this.require<HTMLAnchorElement>(".comment-submit")
     this.toolbar = this.require(".comment-selection-toolbar")
@@ -290,12 +293,13 @@ class CommentUi {
 
     this.listen(this.require(".comment-copy"), "click", () => {
       if (!this.written()) return
-      const { content } = this.compose()
+      // Whatever the preview is showing, which is whatever the button would
+      // send. Copying the file while the screen shows an issue would be the
+      // same mismatch the old label had.
+      const { preview } = this.compose()
       navigator.clipboard
-        .writeText(content)
-        .then(() =>
-          this.say("Copied. Add it at the path shown above and open a pull request.", "note"),
-        )
+        .writeText(preview)
+        .then(() => this.say("Copied.", "note"))
         .catch(() => this.say("The clipboard refused; select the preview and copy it by hand."))
     })
 
@@ -395,7 +399,7 @@ class CommentUi {
   }
 
   /** The file, and the link that submits it by whichever route is selected. */
-  private compose(): { content: string; path: string; url: string; explanation: string } {
+  private compose(): Submission {
     return buildSubmission(this.route, this.target, this.draft())
   }
 
@@ -405,7 +409,9 @@ class CommentUi {
   }
 
   private render(): void {
-    const { content, path, url } = this.compose()
+    const { preview, previewLabel, url } = this.compose()
+
+    this.previewLabel.textContent = previewLabel
 
     if (this.text.value.trim() === "") {
       this.preview.textContent = ""
@@ -413,14 +419,12 @@ class CommentUi {
       return
     }
 
-    this.preview.textContent = `${path}\n\n${content}`
+    this.preview.textContent = preview
 
     if (url.length > MAX_URL_LENGTH) {
-      this.disable(
-        this.route === "email"
-          ? "Too long for a mail link — copy the file and paste it into a mail yourself."
-          : "Too long for the one-click route — copy the file and add it by hand.",
-      )
+      // Every route's fallback is to send the same thing by hand, and the copy
+      // button hands over exactly what is on screen for whichever route it is.
+      this.disable("Too long for the one-click route — copy it and send it by hand.")
       return
     }
 
