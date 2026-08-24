@@ -1,7 +1,7 @@
 ---
-title: "trolley"
+title: "guess we doing"
 tags:
-  - trolley
+  - guess_we_doing
 ---
 
 <link href="/photography.css" rel="stylesheet">
@@ -10,14 +10,14 @@ tags:
 <p class="wasm-credit">made with rust compiled to wasm</p>
 
 <div class="photo-page gallery-page">
-<section class="photo-gallery-section" aria-labelledby="trolley-heading">
+<section class="photo-gallery-section" aria-labelledby="guesswedoing-heading">
 <div class="photo-gallery-header">
-<h2 id="trolley-heading">problem</h2>
+<h2 id="guesswedoing-heading">guess we doing</h2>
 <p class="gallery-count"></p>
 </div>
-<div class="photo-gallery" aria-live="polite" data-collection="trolley" data-noun="trolley problem" data-plural="trolley problems"></div>
+<div class="photo-gallery" aria-live="polite" data-collection="guesswedoing" data-noun="entry" data-plural="entries" data-caption="guess we doing"></div>
 </section>
-<dialog class="photo-lightbox" aria-label="trolley problem viewer">
+<dialog class="photo-lightbox" aria-label="guess we doing viewer">
 <button class="photo-lightbox-close" type="button" aria-label="close">x</button>
 <button class="photo-lightbox-prev" type="button" aria-label="previous">prev</button>
 <figure>

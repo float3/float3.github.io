@@ -49,22 +49,44 @@ impl Site {
         Ok(())
     }
 
+    /// The directories under `content/misc` that get a generated listing.
+    ///
+    /// A gallery is nothing but a directory in this list plus a page that names
+    /// it, which is the point of it being a list: another one is two lines and
+    /// a folder of pictures.
+    const INDICES: &'static [(&'static str, &'static str)] = &[
+        ("media", "media"),
+        ("blobs", "blobs"),
+        ("plaintext", "plaintext"),
+        ("trolley", "trolley"),
+        ("guesswedoing", "guess we doing"),
+    ];
+
     pub(crate) fn indices(&self) -> Result<()> {
-        self.generate_index("media", "media")?;
-        self.generate_index("blobs", "blobs")?;
-        self.generate_index("plaintext", "plaintext")?;
-        self.generate_index("trolley", "trolley")?;
+        for (dir, title) in Self::INDICES {
+            self.generate_index(dir, title)?;
+        }
         Ok(())
     }
 
     fn generate_index(&self, dir: &str, title: &str) -> Result<usize> {
         let base = self.root.join("content/misc").join(dir);
+        // A gallery gets listed here before its first file lands as often as
+        // after, and an empty one is a page that says so rather than an error.
+        if !base.is_dir() {
+            fs::create_dir_all(&base)?;
+        }
+
         let mut entries = Vec::new();
 
         for entry in fs::read_dir(&base)? {
             let entry = entry?;
+            if entry.path().is_dir() {
+                continue;
+            }
+
             let name = entry.file_name().to_string_lossy().into_owned();
-            if name != "index.md" {
+            if is_gallery_item(&name) {
                 entries.push(name);
             }
         }
@@ -82,6 +104,7 @@ impl Site {
         }
 
         fs::write(base.join("index.md"), body)?;
+        fs::write(base.join(MANIFEST), manifest(&entries))?;
         Ok(entries.len())
     }
 
@@ -89,6 +112,54 @@ impl Site {
         let dir = self.root.join("wasm/tuningplayground");
         self.run(&dir, "cargo", &os_args(&["run", "-p", "chord_generator"]))
     }
+}
+
+/// The machine-readable half of a listing.
+///
+/// The galleries read this rather than the markdown beside it: they want the
+/// filenames, and recovering those from rendered links would mean parsing a
+/// format built for people to read in order to get at something never meant to
+/// be hidden in the first place.
+const MANIFEST: &str = "index.json";
+
+/// Whether a filename in a gallery directory is one of the gallery's items.
+///
+/// The two generated files are not, and neither is anything starting with a
+/// dot: that is either the staging directory of a `normalize-gallery` that died
+/// partway or something the operating system left behind, and listing it would
+/// put a broken link on the page. `normalize-gallery` filters by this too, so
+/// the numbering and the manifest cannot disagree about what is in a gallery.
+pub(crate) fn is_gallery_item(name: &str) -> bool {
+    !name.starts_with('.') && name != "index.md" && name != MANIFEST
+}
+
+/// A JSON array of filenames.
+///
+/// Written by hand rather than with a serialiser: quoting a list of strings is
+/// the whole of the job, and the escape rules for a JSON string are shorter
+/// than the argument for taking on a dependency to apply them.
+fn manifest(entries: &[String]) -> String {
+    let mut out = String::from("[");
+
+    for (index, entry) in entries.iter().enumerate() {
+        if index > 0 {
+            out.push(',');
+        }
+        out.push('"');
+        for ch in entry.chars() {
+            match ch {
+                '"' => out.push_str("\\\""),
+                '\\' => out.push_str("\\\\"),
+                // Control characters cannot appear raw inside a JSON string.
+                c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+                c => out.push(c),
+            }
+        }
+        out.push('"');
+    }
+
+    out.push_str("]\n");
+    out
 }
 
 fn extract_urls(source: &str) -> Vec<String> {
@@ -135,6 +206,33 @@ fn is_url_delimiter(ch: char) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn lists_media_and_nothing_the_build_or_the_os_dropped_in() {
+        assert!(is_gallery_item("00.jpg"));
+        assert!(is_gallery_item("63.mp4"));
+        assert!(!is_gallery_item("index.md"));
+        assert!(!is_gallery_item("index.json"));
+        assert!(!is_gallery_item(".normalize"));
+        assert!(!is_gallery_item(".DS_Store"));
+    }
+
+    #[test]
+    fn writes_an_empty_manifest_for_an_empty_gallery() {
+        assert_eq!(manifest(&[]), "[]\n");
+    }
+
+    #[test]
+    fn quotes_filenames_into_the_manifest() {
+        let entries = vec!["00.jpg".to_string(), "63.mp4".to_string()];
+        assert_eq!(manifest(&entries), "[\"00.jpg\",\"63.mp4\"]\n");
+    }
+
+    #[test]
+    fn escapes_filenames_that_would_break_the_json() {
+        let entries = vec!["a\"b.jpg".to_string(), "c\\d.png".to_string()];
+        assert_eq!(manifest(&entries), "[\"a\\\"b.jpg\",\"c\\\\d.png\"]\n");
+    }
 
     #[test]
     fn extracts_markdown_urls_without_trailing_punctuation() {

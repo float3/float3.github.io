@@ -226,16 +226,22 @@
   right: 0;
 }
 
-.trolley-gallery {
+.gallery-empty {
+  color: var(--gray);
+  font-style: italic;
+  margin: 0;
+}
+
+.gallery-page .photo-gallery {
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
 }
 
-.trolley-page .photo-card {
+.gallery-page .photo-card {
   height: 100%;
 }
 
-.trolley-page .photo-card img,
-.trolley-page .photo-card video {
+.gallery-page .photo-card img,
+.gallery-page .photo-card video {
   aspect-ratio: 4 / 3;
   object-fit: contain;
 }

@@ -37,6 +37,7 @@
     "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
     "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
     "wasm-chars": "file:../wasm/wasm/pkg/chars",
+    "wasm-gallery": "file:../wasm/wasm/pkg/gallery",
     "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
     "wasm-movies": "file:../wasm/wasm/pkg/movies",
     "wasm-photography": "file:../wasm/wasm/pkg/photography",
@@ -44,7 +45,6 @@
     "wasm-polyrhythm": "file:../wasm/wasm/pkg/polyrhythm",
     "wasm-recursive_ji": "file:../wasm/wasm/pkg/recursive_ji",
     "wasm-textprocessing": "file:../wasm/wasm/pkg/textprocessing",
-    "wasm-trolley": "file:../wasm/wasm/pkg/trolley",
     "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground"
   },
   "devDependencies": {

@@ -9,6 +9,8 @@ pub mod aoc;
 pub mod bayes;
 #[cfg(feature = "chars")]
 pub mod chars;
+#[cfg(feature = "gallery")]
+pub mod gallery;
 #[cfg(feature = "glsl")]
 pub mod glsl;
 pub mod graph;
@@ -23,8 +25,6 @@ pub mod polyrhythm;
 pub mod random;
 #[cfg(feature = "recursive_ji")]
 pub mod recursive_ji;
-#[cfg(feature = "trolley")]
-pub mod trolley;
 
 use wasm_bindgen::prelude::*;
 
