@@ -92,7 +92,7 @@ impl Site {
                 "run",
                 "webpack",
                 "--config",
-                "webpack.config.mjs",
+                "webpack.config.ts",
                 "--mode",
                 mode.webpack(),
             ]),
@@ -113,7 +113,7 @@ impl Site {
                     "run",
                     "webpack",
                     "--config",
-                    "webpack.config.mjs",
+                    "webpack.config.ts",
                     "--mode",
                     "development",
                     "--watch",
@@ -166,7 +166,9 @@ impl Site {
             match dependencies.and_then(|dependencies| dependencies.get(&package)) {
                 None => problems.push(format!("ts/package.json is missing \"{package}\"")),
                 Some(JsonValue::String(spec)) if spec != &format!("file:{expected}") => problems
-                    .push(format!("\"{package}\" points at {spec}, expected file:{expected}")),
+                    .push(format!(
+                        "\"{package}\" points at {spec}, expected file:{expected}"
+                    )),
                 Some(_) => {}
             }
 
