@@ -4,8 +4,9 @@ use crate::{
     Mode, Result, Site, SiteError,
 };
 use serde_json::Value as JsonValue;
+use std::collections::{BTreeSet, VecDeque};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::time::Instant;
 use toml::{Table, Value};
 
@@ -169,14 +170,16 @@ impl Site {
         Ok(tools)
     }
 
-    /// A tool the bundler never depends on builds fine and then silently does nothing,
-    /// which is how `pokemon` stayed missing from `ts/package.json` while still being
-    /// imported — it only worked off a stale `node_modules`. Fail loudly instead.
+    /// A tool the bundler never depends on builds fine and then silently does nothing.
+    /// Asking only "does some file under ts/src name this package" is not enough: that
+    /// is exactly what kept `pokemon` alive for four months after webpack stopped
+    /// bundling it, because ts/src/pokemon.ts went on naming it into the void. So the
+    /// question is whether a file webpack can actually *reach* imports it.
     fn check_wasm_tool_wiring(&self, tools: &[String]) -> Result<()> {
         let ts_dir = self.root.join("ts");
         let manifest = fs::read_to_string(ts_dir.join("package.json"))?.parse::<JsonValue>()?;
         let dependencies = manifest.get("dependencies").and_then(JsonValue::as_object);
-        let sources = read_sources(&ts_dir.join("src"))?;
+        let sources = concatenated(&reachable_sources(&ts_dir)?)?;
 
         let mut problems = Vec::new();
         for tool in tools {
@@ -193,7 +196,7 @@ impl Site {
             }
 
             if !sources.contains(&format!("\"{package}\"")) {
-                problems.push(format!("nothing under ts/src imports \"{package}\""));
+                problems.push(format!("nothing webpack bundles imports \"{package}\""));
             }
         }
 
@@ -297,17 +300,124 @@ impl Site {
     }
 }
 
-/// Every `.ts` file under `dir`, concatenated — enough to answer "does anything import
-/// this package" without teaching the build system to parse TypeScript.
-fn read_sources(dir: &Path) -> Result<String> {
+/// The `ts/src` files webpack actually pulls in: the union of the module graphs
+/// rooted at the bundle's entry points. Anything outside this set is dead weight,
+/// however convincingly it imports things.
+fn reachable_sources(ts_dir: &Path) -> Result<BTreeSet<PathBuf>> {
+    let src = ts_dir.join("src");
+    let entries = webpack_entry_sources(ts_dir)?;
+    let mut seen: BTreeSet<PathBuf> = entries.iter().cloned().collect();
+    let mut queue: VecDeque<PathBuf> = entries.into();
+
+    while let Some(path) = queue.pop_front() {
+        let Ok(text) = fs::read_to_string(&path) else {
+            continue;
+        };
+
+        for specifier in string_literals(&text) {
+            if !specifier.starts_with('.') {
+                continue;
+            }
+            let Some(next) = resolve_specifier(&path, &specifier) else {
+                continue;
+            };
+            if next.starts_with(&src) && next.is_file() && seen.insert(next.clone()) {
+                queue.push_back(next);
+            }
+        }
+    }
+
+    Ok(seen)
+}
+
+/// Where the bundle starts. webpack names `./dist/<name>.js`, which is what `tsc`
+/// emits for `src/<name>.ts`.
+fn webpack_entry_sources(ts_dir: &Path) -> Result<Vec<PathBuf>> {
+    let config = fs::read_to_string(ts_dir.join("webpack.config.ts"))?;
+    let src = ts_dir.join("src");
+
+    let entries: Vec<PathBuf> = string_literals(&config)
+        .iter()
+        .filter_map(|literal| literal.strip_prefix("./dist/")?.strip_suffix(".js"))
+        .map(|stem| src.join(format!("{stem}.ts")))
+        .collect();
+
+    if entries.is_empty() {
+        return Err(Box::new(SiteError::new(
+            "ts/webpack.config.ts declares no ./dist/*.js entry points",
+        )));
+    }
+
+    if let Some(missing) = entries.iter().find(|entry| !entry.is_file()) {
+        return Err(Box::new(SiteError::new(format!(
+            "ts/webpack.config.ts names an entry with no source: {}",
+            missing.display()
+        ))));
+    }
+
+    Ok(entries)
+}
+
+/// `./thing.js` next to `importer`, as the `.ts` file `tsc` compiled it from.
+fn resolve_specifier(importer: &Path, specifier: &str) -> Option<PathBuf> {
+    let stem = specifier.strip_suffix(".js")?;
+    let mut path = importer.parent()?.to_path_buf();
+
+    for component in stem.split('/') {
+        match component {
+            "." => {}
+            ".." => {
+                path.pop();
+            }
+            name => path.push(name),
+        }
+    }
+
+    let file = path.file_name()?.to_string_lossy().into_owned();
+    path.set_file_name(format!("{file}.ts"));
+    Some(path)
+}
+
+/// Every double-quoted literal in a source file. Import specifiers are always
+/// quoted and never interpolated, so this is all the scanning here needs — and it
+/// keeps the build system out of the business of parsing TypeScript.
+fn string_literals(text: &str) -> Vec<String> {
+    let mut literals = Vec::new();
+    let mut rest = text;
+
+    while let Some(start) = rest.find('"') {
+        let after = &rest[start + 1..];
+        let Some(end) = after.find('"') else {
+            break;
+        };
+        if !after[..end].contains('\n') {
+            literals.push(after[..end].to_string());
+        }
+        rest = &after[end + 1..];
+    }
+
+    literals
+}
+
+fn concatenated(paths: &BTreeSet<PathBuf>) -> Result<String> {
     let mut sources = String::new();
+    for path in paths {
+        sources.push_str(&fs::read_to_string(path)?);
+    }
+    Ok(sources)
+}
+
+/// Every `.ts` file under `dir`.
+#[cfg(test)]
+fn all_sources(dir: &Path) -> Result<BTreeSet<PathBuf>> {
+    let mut sources = BTreeSet::new();
 
     for entry in fs::read_dir(dir)? {
         let path = entry?.path();
         if path.is_dir() {
-            sources.push_str(&read_sources(&path)?);
+            sources.extend(all_sources(&path)?);
         } else if path.extension().is_some_and(|extension| extension == "ts") {
-            sources.push_str(&fs::read_to_string(&path)?);
+            sources.insert(path);
         }
     }
 
@@ -334,6 +444,30 @@ mod tests {
         assert!(!tools.contains(&"default".to_string()));
         assert!(!tools.contains(&"mini-alloc".to_string()));
         assert!(!tools.contains(&"console_error_panic_hook".to_string()));
+    }
+
+    /// The check that `pokemon` would have failed. A `.ts` file webpack cannot reach
+    /// is compiled by `tsc`, linted, and shipped to nobody; worse, it can go on
+    /// satisfying the wiring check on behalf of a tool that is otherwise dead.
+    #[test]
+    fn no_typescript_is_unreachable_from_the_bundle() {
+        let ts_dir = site().root.join("ts");
+        let reachable = reachable_sources(&ts_dir).unwrap();
+        let orphans: Vec<String> = all_sources(&ts_dir.join("src"))
+            .unwrap()
+            .difference(&reachable)
+            .map(|path| path.display().to_string())
+            .collect();
+
+        assert!(
+            orphans.is_empty(),
+            "no webpack entry reaches these files:
+  {}",
+            orphans.join(
+                "
+  "
+            )
+        );
     }
 
     #[test]
