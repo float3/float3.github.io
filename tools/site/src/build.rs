@@ -12,6 +12,23 @@ use toml::{Table, Value};
 /// Features of `wasm/wasm` that configure the build rather than name a tool.
 const NON_TOOL_FEATURES: [&str; 3] = ["default", "console_error_panic_hook", "mini-alloc"];
 
+/// Tools listed under `[package.metadata.site] parked-tools`: kept in the tree,
+/// left out of the build. A parked tool needs no webpack entry and no package
+/// in ts/, since nothing is produced for it to import.
+fn parked_tools(manifest: &Table) -> Vec<&str> {
+    manifest
+        .get("package")
+        .and_then(Value::as_table)
+        .and_then(|package| package.get("metadata"))
+        .and_then(Value::as_table)
+        .and_then(|metadata| metadata.get("site"))
+        .and_then(Value::as_table)
+        .and_then(|site| site.get("parked-tools"))
+        .and_then(Value::as_array)
+        .map(|names| names.iter().filter_map(Value::as_str).collect())
+        .unwrap_or_default()
+}
+
 impl Site {
     pub(crate) fn build(&self, mode: Mode) -> Result<()> {
         let started = Instant::now();
@@ -133,9 +150,12 @@ impl Site {
             .and_then(Value::as_table)
             .ok_or_else(|| SiteError::new("wasm/wasm/Cargo.toml has no [features] table"))?;
 
+        let parked = parked_tools(&manifest);
+
         let mut tools: Vec<String> = features
             .keys()
             .filter(|feature| !NON_TOOL_FEATURES.contains(&feature.as_str()))
+            .filter(|feature| !parked.contains(&feature.as_str()))
             .cloned()
             .collect();
         tools.sort();
@@ -323,6 +343,37 @@ mod tests {
 
         if let Err(error) = site.check_wasm_tool_wiring(&tools) {
             panic!("{error}");
+        }
+    }
+
+    /// A parked tool is source kept for later, not a tool that is built. It has
+    /// no webpack entry and no package under ts/, so if it ever leaked back into
+    /// the built set the wiring check would fail on it, confusingly, since
+    /// nothing is wrong with it.
+    #[test]
+    fn parked_tools_are_not_built() {
+        let site = site();
+        let wasm_dir = site.root.join("wasm/wasm");
+        let manifest = fs::read_to_string(wasm_dir.join("Cargo.toml"))
+            .unwrap()
+            .parse::<Table>()
+            .unwrap();
+
+        let parked = parked_tools(&manifest);
+        assert!(!parked.is_empty(), "expected at least one parked tool");
+
+        let features = manifest["features"].as_table().unwrap();
+        let built = site.wasm_tools(&wasm_dir).unwrap();
+
+        for tool in &parked {
+            assert!(
+                features.contains_key(*tool),
+                "{tool} is parked but has no feature to park"
+            );
+            assert!(
+                !built.iter().any(|name| name == tool),
+                "{tool} is parked but was built"
+            );
         }
     }
 }

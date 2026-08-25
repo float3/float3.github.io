@@ -20,3 +20,16 @@ wasm-bindgen = { version = "0.2.126" }
 console_error_panic_hook = { version = "0.1.7" }
 mini-alloc = { version = "1.0.0" }
 recursive-ji-core = { path = "./crates/recursive_ji_core" }
+
+# Cargo only honours `[profile.*]` from the workspace root; the copy that used to
+# sit in wasm/wasm/Cargo.toml was silently ignored, so every release wasm was
+# built with plain defaults. Size is what matters for the artifacts that ship.
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = "symbols"
+
+# `site` is a build tool, not a payload: it wants to run fast, not be small.
+[profile.release.package.site]
+opt-level = 3

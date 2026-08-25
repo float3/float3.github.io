@@ -27,6 +27,14 @@ textprocessing = ["dep:textprocessing"]
 pokemon = ["dep:krabby"]
 tuningplayground = ["dep:tuningplayground", "dep:music21-rs"]
 
+[package.metadata.site]
+# Tools kept in the tree but left out of the build. `site` skips these, so the
+# source stays put and costs nothing: pokemon's krabby dependency embeds every
+# sprite and compiles to a 37 MB wasm artifact. Move a name out of here to
+# bring it back, and give it a webpack entry in ts/ at the same time; the
+# TypeScript that drove this one is at 6e56b25c:ts/src/pokemon.ts.
+parked-tools = ["pokemon"]
+
 [dependencies]
 tuningplayground = { path = "../tuningplayground/", optional = true }
 music21-rs = { workspace = true, optional = true }
@@ -45,11 +53,11 @@ web-sys = { version = "0.3.103", features = [
     "HtmlCanvasElement",
 ] }
 getrandom = { version = "0.4.3", features = ["wasm_js"] }
+unicode-width = "0.2.2"
 krabby = { git = "https://github.com/float3/krabby/", features = [
     "debug-embed",
     "html",
 ], optional = true }
-unicode-width = "0.2.2"
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # Transitive crates still pull getrandom 0.3, and the wasm build sets
@@ -60,19 +68,6 @@ getrandom_03 = { package = "getrandom", version = "0.3.4", features = [
 
 [dev-dependencies]
 wasm-bindgen-test = "0.3.76"
-
-[profile.release]
-codegen-units = 1
-debug = false
-debug-assertions = false
-incremental = true
-lto = true
-opt-level = 's'
-overflow-checks = false
-panic = "unwind"
-rpath = false
-split-debuginfo = "off"
-strip = "symbols"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-Os', '--enable-bulk-memory', '--enable-nontrapping-float-to-int']

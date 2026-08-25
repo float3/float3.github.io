@@ -105,13 +105,9 @@
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/**/*",
-    "src/*.ts",
-    "../pkg/bundle_wasm.d.ts"
+    "src/**/*"
   ],
   "exclude": [
-    "node_modules",
-    "src/pokemon.ts",
-    "src/pokemon/**/*"
+    "node_modules"
   ]
 }
