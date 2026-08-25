@@ -229,42 +229,24 @@ impl Site {
     }
 
     pub(crate) fn check(&self) -> Result<()> {
-        let mut site_check_args = os_args(&[
-            "check",
-            "--locked",
-            "--manifest-path",
-            "tools/site/Cargo.toml",
-        ]);
-        let mut site_test_args = os_args(&[
-            "test",
-            "--locked",
-            "--manifest-path",
-            "tools/site/Cargo.toml",
-        ]);
+        // glsl2hlsl, textprocessing and tuningplayground are all members of the root
+        // workspace, so one `--workspace` check covers them and compiles the shared
+        // dependency graph once. Checking them a manifest at a time, each into its own
+        // --target-dir, built that graph three more times over into 489 MB of
+        // duplicate artifacts that CI got to pay for from cold on every run.
+        let mut check_args = os_args(&["check", "--locked", "--workspace"]);
+        let mut test_args = os_args(&["test", "--locked", "--package", "site"]);
 
         if self.ci {
-            site_check_args.push("--no-default-features".into());
-            site_test_args.push("--no-default-features".into());
+            self.warn("checking without default features");
+            check_args.push("--no-default-features".into());
+            test_args.push("--no-default-features".into());
         }
 
-        if self.ci {
-            self.warn("checking site tool without default features");
-        }
-
-        self.run(&self.root, "cargo", &site_check_args)?;
-        self.run(&self.root, "cargo", &site_test_args)?;
+        self.run(&self.root, "cargo", &check_args)?;
+        self.run(&self.root, "cargo", &test_args)?;
         self.wasm(Mode::Dev)?;
-        self.check_typescript()?;
-
-        for (manifest, target_name) in [
-            ("wasm/glsl2hlsl/Cargo.toml", "glsl2hlsl"),
-            ("wasm/textprocessing/Cargo.toml", "textprocessing"),
-            ("wasm/tuningplayground/Cargo.toml", "tuningplayground"),
-        ] {
-            self.cargo_check_manifest(manifest, target_name)?;
-        }
-
-        Ok(())
+        self.check_typescript()
     }
 
     fn check_typescript(&self) -> Result<()> {
@@ -281,22 +263,6 @@ impl Site {
             &os_args(&["run", "tsc", "--noEmit", "--incremental", "false"]),
         )?;
         self.run_bun(&dir, &os_args(&["run", "eslint", "src"]))
-    }
-
-    fn cargo_check_manifest(&self, manifest: &str, target_name: &str) -> Result<()> {
-        let target_dir = format!("target/check/{target_name}");
-        self.run(
-            &self.root,
-            "cargo",
-            &os_args(&[
-                "check",
-                "--locked",
-                "--manifest-path",
-                manifest,
-                "--target-dir",
-                target_dir.as_str(),
-            ]),
-        )
     }
 }
 
