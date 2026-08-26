@@ -234,8 +234,12 @@ impl Site {
         // dependency graph once. Checking them a manifest at a time, each into its own
         // --target-dir, built that graph three more times over into 489 MB of
         // duplicate artifacts that CI got to pay for from cold on every run.
+        //
+        // The tests run over the workspace too. Running them for `site` alone is how
+        // two red tests in recursive-ji-core went unnoticed long enough for the
+        // tuning system underneath them to be renamed out from under the post.
         let mut check_args = os_args(&["check", "--locked", "--workspace"]);
-        let mut test_args = os_args(&["test", "--locked", "--package", "site"]);
+        let mut test_args = os_args(&["test", "--locked", "--workspace"]);
 
         if self.ci {
             self.warn("checking without default features");

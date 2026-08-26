@@ -4,7 +4,7 @@ use std::io::Write;
 
 use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
 use music21_rs::tuningsystem::{AnyTuningSystem, TWELVE_TONE_NAMES};
-use music21_rs::{abc_chord, abc_note, Pitch, TuningSystem};
+use music21_rs::{Pitch, TuningSystem};
 
 pub mod engrave;
 pub mod glyphs;
@@ -16,7 +16,7 @@ pub const SAMPLE_RATE: u32 = 44_100;
 const MIDDLE_C_PITCH_SPACE: f64 = 60.0;
 
 const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
-const JUST_INTONATION: TuningSystem = TuningSystem::JustIntonation;
+const JUST_INTONATION: TuningSystem = TuningSystem::FiveLimit;
 
 /// Interval definitions derived from music21-rs chord analysis.
 /// These represent the semitone offsets from root in standard chord theory.
@@ -26,14 +26,14 @@ const DOMINANT_INTERVALS: &[i32] = &[0, 4, 7, 10];
 const TWELVE_TET: AnyTuningSystem =
     AnyTuningSystem::Fixed(TuningSystem::EqualTemperament { octave_size: 12 });
 
-const FIXED_C_JUST: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::JustIntonation);
+const FIXED_C_JUST: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::FiveLimit);
 
 const RECURSIVE_JUST: AnyTuningSystem = AnyTuningSystem::Adaptive(RECURSIVE_JI);
 
 const TWELVE_TET_ROOTED_JUST: AnyTuningSystem =
     AnyTuningSystem::Adaptive(AdaptiveTuningSystem::Recursive {
         root_tuning_system: TuningSystem::EqualTemperament { octave_size: 12 },
-        local_tuning_system: TuningSystem::JustIntonation,
+        local_tuning_system: TuningSystem::FiveLimit,
     });
 
 fn all_tunings() -> [AnyTuningSystem; 4] {
@@ -200,65 +200,6 @@ pub fn generated_text_files() -> Vec<GeneratedText> {
 
 pub fn generated_media_text_files() -> Vec<GeneratedText> {
     long_form::generated_media_text_files()
-}
-
-pub fn chord_progression_abc() -> Result<String> {
-    let chords = progression();
-    let mut bars = Vec::new();
-
-    for chord in chords {
-        let pitches = notated_pitches(chord)?;
-        bars.push(format!(
-            "\"{}\"{}4",
-            abc_label(notation_chord_label(chord)),
-            abc_chord(&pitches)?
-        ));
-    }
-
-    let mut abc = String::from(
-        "X:1\nT:Recursive just intonation chord progression\nL:1/4\nM:4/4\nK:C clef=treble\n",
-    );
-
-    for (index, bar) in bars.iter().enumerate() {
-        abc.push_str(bar);
-        if index + 1 == bars.len() {
-            abc.push_str(" |]\n");
-        } else if (index + 1) % 4 == 0 {
-            abc.push_str(" |\n");
-        } else {
-            abc.push_str(" | ");
-        }
-    }
-
-    Ok(abc)
-}
-
-pub fn note_splits_abc() -> Result<String> {
-    let mut abc = String::from("X:2\nT:Pitch-name splits\nL:1/4\nM:3/4\nK:C clef=treble\n");
-
-    for pair in split_pairs() {
-        let token = abc_note(&Pitch::from_name(pair.abc_pitch)?)?;
-        let fixed = note_frequency(FIXED_C_JUST, pair.chord, pair.offset);
-        let recursive = note_frequency(RECURSIVE_JUST, pair.chord, pair.offset);
-        let difference = format_signed_cents(cents_between(recursive, fixed));
-        let context = chord_context_label(pair.chord);
-
-        abc.push_str(&format!(
-            "\"^{} {} fixed +0.000c\"{} \"^recursive {}c\"{} \"^together +0.000/{}c\"[{}{}] |",
-            abc_label(&context),
-            abc_label(pair.note),
-            token,
-            difference,
-            token,
-            difference,
-            token,
-            token,
-        ));
-        abc.push('\n');
-    }
-
-    abc.push_str("|]\n");
-    Ok(abc)
 }
 
 pub fn render_progression(tuning: AnyTuningSystem, tone_color: ToneColor) -> Vec<f32> {
@@ -663,6 +604,12 @@ fn format_cents(value: f64) -> String {
 
 fn format_signed_cents(value: f64) -> String {
     let rounded = (value * 1000.0).round() / 1000.0;
+
+    // A value that rounds down to negative zero satisfies `>= 0.0` and then
+    // prints its own minus sign, giving "+-0.000". Comparing equal to zero
+    // catches both zeroes and leaves everything else alone.
+    let rounded = if rounded == 0.0 { 0.0 } else { rounded };
+
     if rounded >= 0.0 {
         format!("+{rounded:.3}")
     } else {
@@ -670,13 +617,17 @@ fn format_signed_cents(value: f64) -> String {
     }
 }
 
-fn abc_label(label: &str) -> String {
-    label.replace('"', "'")
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_cent_value_that_rounds_to_zero_gets_one_sign() {
+        assert_eq!(format_signed_cents(-0.000_1), "+0.000");
+        assert_eq!(format_signed_cents(0.0), "+0.000");
+        assert_eq!(format_signed_cents(-41.058_9), "-41.059");
+        assert_eq!(format_signed_cents(12.5), "+12.500");
+    }
 
     #[test]
     fn recursive_e_major_third_is_not_fixed_c_g_sharp() {
@@ -684,7 +635,10 @@ mod tests {
         let recursive = note_frequency(RECURSIVE_JUST, chord, 4);
         let fixed = note_frequency(FIXED_C_JUST, chord, 4);
 
-        assert!((cents_between(recursive, fixed) + 34.282).abs() < 0.01);
+        // 25/16 (a pure third above a pure third) against the scale's 8/5, which
+        // is the diesis, 128/125. music21-rs is the source of truth for the
+        // number; the 34.282 this used to expect predates its tuning tables.
+        assert!((cents_between(recursive, fixed) + 41.059).abs() < 0.01);
     }
 
     #[test]
@@ -720,17 +674,5 @@ mod tests {
 
         assert!(samples.len() > SAMPLE_RATE as usize);
         assert!(samples.iter().any(|sample| sample.abs() > 0.01));
-    }
-
-    #[test]
-    fn generates_notation() {
-        let progression = chord_progression_abc().unwrap();
-        let splits = note_splits_abc().unwrap();
-
-        assert!(progression.contains("Recursive just intonation chord progression"));
-        assert!(progression.contains("\"Ab\""));
-        assert!(!progression.contains("\"G#/Ab\""));
-        assert!(splits.contains("Pitch-name splits"));
-        assert!(splits.contains("-34.283c"));
     }
 }

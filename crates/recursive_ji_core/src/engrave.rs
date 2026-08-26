@@ -434,6 +434,31 @@ mod tests {
         }
     }
 
+    /// What the two figures have to say, as opposed to how they are drawn. These
+    /// assertions came off the ABC builders that used to feed abcjs; the SVG is
+    /// what ships now, so they belong here.
+    #[test]
+    fn the_figures_are_labelled_the_way_the_post_reads() {
+        let progression = chord_progression_svg().unwrap();
+        assert!(
+            progression.contains(">Ab<"),
+            "the flat spelling is the one used"
+        );
+        assert!(
+            !progression.contains("G#/Ab"),
+            "the chord name is spelled one way on the staff"
+        );
+
+        let splits = note_splits_svg().unwrap();
+        assert!(
+            splits.contains("E major G#/Ab"),
+            "the split is named in full"
+        );
+        // 25/16 against the five-limit scale's 8/5: the diesis. music21-rs owns
+        // this number, and it moved when its tuning tables were corrected.
+        assert!(splits.contains("-41.059c"), "the recursive offset is shown");
+    }
+
     /// The outlines go in `<defs>` once and are pointed at thereafter. Built and
     /// then not written into the document, which is a mistake that compiles, the
     /// figure comes out as bare staff lines with no clef and no notes on them.
