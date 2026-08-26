@@ -374,6 +374,14 @@ pre.poetry {
   width: 100%;
 }
 
+// The tuning playground engraves the chord being held down. One bar wants a
+// bar's worth of room, not the width of the page, and it is drawn in
+// currentColor so it follows the theme the way the post's figures do.
+.chord-staff {
+  color: var(--dark);
+  max-width: 20rem;
+}
+
 .engraved-notation text {
   fill: currentColor;
   font-family: var(--bodyFont), sans-serif;

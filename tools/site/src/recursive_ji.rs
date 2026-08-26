@@ -121,11 +121,11 @@ fn update_recursive_ji_notation(post: &Path) -> Result<()> {
     let figures = [
         (
             "progression",
-            recursive_ji_core::engrave::chord_progression_svg()?,
+            recursive_ji_core::figures::chord_progression_svg()?,
         ),
         (
             "note-splits",
-            recursive_ji_core::engrave::note_splits_svg()?,
+            recursive_ji_core::figures::note_splits_svg()?,
         ),
     ];
 

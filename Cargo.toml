@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "tools/site",
+    "crates/engrave",
     "crates/recursive_ji_core",
     "wasm/wasm",
     "wasm/textprocessing",
@@ -23,6 +24,7 @@ music21-rs = { git = "https://github.com/float3/music21-rs.git" }
 wasm-bindgen = { version = "0.2.127" }
 console_error_panic_hook = { version = "0.1.7" }
 mini-alloc = { version = "1.0.0" }
+engrave = { path = "./crates/engrave" }
 recursive-ji-core = { path = "./crates/recursive_ji_core" }
 
 # Cargo only honours `[profile.*]` from the workspace root; the copy that used to

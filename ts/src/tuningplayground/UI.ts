@@ -1,4 +1,3 @@
-import * as abcjs from "abcjs"
 import { _noteOn, markedKeys, noteOff, noteOn, playingTones, stopAllTones } from "./index.js"
 import { playMIDIFile, stopMIDIFile } from "./MIDI.js"
 import { wasm } from "./index.js"
@@ -243,17 +242,18 @@ export function populateTuningSelect(): void {
   }
 }
 
-function adjustOutputSize(): void {
-  output.style.width = "300px"
-  output.style.height = "200px"
+// The empty staff never changes, so it is engraved once and kept.
+let emptyStaffSvg: string | null = null
+function emptyStaff(): string {
+  emptyStaffSvg ??= wasm.empty_staff()
+  return emptyStaffSvg
 }
 
 export function playingTonesChanged(): void {
   const notes = Object.keys(playingTones).map(Number)
 
   if (notes.length === 0) {
-    abcjs.renderAbc("output", 'X: 1\nL: 1/1\n|""[u]|')
-    adjustOutputSize()
+    output.innerHTML = emptyStaff()
     return
   }
 
@@ -263,10 +263,10 @@ export function playingTonesChanged(): void {
     .join(" ")
 
   if (octaveSize.value === "12") {
-    const formatted_notes = wasm.convert_notes(tones.split(" "))
+    // The wasm engraves the staff and names the chord in one pass; what comes
+    // back is the finished picture, not notation for a library to lay out.
+    output.innerHTML = wasm.convert_notes(tones.split(" "))
     chordName = wasm.get_chord_name()
-    abcjs.renderAbc("output", formatted_notes)
-    adjustOutputSize()
   }
 
   logToDiv(`${tones} | ${chordName}`, notes)

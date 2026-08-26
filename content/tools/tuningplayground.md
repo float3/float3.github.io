@@ -70,7 +70,7 @@ tags:
   <button id="playMarked">Play Marked Notes</button>
   <button id="shareMarked">Share Marked Notes</button>
 </div>
-<div id="output" style="background-color: #00000000; color: white"></div>
+<div id="output" class="chord-staff"></div>
 <div class="keyboard dark-mode-invert">
   <div class="octave">
     <div class="white-key" data-note="21"></div>

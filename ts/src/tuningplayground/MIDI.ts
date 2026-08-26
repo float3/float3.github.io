@@ -1,5 +1,4 @@
-import { noteOn, noteOff } from "./index.js"
-import { Midi } from "@tonejs/midi"
+import { noteOn, noteOff, wasm } from "./index.js"
 import { midiMultiplier } from "./config.js"
 
 type MidiMessageLike = {
@@ -80,25 +79,19 @@ export function stopMIDIFile(): void {
 }
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
-  const midi = new Midi(midiFile)
+  // The wasm reads the file and hands back the notes flat: key, velocity,
+  // start and end, four numbers at a time. Parsing it in the browser used to
+  // mean @tonejs/midi, a full object model of tracks and controllers built so
+  // that this loop could read four numbers off each note.
+  const notes = wasm.parse_midi(new Uint8Array(midiFile))
 
-  // const tempo = midi.header.tempos[0].bpm;
+  for (let at = 0; at < notes.length; at += 4) {
+    const key = notes[at]
+    const velocity = notes[at + 1]
+    const start = notes[at + 2] * midiMultiplier
+    const end = notes[at + 3] * midiMultiplier
 
-  midi.tracks.forEach((track) => {
-    const startTime: number = 0
-    // track.notes.forEach((note) => {
-    //   startTime = note.time * midiMultiplier;
-    //   return;
-    // });
-    track.notes.forEach((note) => {
-      const noteOnTime = note.time * midiMultiplier - startTime
-      const noteOffTime = (note.time + note.duration) * midiMultiplier - startTime
-      const velocity = note.velocity
-      if (velocity === 1) note.velocity = 127 // fix for some midi files
-      const midiNote = note.midi
-
-      timeoutIds.push(setTimeout(() => noteOn(midiNote, velocity), noteOnTime))
-      timeoutIds.push(setTimeout(() => noteOff(midiNote), noteOffTime))
-    })
-  })
+    timeoutIds.push(setTimeout(() => noteOn(key, velocity), start))
+    timeoutIds.push(setTimeout(() => noteOff(key), end))
+  }
 }

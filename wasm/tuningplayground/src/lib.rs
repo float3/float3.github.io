@@ -4,6 +4,9 @@ use std::sync::Mutex;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
+pub mod midi;
+
+use music21_rs::Pitch;
 use music21_rs::chord::Chord;
 use music21_rs::tuningsystem::{ALL_TUNING_SYSTEMS, TuningSystem};
 
@@ -129,11 +132,6 @@ pub fn set_keymap(keymap: &str) {
     }
 }
 
-#[derive(Debug)]
-struct ParsedNote {
-    abc: String,
-}
-
 fn normalize_tuning_system_name(name: &str) -> String {
     name.trim()
         .to_ascii_lowercase()
@@ -256,56 +254,43 @@ fn parse_octave(note: &str) -> Option<i32> {
         .flatten()
 }
 
-fn parse_note_token(note: &str) -> Result<ParsedNote, String> {
+/// One of the playground's note spellings as a pitch: a letter, any
+/// accidentals, and an octave.
+///
+/// The name this builds is music21's, where a flat is `-`, because music21 is
+/// what names the chord and the engraver reads the staff position back off the
+/// same pitch. It used to build an ABC token instead, for abcjs to parse again
+/// in the browser; that round trip through a second notation is gone.
+fn parse_note_token(note: &str) -> Result<Pitch, String> {
     let note = note.trim();
     let mut chars = note.chars().peekable();
-    let name = chars
+    let letter = chars
         .next()
         .ok_or_else(|| "Expected a note name".to_string())?
         .to_ascii_uppercase();
 
-    if !('A'..='G').contains(&name) {
+    if !('A'..='G').contains(&letter) {
         return Err(format!("Invalid note: {note}"));
     }
 
-    let mut accidental = String::new();
+    let mut accidentals = String::new();
     while let Some(ch) = chars.peek() {
         match ch {
             '#' => {
-                accidental.push('#');
+                accidentals.push('#');
                 chars.next();
             }
             'b' | 'B' | '-' => {
-                accidental.push('b');
+                accidentals.push('-');
                 chars.next();
             }
             _ => break,
         }
     }
 
-    let octave = parse_octave(note);
-    let abc_octave = octave.unwrap_or(4) - 4;
-    let octave_str = if abc_octave < 0 {
-        ",".repeat(abc_octave.unsigned_abs() as usize)
-    } else {
-        "'".repeat(abc_octave as usize)
-    };
-
-    let abc_accidental = accidental.replace('#', "^").replace('b', "_");
-
-    // ABC notation uses case to indicate octave ranges. Use lowercase
-    // letters for notes at or above the reference octave (abc_octave >= 0),
-    // and uppercase for notes below it. This lets ABC render ledger lines
-    // and notes outside the single visible octave correctly.
-    let note_letter = if abc_octave >= 0 {
-        name.to_ascii_lowercase().to_string()
-    } else {
-        name.to_string()
-    };
-
-    Ok(ParsedNote {
-        abc: format!("{abc_accidental}{note_letter}{octave_str}"),
-    })
+    let octave = parse_octave(note).unwrap_or(4);
+    let name = format!("{letter}{accidentals}{octave}");
+    Pitch::from_name(&name).map_err(|err| format!("Invalid note {note}: {err}"))
 }
 
 fn set_chord_name(chord: &str) {
@@ -314,42 +299,46 @@ fn set_chord_name(chord: &str) {
     chord_name.push_str(chord);
 }
 
-fn abc_label(label: &str) -> String {
-    label.replace('"', "'")
-}
-
+/// The chord being held down, engraved as one labelled bar of SVG.
+///
+/// This used to return ABC for abcjs to lay out in the browser, which is 1.3 MB
+/// of JavaScript fetched to draw a single bar of a single chord. The staff is
+/// drawn here instead, in the wasm the page has already loaded.
 pub fn convert_notes_core(input: Vec<String>) -> String {
-    let mut notes = Vec::new();
-    let mut note_names = Vec::new();
+    let mut pitches = Vec::new();
+    let mut names = Vec::new();
 
-    for note_str in input.into_iter() {
-        match parse_note_token(&note_str) {
-            Ok(note) => {
-                notes.push(note.abc);
-                // Normalize the note string for chord recognition:
-                // some callers use an internal 'N' separator for octave
-                // (e.g. "C#N4"). The chord parser expects formats like
-                // "C#4", so remove a single 'N' if present.
-                let normalized = note_str.replace("N", "");
-                note_names.push(normalized);
+    for token in input {
+        match parse_note_token(&token) {
+            Ok(pitch) => {
+                names.push(pitch.name_with_octave());
+                pitches.push(pitch);
             }
-            Err(err) => {
-                set_chord_name(&err);
-                return format!("X: 1\nL: 1/1\n|\"{}\"[]|", abc_label(&err));
-            }
+            Err(err) => return failed_bar(&err),
         }
     }
 
-    let chord = Chord::new(note_names)
+    let chord = Chord::new(names)
         .map(|chord| chord.pitched_common_name())
         .unwrap_or_else(|_| "Unknown chord".to_string());
     set_chord_name(&chord);
 
-    format!(
-        "X: 1\nL: 1/1\n|\"{}\"[{}]|",
-        abc_label(&chord),
-        notes.join(" ")
-    )
+    match engrave::chord_svg(&chord, &pitches) {
+        Ok(svg) => svg,
+        Err(err) => failed_bar(&err.to_string()),
+    }
+}
+
+/// An empty staff, for when nothing is being played.
+pub fn empty_staff_core() -> String {
+    engrave::chord_svg("", &[]).unwrap_or_default()
+}
+
+/// An empty bar carrying the reason there is nothing on it. The message goes to
+/// the chord name too, which is where the page's log reads it from.
+fn failed_bar(message: &str) -> String {
+    set_chord_name(message);
+    engrave::chord_svg(message, &[]).unwrap_or_default()
 }
 
 #[cfg(test)]
@@ -409,6 +398,34 @@ pub fn chord_details(notes: &str) -> String {
 #[wasm_bindgen]
 pub fn convert_notes(notes: Vec<String>) -> String {
     convert_notes_core(notes)
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn empty_staff() -> String {
+    empty_staff_core()
+}
+
+/// The notes of a MIDI file, flat: key, velocity, start and end for each, four
+/// numbers at a time.
+///
+/// Flat because that crosses into JavaScript as one `Float64Array` sharing the
+/// wasm's own memory, where a list of note objects would be an allocation and a
+/// property bag each.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn parse_midi(bytes: &[u8]) -> Result<Vec<f64>, JsError> {
+    let notes = midi::parse(bytes).map_err(|err| JsError::new(&err))?;
+    let mut flat = Vec::with_capacity(notes.len() * 4);
+
+    for note in notes {
+        flat.push(f64::from(note.key));
+        flat.push(f64::from(note.velocity));
+        flat.push(note.start);
+        flat.push(note.end);
+    }
+
+    Ok(flat)
 }
 
 #[cfg(feature = "wasm")]

@@ -6,8 +6,7 @@ use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
 use music21_rs::tuningsystem::{AnyTuningSystem, TWELVE_TONE_NAMES};
 use music21_rs::{Pitch, TuningSystem};
 
-pub mod engrave;
-pub mod glyphs;
+pub mod figures;
 mod long_form;
 
 pub type Result<T> = std::result::Result<T, Box<dyn Error>>;

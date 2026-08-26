@@ -12,6 +12,7 @@ default = ["wasm"]
 wasm = ["dep:wasm-bindgen"]
 
 [dependencies]
+engrave = { workspace = true }
 wasm-bindgen = { workspace = true, optional = true }
 music21-rs = { workspace = true }
 keymapping = { path = "./keymapping" }

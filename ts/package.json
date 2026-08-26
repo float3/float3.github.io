@@ -25,7 +25,6 @@
   },
   "homepage": "https://github.com/float3/float3.github.io#readme",
   "dependencies": {
-    "@tonejs/midi": "^2.0.28",
     "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
     "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
     "wasm-chars": "file:../wasm/wasm/pkg/chars",
