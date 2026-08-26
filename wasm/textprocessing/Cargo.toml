@@ -38,3 +38,12 @@ pinyin_zhuyin = { version = "0.2.0", optional = true }
 
 hanja = { version = "0.1.1", optional = true }
 hangeul_conversion = { path = "hangeul_conversion", optional = true }
+
+# The generator renders the whole table in one pass, so it needs both
+# dictionaries; without this it is still built by `cargo test --workspace
+# --no-default-features`, where `textprocessing::examples` is compiled out and
+# the example cannot resolve it. CI builds the workspace exactly that way, so
+# the failure lands there and nowhere else.
+[[example]]
+name = "generate_examples"
+required-features = ["chinese", "korean"]
