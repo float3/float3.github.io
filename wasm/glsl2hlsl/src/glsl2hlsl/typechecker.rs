@@ -410,8 +410,22 @@ mod tests {
     use super::*;
     use glsl::syntax::{BinaryOp, Expr};
 
+    /// `SYM_TABLE` is one table for the whole process, and cargo runs these
+    /// tests on parallel threads. Two of them push a scope, add a name and then
+    /// look it up; without this, the other one's `clear_sym`/`pop_sym` lands in
+    /// between and the lookup comes back `None`. It failed about one run in
+    /// five.
+    static SYM_TABLE_TESTS: Mutex<()> = Mutex::new(());
+
+    /// Poisoning only means some earlier test panicked while holding this; the
+    /// guarded state is reset by `clear_sym` regardless.
+    fn serialised() -> std::sync::MutexGuard<'static, ()> {
+        SYM_TABLE_TESTS.lock().unwrap_or_else(|poisoned| poisoned.into_inner())
+    }
+
     #[test]
     fn test_symbol_table() {
+        let _guard = serialised();
         clear_sym();
         push_sym();
         add_sym("a".to_string(), TypeKind::Scalar);
@@ -455,6 +469,7 @@ mod tests {
 
     #[test]
     fn test_get_expr_type_variable() {
+        let _guard = serialised();
         clear_sym();
         push_sym();
         add_sym("x".to_string(), TypeKind::Vector(3));
