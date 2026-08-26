@@ -68,3 +68,14 @@ input[type="checkbox"] {
 input[type="button"] {
   margin-top: 10px;
 }
+
+/* The background preview's note, which is nearly always a compile error from
+   a shader somebody is still typing — quiet enough to ignore while doing so. */
+#preview-status {
+  float: left;
+  clear: both;
+  margin: 6px 0 0;
+  font-size: 0.8rem;
+  font-family: var(--codeFont, monospace);
+  opacity: 0.7;
+}

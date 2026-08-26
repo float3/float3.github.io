@@ -34,6 +34,9 @@ glsl2hlsl is MIT Licensed
         <h3>Experimental Features, might break:</h3>
         <input type="checkbox" id="extract" style="margin-left:5%;">Extract properties
         <input type="checkbox" id="raymarch" style="margin-left:5%;">Raymarched
+        <br>
+        <input type="checkbox" id="preview-bg">Render the shader as this page's background
+        <p id="preview-status" role="status" hidden></p>
       </td>
       <td><input id="convert" type="button" value="Convert"></td>
     </tr>

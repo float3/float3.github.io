@@ -16,6 +16,32 @@ import { BackgroundDef, BackgroundSettings, FluidStyle } from "./types.js"
 
 const DOM_BACKGROUND_ID = "dappled-light"
 
+/**
+ * The id a page-driven preview renders under.
+ *
+ * It is never in `allBackgrounds()` and never persisted: a preview belongs to
+ * the page that asked for it, and lasts exactly as long as that page does.
+ */
+const PREVIEW_ID = "page-preview"
+
+/** What a page gets to do to the background, on `window.float3Background`. */
+export interface BackgroundApi {
+  /**
+   * Renders `source` instead of the chosen background, without saving it.
+   * Returns the compile error, or null on success. A source that does not
+   * compile leaves whatever is already on screen alone.
+   */
+  preview(source: string): string | null
+  /** Puts the chosen background back. */
+  endPreview(): void
+}
+
+declare global {
+  interface Window {
+    float3Background?: BackgroundApi
+  }
+}
+
 class BackgroundController {
   private settings: BackgroundSettings
   private canvas: HTMLCanvasElement
@@ -24,6 +50,7 @@ class BackgroundController {
   private uniforms: UniformCache | null = null
   private fluid: FluidSimulation | null = null
   private menu: BackgroundMenu | null = null
+  private previewDef: BackgroundDef | null = null
 
   private frame = 0
   private startTime = performance.now()
@@ -111,6 +138,11 @@ class BackgroundController {
     return this.allBackgrounds().find((background) => background.id === id)
   }
 
+  /** What is actually on screen, which is the preview whenever there is one. */
+  private activeDefinition(): BackgroundDef | undefined {
+    return this.previewDef ?? this.definition(this.settings.selected)
+  }
+
   private persist(): void {
     saveSettings(this.settings)
   }
@@ -127,6 +159,8 @@ class BackgroundController {
   /** Switches background, falling back to the DOM one if the GPU path fails. */
   private select(id: string, initial = false): void {
     const background = this.definition(id) ?? this.definition(DOM_BACKGROUND_ID)!
+    // Choosing anything at all ends a preview; the menu wins over the page.
+    this.previewDef = null
     this.settings.selected = background.id
     if (!initial) this.persist()
 
@@ -224,6 +258,58 @@ class BackgroundController {
     return program ? null : (error ?? "unknown compile error")
   }
 
+  /**
+   * Renders a source a page is driving, without saving anything.
+   *
+   * The program is linked before anything on screen is touched, so a source
+   * that does not compile — which is most of the time, while somebody is
+   * typing one — changes nothing: the last one that did compile keeps
+   * rendering. That is the whole reason this does not go through `select`,
+   * whose failure path is to fall back to the DOM background.
+   */
+  preview(source: string): string | null {
+    const gl = this.acquireContext()
+    if (!gl) return "WebGL2 is not available in this browser."
+
+    const { program, error } = linkProgram(gl, buildFragmentSource(source))
+    if (!program) return error ?? "unknown compile error"
+
+    this.teardownGl()
+    this.program = program
+    this.uniforms = new UniformCache(gl, program)
+    this.previewDef = {
+      id: PREVIEW_ID,
+      name: "Preview",
+      blurb: "Driven by this page.",
+      kind: "glsl",
+      themeReactive: /uTheme/.test(source),
+      mouseReactive: /iMouse/.test(source),
+      fragment: source,
+      params: [
+        { key: "speed", label: "Speed", min: 0, max: 3, step: 0.05, value: 1 },
+        { key: "scale", label: "Scale", min: 0.3, max: 3, step: 0.05, value: 1 },
+      ],
+    }
+
+    document.documentElement.dataset.bg = "gl"
+    this.frame = 0
+    this.startTime = performance.now()
+    this.lastTime = this.startTime
+    this.resize(true)
+    this.renderOnce()
+    if (this.animating) this.start()
+    return null
+  }
+
+  /** Puts the chosen background back, if a preview replaced it. */
+  endPreview(): void {
+    if (!this.previewDef) return
+    this.previewDef = null
+    // `initial`, because the selection never changed and re-saving it here
+    // would only rewrite storage with what it already holds.
+    this.select(this.settings.selected, true)
+  }
+
   private addCustom(name: string, source: string): string | null {
     const id = `custom-${Date.now().toString(36)}`
     this.settings.custom.push({ id, name, source })
@@ -294,6 +380,11 @@ class BackgroundController {
   }
 
   private watchNav(): void {
+    // A preview belongs to the page that asked for it. `prenav` fires before
+    // the incoming page's scripts run, so a page that wants one again gets to
+    // ask after this has cleared the last one, rather than being undone by it.
+    document.addEventListener("prenav", () => this.endPreview())
+
     // Quartz's SPA router morphs <body> against the incoming page. The canvas
     // and the menu host are in that markup, so the diff lines up, but the
     // router still strips the attributes this class wrote and empties the
@@ -413,8 +504,8 @@ class BackgroundController {
     )
     this.uniforms.float("uTheme", this.themeCurrent)
 
-    const background = this.definition(this.settings.selected)
-    const overrides = this.settings.params[this.settings.selected] ?? {}
+    const background = this.activeDefinition()
+    const overrides = this.settings.params[background?.id ?? ""] ?? {}
     for (const param of background?.params ?? []) {
       this.uniforms.float(`u_${param.key}`, overrides[param.key] ?? param.value)
     }
@@ -426,8 +517,8 @@ class BackgroundController {
 
   private renderFluid(delta: number): void {
     if (!this.fluid) return
-    const background = this.definition(this.settings.selected)
-    const overrides = this.settings.params[this.settings.selected] ?? {}
+    const background = this.activeDefinition()
+    const overrides = this.settings.params[background?.id ?? ""] ?? {}
     const value = (key: string, fallback: number) =>
       overrides[key] ?? background?.params.find((p) => p.key === key)?.value ?? fallback
 
@@ -500,7 +591,14 @@ function hueToRgb(hue: number): [number, number, number] {
 }
 
 function boot(): void {
-  new BackgroundController()
+  const controller = new BackgroundController()
+  window.float3Background = {
+    preview: (source) => controller.preview(source),
+    endPreview: () => controller.endPreview(),
+  }
+  // Page scripts load independently of this one, so whichever is late needs a
+  // way to find the other: they check for the global, and listen for this.
+  document.dispatchEvent(new CustomEvent("float3:background-ready"))
 }
 
 if (document.readyState === "loading") {
