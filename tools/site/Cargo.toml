@@ -13,6 +13,7 @@ image = { version = "0.25.10", default-features = false, features = [
     "jpeg",
     "png",
     "webp",
+    "gif",
 ], optional = true }
 music21-rs = { workspace = true }
 recursive-ji-core = { path = "../../crates/recursive_ji_core" }

@@ -9,6 +9,10 @@
 //! a folder of saved images means camera serials, GPS fixes, and editing
 //! history belonging to strangers.
 //!
+//! A gif is the one thing that gets asked what it is rather than told: one
+//! frame is a still like any other, and more than one is an animation, which
+//! keeps its extension and its bytes the way video does.
+//!
 //! It also drops the copies. A folder of saved images holds the same picture
 //! more than once, under two names and often at two sizes; `duplicates` decides
 //! which of those are one picture, and the largest of each set is what stays.
@@ -39,7 +43,15 @@ const STAGING: &str = ".normalize";
 
 /// What the `image` dependency is built to decode; anything else is refused by
 /// name rather than misfiled as a still that will never open.
-const IMAGE_EXTENSIONS: &[&str] = &["jpg", "jpeg", "png", "webp"];
+const IMAGE_EXTENSIONS: &[&str] = &["jpg", "jpeg", "png", "webp", "gif"];
+
+/// The one extension that can hold either of the two things a gallery has.
+///
+/// A gif of one frame is a still like any other and becomes a JPEG; a gif of
+/// several is an animation, and re-encoding it would mean keeping the first
+/// frame and throwing the rest away, so it is carried across as it is. Which
+/// of the two a file is cannot be read off its name, so [`is_still`] opens it.
+const GIF: &str = "gif";
 
 /// What the gallery renders in a `<video>`, kept as it is: re-encoding video
 /// would mean depending on ffmpeg for the sake of six files.
@@ -192,7 +204,9 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
 ///
 /// Video keeps its extension and its place in the run — the trolley problems
 /// have `35.mp4` sitting between two jpgs — because the manifest carries names
-/// rather than a range, and the page picks its element from the extension.
+/// rather than a range, and the page picks its element from the extension. A
+/// gif is planned as one too, and [`settle`] turns the ones holding a single
+/// frame back into stills; that way nothing here has to open a file.
 fn plan(names: &[String]) -> Result<Vec<Step>> {
     let width = number_width(names.len());
     let mut steps = Vec::with_capacity(names.len());
@@ -201,7 +215,9 @@ fn plan(names: &[String]) -> Result<Vec<Step>> {
         let extension = extension_of(name);
         let extension = extension.as_str();
 
-        let (target, action) = if IMAGE_EXTENSIONS.contains(&extension) {
+        let (target, action) = if extension == GIF {
+            (format!("{index:0width$}.{GIF}"), Action::Keep)
+        } else if IMAGE_EXTENSIONS.contains(&extension) {
             (format!("{index:0width$}.jpg"), Action::Transcode)
         } else if VIDEO_EXTENSIONS.contains(&extension) {
             (format!("{index:0width$}.{extension}"), Action::Keep)
@@ -223,22 +239,39 @@ fn plan(names: &[String]) -> Result<Vec<Step>> {
     Ok(steps)
 }
 
-/// Downgrades a re-encode to a copy where there is nothing left to do.
+/// Settles the two questions a filename cannot answer, by opening the file.
 ///
-/// A still that is already a JPEG carrying no metadata segments would come out
-/// of the encoder a little worse and no cleaner, so it is moved as the bytes it
-/// already is. The decision is about the contents and not the name: a gallery
-/// renumbers itself whenever anything joins or leaves the front of it, and a
-/// rename is no reason to put a picture through the encoder again. `--force`
-/// skips this and re-encodes the lot.
+/// The first is whether a gif holds a picture or an animation: one frame is a
+/// still and becomes a JPEG like any other, and more than one stays the gif it
+/// is, since there is no re-encoding an animation into a still without losing
+/// most of it.
+///
+/// The second is whether a re-encode has anything left to do. A still that is
+/// already a JPEG carrying no metadata segments would come out of the encoder a
+/// little worse and no cleaner, so it is moved as the bytes it already is. That
+/// decision is about the contents and not the name: a gallery renumbers itself
+/// whenever anything joins or leaves the front of it, and a rename is no reason
+/// to put a picture through the encoder again. `--force` skips it and re-encodes
+/// the lot — but not the first question, because that one is not a matter of
+/// taste.
 fn settle(plan: Vec<Step>, dir: &Path, force: bool) -> Result<Vec<Step>> {
-    if force {
-        return Ok(plan);
-    }
-
     plan.into_iter()
         .map(|step| {
-            if step.action != Action::Transcode {
+            if extension_of(&step.source) == GIF {
+                // A gif is never a JPEG with nothing left to strip, so the
+                // question below does not arise for one either way.
+                return Ok(if is_still(dir, &step.source)? {
+                    Step {
+                        target: with_jpg_extension(&step.target),
+                        action: Action::Transcode,
+                        ..step
+                    }
+                } else {
+                    step
+                });
+            }
+
+            if force || step.action != Action::Transcode {
                 return Ok(step);
             }
 
@@ -255,18 +288,41 @@ fn settle(plan: Vec<Step>, dir: &Path, force: bool) -> Result<Vec<Step>> {
         .collect()
 }
 
+/// Whether the gallery holds this file as a picture rather than as something it
+/// can only carry across: a still, or a gif of one frame.
+///
+/// Every caller wants the same answer — the re-encode and the duplicate scan
+/// have to agree about what a gif is, or a gif would be fingerprinted as bytes
+/// and then transcoded, or compared as a picture and then kept whole.
+fn is_still(dir: &Path, name: &str) -> Result<bool> {
+    let extension = extension_of(name);
+    if extension == GIF {
+        return Ok(!gif_is_animated(&fs::read(dir.join(name))?));
+    }
+
+    Ok(IMAGE_EXTENSIONS.contains(&extension.as_str()))
+}
+
+/// The same numbered name as a JPEG, for a gif that turned out to be a still.
+fn with_jpg_extension(target: &str) -> String {
+    let stem = target.rsplit_once('.').map_or(target, |(stem, _)| stem);
+    format!("{stem}.jpg")
+}
+
 /// Which files in the gallery are copies of other files in it.
 ///
 /// Stills are fingerprinted as pictures, which costs a decode each; everything
-/// else is fingerprinted as bytes. Both are read here and then again by the
-/// re-encode, which is a maintenance command reading a folder twice rather than
-/// holding every picture in a gallery in memory at once.
+/// else — video, and a gif that moves — is fingerprinted as bytes, so an
+/// animation is never weighed against the first frame of itself. Both are read
+/// here and then again by the re-encode, which is a maintenance command reading
+/// a folder twice rather than holding every picture in a gallery in memory at
+/// once.
 fn duplicates(dir: &Path, names: &[String]) -> Result<Vec<Removal>> {
     let mut files: Vec<(String, Fingerprint)> = Vec::with_capacity(names.len());
 
     for name in names {
         let path = dir.join(name);
-        let fingerprint = if IMAGE_EXTENSIONS.contains(&extension_of(name).as_str()) {
+        let fingerprint = if is_still(dir, name)? {
             duplicates::picture(&path)?
         } else {
             duplicates::bytes(&path)?
@@ -425,6 +481,100 @@ fn without_metadata_segments(bytes: &[u8]) -> Option<Vec<u8>> {
     }
 }
 
+/// Whether a gif holds more than one frame.
+///
+/// Walking the blocks rather than decoding: the question is how many image
+/// descriptors the file has, and stopping at the second means never inflating a
+/// frame. It also keeps this compiling and testable without the `photos`
+/// feature, which CI builds without.
+///
+/// Anything unparseable counts as animated, because that is the harmless
+/// direction to be wrong in: an animation kept as a gif is a file that still
+/// plays, and a still kept as a gif is a slightly larger file, while an
+/// animation mistaken for a still loses every frame but the first.
+fn gif_is_animated(bytes: &[u8]) -> bool {
+    let Some(mut offset) = gif_blocks_offset(bytes) else {
+        return true;
+    };
+    let mut frames = 0;
+
+    loop {
+        let Some(&block) = bytes.get(offset) else {
+            return true;
+        };
+        offset += 1;
+
+        match block {
+            // Trailer: the file ended, having held at most the one frame.
+            0x3B => return false,
+            // An extension is its label and then a run of sub-blocks. Graphic
+            // control, comment, application: none of them is a frame.
+            0x21 => {
+                let Some(next) = gif_skip_sub_blocks(bytes, offset + 1) else {
+                    return true;
+                };
+                offset = next;
+            }
+            // An image descriptor is a frame: nine bytes, the last of them the
+            // packed field saying whether a local colour table follows, then
+            // the LZW code size and the frame's own sub-blocks.
+            0x2C => {
+                frames += 1;
+                if frames > 1 {
+                    return true;
+                }
+
+                let Some(&packed) = bytes.get(offset + 8) else {
+                    return true;
+                };
+                let data = offset + 9 + gif_colour_table_len(packed) + 1;
+                let Some(next) = gif_skip_sub_blocks(bytes, data) else {
+                    return true;
+                };
+                offset = next;
+            }
+            _ => return true,
+        }
+    }
+}
+
+/// Where a gif's blocks start: past the header, the screen descriptor, and the
+/// global colour table if it has one. `None` if this is not a gif.
+fn gif_blocks_offset(bytes: &[u8]) -> Option<usize> {
+    if !bytes.starts_with(b"GIF87a") && !bytes.starts_with(b"GIF89a") {
+        return None;
+    }
+
+    // Six bytes of header, then width, height, and the packed field.
+    let packed = *bytes.get(10)?;
+    let offset = 13 + gif_colour_table_len(packed);
+    (offset <= bytes.len()).then_some(offset)
+}
+
+/// The size of the colour table a packed field describes, in bytes: three per
+/// entry, and two to the power of one more than the low three bits of entries.
+fn gif_colour_table_len(packed: u8) -> usize {
+    if packed & 0x80 == 0 {
+        0
+    } else {
+        3 * (1 << ((packed & 0x07) + 1))
+    }
+}
+
+/// Past a run of length-prefixed sub-blocks and the zero that ends it.
+fn gif_skip_sub_blocks(bytes: &[u8], mut offset: usize) -> Option<usize> {
+    loop {
+        let length = usize::from(*bytes.get(offset)?);
+        offset = offset.checked_add(1)?.checked_add(length)?;
+        if offset > bytes.len() {
+            return None;
+        }
+        if length == 0 {
+            return Some(offset);
+        }
+    }
+}
+
 fn parse_options(args: &[String]) -> Result<Options> {
     let mut collections = Vec::new();
     let mut quality = DEFAULT_QUALITY;
@@ -481,8 +631,8 @@ fn print_help() {
 site normalize-gallery
 
 Renumber a content/misc gallery, re-encode its stills as JPEG, strip their
-metadata, and delete the ones that are copies of another. Video keeps its
-extension and its place in the numbering.
+metadata, and delete the ones that are copies of another. Video, and any gif
+that moves, keeps its extension and its place in the numbering.
 
 Usage:
   site normalize-gallery COLLECTION... [--quality N] [--force]
@@ -500,6 +650,7 @@ Options:
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::process;
 
     fn names(values: &[&str]) -> Vec<String> {
         values.iter().map(|value| value.to_string()).collect()
@@ -534,8 +685,159 @@ mod tests {
     #[test]
     fn refuses_files_that_are_not_gallery_media() {
         assert!(plan(&names(&["notes.txt"])).is_err());
-        assert!(plan(&names(&["loop.gif"])).is_err());
         assert!(plan(&names(&["nameless"])).is_err());
+    }
+
+    #[test]
+    fn plans_a_gif_as_a_gif_until_something_has_opened_it() {
+        let plan = plan(&names(&["a.jpg", "loop.GIF"])).unwrap();
+
+        assert_eq!(plan[1].target, "01.gif");
+        assert_eq!(plan[1].action, Action::Keep);
+        // And the still it may turn out to be keeps the number it was given.
+        assert_eq!(with_jpg_extension(&plan[1].target), "01.jpg");
+        assert_eq!(with_jpg_extension("07"), "07.jpg");
+    }
+
+    /// A directory of files, cleaned up whatever the test does.
+    struct Fixture {
+        dir: std::path::PathBuf,
+    }
+
+    impl Fixture {
+        fn new(name: &str, files: &[(&str, Vec<u8>)]) -> Self {
+            let dir = std::env::temp_dir().join(format!("site-gallery-{name}-{}", process::id()));
+            let _ = fs::remove_dir_all(&dir);
+            fs::create_dir_all(&dir).unwrap();
+            for (name, bytes) in files {
+                fs::write(dir.join(name), bytes).unwrap();
+            }
+            Self { dir }
+        }
+    }
+
+    impl Drop for Fixture {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.dir);
+        }
+    }
+
+    #[test]
+    fn opens_a_gif_to_decide_which_of_the_two_it_is() {
+        let fixture = Fixture::new("gifs", &[("still.gif", gif(1)), ("animated.gif", gif(3))]);
+        let plan = settle(
+            plan(&names(&["animated.gif", "still.gif"])).unwrap(),
+            &fixture.dir,
+            false,
+        )
+        .unwrap();
+
+        // The animation keeps its bytes and its extension, as video does.
+        assert_eq!(plan[0].target, "00.gif");
+        assert_eq!(plan[0].action, Action::Keep);
+        // The one-frame gif is a still, and becomes a JPEG under its number.
+        assert_eq!(plan[1].target, "01.jpg");
+        assert_eq!(plan[1].action, Action::Transcode);
+
+        assert!(is_still(&fixture.dir, "still.gif").unwrap());
+        assert!(!is_still(&fixture.dir, "animated.gif").unwrap());
+    }
+
+    /// The animation has to survive `--force` too: that flag is about
+    /// re-encoding a picture, and there is no re-encoding this into a still.
+    #[test]
+    fn keeps_an_animation_whole_even_when_forced() {
+        let fixture = Fixture::new("forced", &[("00.gif", gif(2))]);
+        let plan = settle(plan(&names(&["00.gif"])).unwrap(), &fixture.dir, true).unwrap();
+
+        assert_eq!(plan[0].target, "00.gif");
+        assert_eq!(plan[0].action, Action::Keep);
+    }
+
+    #[cfg(feature = "photos")]
+    #[test]
+    fn re_encodes_a_one_frame_gif_into_a_clean_jpeg() {
+        let fixture = Fixture::new("transcode", &[]);
+        let source = fixture.dir.join("still.gif");
+        let target = fixture.dir.join("00.jpg");
+        image::RgbaImage::from_pixel(4, 4, image::Rgba([10, 200, 30, 255]))
+            .save(&source)
+            .unwrap();
+
+        assert!(is_still(&fixture.dir, "still.gif").unwrap());
+        transcode(&source, &target, DEFAULT_QUALITY).unwrap();
+
+        let encoded = fs::read(&target).unwrap();
+        assert_eq!(&encoded[..2], &[0xFF, 0xD8]);
+        assert!(!jpeg_carries_metadata(&encoded));
+    }
+
+    #[test]
+    fn counts_a_gif_of_one_frame_as_a_still() {
+        assert!(!gif_is_animated(&gif(1)));
+        assert!(gif_is_animated(&gif(2)));
+        assert!(gif_is_animated(&gif(7)));
+    }
+
+    #[test]
+    fn treats_a_gif_it_cannot_walk_as_an_animation() {
+        assert!(gif_is_animated(&[]));
+        assert!(gif_is_animated(&[0xFF, 0xD8, 0xFF, 0xE0]));
+        // A header and nothing after it: no trailer to say the file ended.
+        assert!(gif_is_animated(b"GIF89a     "));
+        // A sub-block claiming more bytes than the file has.
+        let mut truncated = gif(1);
+        truncated.truncate(truncated.len() - 4);
+        assert!(gif_is_animated(&truncated));
+    }
+
+    #[test]
+    fn skips_the_colour_tables_on_its_way_through_a_gif() {
+        // The global table is what the offsets below would run into if it were
+        // not skipped, and a local one sits inside the frame the same way.
+        assert_eq!(gif_colour_table_len(0x00), 0);
+        assert_eq!(gif_colour_table_len(0x07), 0);
+        assert_eq!(gif_colour_table_len(0x80), 6);
+        assert_eq!(gif_colour_table_len(0x87), 768);
+
+        assert!(!gif_is_animated(&gif_with_tables(1)));
+        assert!(gif_is_animated(&gif_with_tables(2)));
+    }
+
+    /// A gif of `frames` frames: header, screen descriptor with no colour
+    /// table, and a graphic control extension and an image descriptor each.
+    fn gif(frames: usize) -> Vec<u8> {
+        let mut bytes = b"GIF89a".to_vec();
+        // Width, height, packed (no global table), background, aspect.
+        bytes.extend_from_slice(&[0x01, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00]);
+
+        for _ in 0..frames {
+            // Graphic control extension: label, one sub-block, terminator.
+            bytes.extend_from_slice(&[0x21, 0xF9, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00]);
+            // Image descriptor: left, top, width, height, packed.
+            bytes.extend_from_slice(&[0x2C, 0, 0, 0, 0, 0x01, 0x00, 0x01, 0x00, 0x00]);
+            // LZW code size, one sub-block of data, terminator.
+            bytes.extend_from_slice(&[0x02, 0x02, 0x4C, 0x01, 0x00]);
+        }
+
+        bytes.push(0x3B);
+        bytes
+    }
+
+    /// The same, with a global colour table and a local one per frame.
+    fn gif_with_tables(frames: usize) -> Vec<u8> {
+        let mut bytes = b"GIF89a".to_vec();
+        bytes.extend_from_slice(&[0x01, 0x00, 0x01, 0x00, 0x80, 0x00, 0x00]);
+        bytes.extend_from_slice(&[0xFF; 6]);
+
+        for _ in 0..frames {
+            bytes.extend_from_slice(&[0x2C, 0, 0, 0, 0, 0x01, 0x00, 0x01, 0x00, 0x80]);
+            bytes.extend_from_slice(&[0xFF; 6]);
+            bytes.extend_from_slice(&[0x02, 0x02, 0x4C, 0x01, 0x00]);
+        }
+
+        bytes.push(0x3B);
+        bytes
     }
 
     #[test]

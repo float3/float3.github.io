@@ -88,6 +88,10 @@ mod tests {
         assert_eq!(gallery_media_kind("00.jpg"), "image");
         assert_eq!(gallery_media_kind("63.mp4"), "video");
         assert_eq!(gallery_media_kind("clip.MOV"), "video");
+        // A gif is an image element, which is what animates it; the gallery
+        // only ever carries the animated ones, the rest having been re-encoded
+        // into stills by `site normalize-gallery`.
+        assert_eq!(gallery_media_kind("42.gif"), "image");
         // Anything unrecognised renders as an image, which fails visibly rather
         // than silently producing a video element that will never play.
         assert_eq!(gallery_media_kind("notes"), "image");
