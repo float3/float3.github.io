@@ -1,4 +1,4 @@
-port module Main exposing (main)
+port module Main exposing (..)
 
 {-| The site graph, drawn in Elm.
 
@@ -19,6 +19,12 @@ Colour is left to the stylesheet. The old script read six custom properties out
 of `getComputedStyle` when it started, which is why it had to be told to redraw
 when the theme changed. Here a node is a circle with a class on it and the CSS
 says what that means in each theme.
+
+Everything is exposed for one reason: the tests in `../tests` read it. Elm
+builds an application from `main` outwards whatever the module line says, so
+nothing extra is compiled into the page for it, and the alternative was a
+twenty-name export list that would go stale the first time a test wanted one
+more.
 
 -}
 
@@ -55,11 +61,16 @@ changed the shape of them will see it.
 port failed : String -> Cmd msg
 
 
-{-| The container's size, watched by a `ResizeObserver` on the other side. Elm
-can hear the window resize but cannot measure a div, and this one lives in a
-sidebar that changes width without the window doing anything.
+{-| Where the container is and how big, watched by a `ResizeObserver` and the
+page's scrolling on the other side.
+
+Elm can hear the window resize but cannot measure a div, and this one lives in
+a sidebar that changes width without the window doing anything. The corner
+comes with it because a mouse event says where it is in the window and the
+graph needs to know where that is in the box -- `getBoundingClientRect` is a
+method, and an event decoder can only read properties.
 -}
-port resized : (Size -> msg) -> Sub msg
+port resized : (Box -> msg) -> Sub msg
 
 
 {-| Stop.
@@ -73,8 +84,58 @@ took to settle.
 port halt : (() -> msg) -> Sub msg
 
 
-type alias Size =
-    { width : Float, height : Float }
+{-| The container, in CSS pixels: how big it is, and where its top left corner
+sits in the window.
+-}
+type alias Box =
+    { width : Float, height : Float, left : Float, top : Float }
+
+
+{-| A place, in whichever space the name around it says. -}
+type alias Point =
+    { x : Float, y : Float }
+
+
+{-| What part of the drawing the box is showing.
+
+`zoom` is how many pixels a unit of the layout takes up, and the rest is where
+the middle of the box is over it. All three are read straight into the
+`viewBox`, so panning and zooming move the picture without touching a single
+node.
+-}
+type alias Camera =
+    { zoom : Float, x : Float, y : Float }
+
+
+{-| Looking at the middle of the layout, one pixel to the unit. -}
+resting : Camera
+resting =
+    { zoom = 1, x = 0, y = 0 }
+
+
+{-| d3's own limits, and for the same reason: further out than a quarter and
+the graph is a smudge, closer in than four and it is one node.
+-}
+closest : Float
+closest =
+    4
+
+
+furthest : Float
+furthest =
+    0.25
+
+
+{-| What the mouse is doing, if anything.
+
+`moved` is what tells a drag from a click. A node is a link, so letting go of
+one after hauling it across the box would otherwise navigate, which is not what
+the hand that hauled it meant.
+-}
+type Drag
+    = Still
+    | Holding { id : String, grab : Point, moved : Bool }
+    | Panning { from : Point, moved : Bool }
 
 
 
@@ -84,7 +145,7 @@ type alias Size =
 type alias Flags =
     { slug : String
     , base : String
-    , size : Size
+    , box : Box
     , depth : Int
     , showTags : Bool
     , removeTags : List String
@@ -120,10 +181,10 @@ flagsDecoder =
             Decode.oneOf [ Decode.field name Decode.bool, Decode.succeed fallback ]
     in
     Decode.map8
-        (\slug base size depth showTags removeTags visited pages ->
+        (\slug base box depth showTags removeTags visited pages ->
             { slug = slug
             , base = base
-            , size = size
+            , box = box
             , depth = depth
             , showTags = showTags
             , removeTags = removeTags
@@ -139,7 +200,7 @@ flagsDecoder =
         )
         (Decode.field "slug" Decode.string)
         (Decode.oneOf [ Decode.field "base" Decode.string, Decode.succeed "" ])
-        sizeDecoder
+        boxDecoder
         (Decode.oneOf [ Decode.field "depth" Decode.int, Decode.succeed 1 ])
         (yesNo "showTags" True)
         (Decode.oneOf [ Decode.field "removeTags" (Decode.list Decode.string), Decode.succeed [] ])
@@ -167,11 +228,13 @@ flagsDecoder =
             )
 
 
-sizeDecoder : Decoder Size
-sizeDecoder =
-    Decode.map2 Size
+boxDecoder : Decoder Box
+boxDecoder =
+    Decode.map4 Box
         (Decode.oneOf [ Decode.field "width" Decode.float, Decode.succeed 250 ])
         (Decode.oneOf [ Decode.field "height" Decode.float, Decode.succeed 250 ])
+        (Decode.oneOf [ Decode.field "left" Decode.float, Decode.succeed 0 ])
+        (Decode.oneOf [ Decode.field "top" Decode.float, Decode.succeed 0 ])
 
 
 pageDecoder : Decoder Page
@@ -201,6 +264,10 @@ type alias Node =
     , y : Float
     , vx : Float
     , vy : Float
+
+    -- Held by the mouse: the forces still push against it and it does not
+    -- move, which is what makes dragging one node rearrange the rest.
+    , pinned : Bool
     }
 
 
@@ -228,6 +295,12 @@ type alias Model =
     , alpha : Float
     , hovered : Maybe String
     , visited : Set String
+    , camera : Camera
+    , drag : Drag
+
+    -- A click arrives after the mouse is let go, and a node is a link. This is
+    -- how the one that ends a drag is told from the one that follows it.
+    , dragged : Bool
     }
 
 
@@ -235,8 +308,15 @@ type Msg
     = Tick
     | Hover (Maybe String)
     | Follow String
-    | Resized Size
+    | Resized Box
     | Halted
+      -- The mouse, in window coordinates: where it went down, where it has got
+      -- to, and where it was when the wheel turned.
+    | Grabbed String Point
+    | Panned Point
+    | Moved Point
+    | Released
+    | Wheeled Float Point
 
 
 
@@ -386,6 +466,7 @@ build flags =
             , y = y
             , vx = 0
             , vy = 0
+            , pinned = False
             }
 
         link ( from, to ) =
@@ -418,6 +499,9 @@ build flags =
     , alpha = 1
     , hovered = Nothing
     , visited = Set.fromList flags.visited
+    , camera = resting
+    , drag = Still
+    , dragged = False
     }
 
 
@@ -641,7 +725,7 @@ ring model alpha nodes =
     else
         let
             wanted =
-                min model.flags.size.width model.flags.size.height / 2 * 0.8
+                min model.flags.box.width model.flags.box.height / 2 * 0.8
 
             apply node =
                 let
@@ -745,6 +829,14 @@ collide nodes =
 
 integrate : Node -> Node
 integrate node =
+    if node.pinned then
+        -- A node under the mouse stays where the mouse put it, and its
+        -- velocity is thrown away rather than saved up: d3 does the same, so
+        -- that a node let go after a long drag does not shoot off with
+        -- everything the forces wanted to do to it in the meantime.
+        { node | vx = 0, vy = 0 }
+
+    else
     let
         vx =
             node.vx * velocityDecay
@@ -769,12 +861,18 @@ update msg model =
             ( { model | hovered = id }, Cmd.none )
 
         Follow id ->
-            ( model, follow id )
+            -- The click that ends a drag is the same click that follows a
+            -- link, and only the mouse knows which it was.
+            if model.dragged then
+                ( { model | dragged = False }, Cmd.none )
 
-        Resized size ->
+            else
+                ( model, follow id )
+
+        Resized box ->
             -- A box of a different size is a different drawing, so the layout
             -- is given some of its energy back rather than left where it was.
-            ( { model | flags = withSize size model.flags, alpha = max model.alpha 0.3 }
+            ( { model | flags = withBox box model.flags, alpha = max model.alpha 0.3 }
             , Cmd.none
             )
 
@@ -784,10 +882,176 @@ update msg model =
             -- there costing nothing until it is collected.
             ( { model | alpha = 0 }, Cmd.none )
 
+        Grabbed id at ->
+            let
+                held =
+                    where_ model at
+            in
+            ( { model
+                | drag =
+                    Holding
+                        { id = id
+                        , grab = grabbed model id held
+                        , moved = False
+                        }
+                , nodes = pin id model.nodes
 
-withSize : Size -> Flags -> Flags
-withSize size flags =
-    { flags | size = size }
+                -- The rest of the graph should get out of the way while a node
+                -- is being moved, which it only does with some energy left.
+                , alpha = max model.alpha 0.3
+                , hovered = Just id
+              }
+            , Cmd.none
+            )
+
+        Panned at ->
+            ( { model | drag = Panning { from = at, moved = False } }, Cmd.none )
+
+        Moved at ->
+            ( moved at model, Cmd.none )
+
+        Released ->
+            ( { model
+                | drag = Still
+                , dragged = wasMoved model.drag
+                , nodes = Array.map (\node -> { node | pinned = False }) model.nodes
+              }
+            , Cmd.none
+            )
+
+        Wheeled delta at ->
+            ( { model | camera = zoomed model delta at }, Cmd.none )
+
+
+{-| Where a point in the window is over the layout.
+
+The `viewBox` is the box's own size divided by the zoom, centred on the camera,
+and the aspect ratios match by construction -- so there is no letterboxing to
+account for and the mapping is this one line each way.
+-}
+where_ : Model -> Point -> Point
+where_ model at =
+    { x = model.camera.x + (at.x - model.flags.box.left - model.flags.box.width / 2) / model.camera.zoom
+    , y = model.camera.y + (at.y - model.flags.box.top - model.flags.box.height / 2) / model.camera.zoom
+    }
+
+
+{-| How far the node is from the pointer when it is picked up, so that it does
+not jump to sit under the cursor.
+-}
+grabbed : Model -> String -> Point -> Point
+grabbed model id at =
+    case model.nodes |> Array.filter (\node -> node.id == id) |> Array.get 0 of
+        Just node ->
+            { x = at.x - node.x, y = at.y - node.y }
+
+        Nothing ->
+            { x = 0, y = 0 }
+
+
+pin : String -> Array Node -> Array Node
+pin id nodes =
+    Array.map (\node -> { node | pinned = node.id == id }) nodes
+
+
+wasMoved : Drag -> Bool
+wasMoved drag =
+    case drag of
+        Still ->
+            False
+
+        Holding held ->
+            held.moved
+
+        Panning pan ->
+            pan.moved
+
+
+{-| A pixel or two of travel is a click with a shaky hand; more than that is a
+drag, and is not a link being followed.
+-}
+slop : Float
+slop =
+    3
+
+
+moved : Point -> Model -> Model
+moved at model =
+    case model.drag of
+        Still ->
+            model
+
+        Holding held ->
+            let
+                to =
+                    where_ model at
+            in
+            { model
+                | nodes =
+                    Array.map
+                        (\node ->
+                            if node.id == held.id then
+                                { node | x = to.x - held.grab.x, y = to.y - held.grab.y }
+
+                            else
+                                node
+                        )
+                        model.nodes
+                , drag = Holding { held | moved = True }
+                , alpha = max model.alpha 0.3
+            }
+
+        Panning pan ->
+            let
+                dx =
+                    at.x - pan.from.x
+
+                dy =
+                    at.y - pan.from.y
+            in
+            { model
+                | camera =
+                    { zoom = model.camera.zoom
+                    , x = model.camera.x - dx / model.camera.zoom
+                    , y = model.camera.y - dy / model.camera.zoom
+                    }
+                , drag =
+                    Panning
+                        { from = at
+                        , moved = pan.moved || abs dx + abs dy > slop
+                        }
+            }
+
+
+{-| Zoom about the pointer: whatever was under it stays under it.
+
+d3 scales by two to the power of the wheel's delta over 500, and so does this,
+so a notch of a wheel moves the picture by as much as it used to.
+-}
+zoomed : Model -> Float -> Point -> Camera
+zoomed model delta at =
+    let
+        before =
+            where_ model at
+
+        camera =
+            { zoom = clamp furthest closest (model.camera.zoom * (2 ^ (-delta / 500)))
+            , x = model.camera.x
+            , y = model.camera.y
+            }
+
+        after =
+            where_ { model | camera = camera } at
+    in
+    { camera
+        | x = camera.x + before.x - after.x
+        , y = camera.y + before.y - after.y
+    }
+
+
+withBox : Box -> Flags -> Flags
+withBox box flags =
+    { flags | box = box }
 
 
 subscriptions : Model -> Sub Msg
@@ -800,7 +1064,28 @@ subscriptions model =
             Sub.none
         , resized Resized
         , halt (\() -> Halted)
+
+        -- On the document rather than the node, because a hand that drags
+        -- quickly leaves the box behind, and letting go out there still has to
+        -- count as letting go.
+        , case model.drag of
+            Still ->
+                Sub.none
+
+            _ ->
+                Sub.batch
+                    [ Browser.Events.onMouseMove (Decode.map Moved point)
+                    , Browser.Events.onMouseUp (Decode.succeed Released)
+                    ]
         ]
+
+
+{-| Where a mouse event happened, in the window. -}
+point : Decoder Point
+point =
+    Decode.map2 Point
+        (Decode.field "clientX" Decode.float)
+        (Decode.field "clientY" Decode.float)
 
 
 
@@ -812,27 +1097,110 @@ href model id =
     model.flags.base ++ "/" ++ id
 
 
+{-| What the camera is looking at, as the four numbers of a `viewBox`.
+
+Zooming and panning are this and nothing else: no transform on the nodes, no
+second coordinate system to keep in step, and a stylesheet that goes on
+measuring strokes and font sizes in the units it was written in.
+-}
+viewBox : Model -> String
+viewBox model =
+    let
+        width =
+            model.flags.box.width / model.camera.zoom
+
+        height =
+            model.flags.box.height / model.camera.zoom
+    in
+    [ model.camera.x - width / 2
+    , model.camera.y - height / 2
+    , width
+    , height
+    ]
+        |> List.map String.fromFloat
+        |> String.join " "
+
+
 view : Model -> Html Msg
 view model =
-    let
-        box =
-            [ -(model.flags.size.width / 2)
-            , -(model.flags.size.height / 2)
-            , model.flags.size.width
-            , model.flags.size.height
-            ]
-                |> List.map String.fromFloat
-                |> String.join " "
-    in
     Svg.svg
         [ Attr.class "elm-graph-svg"
-        , Attr.viewBox box
+        , Attr.viewBox (viewBox model)
         , Attr.preserveAspectRatio "xMidYMid meet"
+
+        -- The page does not scroll while the graph is being zoomed, which is
+        -- what a reader reaching for the wheel over a graph means by it.
+        , Html.Events.custom "wheel"
+            (Decode.map2
+                (\delta at ->
+                    { message = Wheeled delta at
+                    , stopPropagation = False
+                    , preventDefault = True
+                    }
+                )
+                wheelDelta
+                point
+            )
         ]
-        [ Svg.g [ Attr.class "elm-graph-links" ] (List.map (viewLink model) model.links)
+        [ -- Something to catch a drag that starts on the background, filling
+          -- whatever the camera is looking at. `pointer-events` in the
+          -- stylesheet keeps it from swallowing anything else.
+          Svg.rect
+            [ Attr.class "elm-graph-field"
+            , Attr.x (String.fromFloat (model.camera.x - model.flags.box.width / model.camera.zoom / 2))
+            , Attr.y (String.fromFloat (model.camera.y - model.flags.box.height / model.camera.zoom / 2))
+            , Attr.width (String.fromFloat (model.flags.box.width / model.camera.zoom))
+            , Attr.height (String.fromFloat (model.flags.box.height / model.camera.zoom))
+            , Html.Events.custom "mousedown"
+                (Decode.map
+                    (\at ->
+                        { message = Panned at, stopPropagation = False, preventDefault = True }
+                    )
+                    point
+                )
+            ]
+            []
+        , Svg.g [ Attr.class "elm-graph-links" ] (List.map (viewLink model) model.links)
         , Svg.g [ Attr.class "elm-graph-nodes" ]
             (model.nodes |> Array.toList |> List.map (viewNode model))
         ]
+
+
+{-| How far the wheel turned, in pixels.
+
+A wheel reports its delta in pixels, lines or pages depending on the device and
+the browser, and the numbers are not comparable: a line is worth about 16
+pixels and a page about a boxful. Without this a mouse wheel in Firefox, which
+reports lines, would zoom a fortieth as far as the same wheel in Chrome.
+-}
+wheelDelta : Decoder Float
+wheelDelta =
+    Decode.map2
+        (\delta mode ->
+            case mode of
+                1 ->
+                    delta * 16
+
+                2 ->
+                    delta * 400
+
+                _ ->
+                    delta
+        )
+        (Decode.field "deltaY" Decode.float)
+        (Decode.oneOf [ Decode.field "deltaMode" Decode.int, Decode.succeed 0 ])
+
+
+{-| How much of a label is showing before anyone hovers anything.
+
+The old graph faded labels in as the reader zoomed, and the arithmetic is its:
+nothing at all until the picture is bigger than life size, then up towards
+opaque as it grows. Reading fifty labels at once is not reading; reading the
+half dozen you have zoomed into is.
+-}
+labelOpacity : Camera -> Float
+labelOpacity camera =
+    clamp 0 1 ((camera.zoom - 1) / 3.75)
 
 
 {-| Which ids the pointer is on or next to. Hovering nothing lights everything,
@@ -938,6 +1306,20 @@ viewNode model node =
         , Html.Attributes.attribute "data-router-ignore" ""
         , Svg.Events.onMouseOver (Hover (Just node.id))
         , Svg.Events.onMouseOut (Hover Nothing)
+
+        -- Picking a node up. The default is prevented because the browser
+        -- would otherwise start dragging the link itself, ghost image and all,
+        -- and it is stopped from reaching the background, which would pan.
+        , Html.Events.custom "mousedown"
+            (Decode.map
+                (\at ->
+                    { message = Grabbed node.id at
+                    , stopPropagation = True
+                    , preventDefault = True
+                    }
+                )
+                point
+            )
         , Html.Events.custom "click"
             (Decode.succeed
                 { message = Follow node.id
@@ -957,6 +1339,11 @@ viewNode model node =
             , Attr.x (String.fromFloat node.x)
             , Attr.y (String.fromFloat (node.y - radius node - 3))
             , Attr.textAnchor "middle"
+
+            -- A presentation attribute, which the stylesheet's `opacity` beats
+            -- -- that is what lets hovering a node show its label whatever the
+            -- zoom is doing.
+            , Attr.opacity (String.fromFloat (labelOpacity model.camera))
             ]
             [ Svg.text node.label ]
         ]
@@ -995,7 +1382,7 @@ flags0 : Flags
 flags0 =
     { slug = ""
     , base = ""
-    , size = { width = 250, height = 250 }
+    , box = { width = 250, height = 250, left = 0, top = 0 }
     , depth = 1
     , showTags = False
     , removeTags = []

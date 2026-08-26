@@ -403,6 +403,7 @@ impl Site {
         self.run(&self.root, "cargo", &check_args)?;
         self.run(&self.root, "cargo", &test_args)?;
         self.wasm(Mode::Dev)?;
+        self.elm_test()?;
         self.check_typescript()
     }
 

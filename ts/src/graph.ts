@@ -22,16 +22,26 @@ interface ElmSubscription<T> {
   subscribe(handler: (value: T) => void): void
 }
 
-interface Size {
+/**
+ * The container, as Elm needs it: how big, and where in the window.
+ *
+ * The corner is there because a mouse event says where it happened in the
+ * window and the graph works in the units of its own drawing. Elm can read
+ * properties off an event but cannot call `getBoundingClientRect`, so the
+ * measuring happens here.
+ */
+interface Box {
   width: number
   height: number
+  left: number
+  top: number
 }
 
 interface ElmApp {
   ports: {
     follow: ElmSubscription<string>
     failed: ElmSubscription<string>
-    resized: ElmPort<Size>
+    resized: ElmPort<Box>
     halt: ElmPort<null>
   }
 }
@@ -168,13 +178,17 @@ function pages(): Promise<Page[]> {
   return index
 }
 
-function size(container: HTMLElement): Size {
+function size(container: HTMLElement): Box {
+  const box = container.getBoundingClientRect()
+
   return {
-    width: Math.max(container.clientWidth, 100),
+    width: Math.max(box.width, 100),
     // A container that has not been laid out yet -- the whole-site graph,
     // before its dialog is opened -- measures zero, and a graph in a box of no
     // height is a graph nobody can see.
-    height: Math.max(container.clientHeight, 250),
+    height: Math.max(box.height, 250),
+    left: box.left,
+    top: box.top,
   }
 }
 
@@ -303,9 +317,42 @@ function expandable(): void {
   }
 }
 
+/**
+ * The corner moves when the page scrolls, and nothing tells the graph that: a
+ * `ResizeObserver` watches the size and says nothing about where the box has
+ * got to. Without this, zooming a graph the reader has scrolled to would zoom
+ * about the wrong point.
+ *
+ * Once a frame at most, and only while there is a graph on the page.
+ */
+function watchScrolling(): void {
+  if (scrolling) return
+  scrolling = true
+
+  let waiting = false
+  addEventListener(
+    "scroll",
+    () => {
+      if (waiting) return
+      waiting = true
+
+      requestAnimationFrame(() => {
+        waiting = false
+        for (const container of document.querySelectorAll<HTMLElement>(".elm-graph-container")) {
+          mounts.get(container)?.app.ports.resized.send(size(container))
+        }
+      })
+    },
+    { passive: true, capture: true },
+  )
+}
+
+let scrolling = false
+
 function boot(): void {
   initialise()
   expandable()
+  watchScrolling()
 }
 
 if (document.readyState === "loading") {

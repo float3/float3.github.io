@@ -25,6 +25,13 @@ const OUTPUT: &str = "content/js/elm.js";
 /// it can be read.
 const RAW: &str = "content/js/elm.raw.js";
 
+/// The runner, when it has to come from npm.
+///
+/// elm-test's versions are named for the compiler they drive, and the plain
+/// `latest` is `0.19.2-1`, for a compiler that is not out: it writes an
+/// elm.json asking for Elm 0.19.2 and then refuses the 0.19.1 that answers.
+const ELM_TEST: &str = "elm-test@0.19.1-revision12";
+
 impl Site {
     pub(crate) fn elm(&self, mode: Mode) -> Result<()> {
         let source = self.root.join("quartz-local/elm-graph");
@@ -52,6 +59,30 @@ impl Site {
                 self.compile(&source, &output, mode)
             }
         }
+    }
+
+    /// Runs the graph's own tests.
+    ///
+    /// They are the half of it a browser cannot be made to show: the forces
+    /// settling a link to the length it was asked for, a drag carrying a node
+    /// by exactly the distance the mouse moved, a wheel keeping whatever is
+    /// under the pointer under the pointer. The compiler cannot check any of
+    /// that, and neither can a screenshot.
+    pub(crate) fn elm_test(&self) -> Result<()> {
+        let source = self.root.join("quartz-local/elm-graph");
+        if !source.join("tests").is_dir() {
+            return Err(Box::new(SiteError::new(
+                "no tests directory in quartz-local/elm-graph",
+            )));
+        }
+
+        // The dev shell has it; a machine without nix gets it from npm, which
+        // is where the pinned version above earns its keep.
+        if command_succeeds("elm-test", &["--version"]) {
+            return self.run(&source, "elm-test", &[]);
+        }
+
+        self.run_bun(&source, &os_args(&["x", ELM_TEST]))
     }
 
     fn compile(&self, source: &Path, output: &Path, mode: Mode) -> Result<()> {

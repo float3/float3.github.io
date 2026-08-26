@@ -29,6 +29,7 @@
             cargo-hack
             clang
             elmPackages.elm
+            elmPackages.elm-test
             git
             gcc
             gnugrep

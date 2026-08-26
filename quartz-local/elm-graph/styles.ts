@@ -34,6 +34,18 @@ export const styles = `
   height: 100%;
 }
 
+/* The background, which is what a drag that misses a node lands on. It has to
+   be painted to be hit at all, since fill:none is not hit-tested, so it is
+   painted in nothing. */
+.elm-graph-field {
+  fill: transparent;
+  cursor: grab;
+}
+
+.elm-graph-svg:active .elm-graph-field {
+  cursor: grabbing;
+}
+
 .elm-graph-link {
   stroke: var(--lightgray);
   stroke-width: 1px;
@@ -53,6 +65,12 @@ export const styles = `
 .elm-graph-node {
   cursor: pointer;
   transition: opacity 0.2s ease;
+}
+
+/* A node being dragged should not also be a piece of text being selected. */
+.elm-graph-svg {
+  user-select: none;
+  touch-action: none;
 }
 
 .elm-graph-node circle {
