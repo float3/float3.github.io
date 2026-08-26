@@ -525,7 +525,7 @@ mod tests {
         let width = |svg: &str| {
             svg.split("viewBox=\"0 0 ")
                 .nth(1)
-                .and_then(|rest| rest.split(' ').nth(0).map(str::to_string))
+                .and_then(|rest| rest.split(' ').next().map(str::to_string))
                 .and_then(|width| width.parse::<f64>().ok())
                 .unwrap()
         };
