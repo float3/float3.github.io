@@ -41,6 +41,7 @@ const config: Configuration = {
     audiooscilloscope: "./dist/audiooscilloscope.js",
     background: "./dist/background.js",
     you: "./dist/you.js",
+    audiolink: "./dist/audiolink.js",
     insurance: "./dist/insurance.js",
     comments: "./dist/comments.js",
   },
