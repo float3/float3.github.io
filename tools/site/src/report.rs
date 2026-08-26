@@ -145,9 +145,9 @@ fn command_text(cwd: &Path, program: &str, args: &[&str]) -> String {
 
     match output {
         Ok(output) => {
-            let mut text = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            let mut text = strip_ansi(&String::from_utf8_lossy(&output.stdout));
             if text.is_empty() {
-                text = String::from_utf8_lossy(&output.stderr).trim().to_string();
+                text = strip_ansi(&String::from_utf8_lossy(&output.stderr));
             }
             if text.is_empty() {
                 "not installed".to_string()
@@ -159,12 +159,85 @@ fn command_text(cwd: &Path, program: &str, args: &[&str]) -> String {
     }
 }
 
+/// Whatever a tool printed, without the colour it printed it in.
+///
+/// These strings are read off a terminal and written into a page, where an
+/// escape sequence survives as visible rubbish: the escape character itself
+/// disappears into the HTML and `[39m[22m` is left sitting in the text. Only
+/// CSI sequences need recognising -- `ESC [` up to a byte between `@` and `~`,
+/// which is what colour is made of; any other escape is dropped along with the
+/// character that follows it.
+fn strip_ansi(text: &str) -> String {
+    let mut plain = String::with_capacity(text.len());
+    let mut characters = text.chars();
+
+    while let Some(character) = characters.next() {
+        if character != '\u{1b}' {
+            plain.push(character);
+            continue;
+        }
+
+        if characters.next() == Some('[') {
+            for byte in characters.by_ref() {
+                if ('@'..='~').contains(&byte) {
+                    break;
+                }
+            }
+        }
+    }
+
+    plain.trim().to_string()
+}
+
 fn webpack_version(ts_dir: &Path) -> String {
-    let full = command_text(ts_dir, "bun", &["run", "webpack", "--version"]);
-    if let Some((_, packages)) = full.split_once("Packages:") {
-        packages.trim().replace('\n', "<br>")
+    webpack_versions(&command_text(
+        ts_dir,
+        "bun",
+        &["run", "webpack", "--version"],
+    ))
+}
+
+/// The versions out of `webpack --version`, which does not print a version.
+///
+/// webpack-cli prints a table of every webpack package installed, in colour,
+/// between two box-drawing rules:
+///
+/// ```text
+/// ⬡ Packages:
+/// ──────────────────────────────
+///   webpack:  ^5.109.2 → 5.109.2
+/// ──────────────────────────────
+/// ```
+///
+/// What went into the report was everything after the word `Packages:`, with
+/// the newlines turned into `<br>`. Three things were wrong with that at once.
+/// The `<br>` went through `escape_html` on its way out and arrived as that
+/// literal text; the rules came along with the rows; and the split landed in
+/// the middle of the heading's colour codes, so the field opened with
+/// `[39m[22m`.
+///
+/// What is wanted is the right-hand side of each row: the version actually
+/// resolved, after the arrow, for every package that names one.
+fn webpack_versions(output: &str) -> String {
+    let versions: Vec<String> = output
+        .lines()
+        .filter_map(|line| {
+            let (name, rest) = line.split_once(':')?;
+
+            // The heading has no arrow, and a rule has neither.
+            let version = rest.rsplit('→').next()?.trim();
+            if !rest.contains('→') || !version.starts_with(|c: char| c.is_ascii_digit()) {
+                return None;
+            }
+
+            Some(format!("{} {}", name.trim(), version))
+        })
+        .collect();
+
+    if versions.is_empty() {
+        output.to_string()
     } else {
-        full
+        versions.join(", ")
     }
 }
 
@@ -327,4 +400,47 @@ fn escape_html(value: &str) -> String {
         }
     }
     escaped
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The escape character survives into the page as nothing at all, so a
+    /// sequence left in leaves its tail behind as text.
+    #[test]
+    fn colour_does_not_reach_the_page() {
+        assert_eq!(
+            strip_ansi("\u{1b}[1m\u{1b}[32m5.109.2\u{1b}[39m\u{1b}[22m"),
+            "5.109.2"
+        );
+    }
+
+    #[test]
+    fn plain_output_is_left_alone() {
+        assert_eq!(strip_ansi("  wasm-pack 0.13.1\n"), "wasm-pack 0.13.1");
+    }
+
+    #[test]
+    fn the_webpack_table_becomes_the_versions_in_it() {
+        let output = strip_ansi(concat!(
+            "\u{1b}[1m\u{1b}[36m⬡\u{1b}[39m\u{1b}[22m \u{1b}[1m\u{1b}[36mPackages:\u{1b}[39m\u{1b}[22m\n",
+            "\u{1b}[2m────────────\u{1b}[22m\n",
+            "  \u{1b}[1mterser-webpack-plugin:\u{1b}[22m  ^5.6.1 → 5.6.1\n",
+            "  \u{1b}[1mwebpack:              \u{1b}[22m  ^5.109.2 → 5.109.2\n",
+            "  \u{1b}[1mwebpack-cli:          \u{1b}[22m  ^7.2.2 → 7.2.2\n",
+            "\u{1b}[2m────────────\u{1b}[22m",
+        ));
+
+        assert_eq!(
+            webpack_versions(&output),
+            "terser-webpack-plugin 5.6.1, webpack 5.109.2, webpack-cli 7.2.2"
+        );
+    }
+
+    /// A webpack that goes back to printing a version keeps working.
+    #[test]
+    fn something_that_is_not_a_table_survives_whole() {
+        assert_eq!(webpack_versions("5.109.2"), "5.109.2");
+    }
 }
