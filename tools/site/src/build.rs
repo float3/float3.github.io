@@ -5,10 +5,32 @@ use crate::{
 };
 use serde_json::Value as JsonValue;
 use std::collections::{BTreeSet, VecDeque};
+use std::ffi::OsString;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Mutex;
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+use std::thread;
 use std::time::Instant;
 use toml::{Table, Value};
+
+/// How many tool builds to have in flight at once.
+///
+/// Cargo serialises the compiles on its lock over the shared target directory,
+/// so this is not about compiling in parallel: it is about having the next
+/// compile queued behind the lock while the last one's wasm-opt is still
+/// running. A handful is all that buys anything, and every extra one is
+/// another wasm-opt holding a whole module in memory.
+fn workers(tools: usize) -> usize {
+    const MOST: usize = 4;
+
+    thread::available_parallelism()
+        .map(usize::from)
+        .unwrap_or(1)
+        .min(MOST)
+        .min(tools)
+        .max(1)
+}
 
 /// The DOOM binary wasm-doom ships. Its `exports` map keeps webpack from
 /// importing it, and left to itself the library fetches it from a CDN, so it is
@@ -88,28 +110,7 @@ impl Site {
         let tools = self.wasm_tools(&wasm_dir)?;
         self.check_wasm_tool_wiring(&tools)?;
 
-        for tool in &tools {
-            let mut args = base_args.clone();
-            args.extend(os_args(&["--out-dir", &format!("pkg/{tool}"), "--"]));
-            args.extend(os_args(&[
-                "--features",
-                "console_error_panic_hook",
-                "--features",
-                tool,
-            ]));
-
-            self.run_with_env(
-                &wasm_dir,
-                "wasm-pack",
-                &args,
-                &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
-            )?;
-
-            self.patch_wasm_package_name(&wasm_dir.join(format!("pkg/{tool}")), tool)?;
-
-            // wasm-pack drops a .gitignore in every output directory
-            remove_file_if_exists(&wasm_dir.join(format!("pkg/{tool}/.gitignore")))?;
-        }
+        self.build_wasm_tools(&wasm_dir, &tools, &base_args)?;
 
         let ts_dir = self.root.join("ts");
         self.bun_install(&ts_dir, InstallMode::Locked)?;
@@ -145,6 +146,103 @@ impl Site {
 
         fs::copy(&source, self.root.join("content/js").join(name))?;
         Ok(())
+    }
+
+    /// Builds every tool's package, several at a time.
+    ///
+    /// They are independent -- one package per tool, each into its own output
+    /// directory -- but they were built one after another, and for most of a
+    /// build the machine had nothing to do. Cargo locks the shared target
+    /// directory, so the compiles still take their turn; what now overlaps is
+    /// one tool's wasm-bindgen and wasm-opt with the next tool's compile, and
+    /// wasm-opt over the 10 MB Chinese dictionary is the longest single step
+    /// there is.
+    fn build_wasm_tools(
+        &self,
+        wasm_dir: &Path,
+        tools: &[String],
+        base_args: &[OsString],
+    ) -> Result<()> {
+        // The first one goes alone. wasm-pack installs wasm-bindgen and
+        // wasm-opt into a shared cache the first time it needs them, and
+        // several copies racing to populate it is not a race worth having.
+        let (first, rest) = tools
+            .split_first()
+            .ok_or_else(|| SiteError::new("no tools to build"))?;
+        print!("{}", self.build_wasm_tool(wasm_dir, first, base_args)?);
+
+        let next = AtomicUsize::new(0);
+        let broken = AtomicBool::new(false);
+        let printing = Mutex::new(());
+        let failures: Mutex<Vec<String>> = Mutex::new(Vec::new());
+
+        thread::scope(|scope| {
+            for _ in 0..workers(rest.len()) {
+                scope.spawn(|| {
+                    // Nothing new is started once a tool has failed. The
+                    // failure is usually in code they all share, and twelve
+                    // copies of one compiler error, each with a build log
+                    // attached, is not twelve times as useful as one.
+                    while !broken.load(Ordering::Relaxed) {
+                        let index = next.fetch_add(1, Ordering::Relaxed);
+                        let Some(tool) = rest.get(index) else { return };
+
+                        match self.build_wasm_tool(wasm_dir, tool, base_args) {
+                            // One lock, so a finished build's log lands in one
+                            // piece rather than shuffled into another's.
+                            Ok(log) => {
+                                let _guard = printing.lock().expect("poisoned");
+                                print!("{log}");
+                            }
+                            // As text: the error type here is not one a thread
+                            // can carry back out.
+                            Err(error) => {
+                                broken.store(true, Ordering::Relaxed);
+                                failures.lock().expect("poisoned").push(error.to_string());
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        let failures = failures.into_inner().expect("poisoned");
+        if failures.is_empty() {
+            return Ok(());
+        }
+
+        Err(Box::new(SiteError::new(failures.join("\n"))))
+    }
+
+    /// One tool's package, and the log of building it.
+    fn build_wasm_tool(
+        &self,
+        wasm_dir: &Path,
+        tool: &str,
+        base_args: &[OsString],
+    ) -> Result<String> {
+        let mut args = base_args.to_vec();
+        args.extend(os_args(&["--out-dir", &format!("pkg/{tool}"), "--"]));
+        args.extend(os_args(&[
+            "--features",
+            "console_error_panic_hook",
+            "--features",
+            tool,
+        ]));
+
+        let log = self.run_captured(
+            wasm_dir,
+            "wasm-pack",
+            &args,
+            &[("RUSTFLAGS", r#"--cfg getrandom_backend="wasm_js""#)],
+        )?;
+
+        self.patch_wasm_package_name(&wasm_dir.join(format!("pkg/{tool}")), tool)?;
+
+        // wasm-pack drops a .gitignore in every output directory
+        remove_file_if_exists(&wasm_dir.join(format!("pkg/{tool}/.gitignore")))?;
+
+        Ok(log)
     }
 
     fn start_typescript_watchers(&self) -> Result<Vec<ChildGuard>> {

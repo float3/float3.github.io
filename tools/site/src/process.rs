@@ -153,6 +153,61 @@ impl Site {
         }
     }
 
+    /// Runs a command and keeps everything it says until it is done.
+    ///
+    /// For commands that run alongside each other: twelve wasm builds sharing
+    /// this process's stdout interleave line by line into something nobody can
+    /// read. The caller prints the returned log when the command finishes, so
+    /// each build's output arrives in one piece.
+    pub(crate) fn run_captured<P>(
+        &self,
+        cwd: &Path,
+        program: P,
+        args: &[OsString],
+        envs: &[(&str, &str)],
+    ) -> Result<String>
+    where
+        P: AsRef<OsStr>,
+    {
+        let program = program.as_ref();
+        let relative = cwd.strip_prefix(&self.root).unwrap_or(cwd);
+        let mut log = format!(
+            "$ (cd {}) {}\n",
+            if relative.as_os_str().is_empty() {
+                ".".to_string()
+            } else {
+                relative.display().to_string()
+            },
+            format_command(program, args)
+        );
+
+        let mut command = Command::new(program);
+        command.args(args).current_dir(cwd);
+        for (key, value) in envs {
+            command.env(key, value);
+        }
+
+        let output = command.output().map_err(|source| {
+            SiteError(format!(
+                "failed to run {}: {source}",
+                format_command(program, args)
+            ))
+        })?;
+
+        log.push_str(&String::from_utf8_lossy(&output.stdout));
+        log.push_str(&String::from_utf8_lossy(&output.stderr));
+
+        if output.status.success() {
+            return Ok(log);
+        }
+
+        Err(Box::new(SiteError(format!(
+            "command failed with {}: {}\n{log}",
+            output.status,
+            format_command(program, args)
+        ))))
+    }
+
     pub(crate) fn output_optional<P>(
         &self,
         cwd: &Path,
