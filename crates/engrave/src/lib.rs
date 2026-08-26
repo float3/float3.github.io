@@ -540,6 +540,78 @@ mod tests {
         assert!(width(&long) > width(&short));
     }
 
+    /// Everything the bar draws has to land inside the bar, because an SVG root
+    /// clips and a notehead outside the viewBox is a notehead that is simply
+    /// not there. Checked over the shapes a chord can actually take -- clusters,
+    /// stacked accidentals, notes far above and below the staff -- since each
+    /// of those is a different way for the drawing to reach past its own edge.
+    #[test]
+    fn nothing_is_drawn_outside_the_picture() {
+        let cases: [&[&str]; 8] = [
+            &["C4", "E4", "G4"],
+            &["C4", "D4", "E4"],
+            &["C#4", "D#4"],
+            &["C-4", "E-4", "G-4", "B-4"],
+            &["C3", "E3", "G3", "B-3"],
+            &["G5", "B5", "D6"],
+            &["A0", "C8"],
+            &["C2"],
+        ];
+
+        for notes in cases {
+            let svg = chord_svg("a chord", &pitches(notes)).unwrap();
+            let (width, height) = view_box(&svg);
+
+            for (x, y) in drawn_points(&svg) {
+                assert!(
+                    (0.0..=width).contains(&x) && (0.0..=height).contains(&y),
+                    "{notes:?} draws at ({x}, {y}), outside {width}x{height}"
+                );
+            }
+        }
+    }
+
+    fn view_box(svg: &str) -> (f64, f64) {
+        let box_ = svg
+            .split("viewBox=\"0 0 ")
+            .nth(1)
+            .and_then(|rest| rest.split('"').next())
+            .unwrap();
+        let mut parts = box_.split(' ').map(|n| n.parse::<f64>().unwrap());
+        (parts.next().unwrap(), parts.next().unwrap())
+    }
+
+    /// Every point the body places something at. Glyphs are drawn about their
+    /// own origin, so a glyph's own extent is not counted here -- what this
+    /// catches is a placement that has left the picture altogether.
+    fn drawn_points(svg: &str) -> Vec<(f64, f64)> {
+        let number = |fragment: &str, key: &str| {
+            fragment
+                .split(&format!("{key}=\""))
+                .nth(1)
+                .and_then(|rest| rest.split('"').next())
+                .and_then(|value| value.parse::<f64>().ok())
+        };
+
+        let mut points = Vec::new();
+        for element in svg.split('<').skip(1) {
+            if element.starts_with("use ") || element.starts_with("text ") {
+                if let (Some(x), Some(y)) = (number(element, "x"), number(element, "y")) {
+                    points.push((x, y));
+                }
+            } else if element.starts_with("line ") {
+                for (x, y) in [("x1", "y1"), ("x2", "y2")] {
+                    if let (Some(x), Some(y)) = (number(element, x), number(element, y)) {
+                        points.push((x, y));
+                    }
+                }
+            }
+        }
+
+        assert!(!points.is_empty(), "found nothing drawn at all");
+        points
+    }
+
     #[test]
     fn draws_an_empty_bar_when_nothing_is_held() {
         let svg = chord_svg("", &[]).unwrap();

@@ -67,7 +67,10 @@ pub(crate) fn remove_file_if_exists(path: &Path) -> Result<()> {
     Ok(())
 }
 
-pub(crate) fn remove_files(path: &Path) -> Result<()> {
+/// Deletes the `*.LICENSE.txt` files webpack leaves beside the bundles it
+/// minifies. Named for what it removes: `remove_files` read as though it
+/// emptied the directory, next to a call that actually did.
+pub(crate) fn remove_license_files(path: &Path) -> Result<()> {
     if !path.is_dir() {
         return Ok(());
     }

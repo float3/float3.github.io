@@ -36,7 +36,7 @@ use std::fmt;
 use std::path::PathBuf;
 
 pub(crate) use fsutil::{
-    find_repo_root, remove_dir_if_exists, remove_file_if_exists, remove_files,
+    find_repo_root, remove_dir_if_exists, remove_file_if_exists, remove_license_files,
 };
 pub(crate) use process::{ChildGuard, InstallMode, os_args};
 

@@ -1,7 +1,7 @@
 use crate::report;
 use crate::{
     ChildGuard, InstallMode, Mode, Result, Site, SiteError, os_args, remove_dir_if_exists,
-    remove_file_if_exists, remove_files,
+    remove_file_if_exists, remove_license_files,
 };
 use serde_json::Value as JsonValue;
 use std::collections::{BTreeSet, VecDeque};
@@ -43,10 +43,7 @@ impl Site {
             self.warn("building in development mode");
         }
 
-        remove_dir_if_exists(&self.root.join("content/js"))?;
         self.wasm(mode)?;
-        remove_files(&self.root.join("content/js"))?;
-
         self.bun_install(&self.root, InstallMode::Locked)?;
 
         let mut args = os_args(&["quartz/bootstrap-cli.mts", "build"]);
@@ -66,6 +63,14 @@ impl Site {
     }
 
     pub(crate) fn wasm(&self, mode: Mode) -> Result<()> {
+        // Emptied here rather than in `build`, because this is the step that
+        // fills it and `site wasm` runs on its own. webpack writes into the
+        // directory without clearing it and names every wasm chunk after its
+        // contents, so a directory nobody empties keeps a copy of every chunk
+        // ever built: 110 MB of them had piled up before this moved.
+        let content_js = self.root.join("content/js");
+        remove_dir_if_exists(&content_js)?;
+
         let wasm_dir = self.root.join("wasm/wasm");
         let mut base_args = os_args(&["build", "--target", "bundler"]);
 
@@ -121,7 +126,8 @@ impl Site {
             ]),
         )?;
 
-        self.copy_doom_wasm()
+        self.copy_doom_wasm()?;
+        remove_license_files(&content_js)
     }
 
     /// Puts the DOOM binary where `ts/src/doom.ts` expects it. webpack cannot,
