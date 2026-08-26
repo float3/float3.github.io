@@ -32,6 +32,49 @@ fn workers(tools: usize) -> usize {
         .max(1)
 }
 
+/// Removes anything in the package directory that is not one of this build's
+/// tools.
+///
+/// Nothing had ever cleared it, so it still held a whole package from before
+/// the split into one package per tool -- `wasm.js`, `wasm_bg.wasm` and a
+/// LICENSE, a month stale. Being stale is the smaller half: a package left
+/// behind for a tool that is no longer built goes on answering `ts/`'s `file:`
+/// dependency on it, so the bundle can keep resolving a tool the build has
+/// stopped producing, which is the shape of the `pokemon` bug the wiring check
+/// exists to catch.
+///
+/// The live packages are left where they are for wasm-pack to write over.
+/// Emptying the directory outright looks tidier and is not: bun installs a
+/// `file:` dependency as a directory of symlinks pointing at the package file
+/// by file, so removing one out from under `ts/node_modules` leaves every link
+/// dangling, and the `bun install` that follows does not reliably mend them.
+fn prune_wasm_packages(pkg: &Path, tools: &[String]) -> Result<()> {
+    if !pkg.is_dir() {
+        return Ok(());
+    }
+
+    for entry in fs::read_dir(pkg)? {
+        let entry = entry?;
+        let name = entry.file_name();
+        let name = name.to_string_lossy();
+
+        // wasm-pack writes this, and `wasm/wasm/.gitignore` covers the
+        // directory anyway; either way it is not something to delete.
+        if name == ".gitignore" || tools.iter().any(|tool| *tool == name) {
+            continue;
+        }
+
+        let path = entry.path();
+        if path.is_dir() {
+            fs::remove_dir_all(&path)?;
+        } else {
+            fs::remove_file(&path)?;
+        }
+    }
+
+    Ok(())
+}
+
 /// The DOOM binary wasm-doom ships. Its `exports` map keeps webpack from
 /// importing it, and left to itself the library fetches it from a CDN, so it is
 /// copied beside the bundle instead. `ts/src/doom.ts` names the same path.
@@ -110,6 +153,7 @@ impl Site {
         let tools = self.wasm_tools(&wasm_dir)?;
         self.check_wasm_tool_wiring(&tools)?;
 
+        prune_wasm_packages(&wasm_dir.join("pkg"), &tools)?;
         self.build_wasm_tools(&wasm_dir, &tools, &base_args)?;
 
         let ts_dir = self.root.join("ts");
