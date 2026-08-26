@@ -6,10 +6,24 @@ import {
   aoc_day_count_for_year,
   aoc_day_status,
   aoc_problem_count_for_day,
+  highlight_css,
   retrieve_html,
   retrieve_problem,
   solve,
 } from "wasm-aoc"
+
+// The solutions are highlighted once and coloured by class, so the palette is
+// one stylesheet installed once. It used to be two coloured copies of every
+// solution in the wasm, re-rendered into all 205 panels on a theme change.
+function installHighlightStyles(): void {
+  const id = "aoc-highlight-styles"
+  if (document.getElementById(id)) return
+
+  const style = document.createElement("style")
+  style.id = id
+  style.textContent = highlight_css()
+  document.head.appendChild(style)
+}
 
 export interface TabConfig {
   years: number
@@ -98,7 +112,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     Array.from({ length: days }, () => Array.from({ length: problems }, () => false)),
   )
 
-  let isDark = document.documentElement.getAttribute("saved-theme") === "dark"
+  installHighlightStyles()
 
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     for (let d = 1; d <= dayCountForYear(y); d++) {
@@ -117,7 +131,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
         const codeArea = document.createElement("div")
         codeArea.className = "big-field code-field"
-        const code = retrieve_html(y, d, p, isDark)
+        const code = retrieve_html(y, d, p)
         complete[y - START_YEAR][d - 1][p - 1] = !code.includes("todo!")
         codeArea.innerHTML = code
 
@@ -341,35 +355,6 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
     url.searchParams.set("problem", activeProblem.toString())
     history.replaceState(null, "", url.toString())
   }
-
-  function updateThemeForAllFields(newIsDark: boolean) {
-    fieldsMap.forEach((fieldsDiv, key) => {
-      const [yStr, dStr, pStr] = key.split("-")
-      const y = parseInt(yStr, 10)
-      const d = parseInt(dStr, 10)
-      const p = parseInt(pStr, 10)
-
-      const newCode = retrieve_html(y, d, p, newIsDark)
-      const codeArea = fieldsDiv.querySelector(".code-field") as HTMLDivElement | null
-      if (codeArea) codeArea.innerHTML = newCode
-    })
-    isDark = newIsDark
-  }
-
-  function setupThemeObserver() {
-    const observer = new MutationObserver(() => {
-      const newIsDark = document.documentElement.getAttribute("saved-theme") === "dark"
-      if (newIsDark !== isDark) {
-        updateThemeForAllFields(newIsDark)
-      }
-    })
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["saved-theme"],
-    })
-  }
-
-  setupThemeObserver()
 
   updateYearTabs()
   updateDayTabs()

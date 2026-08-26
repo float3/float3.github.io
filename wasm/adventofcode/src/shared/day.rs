@@ -27,27 +27,10 @@ macro_rules! define_day_mod {
         }
 
         #[cfg(target_arch = "wasm32")]
-        pub(super) fn retrieve_html(problem: u8, darkmode: bool) -> String {
-            match darkmode {
-                true => retrieve_dark_html(problem),
-                false => retrieve_light_html(problem),
-            }
-        }
-
-        #[cfg(target_arch = "wasm32")]
-        fn retrieve_dark_html(problem: u8) -> String {
+        pub(super) fn retrieve_html(problem: u8) -> String {
             match problem {
-                1 => include_str!("solution1-dark.html").to_string(),
-                2 => include_str!("solution2-dark.html").to_string(),
-                _ => panic!("Html not found"),
-            }
-        }
-
-        #[cfg(target_arch = "wasm32")]
-        fn retrieve_light_html(problem: u8) -> String {
-            match problem {
-                1 => include_str!("solution1-light.html").to_string(),
-                2 => include_str!("solution2-light.html").to_string(),
+                1 => include_str!("solution1.html").to_string(),
+                2 => include_str!("solution2.html").to_string(),
                 _ => panic!("Html not found"),
             }
         }
@@ -93,25 +76,9 @@ macro_rules! define_one_problem_day_mod {
         }
 
         #[cfg(target_arch = "wasm32")]
-        pub(super) fn retrieve_html(problem: u8, darkmode: bool) -> String {
-            match darkmode {
-                true => retrieve_dark_html(problem),
-                false => retrieve_light_html(problem),
-            }
-        }
-
-        #[cfg(target_arch = "wasm32")]
-        fn retrieve_dark_html(problem: u8) -> String {
+        pub(super) fn retrieve_html(problem: u8) -> String {
             match problem {
-                1 => include_str!("solution1-dark.html").to_string(),
-                _ => panic!("Html not found"),
-            }
-        }
-
-        #[cfg(target_arch = "wasm32")]
-        fn retrieve_light_html(problem: u8) -> String {
-            match problem {
-                1 => include_str!("solution1-light.html").to_string(),
+                1 => include_str!("solution1.html").to_string(),
                 _ => panic!("Html not found"),
             }
         }

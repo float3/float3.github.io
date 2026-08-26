@@ -68,20 +68,20 @@ pub(super) fn retrieve_code(day: u32, problem: u8) -> String {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub(super) fn retrieve_html(day: u32, problem: u8, dark: bool) -> String {
+pub(super) fn retrieve_html(day: u32, problem: u8) -> String {
     match day {
-        1 => day01::retrieve_html(problem, dark),
-        2 => day02::retrieve_html(problem, dark),
-        3 => day03::retrieve_html(problem, dark),
-        4 => day04::retrieve_html(problem, dark),
-        5 => day05::retrieve_html(problem, dark),
-        6 => day06::retrieve_html(problem, dark),
-        7 => day07::retrieve_html(problem, dark),
-        8 => day08::retrieve_html(problem, dark),
-        9 => day09::retrieve_html(problem, dark),
-        10 => day10::retrieve_html(problem, dark),
-        11 => day11::retrieve_html(problem, dark),
-        12 => day12::retrieve_html(problem, dark),
+        1 => day01::retrieve_html(problem),
+        2 => day02::retrieve_html(problem),
+        3 => day03::retrieve_html(problem),
+        4 => day04::retrieve_html(problem),
+        5 => day05::retrieve_html(problem),
+        6 => day06::retrieve_html(problem),
+        7 => day07::retrieve_html(problem),
+        8 => day08::retrieve_html(problem),
+        9 => day09::retrieve_html(problem),
+        10 => day10::retrieve_html(problem),
+        11 => day11::retrieve_html(problem),
+        12 => day12::retrieve_html(problem),
         _ => panic!("Day not found"),
     }
 }

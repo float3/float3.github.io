@@ -11,6 +11,12 @@ mod aoc2024;
 mod aoc2025;
 pub(crate) mod shared;
 
+/// The palette the highlighted solutions refer to by class, written by
+/// `build.rs` alongside them. Sixteen colours in two themes, rather than a
+/// second coloured copy of every solution.
+#[cfg(target_arch = "wasm32")]
+pub const HIGHLIGHT_CSS: &str = include_str!("shared/highlight.css");
+
 pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
     match year {
         2015 => aoc2015::retrieve_problem(day, problem),
@@ -47,19 +53,19 @@ pub fn retrieve_code(year: u32, day: u32, problem: u8) -> String {
 }
 
 #[cfg(target_arch = "wasm32")]
-pub fn retrieve_html(year: u32, day: u32, problem: u8, dark: bool) -> String {
+pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
     match year {
-        2015 => aoc2015::retrieve_html(day, problem, dark),
-        2016 => aoc2016::retrieve_html(day, problem, dark),
-        2017 => aoc2017::retrieve_html(day, problem, dark),
-        2018 => aoc2018::retrieve_html(day, problem, dark),
-        2019 => aoc2019::retrieve_html(day, problem, dark),
-        2020 => aoc2020::retrieve_html(day, problem, dark),
-        2021 => aoc2021::retrieve_html(day, problem, dark),
-        2022 => aoc2022::retrieve_html(day, problem, dark),
-        2023 => aoc2023::retrieve_html(day, problem, dark),
-        2024 => aoc2024::retrieve_html(day, problem, dark),
-        2025 => aoc2025::retrieve_html(day, problem, dark),
+        2015 => aoc2015::retrieve_html(day, problem),
+        2016 => aoc2016::retrieve_html(day, problem),
+        2017 => aoc2017::retrieve_html(day, problem),
+        2018 => aoc2018::retrieve_html(day, problem),
+        2019 => aoc2019::retrieve_html(day, problem),
+        2020 => aoc2020::retrieve_html(day, problem),
+        2021 => aoc2021::retrieve_html(day, problem),
+        2022 => aoc2022::retrieve_html(day, problem),
+        2023 => aoc2023::retrieve_html(day, problem),
+        2024 => aoc2024::retrieve_html(day, problem),
+        2025 => aoc2025::retrieve_html(day, problem),
         _ => panic!("Year not found: {}", year),
     }
 }

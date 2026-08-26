@@ -40,8 +40,18 @@ pub fn retrieve_problem(year: u32, day: u32, problem: u8) -> String {
 
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
-pub fn retrieve_html(year: u32, day: u32, problem: u8, dark: bool) -> String {
-    adventofcode::retrieve_html(year, day, problem, dark)
+pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
+    adventofcode::retrieve_html(year, day, problem)
+}
+
+/// The colours the highlighted solutions refer to by class, in both themes.
+///
+/// One stylesheet the page installs once, rather than a second coloured copy of
+/// every solution and a re-render of all of them whenever the theme changes.
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn highlight_css() -> String {
+    adventofcode::HIGHLIGHT_CSS.to_string()
 }
 
 #[wasm_bindgen]
