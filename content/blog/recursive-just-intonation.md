@@ -216,31 +216,6 @@ octave, multiply or divide the whole row by `2`.
 | A#/Bb | <span class="recursive-note-cell note-c" data-note="C"><code>261.626 Hz</code><small class="tet-cents">0.000 cents</small></span> | <span class="recursive-note-cell note-c-sharp" data-note="C#/Db"><code>279.067 Hz</code><small class="tet-cents">11.731 cents</small></span> | <span class="recursive-note-cell note-d" data-note="D"><code>290.695 Hz</code><small class="tet-cents">-17.596 cents</small></span> | <span class="recursive-note-cell note-d-sharp" data-note="D#/Eb"><code>310.075 Hz</code><small class="tet-cents">-5.865 cents</small></span> | <span class="recursive-note-cell note-e" data-note="E"><code>330.746 Hz</code><small class="tet-cents">5.866 cents</small></span> | <span class="recursive-note-cell note-f" data-note="F"><code>348.834 Hz</code><small class="tet-cents">-1.955 cents</small></span> | <span class="recursive-note-cell note-f-sharp" data-note="F#/Gb"><code>372.090 Hz</code><small class="tet-cents">9.776 cents</small></span> | <span class="recursive-note-cell note-g" data-note="G"><code>387.593 Hz</code><small class="tet-cents">-19.551 cents</small></span> | <span class="recursive-note-cell note-g-sharp" data-note="G#/Ab"><code>413.433 Hz</code><small class="tet-cents">-7.820 cents</small></span> | <span class="recursive-note-cell note-a" data-note="A"><code>436.043 Hz</code><small class="tet-cents">-15.641 cents</small></span> | <span class="recursive-note-cell note-a-sharp" data-note="A#/Bb"><code>232.556 Hz</code><small class="tet-cents">-3.910 cents</small></span> | <span class="recursive-note-cell note-b" data-note="B"><code>248.060 Hz</code><small class="tet-cents">7.821 cents</small></span> |
 | B | <span class="recursive-note-cell note-c" data-note="C"><code>261.626 Hz</code><small class="tet-cents">0.000 cents</small></span> | <span class="recursive-note-cell note-c-sharp" data-note="C#/Db"><code>275.933 Hz</code><small class="tet-cents">-7.821 cents</small></span> | <span class="recursive-note-cell note-d" data-note="D"><code>294.329 Hz</code><small class="tet-cents">3.910 cents</small></span> | <span class="recursive-note-cell note-d-sharp" data-note="D#/Eb"><code>306.593 Hz</code><small class="tet-cents">-25.418 cents</small></span> | <span class="recursive-note-cell note-e" data-note="E"><code>327.032 Hz</code><small class="tet-cents">-13.686 cents</small></span> | <span class="recursive-note-cell note-f" data-note="F"><code>348.834 Hz</code><small class="tet-cents">-1.955 cents</small></span> | <span class="recursive-note-cell note-f-sharp" data-note="F#/Gb"><code>367.911 Hz</code><small class="tet-cents">-9.776 cents</small></span> | <span class="recursive-note-cell note-g" data-note="G"><code>392.438 Hz</code><small class="tet-cents">1.955 cents</small></span> | <span class="recursive-note-cell note-g-sharp" data-note="G#/Ab"><code>408.790 Hz</code><small class="tet-cents">-27.373 cents</small></span> | <span class="recursive-note-cell note-a" data-note="A"><code>436.043 Hz</code><small class="tet-cents">-15.641 cents</small></span> | <span class="recursive-note-cell note-a-sharp" data-note="A#/Bb"><code>459.889 Hz</code><small class="tet-cents">-23.463 cents</small></span> | <span class="recursive-note-cell note-b" data-note="B"><code>245.274 Hz</code><small class="tet-cents">-11.731 cents</small></span> |
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 We now have a chord-contextual tuning system. Pitch classes split according to harmonic function.
 
 ### What It Sounds Like

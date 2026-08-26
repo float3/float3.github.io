@@ -248,10 +248,12 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
         String::new()
     };
 
+    // `table` already ends in a newline, so a separator here adds one blank
+    // line to the post on every run. It had reached 36 where one belongs.
     let final_text = if suffix.is_empty() {
         format!("{prefix}\n{table}")
     } else {
-        format!("{prefix}\n{table}\n{suffix}")
+        format!("{prefix}\n{table}{suffix}")
     };
 
     fs::write(post, final_text)?;
@@ -278,4 +280,46 @@ fn note_to_class(name: &str) -> &'static str {
 
 fn html_escape(s: &str) -> String {
     s.replace('"', "'")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Both writers rewrite the post in place, so running `site generate` twice
+    /// has to leave the same file. It did not: the table writer put a separator
+    /// after a table that already ended in a newline, and the post had
+    /// collected 36 blank lines one CI run at a time.
+    #[test]
+    fn rewriting_the_post_twice_changes_nothing() {
+        let site = Site {
+            root: crate::find_repo_root().expect("tests run inside the repository"),
+            ci: false,
+        };
+        let post = site.root.join("content/blog/recursive-just-intonation.md");
+        let before = fs::read_to_string(&post).expect("the post is in the repository");
+
+        let csv = site
+            .root
+            .join("content/misc/plaintext/recursive-ji-frequencies.csv");
+
+        let rewrite = || {
+            update_recursive_ji_table(&post, &csv).unwrap();
+            update_recursive_ji_notation(&post).unwrap();
+            fs::read_to_string(&post).unwrap()
+        };
+
+        let once = rewrite();
+        let twice = rewrite();
+
+        fs::write(&post, &before).unwrap();
+
+        assert_eq!(
+            once.len(),
+            twice.len(),
+            "rewriting the post grew it by {} bytes",
+            twice.len() as i64 - once.len() as i64
+        );
+        assert_eq!(once, twice, "rewriting the post is not idempotent");
+    }
 }
