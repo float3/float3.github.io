@@ -43,6 +43,7 @@ const config: Configuration = {
     you: "./dist/you.js",
     audiolink: "./dist/audiolink.js",
     insurance: "./dist/insurance.js",
+    graph: "./dist/graph.js",
     comments: "./dist/comments.js",
   },
   output: {

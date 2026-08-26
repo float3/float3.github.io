@@ -170,7 +170,9 @@ plugins:
     layout:
       position: left
       priority: 80
-  - source: github:quartz-community/graph
+  # The graph is the local one, in Elm: quartz-local/elm-graph. The community
+  # plugin it replaces fetched d3 and pixi.js from jsDelivr on every page view.
+  - source: ./quartz-local/elm-graph
     enabled: true
     options:
       localGraph:
@@ -280,7 +282,7 @@ layout:
     content: {}
     folder:
       exclude:
-        - graph
+        - elm-graph
         - backlinks
         - table-of-contents
         - tag-list
@@ -288,7 +290,7 @@ layout:
         right: []
     tag:
       exclude:
-        - graph
+        - elm-graph
         - backlinks
         - table-of-contents
         - tag-list

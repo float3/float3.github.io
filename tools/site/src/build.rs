@@ -166,6 +166,10 @@ impl Site {
             ]),
         )?;
 
+        // The Elm graph is the third thing that lands in content/js, and it
+        // has to be built after the emptying above rather than before it.
+        self.elm(mode)?;
+
         remove_license_files(&content_js)
     }
 

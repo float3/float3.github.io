@@ -19,5 +19,8 @@ content/.trash/
 content/.obsidian/
 
 content/js
+
+# The Elm compiler's package cache for quartz-local/elm-graph.
+elm-stuff/
 content/tools/wasm/
 content/.stfolder

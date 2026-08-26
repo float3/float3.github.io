@@ -1,0 +1,106 @@
+# elm-graph
+
+The site graph, drawn in Elm.
+
+Quartz's graph is a community plugin, `github:quartz-community/graph`. It draws
+a good picture, and to draw it the page fetches **d3 and pixi.js from jsDelivr**
+— about a megabyte and a half of somebody else's JavaScript, from a third party,
+on every page view — and paints into a WebGL canvas. Its script opens with
+`@ts-nocheck`, so none of it is type-checked, and the reader's IP address goes
+to a CDN before a single node is drawn.
+
+This draws the same picture out of SVG, from a compiled Elm program served from
+this site. **54 KB, 19 KB over the wire**, fetched only on a page that has a
+graph on it.
+
+## What is where
+
+| file                          | what it is                                                                        |
+| ----------------------------- | --------------------------------------------------------------------------------- |
+| `src/Main.elm`                | the graph: neighbourhood, force simulation, SVG, hover, click                     |
+| `components.ts`               | the Quartz component — two empty containers and the button that opens the big one |
+| `styles.ts`                   | what a node, a link and a label look like in each theme                           |
+| `../../ts/src/graph.ts`       | the page's side: the content index, the box's size, visited pages, navigation     |
+| `../../tools/site/src/elm.rs` | `site elm`, which compiles `Main.elm` into `content/js/elm.js`                    |
+
+Nothing here is hand-compiled: `site build` and `site wasm` both run `site elm`,
+and `content/js` is a build output.
+
+## The layout
+
+The forces are d3-force's, deliberately, so the graph settles into the shape the
+old one settled into: charge at `-100 × repelForce`, links pulling towards
+`linkDistance` with d3's own strength and bias, a centring force that moves
+positions rather than velocities, one pass of collision, and the same alpha
+decay of 0.0228 per tick down to 0.001.
+
+Two things are not d3's:
+
+- **Nothing is random.** d3 seeds positions with `Math.random`; this uses the
+  phyllotaxis spiral d3 falls back to for a node with no position, so the same
+  page draws the same graph every time it is opened.
+- **The first layout is run before anything is drawn**, against a budget of
+  about 110,000 node-pair steps. A simulation that starts from its seed
+  positions spends its first second looking like an explosion, which in a
+  sidebar is movement for its own sake; and a graph in a background tab gets no
+  animation frames at all, so without this it would sit there as a spiral of
+  untouched seed positions. The budget is what keeps that cheap: a step compares
+  every node with every other, so the whole-site graph — 94 nodes against the
+  sidebar's three — gets twelve steps where the sidebar gets its full three
+  hundred and settles completely.
+
+A reader who has asked for `prefers-reduced-motion` gets the layout settled and
+still, rather than performed at them.
+
+## Colour
+
+There is none in the Elm. A node is a `circle` with `is-current`, `is-tag`,
+`is-visited`, `is-hovered` or `is-dim` on it, and `styles.ts` says what those
+mean in `var(--secondary)` and friends. The graph this replaced read six custom
+properties out of `getComputedStyle` when it started and painted them into a
+WebGL scene, which is why it had to be told to rebuild itself when the theme
+changed; this one is repainted by the browser like anything else on the page.
+
+## The four ports
+
+Elm owns the graph and nothing else. Everything that is the page's job crosses a
+port:
+
+| port      | direction | what it carries                                                   |
+| --------- | --------- | ----------------------------------------------------------------- |
+| `follow`  | out       | the id of a clicked node, which the page hands to Quartz's router |
+| `failed`  | out       | why flags could not be read, for the console                      |
+| `resized` | in        | the container's size, from a `ResizeObserver`                     |
+| `halt`    | in        | stop: this app's view has been patched out of the page            |
+
+`halt` exists because of how Quartz navigates. It patches the document rather
+than replacing it, so after a soft navigation the container is the same element
+— with the drawing taken out of it by micromorph, because the incoming page's
+HTML has an empty one. The app rendering into it is left holding a view that is
+no longer in the page, so `graph.ts` stops it and starts another around the page
+the reader has arrived at.
+
+Clicks are the other place the two sides meet. A node is an SVG `<a href>`, so
+it can be focused and read as a link — but Quartz's router reads `href` off
+whatever anchor a click came from, and on an SVG anchor that is an
+`SVGAnimatedString` rather than a string. The anchor carries `data-router-ignore`
+to keep the router's hands off it, and Elm sends the id out through `follow`
+instead, which the page turns into a URL the router can read.
+
+## What is not ported
+
+The old graph could be dragged and zoomed. This cannot, yet — the picture, the
+neighbourhood, the highlighting, the whole-site graph and the visited colouring
+are all here, and drag and zoom are the two things left. `scale` is gone for
+good: it was a pixi camera setting with nothing to configure in an SVG.
+
+## Building it
+
+```sh
+cargo run --locked --manifest-path tools/site/Cargo.toml -- elm --prod
+```
+
+`--dev` skips `--optimize` and the esbuild pass, so the JavaScript in the
+debugger is the JavaScript on disk. The compiler is `elmPackages.elm` in the
+flake's dev shell; `elm-stuff/` beside this file is its package cache and is
+ignored.

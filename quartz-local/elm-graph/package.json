@@ -9,17 +9,17 @@
   "quartz": {
     "name": "elm-graph",
     "displayName": "Elm Graph",
-    "description": "Elm-powered Quartz graph component.",
+    "description": "The site graph, drawn in Elm: the neighbourhood, the force simulation and the SVG are all compiled from quartz-local/elm-graph/src/Main.elm, with no d3 and no pixi.js fetched from a CDN.",
     "version": "1.0.0",
-    "category": [
-      "component"
-    ],
+    "category": "component",
     "components": {
       "ElmGraph": {
         "name": "ElmGraph",
         "displayName": "Elm Graph",
-        "description": "Interactive site graph rendered with Elm.",
-        "version": "1.0.0"
+        "description": "Interactive site graph, drawn as SVG by a compiled Elm program.",
+        "version": "1.0.0",
+        "defaultPosition": "right",
+        "defaultPriority": 10
       }
     }
   }

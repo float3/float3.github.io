@@ -279,7 +279,7 @@ pub(crate) fn os_args(args: &[&str]) -> Vec<OsString> {
     args.iter().map(OsString::from).collect()
 }
 
-fn command_succeeds<P>(program: P, args: &[&str]) -> bool
+pub(crate) fn command_succeeds<P>(program: P, args: &[&str]) -> bool
 where
     P: AsRef<OsStr>,
 {
