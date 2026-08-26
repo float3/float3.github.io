@@ -114,7 +114,7 @@ function runner(comment: CommentRecord): ComponentChildren {
       // it and start it again rather than as the way to begin.
       "run it",
     ),
-    h("span", { class: "comment-hint" }, "runs on its own, sandboxed — it cannot reach this page"),
+    h("span", { class: "comment-hint" }, "runs sandboxed"),
     h("div", { class: "comment-stage" }),
   ])
 }
