@@ -23,8 +23,6 @@ pub mod photography;
 #[cfg(feature = "polyrhythm")]
 pub mod polyrhythm;
 pub mod random;
-#[cfg(feature = "recursive_ji")]
-pub mod recursive_ji;
 
 use wasm_bindgen::prelude::*;
 

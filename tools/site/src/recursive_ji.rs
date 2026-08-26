@@ -58,6 +58,14 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
         }
     }
 
+    if post_path.exists() {
+        update_recursive_ji_notation(&post_path)?;
+        println!(
+            "engraved the notation in {}",
+            relative_to_root(site, &post_path).display()
+        );
+    }
+
     Ok(())
 }
 
@@ -101,6 +109,45 @@ Text files:
   recursive-ji-frequencies.csv
 "
     );
+}
+
+/// Writes the engraved notation into the post, inside the `data-recursive-ji-abc`
+/// containers that used to be filled in by abcjs at read time.
+///
+/// Rewriting in place, the way the frequency table above is handled, keeps the
+/// post the one file that holds the post.
+fn update_recursive_ji_notation(post: &Path) -> Result<()> {
+    let figures = [
+        (
+            "progression",
+            recursive_ji_core::engrave::chord_progression_svg()?,
+        ),
+        (
+            "note-splits",
+            recursive_ji_core::engrave::note_splits_svg()?,
+        ),
+    ];
+
+    let mut markdown = fs::read_to_string(post)?;
+
+    for (kind, svg) in figures {
+        let opening = format!("<div class=\"abc-notation\" data-recursive-ji-abc=\"{kind}\">");
+        let start = markdown.find(&opening).ok_or_else(|| {
+            SiteError::new(format!(
+                "{} has no container for the {kind} notation",
+                post.display()
+            ))
+        })?;
+        let content = start + opening.len();
+        let end = markdown[content..].find("</div>").ok_or_else(|| {
+            SiteError::new(format!("the {kind} notation container is never closed"))
+        })? + content;
+
+        markdown.replace_range(content..end, &svg);
+    }
+
+    fs::write(post, markdown)?;
+    Ok(())
 }
 
 fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {

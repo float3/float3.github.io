@@ -2955,7 +2955,6 @@ dependencies = [
  "krabby",
  "mini-alloc",
  "music21-rs",
- "recursive-ji-core",
  "textprocessing",
  "tuningplayground",
  "unicode-width",

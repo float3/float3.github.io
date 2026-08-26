@@ -363,6 +363,26 @@ pre.poetry {
   border: 1px solid var(--lightgray);
   overflow-x: auto;
   padding: 0.5rem;
+  // The notation is engraved at build time in currentColor, so it follows the
+  // theme instead of staying black the way the old rendering did.
+  color: var(--dark);
+}
+
+.engraved-notation {
+  display: block;
+  height: auto;
+  width: 100%;
+}
+
+.engraved-notation text {
+  fill: currentColor;
+  font-family: var(--bodyFont), sans-serif;
+  stroke: none;
+  text-anchor: middle;
+}
+
+.engraved-notation .notation-chord {
+  font-weight: 600;
 }
 
 .abc-figure figcaption {

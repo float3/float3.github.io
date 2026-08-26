@@ -39,7 +39,6 @@ const config: Configuration = {
     bayestheorem: "./dist/bayestheorem.js",
     photography: "./dist/photography.js",
     audiooscilloscope: "./dist/audiooscilloscope.js",
-    abcnotation: "./dist/abcnotation.js",
     background: "./dist/background.js",
     you: "./dist/you.js",
     comments: "./dist/comments.js",

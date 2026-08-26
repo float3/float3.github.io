@@ -22,7 +22,6 @@ glsl = ["dep:glsl2hlsl"]
 movies = []
 photography = []
 polyrhythm = ["dep:music21-rs"]
-recursive_ji = ["dep:music21-rs", "dep:recursive-ji-core"]
 textprocessing = ["dep:textprocessing"]
 pokemon = ["dep:krabby"]
 textprocessing_chinese = ["textprocessing", "textprocessing/chinese"]
@@ -47,7 +46,6 @@ mini-alloc = { workspace = true, optional = true }
 glsl2hlsl = { path = "../glsl2hlsl", optional = true }
 adventofcode = { path = "../adventofcode/", optional = true }
 textprocessing = { path = "../textprocessing/", optional = true, default-features = false }
-recursive-ji-core = { workspace = true, optional = true }
 web-sys = { version = "0.3.103", features = [
     "Window",
     "Document",

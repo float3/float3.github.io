@@ -4,7 +4,7 @@ use crate::{
     Mode, Result, Site, SiteError,
 };
 use serde_json::Value as JsonValue;
-use std::collections::{BTreeMap, BTreeSet, VecDeque};
+use std::collections::{BTreeSet, VecDeque};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -392,9 +392,10 @@ fn all_sources(dir: &Path) -> Result<BTreeSet<PathBuf>> {
 
 /// Which language feature each transform index needs, read out of the `#[cfg]`
 /// attributes on the dispatch arms in `wasm/textprocessing/src/wasm/mod.rs`.
-fn transform_features(root: &Path) -> Result<BTreeMap<u32, String>> {
+#[cfg(test)]
+fn transform_features(root: &Path) -> Result<std::collections::BTreeMap<u32, String>> {
     let source = fs::read_to_string(root.join("wasm/textprocessing/src/wasm/mod.rs"))?;
-    let mut features = BTreeMap::new();
+    let mut features = std::collections::BTreeMap::new();
     let mut pending: Option<String> = None;
 
     for line in source.lines() {
