@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@v7
         with:
           submodules: recursive
           # Page created/updated dates and version counts are read from git history

@@ -24,7 +24,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # The workflow branches from the default branch and nothing here reads
           # history, so the default shallow fetch is all it needs.
