@@ -193,6 +193,20 @@ suite =
                                 model
                     in
                     after.dragged |> Expect.equal True
+            , test "is a link being followed when the hand only twitched" <|
+                \_ ->
+                    -- Pressing a trackpad moves the pointer a pixel or two on
+                    -- the way down, and that is a click, not a drag.
+                    let
+                        after =
+                            run
+                                [ Main.Grabbed "one" middle
+                                , Main.Moved { x = middle.x + 2, y = middle.y + 1 }
+                                , Main.Released
+                                ]
+                                model
+                    in
+                    after.dragged |> Expect.equal False
             , test "is a link being followed when the mouse never moved" <|
                 \_ ->
                     let
@@ -213,6 +227,23 @@ suite =
                                 model
                     in
                     after.dragged |> Expect.equal False
+            ]
+        , describe "a click on the background"
+            [ test "asks for the whole-site graph" <|
+                \_ ->
+                    Main.expands (Main.Panning { from = middle, moved = False })
+                        |> Expect.equal True
+            , test "does not, when the hand was panning" <|
+                \_ ->
+                    Main.expands (Main.Panning { from = middle, moved = True })
+                        |> Expect.equal False
+            , test "is not what letting go of a node is" <|
+                \_ ->
+                    Main.expands
+                        (Main.Holding
+                            { id = "one", grab = { x = 0, y = 0 }, from = middle, moved = False }
+                        )
+                        |> Expect.equal False
             ]
         , describe "panning"
             [ test "moves the picture with the hand" <|

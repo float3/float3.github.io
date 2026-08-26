@@ -69,6 +69,7 @@ port:
 | port      | direction | what it carries                                                        |
 | --------- | --------- | ---------------------------------------------------------------------- |
 | `follow`  | out       | the id of a clicked node, which the page hands to Quartz's router      |
+| `expand`  | out       | a click on the background, which the page turns into the big graph     |
 | `failed`  | out       | why flags could not be read, for the console                           |
 | `resized` | in        | where the container is and how big, from a `ResizeObserver` and scroll |
 | `halt`    | in        | stop: this app's view has been patched out of the page                 |
@@ -100,12 +101,16 @@ instead, which the page turns into a URL the router can read.
 Dragging a node pins it: the forces go on pushing at it, it does not move, and
 everything else rearranges itself around where it has been put. Letting go
 unpins it. A node is also a link, so the click that ends a drag would otherwise
-follow it — the drag remembers whether the mouse travelled more than three
-pixels, and the click after one that did is swallowed.
+follow it — every drag remembers whether the mouse travelled more than three
+pixels, and the click after one that did is swallowed. Three rather than one
+because pressing a trackpad moves the pointer a little on the way down, and
+that is a click.
 
-Dragging the background pans, and the wheel zooms about the pointer, between a
-quarter and four times, on d3's own curve of two to the power of the delta over
-five hundred. Both are the `viewBox` and nothing else: no transform on the
+A click on the background — down and up in the same place — opens the
+whole-site graph, because the button in the corner is easy to miss and a graph
+that small is mostly an invitation to see a bigger one. Dragging the background
+pans instead, and the wheel zooms about the pointer, between a quarter and four
+times, on d3's own curve of two to the power of the delta over five hundred. Both are the `viewBox` and nothing else: no transform on the
 nodes, no second coordinate system, and a stylesheet that goes on measuring
 strokes and font sizes in the units it was written in. Labels fade in above
 life size, which is the old graph's arithmetic, so that zooming into a corner

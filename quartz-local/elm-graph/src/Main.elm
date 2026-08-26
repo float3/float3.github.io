@@ -54,6 +54,16 @@ pages have been visited, so it is the side that writes this one down.
 port follow : String -> Cmd msg
 
 
+{-| A click on the background, asking for the whole-site graph.
+
+The button in the corner of the box is easy to miss, and a graph that small is
+mostly an invitation to see a bigger one. What to do about it is the page's to
+decide -- the big graph's own background is not a request to open the big
+graph.
+-}
+port expand : () -> Cmd msg
+
+
 {-| Said out loud rather than swallowed: flags this cannot read mean a graph
 that cannot be drawn, and the reason belongs in the console where whoever
 changed the shape of them will see it.
@@ -134,7 +144,7 @@ the hand that hauled it meant.
 -}
 type Drag
     = Still
-    | Holding { id : String, grab : Point, moved : Bool }
+    | Holding { id : String, grab : Point, from : Point, moved : Bool }
     | Panning { from : Point, moved : Bool }
 
 
@@ -892,6 +902,7 @@ update msg model =
                     Holding
                         { id = id
                         , grab = grabbed model id held
+                        , from = at
                         , moved = False
                         }
                 , nodes = pin id model.nodes
@@ -916,7 +927,11 @@ update msg model =
                 , dragged = wasMoved model.drag
                 , nodes = Array.map (\node -> { node | pinned = False }) model.nodes
               }
-            , Cmd.none
+            , if expands model.drag then
+                expand ()
+
+              else
+                Cmd.none
             )
 
         Wheeled delta at ->
@@ -954,6 +969,20 @@ pin id nodes =
     Array.map (\node -> { node | pinned = node.id == id }) nodes
 
 
+{-| A click on the background rather than a drag of it: down and up in the same
+place, with nothing in between. Letting go of a node is not it, and neither is
+the end of a pan, which is a hand that meant to move the picture.
+-}
+expands : Drag -> Bool
+expands drag =
+    case drag of
+        Panning pan ->
+            not pan.moved
+
+        _ ->
+            False
+
+
 wasMoved : Drag -> Bool
 wasMoved drag =
     case drag of
@@ -969,10 +998,19 @@ wasMoved drag =
 
 {-| A pixel or two of travel is a click with a shaky hand; more than that is a
 drag, and is not a link being followed.
+
+A trackpad is what this is for. Pressing one moves the pointer a pixel or two
+on the way down more often than not, and without this every click on a node
+would be a drag of it and would never follow the link.
 -}
 slop : Float
 slop =
     3
+
+
+travelled : Point -> Point -> Bool
+travelled from to =
+    abs (to.x - from.x) + abs (to.y - from.y) > slop
 
 
 moved : Point -> Model -> Model
@@ -997,7 +1035,8 @@ moved at model =
                                 node
                         )
                         model.nodes
-                , drag = Holding { held | moved = True }
+                , drag =
+                    Holding { held | moved = held.moved || travelled held.from at }
                 , alpha = max model.alpha 0.3
             }
 
@@ -1015,11 +1054,7 @@ moved at model =
                     , x = model.camera.x - dx / model.camera.zoom
                     , y = model.camera.y - dy / model.camera.zoom
                     }
-                , drag =
-                    Panning
-                        { from = at
-                        , moved = pan.moved || abs dx + abs dy > slop
-                        }
+                , drag = Panning { from = at, moved = pan.moved || travelled pan.from at }
             }
 
 

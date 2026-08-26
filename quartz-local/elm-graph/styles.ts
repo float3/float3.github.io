@@ -145,10 +145,11 @@ export const styles = `
   display: none;
 }
 
+/* No background of its own: the page's own words go on showing through the
+   dimming behind it, which is what makes this the site's graph rather than a
+   window laid over the top of it. */
 .elm-graph-modal .elm-graph-container {
   width: min(85vw, 60rem);
   height: min(85vh, 45rem);
-  border-radius: 5px;
-  background: var(--light);
 }
 `

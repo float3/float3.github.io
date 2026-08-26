@@ -40,6 +40,7 @@ interface Box {
 interface ElmApp {
   ports: {
     follow: ElmSubscription<string>
+    expand: ElmSubscription<null>
     failed: ElmSubscription<string>
     resized: ElmPort<Box>
     halt: ElmPort<null>
@@ -229,6 +230,12 @@ function start(container: HTMLElement): void {
         console.error("[graph]", reason)
       })
 
+      app.ports.expand.subscribe(() => {
+        // Only the small one opens the big one. A click on the big one's own
+        // background is a click on the graph the reader is already looking at.
+        if (container.closest(".elm-graph-modal") === null) open()
+      })
+
       app.ports.follow.subscribe((id) => {
         remember(id)
         const url = new URL(`${basePath()}/${id}`, window.location.href)
@@ -284,10 +291,20 @@ function initialise(): void {
 let listening = false
 
 /**
- * The whole-site graph, drawn only when it is asked for: it is the same
- * simulation over every page rather than a dozen, and there is no reason to
- * run it behind a closed dialog.
+ * Show the whole-site graph, drawing it if this is the first time anyone has
+ * asked: it is the same simulation over every page rather than a dozen, and
+ * there is no reason to run it behind a closed dialog.
  */
+function open(): void {
+  const modal = document.querySelector<HTMLElement>(".elm-graph-modal")
+  if (modal === null) return
+
+  modal.hidden = false
+
+  const container = modal.querySelector<HTMLElement>(".elm-graph-container")
+  if (container !== null && !taken.has(container)) start(container)
+}
+
 function expandable(): void {
   const button = document.querySelector<HTMLButtonElement>(".elm-graph-expand")
   const modal = document.querySelector<HTMLElement>(".elm-graph-modal")
@@ -295,11 +312,7 @@ function expandable(): void {
 
   // Assigned rather than added: a soft navigation can hand back the same
   // elements, and adding would stack a second handler on each of them.
-  button.onclick = () => {
-    modal.hidden = false
-    const container = modal.querySelector<HTMLElement>(".elm-graph-container")
-    if (container !== null && !taken.has(container)) start(container)
-  }
+  button.onclick = open
 
   modal.onclick = (event) => {
     if (event.target === modal) modal.hidden = true
