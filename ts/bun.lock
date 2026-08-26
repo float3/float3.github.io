@@ -6,10 +6,10 @@
       "name": "float3-wasm-bundle",
       "dependencies": {
         "@tonejs/midi": "^2.0.28",
-        "abcjs": "^6.6.4",
         "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
         "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
         "wasm-chars": "file:../wasm/wasm/pkg/chars",
+        "wasm-doom": "^1.2.0",
         "wasm-gallery": "file:../wasm/wasm/pkg/gallery",
         "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
         "wasm-movies": "file:../wasm/wasm/pkg/movies",
@@ -233,8 +233,6 @@
     "@xtuc/ieee754": ["@xtuc/ieee754@1.2.0", "", {}, "sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA=="],
 
     "@xtuc/long": ["@xtuc/long@4.2.2", "", {}, "sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ=="],
-
-    "abcjs": ["abcjs@6.6.4", "", {}, "sha512-KNbRE9Uk7KgJu6TWCEph3rqSifcCN243qRMALysRngEzbuv6JuFJrSKbLI1Bpw/XyXFTFEzoFF1WHWBHsoofyA=="],
 
     "accepts": ["accepts@2.0.0", "", { "dependencies": { "mime-types": "^3.0.0", "negotiator": "^1.0.0" } }, "sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng=="],
 
@@ -701,6 +699,8 @@
     "wasm-bayes": ["wasm-bayes@file:../wasm/wasm/pkg/bayes", {}],
 
     "wasm-chars": ["wasm-chars@file:../wasm/wasm/pkg/chars", {}],
+
+    "wasm-doom": ["wasm-doom@1.2.0", "", {}, "sha512-8Bg2vGMSVBWMOAWsBmLl4+4CYClvYl7aKvWqjKK3CpMM+42gRQkql93Tm9kG23bQaT1YnxBGq/IufrV2vnQa/w=="],
 
     "wasm-gallery": ["wasm-gallery@file:../wasm/wasm/pkg/gallery", {}],
 

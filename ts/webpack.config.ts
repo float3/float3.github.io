@@ -42,6 +42,7 @@ const config: Configuration = {
     background: "./dist/background.js",
     you: "./dist/you.js",
     comments: "./dist/comments.js",
+    doom: "./dist/doom.js",
   },
   output: {
     path: path.resolve(contentJsDir),
