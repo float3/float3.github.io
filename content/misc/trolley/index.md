@@ -44,11 +44,9 @@ tags:
 [37.mp4](/misc/trolley/37.mp4) \
 [38.jpg](/misc/trolley/38.jpg) \
 [39.jpg](/misc/trolley/39.jpg) \
-[39.mp4](/misc/trolley/39.mp4) \
 [40.jpg](/misc/trolley/40.jpg) \
 [41.jpg](/misc/trolley/41.jpg) \
 [42.gif](/misc/trolley/42.gif) \
-[42.mp4](/misc/trolley/42.mp4) \
 [43.jpg](/misc/trolley/43.jpg) \
 [44.jpg](/misc/trolley/44.jpg) \
 [45.jpg](/misc/trolley/45.jpg) \

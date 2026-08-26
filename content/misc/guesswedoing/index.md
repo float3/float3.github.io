@@ -77,4 +77,5 @@ tags:
 [70.jpg](/misc/guesswedoing/70.jpg) \
 [71.jpg](/misc/guesswedoing/71.jpg) \
 [72.jpg](/misc/guesswedoing/72.jpg) \
-[73.jpg](/misc/guesswedoing/73.jpg)
+[73.jpg](/misc/guesswedoing/73.jpg) \
+[74.jpg](/misc/guesswedoing/74.jpg)
