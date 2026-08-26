@@ -4,7 +4,7 @@ use crate::{
     Mode, Result, Site, SiteError,
 };
 use serde_json::Value as JsonValue;
-use std::collections::{BTreeSet, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
@@ -390,6 +390,59 @@ fn all_sources(dir: &Path) -> Result<BTreeSet<PathBuf>> {
     Ok(sources)
 }
 
+/// Which language feature each transform index needs, read out of the `#[cfg]`
+/// attributes on the dispatch arms in `wasm/textprocessing/src/wasm/mod.rs`.
+fn transform_features(root: &Path) -> Result<BTreeMap<u32, String>> {
+    let source = fs::read_to_string(root.join("wasm/textprocessing/src/wasm/mod.rs"))?;
+    let mut features = BTreeMap::new();
+    let mut pending: Option<String> = None;
+
+    for line in source.lines() {
+        let line = line.trim();
+
+        if let Some(rest) = line.strip_prefix("#[cfg(feature = ") {
+            pending = rest
+                .trim_end_matches(")]")
+                .trim_matches('"')
+                .to_string()
+                .into();
+            continue;
+        }
+
+        if let Some(rest) = line.strip_prefix('(') {
+            if let Some((index, _)) = rest.split_once(',') {
+                if let Ok(index) = index.trim().parse::<u32>() {
+                    let feature = pending.take().unwrap_or_else(|| "base".to_string());
+                    // An index may appear twice, once per direction; both arms
+                    // always carry the same gate.
+                    features.entry(index).or_insert(feature);
+                    continue;
+                }
+            }
+        }
+
+        pending = None;
+    }
+
+    Ok(features)
+}
+
+/// The index sets the TypeScript routes on, read back out of the source.
+#[cfg(test)]
+fn routed_indices(root: &Path, name: &str) -> Result<BTreeSet<u32>> {
+    let source = fs::read_to_string(root.join("ts/src/textprocessing/index.ts"))?;
+    let start = source
+        .find(&format!("const {name} = new Set(["))
+        .ok_or_else(|| SiteError::new(format!("ts/src/textprocessing/index.ts has no {name}")))?;
+    let open = source[start..].find('[').unwrap() + start;
+    let close = source[open..].find(']').unwrap() + open;
+
+    Ok(source[open + 1..close]
+        .split(',')
+        .filter_map(|entry| entry.trim().parse::<u32>().ok())
+        .collect())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -434,6 +487,36 @@ mod tests {
   "
             )
         );
+    }
+
+    /// The TypeScript decides which of the three wasm packages to fetch for a
+    /// given transform, and Rust decides which package actually answers for it.
+    /// If those drift, the transform does not fail — it hands back the text it
+    /// was given, which looks like a transform that does nothing. Keep them
+    /// honest against each other.
+    #[test]
+    fn typescript_routes_every_transform_to_the_package_that_implements_it() {
+        let root = site().root;
+        let features = transform_features(&root).unwrap();
+
+        for (language, set_name) in [("chinese", "chineseIndices"), ("korean", "koreanIndices")] {
+            let expected: BTreeSet<u32> = features
+                .iter()
+                .filter(|(_, feature)| feature.as_str() == language)
+                .map(|(index, _)| *index)
+                .collect();
+            let routed = routed_indices(&root, set_name).unwrap();
+
+            assert!(
+                !expected.is_empty(),
+                "found no {language} arms at all, so this test is proving nothing"
+            );
+
+            assert_eq!(
+                routed, expected,
+                "{set_name} does not match the #[cfg(feature = \"{language}\")] arms in                  wasm/textprocessing/src/wasm/mod.rs"
+            );
+        }
     }
 
     #[test]

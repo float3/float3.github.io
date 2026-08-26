@@ -17,6 +17,8 @@
         "wasm-polyrhythm": "file:../wasm/wasm/pkg/polyrhythm",
         "wasm-recursive_ji": "file:../wasm/wasm/pkg/recursive_ji",
         "wasm-textprocessing": "file:../wasm/wasm/pkg/textprocessing",
+        "wasm-textprocessing_chinese": "file:../wasm/wasm/pkg/textprocessing_chinese",
+        "wasm-textprocessing_korean": "file:../wasm/wasm/pkg/textprocessing_korean",
         "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground",
       },
       "devDependencies": {
@@ -714,6 +716,10 @@
     "wasm-recursive_ji": ["wasm-recursive_ji@file:../wasm/wasm/pkg/recursive_ji", {}],
 
     "wasm-textprocessing": ["wasm-textprocessing@file:../wasm/wasm/pkg/textprocessing", {}],
+
+    "wasm-textprocessing_chinese": ["wasm@file:../wasm/wasm/pkg/textprocessing_chinese", {}],
+
+    "wasm-textprocessing_korean": ["wasm@file:../wasm/wasm/pkg/textprocessing_korean", {}],
 
     "wasm-tuningplayground": ["wasm-tuningplayground@file:../wasm/wasm/pkg/tuningplayground", {}],
 

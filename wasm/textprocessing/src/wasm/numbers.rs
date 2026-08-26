@@ -1,3 +1,4 @@
+#[cfg(feature = "chinese")]
 use chinese_number::{ChineseCase, ChineseCountMethod, ChineseVariant, NumberToChinese};
 use wasm_bindgen::prelude::*;
 
@@ -13,6 +14,7 @@ pub fn number_to_japanese(number: String) -> String {
         .unwrap_or_default()
 }
 
+#[cfg(feature = "chinese")]
 #[wasm_bindgen]
 pub fn number_to_chinese_f128(number: String, uppercase: bool, countmethod: i32) -> String {
     let variant: ChineseVariant = ChineseVariant::Traditional;

@@ -4,9 +4,28 @@ use std::fs;
 impl Site {
     pub(crate) fn generate(&self) -> Result<()> {
         crate::recursive_ji::generate(self, &[])?;
+        self.textprocessing_examples()?;
         self.links()?;
         self.indices()?;
         self.generate_chords()
+    }
+
+    /// The worked example on each transform card, rendered here rather than in
+    /// the browser so the page needs no wasm at all to draw itself. Every
+    /// language feature has to be on, since it renders the whole table at once.
+    pub(crate) fn textprocessing_examples(&self) -> Result<()> {
+        self.run(
+            &self.root,
+            "cargo",
+            &crate::os_args(&[
+                "run",
+                "--locked",
+                "--package",
+                "textprocessing",
+                "--example",
+                "generate_examples",
+            ]),
+        )
     }
 
     pub(crate) fn links(&self) -> Result<()> {

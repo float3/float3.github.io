@@ -117,6 +117,7 @@ fn run_main() -> Result<()> {
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
+        "textprocessing-examples" => site.textprocessing_examples(),
         "normalize-gallery" | "normalize" => gallery::normalize(&site, &args[1..]),
         "report" => {
             let build_time = match args.get(1) {

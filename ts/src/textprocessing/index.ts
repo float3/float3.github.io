@@ -1,4 +1,4 @@
-import * as wasm from "wasm-textprocessing"
+import { workedExamples } from "./examples.js"
 
 type Transform = (text: string) => string
 
@@ -69,12 +69,113 @@ interface StoredGraph {
 
 const graphStorageKey = "textprocessing-node-graph-v1"
 
-wasm.main()
+/**
+ * The transforms live in three wasm packages rather than one, because the CJK
+ * dictionaries dwarf everything else: Chinese is 9.3 MB and Korean 708 KB
+ * against 164 KB for the rest of the table put together. Whichever a visitor
+ * needs is fetched when they first ask for it, so opening the page costs the
+ * 164 KB and nothing more.
+ */
+type Backend = "base" | "chinese" | "korean"
 
-const wasmTransform =
-  (index: number, leftToRight: boolean): Transform =>
-  (text) =>
-    wasm.transform_text(index, leftToRight, text)
+interface TransformModule {
+  main: () => void
+  transform_text: (index: number, leftToRight: boolean, text: string) => string
+}
+
+interface GraphMath {
+  graph_wheel_delta_pixels: (deltaMode: number, delta: number, pagePixels: number) => number
+  graph_clamp_zoom: (value: number, min: number, max: number) => number
+  graph_link_path: (fromX: number, fromY: number, toX: number, toY: number) => string
+}
+
+/**
+ * Which package answers for each index. This mirrors the `#[cfg(feature = ...)]`
+ * arms in wasm/textprocessing/src/wasm/mod.rs, and `cargo test -p site` fails if
+ * the two ever disagree — a mismatch would otherwise show up only as a transform
+ * quietly handing back the text it was given.
+ */
+const chineseIndices = new Set([0, 1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22])
+const koreanIndices = new Set([3, 6, 19, 23, 24])
+
+function backendFor(index: number): Backend {
+  if (chineseIndices.has(index)) {
+    return "chinese"
+  }
+  return koreanIndices.has(index) ? "korean" : "base"
+}
+
+const loading = new Map<Backend, Promise<TransformModule>>()
+const loaded = new Map<Backend, TransformModule>()
+
+function importBackend(backend: Backend): Promise<TransformModule> {
+  switch (backend) {
+    case "chinese":
+      return import("wasm-textprocessing_chinese")
+    case "korean":
+      return import("wasm-textprocessing_korean")
+    default:
+      return import("wasm-textprocessing")
+  }
+}
+
+function ensureBackend(backend: Backend): Promise<TransformModule> {
+  const already = loading.get(backend)
+  if (already) {
+    return already
+  }
+
+  const pending = importBackend(backend).then((module) => {
+    module.main()
+    loaded.set(backend, module)
+    return module
+  })
+  loading.set(backend, pending)
+  return pending
+}
+
+/** Load whatever the given transforms need before any of them is run. */
+function ensureBackendsFor(indices: Iterable<number>): Promise<unknown> {
+  const needed = new Set<Backend>()
+  for (const index of indices) {
+    needed.add(backendFor(index))
+  }
+  return Promise.all([...needed].map(ensureBackend))
+}
+
+const indexOfTransform = new WeakMap<Transform, number>()
+
+const wasmTransform = (index: number, leftToRight: boolean): Transform => {
+  const transform: Transform = (text) => {
+    const module = loaded.get(backendFor(index))
+    if (!module) {
+      // Every path that runs a transform awaits ensureBackendsFor first, so this
+      // is a wiring mistake rather than something a visitor can provoke.
+      throw new Error(`transform ${index} used before its wasm package finished loading`)
+    }
+    return module.transform_text(index, leftToRight, text)
+  }
+  indexOfTransform.set(transform, index)
+  return transform
+}
+
+/**
+ * The node graph's geometry helpers come from the umbrella crate's ungated
+ * `graph` module, so every package carries them and the cheapest one will do.
+ * The graph panel awaits this package before it is built.
+ */
+function graphMath(): GraphMath {
+  const module = loaded.get("base")
+  if (!module) {
+    throw new Error("node graph opened before its wasm package finished loading")
+  }
+  return module as unknown as GraphMath
+}
+
+/** The index a transform was built from, for deciding what to load before it runs. */
+function transformIndex(transform: Transform): number | undefined {
+  return indexOfTransform.get(transform)
+}
 
 const transforms: TransformDefinition[] = [
   {
@@ -375,20 +476,34 @@ function start() {
   app.append(graphLauncher)
 
   let graphPanel: HTMLElement | undefined
-  graphLaunchButton.addEventListener("click", () => {
+  const setGraphOpen = (open: boolean) => {
     if (!graphPanel) {
-      graphPanel = renderGraphWorkspace()
-      graphLauncher.after(graphPanel)
-    } else {
-      graphPanel.hidden = !graphPanel.hidden
+      return
     }
-
-    const graphIsOpen = !graphPanel.hidden
-    graphLaunchButton.textContent = graphIsOpen ? "Hide node graph" : "Launch node graph"
-    graphLaunchButton.setAttribute("aria-expanded", String(graphIsOpen))
-    if (graphIsOpen) {
+    graphPanel.hidden = !open
+    graphLaunchButton.textContent = open ? "Hide node graph" : "Launch node graph"
+    graphLaunchButton.setAttribute("aria-expanded", String(open))
+    if (open) {
       graphPanel.scrollIntoView({ block: "nearest" })
     }
+  }
+
+  graphLaunchButton.addEventListener("click", () => {
+    if (graphPanel) {
+      setGraphOpen(Boolean(graphPanel.hidden))
+      return
+    }
+
+    // The workspace reads geometry helpers straight out of wasm as the pointer
+    // moves, so the package has to be in hand before it is built rather than
+    // partway through a drag.
+    graphLaunchButton.disabled = true
+    void ensureBackend("base").then(() => {
+      graphLaunchButton.disabled = false
+      graphPanel = renderGraphWorkspace()
+      graphLauncher.after(graphPanel)
+      setGraphOpen(true)
+    })
   })
 
   const toolbar = document.createElement("div")
@@ -698,11 +813,11 @@ function renderGraphWorkspace(): HTMLElement {
   }
 
   function wheelDeltaPixels(event: WheelEvent, delta: number, pagePixels: number): number {
-    return wasm.graph_wheel_delta_pixels(event.deltaMode, delta, pagePixels)
+    return graphMath().graph_wheel_delta_pixels(event.deltaMode, delta, pagePixels)
   }
 
   function clampZoom(value: number): number {
-    return wasm.graph_clamp_zoom(value, minZoom, maxZoom)
+    return graphMath().graph_clamp_zoom(value, minZoom, maxZoom)
   }
 
   function syncZoomControls() {
@@ -828,7 +943,7 @@ function renderGraphWorkspace(): HTMLElement {
   }
 
   function getLinkPath(fromX: number, fromY: number, toX: number, toY: number) {
-    return wasm.graph_link_path(fromX, fromY, toX, toY)
+    return graphMath().graph_link_path(fromX, fromY, toX, toY)
   }
 
   function createLinkPath(d: string, className: string) {
@@ -957,7 +1072,29 @@ function renderGraphWorkspace(): HTMLElement {
     return true
   }
 
-  const updateGraph = () => {
+  const updateGraph = (): void => {
+    // Evaluation itself stays synchronous — it is a memoised walk over the node
+    // graph and reads far better that way. What it needs is for the packages its
+    // nodes draw on to be in hand first, so on the first pass that finds one
+    // missing it fetches and comes straight back.
+    const required = new Set<number>()
+    for (const node of state.nodes.values()) {
+      if (node.kind !== "transform" || !node.optionId) {
+        continue
+      }
+      const option = optionsById.get(node.optionId)
+      const index = option ? transformIndex(option.transform) : undefined
+      if (index !== undefined) {
+        required.add(index)
+      }
+    }
+
+    const missing = [...required].filter((index) => !loaded.has(backendFor(index)))
+    if (missing.length > 0) {
+      void ensureBackendsFor(missing).then(updateGraph)
+      return
+    }
+
     const results = new Map<string, { value: string; error: string }>()
 
     const evaluate = (nodeId: string, stack: string[] = []): { value: string; error: string } => {
@@ -1679,11 +1816,12 @@ function renderTransform(definition: TransformDefinition): RenderedTransform {
   fields.append(left.element, swap, right.element)
   card.append(title, fields, error)
 
-  const applyLeftToRight = () =>
-    applyTransform(definition.leftToRight, left.textarea.value, right.textarea, error)
+  const applyLeftToRight = () => {
+    void runTransform(definition.leftToRight, left.textarea.value, right.textarea, error)
+  }
   const applyRightToLeft = () => {
     if (definition.rightToLeft) {
-      applyTransform(definition.rightToLeft, right.textarea.value, left.textarea, error)
+      void runTransform(definition.rightToLeft, right.textarea.value, left.textarea, error)
     }
   }
 
@@ -1700,8 +1838,7 @@ function renderTransform(definition: TransformDefinition): RenderedTransform {
   })
 
   left.textarea.value = definition.leftExample
-  right.textarea.value =
-    definition.rightExample ?? safeTransform(definition.leftToRight, left.textarea.value)
+  right.textarea.value = definition.rightExample ?? workedExamples[definition.id] ?? ""
 
   return { definition, card }
 }
@@ -1730,25 +1867,21 @@ function createField(labelText: string) {
   return { element, textarea }
 }
 
-function applyTransform(
+async function runTransform(
   transform: Transform,
   input: string,
   output: HTMLTextAreaElement,
   error: HTMLElement,
 ) {
+  const index = transformIndex(transform)
   try {
+    if (index !== undefined) {
+      await ensureBackendsFor([index])
+    }
     output.value = transform(input)
     error.textContent = ""
   } catch (caught) {
     error.textContent = caught instanceof Error ? caught.message : String(caught)
-  }
-}
-
-function safeTransform(transform: Transform, input: string): string {
-  try {
-    return transform(input)
-  } catch {
-    return ""
   }
 }
 
@@ -1767,26 +1900,6 @@ function transformMatches(definition: TransformDefinition, query: string): boole
     .join(" ")
     .toLowerCase()
     .includes(query)
-}
-
-export function transformLeftToRight(index: number) {
-  legacyTransform(index, true)
-}
-
-export function transformRightToLeft(index: number) {
-  legacyTransform(index, false)
-}
-
-function legacyTransform(index: number, leftToRight: boolean) {
-  const source = document.getElementById(
-    `${leftToRight ? "left" : "right"}${index}`,
-  ) as HTMLInputElement | null
-  const target = document.getElementById(
-    `${leftToRight ? "right" : "left"}${index}`,
-  ) as HTMLInputElement | null
-  if (source && target) {
-    target.value = wasm.transform_text(index, leftToRight, source.value)
-  }
 }
 
 async function copyToClipboard(text: string): Promise<void> {

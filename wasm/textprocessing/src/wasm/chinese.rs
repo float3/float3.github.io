@@ -32,24 +32,36 @@ pub fn zhuyin_to_pinyin_wasm_extended(zhuyin: String) -> String {
         .join(" ")
 }
 
+/// These four convert one syllable at a time, and returned nothing at all for
+/// anything longer — the whole phrase became the empty string, which is what the
+/// "Pinyin tone marks" card had been showing. Convert syllable by syllable and
+/// leave anything that will not convert as it was, so a phrase comes back a
+/// phrase and a typo costs only itself.
+fn per_syllable(text: &str, convert: impl Fn(&str) -> Option<String>) -> String {
+    text.split_whitespace()
+        .map(|syllable| convert(syllable).unwrap_or_else(|| syllable.to_string()))
+        .collect::<Vec<String>>()
+        .join(" ")
+}
+
 #[wasm_bindgen]
 pub fn encode_pinyin_wasm(pinyin: String) -> String {
-    encode_pinyin(&pinyin).unwrap_or_default()
+    per_syllable(&pinyin, |syllable| encode_pinyin(syllable))
 }
 
 #[wasm_bindgen]
 pub fn decode_pinyin_wasm(pinyin: String) -> String {
-    decode_pinyin(&pinyin).unwrap_or_default()
+    per_syllable(&pinyin, |syllable| decode_pinyin(syllable))
 }
 
 #[wasm_bindgen]
 pub fn encode_zhuyin_wasm(zhuyin: String) -> String {
-    encode_zhuyin(&zhuyin).unwrap_or_default()
+    per_syllable(&zhuyin, |syllable| encode_zhuyin(syllable))
 }
 
 #[wasm_bindgen]
 pub fn decode_zhuyin_wasm(zhuyin: String) -> String {
-    decode_zhuyin(&zhuyin).unwrap_or_default()
+    per_syllable(&zhuyin, |syllable| decode_zhuyin(syllable))
 }
 
 #[wasm_bindgen]
