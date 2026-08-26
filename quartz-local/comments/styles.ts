@@ -392,6 +392,10 @@ a.comment-author:hover {
   flex-basis: 100%;
 }
 
+/* The height here is only where the frame starts. Every runnable document
+   measures its own body and posts the number back, and the runner writes it to
+   the element, so the box ends up the size of the thing inside it -- this is
+   what a frame falls back to if that message never arrives. */
 .comment-stage iframe {
   background: var(--light);
   border: 1px solid var(--gray);

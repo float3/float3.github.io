@@ -56,6 +56,36 @@ body > :first-child { margin-top: 0; }
 body > :last-child { margin-bottom: 0; }
 `
 
+/**
+ * Tells the parent how tall the frame's content is, so the box can be the size
+ * of the thing in it rather than a fixed 22rem with the demo scrolling inside.
+ *
+ * It measures the *body*, not `documentElement.scrollHeight`. The root's scroll
+ * height is never less than the viewport, so feeding it back as the frame's
+ * height is a ratchet: the box can grow and can then never shrink again. The
+ * body is `height: auto` with no margins of its own, so its border box is the
+ * content and nothing else, and it does not move when the frame is resized
+ * around it.
+ *
+ * `postMessage` is the only channel there is. The frame has no
+ * `allow-same-origin`, so it cannot touch `frameElement` or reach the parent
+ * document; the parent, for its part, treats what arrives as a number from a
+ * stranger and clamps it.
+ */
+const RESIZE_REPORTER = `
+(() => {
+  const send = () => {
+    parent.postMessage(
+      { commentFrameHeight: Math.ceil(document.body.getBoundingClientRect().height) },
+      "*",
+    )
+  }
+  new ResizeObserver(send).observe(document.body)
+  addEventListener("load", send)
+  send()
+})()
+`
+
 function document(body: string, css: string, js: string): string {
   return [
     "<!doctype html>",
@@ -67,6 +97,7 @@ function document(body: string, css: string, js: string): string {
     "</head><body>",
     body,
     js === "" ? "" : `<script>${js}</script>`,
+    `<script>${RESIZE_REPORTER}</script>`,
     "</body></html>",
   ].join("\n")
 }

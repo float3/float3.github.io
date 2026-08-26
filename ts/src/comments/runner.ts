@@ -22,6 +22,37 @@ const SANDBOX = [
   // allow-popups, allow-forms, allow-downloads, allow-pointer-lock.
 ].join(" ")
 
+/**
+ * Bounds on a height the frame asks for. The number arrives from a document
+ * this site does not control, so it is treated as a request rather than an
+ * instruction: too small and the frame becomes an invisible sliver, too large
+ * and a comment can push the rest of the page off the bottom of the world.
+ */
+const MIN_HEIGHT = 48
+const MAX_HEIGHT = 2000
+
+/**
+ * Sizes the frame to what is in it.
+ *
+ * The document assembled in `runnable.ts` measures its own body and posts the
+ * number here. Only that frame's own window is listened to -- `event.source`
+ * against `contentWindow` -- because every other frame and every extension on
+ * the page can post here too.
+ */
+function trackHeight(frame: HTMLIFrameElement): () => void {
+  const onMessage = (event: MessageEvent) => {
+    if (event.source === null || event.source !== frame.contentWindow) return
+
+    const height = (event.data as { commentFrameHeight?: unknown } | null)?.commentFrameHeight
+    if (typeof height !== "number" || !Number.isFinite(height)) return
+
+    frame.style.height = `${Math.min(Math.max(Math.round(height), MIN_HEIGHT), MAX_HEIGHT)}px`
+  }
+
+  window.addEventListener("message", onMessage)
+  return () => window.removeEventListener("message", onMessage)
+}
+
 function frameFor(document_: string): HTMLIFrameElement {
   const frame = document.createElement("iframe")
   frame.setAttribute("sandbox", SANDBOX)
@@ -48,14 +79,22 @@ export function wireRunner(button: HTMLElement, onToggle: () => void): () => voi
 
   const label = button.textContent ?? "run it"
 
+  // Undoes `trackHeight` for whichever frame is currently up, so a stopped
+  // demo does not leave a listener behind holding on to a dead frame.
+  let untrack = () => {}
+
   const stop = () => {
+    untrack()
+    untrack = () => {}
     stage.replaceChildren()
     button.textContent = label
   }
 
   const start = () => {
     if (stage.firstChild !== null) return
-    stage.append(frameFor(source))
+    const frame = frameFor(source)
+    untrack = trackHeight(frame)
+    stage.append(frame)
     button.textContent = "stop"
   }
 
