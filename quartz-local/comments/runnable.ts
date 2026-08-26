@@ -86,10 +86,53 @@ const RESIZE_REPORTER = `
 })()
 `
 
+/**
+ * Hosts a demo's own code may open a connection to -- `connect-src`, which is
+ * `fetch`, `XMLHttpRequest`, `WebSocket` and `EventSource` at once.
+ *
+ * This is the one channel with no part in *showing* anything, and so the one an
+ * attacker's comment reaches for: to map the reader's own network by timing
+ * requests at `localhost` and `192.168.x`, to fire a state-changing request at
+ * a site the reader is signed in to, or simply to post home whatever it has
+ * managed to scrape together. Everything here is here because some comment
+ * needs it, and the burden is on the comment to justify a new entry: DOOM
+ * fetches its 6.8 MB binary from jsDelivr.
+ */
+const CONNECT_ALLOW = ["https://cdn.jsdelivr.net"]
+
+/**
+ * The frame's own content security policy, carried in the document because a
+ * `srcdoc` frame has no response of its own to hang a header on.
+ *
+ * The sandbox walls the frame off from this site; this walls it off from the
+ * reader. Code still runs -- `script-src` keeps `'unsafe-inline'`, since the
+ * whole document is inline, and gains `'wasm-unsafe-eval'` so `WebAssembly`
+ * still compiles without opening `eval` back up -- and pictures still draw. But
+ * the frame can only reach out to the few hosts above, so a comment cannot
+ * quietly turn the reader's browser into a network scanner, an exfiltration
+ * point, or a cross-site request they never made.
+ *
+ * `img-src` and friends stay open to `https:` and `data:` so a demo can show
+ * what it likes; a determined comment can still trickle a little out through an
+ * image URL, and that is the standing price of letting demos load images at
+ * all. `connect-src` is where the bulk of the harm would have gone, and it is
+ * shut.
+ */
+const FRAME_CSP = [
+  "default-src 'none'",
+  "script-src 'unsafe-inline' 'wasm-unsafe-eval'",
+  "style-src 'unsafe-inline'",
+  "img-src data: blob: https:",
+  "media-src data: blob: https:",
+  "font-src data: https:",
+  `connect-src ${CONNECT_ALLOW.join(" ")}`,
+].join("; ")
+
 function document(body: string, css: string, js: string): string {
   return [
     "<!doctype html>",
     '<html><head><meta charset="utf-8">',
+    `<meta http-equiv="Content-Security-Policy" content="${FRAME_CSP}">`,
     // Relative links in a srcdoc frame resolve against the parent, and a demo
     // navigating this page out from under the reader is never what was wanted.
     '<base target="_blank">',
