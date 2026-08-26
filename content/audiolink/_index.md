@@ -6,12 +6,9 @@ tags:
 ---
 
 [AudioLink](https://github.com/llealloo/audiolink) is the audio-visualization
-library for Unity I help maintain — it takes an audio signal apart into bands
-and hands them to shaders as a texture, so that a world's materials can move
-with the music. This is its example scene, built for WebGL.
-
-It is about 19 MB, so give it a moment. There is no sound input here: the
-player runs the scene against AudioLink's built-in test signal.
+library for Unity I help maintain. it takes an audio signal apart into bands
+and hands them to shaders as a texture, so that a material can be audio reactive.
+This is a example shader, built for WebGL.
 
 <div class="unity-player">
   <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
