@@ -28,7 +28,6 @@
     "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
     "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
     "wasm-chars": "file:../wasm/wasm/pkg/chars",
-    "wasm-doom": "^1.2.0",
     "wasm-gallery": "file:../wasm/wasm/pkg/gallery",
     "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
     "wasm-movies": "file:../wasm/wasm/pkg/movies",

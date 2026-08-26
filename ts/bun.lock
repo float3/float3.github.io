@@ -8,7 +8,6 @@
         "wasm-aoc": "file:../wasm/wasm/pkg/aoc",
         "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
         "wasm-chars": "file:../wasm/wasm/pkg/chars",
-        "wasm-doom": "^1.2.0",
         "wasm-gallery": "file:../wasm/wasm/pkg/gallery",
         "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
         "wasm-movies": "file:../wasm/wasm/pkg/movies",
@@ -692,8 +691,6 @@
     "wasm-bayes": ["wasm-bayes@file:../wasm/wasm/pkg/bayes", {}],
 
     "wasm-chars": ["wasm-chars@file:../wasm/wasm/pkg/chars", {}],
-
-    "wasm-doom": ["wasm-doom@1.2.0", "", {}, "sha512-8Bg2vGMSVBWMOAWsBmLl4+4CYClvYl7aKvWqjKK3CpMM+42gRQkql93Tm9kG23bQaT1YnxBGq/IufrV2vnQa/w=="],
 
     "wasm-gallery": ["wasm-gallery@file:../wasm/wasm/pkg/gallery", {}],
 

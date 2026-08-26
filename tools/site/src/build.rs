@@ -75,11 +75,6 @@ fn prune_wasm_packages(pkg: &Path, tools: &[String]) -> Result<()> {
     Ok(())
 }
 
-/// The DOOM binary wasm-doom ships. Its `exports` map keeps webpack from
-/// importing it, and left to itself the library fetches it from a CDN, so it is
-/// copied beside the bundle instead. `ts/src/doom.ts` names the same path.
-const DOOM_WASM: (&str, &str) = ("ts/node_modules/wasm-doom/wasm/doom.wasm", "doom.wasm");
-
 /// Features of `wasm/wasm` that configure the build rather than name a tool.
 const NON_TOOL_FEATURES: [&str; 3] = ["default", "console_error_panic_hook", "mini-alloc"];
 
@@ -171,25 +166,7 @@ impl Site {
             ]),
         )?;
 
-        self.copy_doom_wasm()?;
         remove_license_files(&content_js)
-    }
-
-    /// Puts the DOOM binary where `ts/src/doom.ts` expects it. webpack cannot,
-    /// so this runs after it, into the directory webpack has just filled.
-    fn copy_doom_wasm(&self) -> Result<()> {
-        let (source, name) = DOOM_WASM;
-        let source = self.root.join(source);
-
-        if !source.is_file() {
-            return Err(Box::new(SiteError::new(format!(
-                "{} is missing; is wasm-doom installed?",
-                source.display()
-            ))));
-        }
-
-        fs::copy(&source, self.root.join("content/js").join(name))?;
-        Ok(())
     }
 
     /// Builds every tool's package, several at a time.
