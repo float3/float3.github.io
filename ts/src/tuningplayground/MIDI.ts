@@ -1,20 +1,6 @@
 import { noteOn, noteOff, wasm } from "./index.js"
 import { midiMultiplier } from "./config.js"
 
-type MidiMessageLike = {
-  data?: ArrayLike<number> | null
-}
-
-type MidiInputLike = {
-  onmidimessage: ((event: MidiMessageLike) => void) | null
-}
-
-type MidiAccessLike = {
-  inputs?: {
-    values?: () => Iterator<unknown>
-  }
-}
-
 export function requestMIDI(): void {
   if (!navigator.requestMIDIAccess) {
     alert("WebMIDI is not supported in this browser.")
@@ -24,8 +10,8 @@ export function requestMIDI(): void {
   navigator.requestMIDIAccess().then(onMIDISuccess).catch(onMIDIFailure)
 }
 
-function onMIDISuccess(midiAccess: unknown): void {
-  const input = firstMidiInput(midiAccess)
+function onMIDISuccess(midiAccess: MIDIAccess): void {
+  const input = midiAccess.inputs.values().next().value
 
   if (input) {
     input.onmidimessage = onMIDIMessage
@@ -38,22 +24,7 @@ function onMIDIFailure(error: DOMException): void {
   console.error("MIDI Access failed:", error)
 }
 
-function firstMidiInput(midiAccess: unknown): MidiInputLike | undefined {
-  const inputs = (midiAccess as MidiAccessLike).inputs
-  const input = inputs?.values?.().next().value
-
-  if (isMidiInputLike(input)) {
-    return input
-  }
-
-  return undefined
-}
-
-function isMidiInputLike(value: unknown): value is MidiInputLike {
-  return !!value && typeof value === "object" && "onmidimessage" in value
-}
-
-function onMIDIMessage(event: MidiMessageLike): void {
+function onMIDIMessage(event: MIDIMessageEvent): void {
   const data = event.data
   if (!data || data.length < 3) return
 
