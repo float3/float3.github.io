@@ -183,10 +183,20 @@ every link gets `rel="nofollow ugc noopener noreferrer"`.
 **Code runs in a sandbox.** A comment containing a `<script>` or `<style>` tag
 gets a _run this_ button, and pressing it loads the whole comment — markup and
 all — into an iframe with `sandbox="allow-scripts allow-modals"` and no
-`allow-same-origin`. A comment with fenced `html`, `css` and `js` blocks instead
-gets them stitched into one page, which is the shape a pasted snippet arrives
-in. Either way nothing executes until a reader asks for it, and pressing the
+`allow-same-origin`. A comment with fenced `html`, `css`, `js` and `ts`
+blocks instead gets them stitched into one page, which is the shape a pasted
+snippet arrives in. Either way nothing executes until a reader asks for it, and pressing the
 button again throws the frame away — as does navigating to another page.
+
+**TypeScript is compiled while the site builds.** A `ts` fence, or a script tag
+that says `lang="ts"` or `type="text/typescript"`, goes through esbuild on the
+way into the frame, so what a reader runs is always JavaScript — a comment
+cannot ask the browser to fetch a compiler, and the sandbox has no network to
+fetch one over. Types are stripped rather than checked: a demo is not a pull
+request, and code `tsc` would have refused still runs, exactly as the JavaScript
+it is. A syntax error is the other kind of wrong, since there is no page to be
+made out of it, and it is printed in the frame where its author will see it —
+a comment with a mistyped fence must not be able to stop the site building.
 
 Without `allow-same-origin` the frame is in an opaque origin. Measured from
 inside one:
