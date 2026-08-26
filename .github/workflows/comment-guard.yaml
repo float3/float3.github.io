@@ -23,7 +23,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           # Both sides of the comparison have to be present, and the merge-base
           # can be arbitrarily far back on a long-running branch.
