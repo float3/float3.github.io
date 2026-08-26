@@ -17,7 +17,7 @@ export const workedExamples: Record<string, string> = {
   "hangeul-mr": "chaewŏnhankuk",
   "korean-rr-mr": "chaewŏnhankuk",
   "roman-numerals": "MMMCCCXXXIX",
-  "japanese-number": "十ニ億三千四百五十六万七千八百九十",
+  "japanese-number": "十二億三千四百五十六万七千八百九十",
   "chinese-number-lower": "十二億三千四百五十六萬七千八百九十",
   "chinese-number-financial": "拾貳億參仟肆佰伍拾陸萬柒仟捌佰玖拾",
   "utf8-hex": "68 65 6C 6C 6F 20 E4 B8 96 E7 95 8C",

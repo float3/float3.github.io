@@ -959,8 +959,7 @@ dependencies = [
 [[package]]
 name = "japanese_number_converter"
 version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1e35ddfada703d296a21f6a843cbb64ccda3a0ac154b05f4f3eee6e0a31db175"
+source = "git+https://github.com/float3/Japanese-number-converter?branch=fix-kanji-two#1544f01c9b4e5f862bd020f340059911145b3a5c"
 
 [[package]]
 name = "js-sys"
