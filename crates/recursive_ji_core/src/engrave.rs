@@ -14,10 +14,10 @@ use std::fmt::Write as _;
 
 use music21_rs::Pitch;
 
-use crate::glyphs::{Glyph, FLAT, LINE_GAP, NOTEHEAD_QUARTER, NOTEHEAD_WHOLE, SHARP, STEP};
+use crate::glyphs::{FLAT, Glyph, LINE_GAP, NOTEHEAD_QUARTER, NOTEHEAD_WHOLE, SHARP, STEP};
 use crate::{
-    cents_between, chord_context_label, format_signed_cents, notated_pitches, notation_chord_label,
-    note_frequency, progression, split_pairs, Result, FIXED_C_JUST, RECURSIVE_JUST,
+    FIXED_C_JUST, RECURSIVE_JUST, Result, cents_between, chord_context_label, format_signed_cents,
+    notated_pitches, notation_chord_label, note_frequency, progression, split_pairs,
 };
 
 /// The staff sits between y = 0 (top line) and y = `STAFF_HEIGHT` (bottom line).

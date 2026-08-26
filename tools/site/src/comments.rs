@@ -291,10 +291,10 @@ pub(crate) fn resolve(payload: &Value, content_dir: &Path) -> Result<Resolved> {
     }
 
     for field in ["replyTo", "editing"] {
-        if let Some(value) = payload_string(payload, field) {
-            if !is_id(&value) {
-                return reject(format!("`{field}` is not a comment id"));
-            }
+        if let Some(value) = payload_string(payload, field)
+            && !is_id(&value)
+        {
+            return reject(format!("`{field}` is not a comment id"));
         }
     }
 
@@ -416,14 +416,12 @@ fn read_comment(file: &Path) -> Comment {
     let mut in_history = false;
     for line in source.lines() {
         if let Some(rest) = line.strip_prefix("  - date:") {
-            if in_history {
-                if let Ok(date) = serde_json::from_str::<String>(rest.trim()) {
-                    comment.history.push(Revision {
-                        date,
-                        issue: None,
-                        edited: false,
-                    });
-                }
+            if in_history && let Ok(date) = serde_json::from_str::<String>(rest.trim()) {
+                comment.history.push(Revision {
+                    date,
+                    issue: None,
+                    edited: false,
+                });
             }
             continue;
         }
@@ -759,12 +757,12 @@ pub(crate) fn check_changes(
             // A new comment may say nothing about who wrote it — the commit
             // answers that — but it may not say somebody else.
             let claimed = at(head, path).and_then(|source| frontmatter_field(&source, "author"));
-            if let Some(claimed) = claimed {
-                if claimed != pull_request.actor {
-                    refusals.push(format!(
+            if let Some(claimed) = claimed
+                && claimed != pull_request.actor
+            {
+                refusals.push(format!(
                         "`{path}` is new but claims to be by `{claimed}`. A comment you add can only be your own."
                     ));
-                }
             }
             continue;
         }
@@ -1025,17 +1023,19 @@ mod tests {
     #[test]
     fn refuses_a_reply_id_that_is_not_an_id() {
         let fixture = Fixture::new("replyid");
-        assert!(apply(
-            &issue(
-                r#"{"parent":"blog/page.md","replyTo":"../../x"}"#,
-                "hi",
-                "alice",
-                1
-            ),
-            &fixture.dir,
-            NOW
-        )
-        .is_err());
+        assert!(
+            apply(
+                &issue(
+                    r#"{"parent":"blog/page.md","replyTo":"../../x"}"#,
+                    "hi",
+                    "alice",
+                    1
+                ),
+                &fixture.dir,
+                NOW
+            )
+            .is_err()
+        );
     }
 
     // -- editing ------------------------------------------------------------
@@ -1080,15 +1080,19 @@ mod tests {
         let first = add(&fixture, "alice");
 
         let payload = format!(r#"{{"parent":"blog/page.md","editing":"{}"}}"#, first.id);
-        assert!(apply(
-            &issue(&payload, "hijacked", "mallory", 2),
-            &fixture.dir,
-            NOW
-        )
-        .is_err());
-        assert!(fs::read_to_string(&first.file)
-            .unwrap()
-            .contains("original"));
+        assert!(
+            apply(
+                &issue(&payload, "hijacked", "mallory", 2),
+                &fixture.dir,
+                NOW
+            )
+            .is_err()
+        );
+        assert!(
+            fs::read_to_string(&first.file)
+                .unwrap()
+                .contains("original")
+        );
     }
 
     #[test]
@@ -1101,38 +1105,42 @@ mod tests {
         )
         .unwrap();
 
-        assert!(apply(
-            &issue(
-                r#"{"parent":"blog/page.md","editing":"deadbeef"}"#,
-                "mine now",
-                "m",
-                3
-            ),
-            &fixture.dir,
-            NOW
-        )
-        .is_err());
+        assert!(
+            apply(
+                &issue(
+                    r#"{"parent":"blog/page.md","editing":"deadbeef"}"#,
+                    "mine now",
+                    "m",
+                    3
+                ),
+                &fixture.dir,
+                NOW
+            )
+            .is_err()
+        );
     }
 
     #[test]
     fn refuses_to_edit_a_comment_that_is_not_there() {
         let fixture = Fixture::new("missing");
-        assert!(apply(
-            &issue(
-                r#"{"parent":"blog/page.md","editing":"aaaaaaaa"}"#,
-                "hi",
-                "alice",
-                1
-            ),
-            &fixture.dir,
-            NOW
-        )
-        .is_err());
+        assert!(
+            apply(
+                &issue(
+                    r#"{"parent":"blog/page.md","editing":"aaaaaaaa"}"#,
+                    "hi",
+                    "alice",
+                    1
+                ),
+                &fixture.dir,
+                NOW
+            )
+            .is_err()
+        );
     }
 
     // -- the pull-request guard --------------------------------------------
 
-    fn tree(entries: &[(&str, &str, &str)]) -> impl Fn(&str, &str) -> Option<String> {
+    fn tree(entries: &[(&str, &str, &str)]) -> impl Fn(&str, &str) -> Option<String> + use<> {
         let mut map: HashMap<(String, String), String> = HashMap::new();
         for (reference, path, author) in entries {
             let source = if author.is_empty() {

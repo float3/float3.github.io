@@ -1,4 +1,4 @@
-use crate::{os_args, Result, Site};
+use crate::{Result, Site, os_args};
 use std::fs;
 
 impl Site {

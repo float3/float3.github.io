@@ -190,35 +190,37 @@ fn strip_links(text: &str) -> String {
 
     while i < bytes.len() {
         // Markdown image: ![alt](url)
-        if bytes[i] == b'!' && i + 1 < bytes.len() && bytes[i + 1] == b'[' {
-            if let Some(end) = skip_markdown_link(text, i + 1) {
-                out.push_str(&text[last_keep..i]);
-                last_keep = end;
-                i = end;
-                continue;
-            }
+        if bytes[i] == b'!'
+            && i + 1 < bytes.len()
+            && bytes[i + 1] == b'['
+            && let Some(end) = skip_markdown_link(text, i + 1)
+        {
+            out.push_str(&text[last_keep..i]);
+            last_keep = end;
+            i = end;
+            continue;
         }
 
         // Markdown link: [text](url) or [text][ref]
-        if bytes[i] == b'[' {
-            if let Some(end) = skip_markdown_link(text, i) {
-                out.push_str(&text[last_keep..i]);
-                last_keep = end;
-                i = end;
-                continue;
-            }
+        if bytes[i] == b'['
+            && let Some(end) = skip_markdown_link(text, i)
+        {
+            out.push_str(&text[last_keep..i]);
+            last_keep = end;
+            i = end;
+            continue;
         }
 
         // Autolink: <https://example.com>
-        if bytes[i] == b'<' {
-            if let Some(close_rel) = text[i + 1..].find('>') {
-                let inner = &text[i + 1..i + 1 + close_rel];
-                if looks_like_url(inner) {
-                    out.push_str(&text[last_keep..i]);
-                    last_keep = i + close_rel + 2;
-                    i = last_keep;
-                    continue;
-                }
+        if bytes[i] == b'<'
+            && let Some(close_rel) = text[i + 1..].find('>')
+        {
+            let inner = &text[i + 1..i + 1 + close_rel];
+            if looks_like_url(inner) {
+                out.push_str(&text[last_keep..i]);
+                last_keep = i + close_rel + 2;
+                i = last_keep;
+                continue;
             }
         }
 

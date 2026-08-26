@@ -281,7 +281,7 @@ impl ProblemOptions {
                     other => {
                         return Err(Box::new(SiteError::new(format!(
                             "unknown aoc-problems option: {other}"
-                        ))))
+                        ))));
                     }
                 }
             }
@@ -347,7 +347,7 @@ impl InputOptions {
                     other => {
                         return Err(Box::new(SiteError::new(format!(
                             "unknown aoc-inputs option: {other}"
-                        ))))
+                        ))));
                     }
                 }
             }
@@ -485,10 +485,10 @@ fn discover_years(root: &Path) -> Result<Vec<u16>> {
         let Some(year) = name.strip_prefix("aoc") else {
             continue;
         };
-        if let Ok(year) = year.parse::<u16>() {
-            if (2000..=2099).contains(&year) {
-                years.push(year);
-            }
+        if let Ok(year) = year.parse::<u16>()
+            && (2000..=2099).contains(&year)
+        {
+            years.push(year);
         }
     }
     years.sort_unstable();

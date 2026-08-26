@@ -21,7 +21,7 @@
 
 use crate::content::is_gallery_item;
 use crate::duplicates::{self, Fingerprint, Removal};
-use crate::{remove_dir_if_exists, Result, Site, SiteError};
+use crate::{Result, Site, SiteError, remove_dir_if_exists};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
@@ -453,7 +453,7 @@ fn parse_options(args: &[String]) -> Result<Options> {
             other if other.starts_with('-') => {
                 return Err(Box::new(SiteError::new(format!(
                     "unknown normalize-gallery option: {other}"
-                ))))
+                ))));
             }
             other => collections.push(other.to_string()),
         }
@@ -591,7 +591,9 @@ mod tests {
 
         assert_eq!(
             stripped,
-            vec![0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x11, 0x22, 0xFF, 0xDA, 0x00, 0x02, 0x99]
+            vec![
+                0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x11, 0x22, 0xFF, 0xDA, 0x00, 0x02, 0x99
+            ]
         );
         // Which is the point of it: what comes out has nothing left to strip,
         // so the next run can leave the file alone.

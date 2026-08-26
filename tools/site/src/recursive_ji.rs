@@ -52,10 +52,11 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     // the post in sync with the generated CSV.
     let csv_path = text_output_dir.join("recursive-ji-frequencies.csv");
     let post_path = site.root.join("content/blog/recursive-just-intonation.md");
-    if csv_path.exists() && post_path.exists() {
-        if let Err(e) = update_recursive_ji_table(&post_path, &csv_path) {
-            eprintln!("warning: failed to update recursive JI table: {e}");
-        }
+    if csv_path.exists()
+        && post_path.exists()
+        && let Err(e) = update_recursive_ji_table(&post_path, &csv_path)
+    {
+        eprintln!("warning: failed to update recursive JI table: {e}");
     }
 
     if post_path.exists() {

@@ -285,12 +285,9 @@ pub fn frequency_report() -> String {
         "tuning,local_root,local_root_ratio,local_interval,note,note_ratio,combined_ratio,frequency_hz,cents_vs_12_tet,cents_vs_fixed_c_ji\n",
     );
 
-    for root_pc in 0..12 {
-        for note_pc in 0..12 {
+    for (root_pc, root_name) in TWELVE_TONE_NAMES.into_iter().enumerate() {
+        for (note_pc, note_name) in TWELVE_TONE_NAMES.into_iter().enumerate() {
             let local_interval = (note_pc as i32 - root_pc as i32).rem_euclid(12);
-
-            let root_name = TWELVE_TONE_NAMES[root_pc];
-            let note_name = TWELVE_TONE_NAMES[note_pc];
 
             let root_ratio = just_ratio_for_degree(root_pc as i32);
             let note_ratio = just_ratio_for_degree(local_interval);

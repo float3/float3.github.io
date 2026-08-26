@@ -128,7 +128,11 @@ pub(super) fn solve_all() {
     (1..=12).for_each(|day| {
         println!("  Day {}", day);
         (1..=problem_count(day)).for_each(|problem| {
-            println!("    Problem {}: {}", problem, solve(&input(day), day, problem));
+            println!(
+                "    Problem {}: {}",
+                problem,
+                solve(&input(day), day, problem)
+            );
         });
     });
 }

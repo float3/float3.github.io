@@ -2,7 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-use crate::{os_args, Result, Site};
+use crate::{Result, Site, os_args};
 
 const REPORT_START: &str = "<!-- REPORT START -->";
 const REPORT_END: &str = "<!-- REPORT END -->";

@@ -2,11 +2,7 @@ use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
 pub fn aoc_day_count_for_year(year: u32, default_days: u32) -> u32 {
-    if year == 2025 {
-        12
-    } else {
-        default_days
-    }
+    if year == 2025 { 12 } else { default_days }
 }
 
 #[wasm_bindgen]

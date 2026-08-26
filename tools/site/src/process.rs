@@ -246,10 +246,11 @@ fn bun_program() -> Option<OsString> {
             .map(PathBuf::from)
             .map(|home| home.join(".bun/bin/bun.exe"));
 
-        if let Some(path) = path {
-            if path.is_file() && command_succeeds(path.as_os_str(), &["--version"]) {
-                return Some(path.into_os_string());
-            }
+        if let Some(path) = path
+            && path.is_file()
+            && command_succeeds(path.as_os_str(), &["--version"])
+        {
+            return Some(path.into_os_string());
         }
     }
 

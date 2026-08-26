@@ -186,8 +186,8 @@ fn same_shape(a_width: u32, a_height: u32, b_width: u32, b_height: u32) -> bool 
 /// channel still land on the same thumbnail.
 #[cfg(feature = "photos")]
 pub(crate) fn picture(path: &Path) -> Result<Fingerprint> {
-    use image::imageops::{resize, FilterType};
     use image::ImageReader;
+    use image::imageops::{FilterType, resize};
 
     let image = ImageReader::open(path)?.with_guessed_format()?.decode()?;
     let (width, height) = (image.width(), image.height());

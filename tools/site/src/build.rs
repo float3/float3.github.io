@@ -1,7 +1,7 @@
 use crate::report;
 use crate::{
-    os_args, remove_dir_if_exists, remove_file_if_exists, remove_files, ChildGuard, InstallMode,
-    Mode, Result, Site, SiteError,
+    ChildGuard, InstallMode, Mode, Result, Site, SiteError, os_args, remove_dir_if_exists,
+    remove_file_if_exists, remove_files,
 };
 use serde_json::Value as JsonValue;
 use std::collections::{BTreeSet, VecDeque};
@@ -414,16 +414,15 @@ fn transform_features(root: &Path) -> Result<std::collections::BTreeMap<u32, Str
             continue;
         }
 
-        if let Some(rest) = line.strip_prefix('(') {
-            if let Some((index, _)) = rest.split_once(',') {
-                if let Ok(index) = index.trim().parse::<u32>() {
-                    let feature = pending.take().unwrap_or_else(|| "base".to_string());
-                    // An index may appear twice, once per direction; both arms
-                    // always carry the same gate.
-                    features.entry(index).or_insert(feature);
-                    continue;
-                }
-            }
+        if let Some(rest) = line.strip_prefix('(')
+            && let Some((index, _)) = rest.split_once(',')
+            && let Ok(index) = index.trim().parse::<u32>()
+        {
+            let feature = pending.take().unwrap_or_else(|| "base".to_string());
+            // An index may appear twice, once per direction; both arms
+            // always carry the same gate.
+            features.entry(index).or_insert(feature);
+            continue;
         }
 
         pending = None;

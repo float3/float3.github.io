@@ -38,7 +38,7 @@ use std::path::PathBuf;
 pub(crate) use fsutil::{
     find_repo_root, remove_dir_if_exists, remove_file_if_exists, remove_files,
 };
-pub(crate) use process::{os_args, ChildGuard, InstallMode};
+pub(crate) use process::{ChildGuard, InstallMode, os_args};
 
 pub(crate) type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
@@ -74,11 +74,7 @@ impl Mode {
     }
 
     fn default_for(ci: bool) -> Self {
-        if ci {
-            Mode::Prod
-        } else {
-            Mode::Dev
-        }
+        if ci { Mode::Prod } else { Mode::Dev }
     }
 }
 
@@ -162,7 +158,7 @@ fn parse_mode(args: &[String], default: Mode) -> Result<Mode> {
             other => {
                 return Err(Box::new(SiteError(format!(
                     "unknown mode argument: {other}"
-                ))))
+                ))));
             }
         };
 

@@ -1138,20 +1138,19 @@ fn parse_midi(data: &[u8]) -> Result<(u16, Vec<(u32, u32)>, Vec<MidiNote>)> {
                     .entry((channel, note))
                     .or_default()
                     .push((tick, velocity));
-            } else if event_type == 0x80 || (event_type == 0x90 && velocity == 0) {
-                if let Some(stack) = active.get_mut(&(channel, note)) {
-                    if !stack.is_empty() {
-                        let (start_tick, start_velocity) = stack.remove(0);
-                        if tick > start_tick {
-                            notes.push(MidiNote {
-                                start_tick,
-                                end_tick: tick,
-                                note,
-                                velocity: start_velocity,
-                                track,
-                            });
-                        }
-                    }
+            } else if (event_type == 0x80 || (event_type == 0x90 && velocity == 0))
+                && let Some(stack) = active.get_mut(&(channel, note))
+                && !stack.is_empty()
+            {
+                let (start_tick, start_velocity) = stack.remove(0);
+                if tick > start_tick {
+                    notes.push(MidiNote {
+                        start_tick,
+                        end_tick: tick,
+                        note,
+                        velocity: start_velocity,
+                        track,
+                    });
                 }
             }
         }
@@ -1162,11 +1161,11 @@ fn parse_midi(data: &[u8]) -> Result<(u16, Vec<(u32, u32)>, Vec<MidiNote>)> {
     tempos.sort_by_key(|(tick, _)| *tick);
     let mut collapsed_tempos = Vec::<(u32, u32)>::with_capacity(tempos.len());
     for (tick, tempo) in tempos {
-        if let Some((last_tick, last_tempo)) = collapsed_tempos.last_mut() {
-            if *last_tick == tick {
-                *last_tempo = tempo;
-                continue;
-            }
+        if let Some((last_tick, last_tempo)) = collapsed_tempos.last_mut()
+            && *last_tick == tick
+        {
+            *last_tempo = tempo;
+            continue;
         }
         collapsed_tempos.push((tick, tempo));
     }
