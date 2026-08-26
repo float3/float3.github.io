@@ -799,6 +799,7 @@ dependencies = [
 [[package]]
 name = "glsl2hlsl"
 version = "0.1.0"
+source = "git+https://github.com/float3/glsl2hlsl?branch=fold-site-changes#68d175a2c248001ca3850e591fadd982b22be52e"
 dependencies = [
  "glsl",
  "md5",

@@ -30,7 +30,6 @@ impl Site {
             "wasm/tuningplayground/keymapping",
             "wasm/textprocessing",
             "wasm/textprocessing/hangeul_conversion",
-            "wasm/glsl2hlsl",
             "wasm/adventofcode",
             "wasm/wasm",
         ] {

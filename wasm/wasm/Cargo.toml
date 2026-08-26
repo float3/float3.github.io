@@ -43,7 +43,7 @@ music21-rs = { workspace = true, optional = true }
 wasm-bindgen = { workspace = true }
 console_error_panic_hook = { workspace = true, optional = true }
 mini-alloc = { workspace = true, optional = true }
-glsl2hlsl = { path = "../glsl2hlsl", optional = true }
+glsl2hlsl = { git = "https://github.com/float3/glsl2hlsl", branch = "fold-site-changes", optional = true }
 adventofcode = { path = "../adventofcode/", optional = true }
 textprocessing = { path = "../textprocessing/", optional = true, default-features = false }
 web-sys = { version = "0.3.103", features = [

@@ -1,5 +1,0 @@
-www/
-debug/
-target/
-**/*.rs.bk
-*.pdb

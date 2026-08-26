@@ -5,7 +5,6 @@ members = [
     "wasm/wasm",
     "wasm/textprocessing",
     "wasm/adventofcode",
-    "wasm/glsl2hlsl",
     "wasm/tuningplayground",
     "wasm/tuningplayground/keymapping",
     "wasm/tuningplayground/chord_generator",
