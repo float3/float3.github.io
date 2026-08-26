@@ -6,6 +6,7 @@ import {
   aoc_day_count_for_year,
   aoc_day_status,
   aoc_problem_count_for_day,
+  aoc_solved,
   highlight_css,
   retrieve_html,
   retrieve_problem,
@@ -114,70 +115,82 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   installHighlightStyles()
 
+  // Which tabs get a star. The wasm answers it without handing the solution
+  // over: the page only needs the yes or no.
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
     for (let d = 1; d <= dayCountForYear(y); d++) {
       for (let p = 1; p <= problemCountForDay(y, d); p++) {
-        const fields = document.createElement("div")
-        fields.className = "fields hidden"
-
-        const descriptionArea = document.createElement("textarea")
-        descriptionArea.className = "big-field description-field"
-        descriptionArea.value = retrieve_problem(y, d, p)
-        descriptionArea.disabled = true
-        descriptionArea.setAttribute(
-          "aria-label",
-          `Problem description for ${y} day ${d} part ${p}`,
-        )
-
-        const codeArea = document.createElement("div")
-        codeArea.className = "big-field code-field"
-        const code = retrieve_html(y, d, p)
-        complete[y - START_YEAR][d - 1][p - 1] = !code.includes("todo!")
-        codeArea.innerHTML = code
-
-        const inputArea = document.createElement("textarea")
-        inputArea.className = "big-field input-field"
-        inputArea.placeholder = "Input here..."
-        inputArea.dataset.aocInput = "true"
-        inputArea.setAttribute("aria-label", `Puzzle input for ${y} day ${d} part ${p}`)
-
-        inputArea.oninput = () => {
-          const otherProblem = p === 1 ? 2 : 1
-          const key = `${y}-${d}-${otherProblem}`
-          const fields = fieldsMap.get(key)
-          if (!fields) return
-
-          const otherInputArea = fields.querySelector(
-            "textarea[data-aoc-input='true']",
-          ) as HTMLTextAreaElement | null
-          if (otherInputArea) otherInputArea.value = inputArea.value
-        }
-
-        const outputArea = document.createElement("textarea")
-        outputArea.className = "small-field output-field"
-        outputArea.disabled = true
-        outputArea.value = ""
-        outputArea.setAttribute("aria-label", `Solution output for ${y} day ${d} part ${p}`)
-
-        const solveButton = document.createElement("button")
-        solveButton.className = "solve-button"
-        solveButton.type = "button"
-        solveButton.textContent = "Solve"
-        solveButton.addEventListener("click", () => {
-          outputArea.value = solve(inputArea.value, y, d, p)
-        })
-
-        fields.appendChild(descriptionArea)
-        fields.appendChild(codeArea)
-        fields.appendChild(inputArea)
-        fields.appendChild(outputArea)
-        fields.appendChild(solveButton)
-
-        const key = `${y}-${d}-${p}`
-        fieldsMap.set(key, fields)
-        contentWrapper.appendChild(fields)
+        complete[y - START_YEAR][d - 1][p - 1] = aoc_solved(y, d, p)
       }
     }
+  }
+
+  // Both parts of a day share their puzzle input, and either part may be built
+  // before the other, so the input lives here rather than in whichever panel
+  // happens to exist.
+  const puzzleInputs = new Map<string, string>()
+
+  // A panel is built the first time it is looked at. All 205 of them used to be
+  // built at load -- five elements and a parse of the highlighted solution
+  // each -- so that one could be shown and the rest hidden.
+  function fieldsFor(y: number, d: number, p: number): HTMLDivElement {
+    const key = `${y}-${d}-${p}`
+    const existing = fieldsMap.get(key)
+    if (existing) return existing
+
+    const fields = document.createElement("div")
+    fields.className = "fields hidden"
+
+    const descriptionArea = document.createElement("textarea")
+    descriptionArea.className = "big-field description-field"
+    descriptionArea.value = retrieve_problem(y, d, p)
+    descriptionArea.disabled = true
+    descriptionArea.setAttribute("aria-label", `Problem description for ${y} day ${d} part ${p}`)
+
+    const codeArea = document.createElement("div")
+    codeArea.className = "big-field code-field"
+    codeArea.innerHTML = retrieve_html(y, d, p)
+
+    const inputArea = document.createElement("textarea")
+    inputArea.className = "big-field input-field"
+    inputArea.placeholder = "Input here..."
+    inputArea.dataset.aocInput = "true"
+    inputArea.setAttribute("aria-label", `Puzzle input for ${y} day ${d} part ${p}`)
+    inputArea.value = puzzleInputs.get(`${y}-${d}`) ?? ""
+
+    inputArea.oninput = () => {
+      puzzleInputs.set(`${y}-${d}`, inputArea.value)
+
+      const other = fieldsMap.get(`${y}-${d}-${p === 1 ? 2 : 1}`)
+      const otherInputArea = other?.querySelector(
+        "textarea[data-aoc-input='true']",
+      ) as HTMLTextAreaElement | null
+      if (otherInputArea) otherInputArea.value = inputArea.value
+    }
+
+    const outputArea = document.createElement("textarea")
+    outputArea.className = "small-field output-field"
+    outputArea.disabled = true
+    outputArea.value = ""
+    outputArea.setAttribute("aria-label", `Solution output for ${y} day ${d} part ${p}`)
+
+    const solveButton = document.createElement("button")
+    solveButton.className = "solve-button"
+    solveButton.type = "button"
+    solveButton.textContent = "Solve"
+    solveButton.addEventListener("click", () => {
+      outputArea.value = solve(inputArea.value, y, d, p)
+    })
+
+    fields.appendChild(descriptionArea)
+    fields.appendChild(codeArea)
+    fields.appendChild(inputArea)
+    fields.appendChild(outputArea)
+    fields.appendChild(solveButton)
+
+    fieldsMap.set(key, fields)
+    contentWrapper.appendChild(fields)
+    return fields
   }
 
   for (let y = START_YEAR; y < START_YEAR + years; y++) {
@@ -343,9 +356,7 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
 
   function showCurrentFields() {
     fieldsMap.forEach((fieldsDiv) => fieldsDiv.classList.add("hidden"))
-    const key = `${activeYear}-${activeDay}-${activeProblem}`
-    const currentFields = fieldsMap.get(key)
-    if (currentFields) currentFields.classList.remove("hidden")
+    fieldsFor(activeYear, activeDay, activeProblem).classList.remove("hidden")
   }
 
   function updateURL() {

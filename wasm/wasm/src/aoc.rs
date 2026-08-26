@@ -44,6 +44,19 @@ pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
     adventofcode::retrieve_html(year, day, problem)
 }
 
+/// Whether a problem has a solution behind it, rather than the `todo!()` a day
+/// starts life as.
+///
+/// The page needs this for all 205 problems to mark its tabs, and used to get
+/// it by pulling every highlighted solution across into JavaScript and looking
+/// for `todo!` there -- 205 strings copied and converted to answer 205 yes/no
+/// questions. The looking happens on this side now.
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn aoc_solved(year: u32, day: u32, problem: u8) -> bool {
+    !adventofcode::retrieve_html(year, day, problem).contains("todo!")
+}
+
 /// The colours the highlighted solutions refer to by class, in both themes.
 ///
 /// One stylesheet the page installs once, rather than a second coloured copy of
