@@ -4,8 +4,13 @@
     "experimentalDecorators": true,
     "module": "esnext",
     "target": "esnext",
-    "moduleResolution": "node",
-    "ignoreDeprecations": "6.0",
+    "moduleResolution": "bundler",
+    "paths": {
+      // micromorph's package.json points "types" at a file it does not ship and
+      // its exports map carries no types condition, so nothing but a direct
+      // mapping finds the declarations sitting next to the entry point.
+      "micromorph": ["./node_modules/micromorph/index.d.ts"]
+    },
     "strict": true,
     "incremental": true,
     "resolveJsonModule": true,
