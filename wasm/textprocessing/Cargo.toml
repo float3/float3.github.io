@@ -23,7 +23,7 @@ chinese = [
 korean = ["dep:hanja", "dep:hangeul_conversion"]
 
 [dependencies]
-base64 = "0.23.0"
+base64 = "0.23.1"
 japanese = "0.1.2"
 japanese_number_converter = { git = "https://github.com/float3/Japanese-number-converter" }
 num-bigint = "0.5.1"

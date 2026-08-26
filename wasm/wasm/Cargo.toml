@@ -46,7 +46,7 @@ mini-alloc = { workspace = true, optional = true }
 glsl2hlsl = { git = "https://github.com/float3/glsl2hlsl", optional = true }
 adventofcode = { path = "../adventofcode/", optional = true }
 textprocessing = { path = "../textprocessing/", optional = true, default-features = false }
-web-sys = { version = "0.3.103", features = [
+web-sys = { version = "0.3.104", features = [
     "Window",
     "Document",
     "CanvasRenderingContext2d",
@@ -67,7 +67,7 @@ getrandom_03 = { package = "getrandom", version = "0.3.4", features = [
 ] }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.76"
+wasm-bindgen-test = "0.3.77"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-Os', '--enable-bulk-memory', '--enable-nontrapping-float-to-int']
