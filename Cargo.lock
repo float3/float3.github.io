@@ -799,7 +799,7 @@ dependencies = [
 [[package]]
 name = "glsl2hlsl"
 version = "0.1.0"
-source = "git+https://github.com/float3/glsl2hlsl?branch=fold-site-changes#68d175a2c248001ca3850e591fadd982b22be52e"
+source = "git+https://github.com/float3/glsl2hlsl#bdaf28a23b2e2ee500c389273bca7c789f543c93"
 dependencies = [
  "glsl",
  "md5",
@@ -959,7 +959,7 @@ dependencies = [
 [[package]]
 name = "japanese_number_converter"
 version = "0.1.0"
-source = "git+https://github.com/float3/Japanese-number-converter?branch=fix-kanji-two#1544f01c9b4e5f862bd020f340059911145b3a5c"
+source = "git+https://github.com/float3/Japanese-number-converter#1544f01c9b4e5f862bd020f340059911145b3a5c"
 
 [[package]]
 name = "js-sys"
