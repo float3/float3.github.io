@@ -26,7 +26,7 @@ Heads: lose everything you own
 Tails: you get 100,000€ (replace with an amount that's reasonable for your financial situation)
 
 
-<div style="max-width:600px;padding:1em;border:1px solid ccc;border-radius:8px">
+<div id="insurance-calculator" style="max-width:600px;padding:1em;border:1px solid ccc;border-radius:8px">
 
 <label>
 Chance of Tails (%):
@@ -50,55 +50,7 @@ Reward if Tails (€):
 
 </div>
 
-<script>
-function money(x) {
-    return "€" + x.toLocaleString(undefined, {
-        maximumFractionDigits: 2
-    });
-}
-
-function updateCalculator() {
-    const p = Number(document.getElementById("tailsProb").value) / 100;
-    const wealth = Number(document.getElementById("netWorth").value);
-    const reward = Number(document.getElementById("reward").value);
-
-    const wealthHeads = 0;
-    const wealthTails = wealth + reward;
-
-    const expectedWealth =
-        (1 - p) * wealthHeads +
-        p * wealthTails;
-
-    const expectedGain = expectedWealth - wealth;
-
-    const breakEvenReward =
-        p > 0 ? wealth / p - wealth : Infinity;
-
-    document.getElementById("results").innerHTML = `
-        <b>If Heads:</b> ${money(wealthHeads)}<br>
-        <b>If Tails:</b> ${money(wealthTails)}<br><br>
-
-        <b>Expected Wealth:</b> ${money(expectedWealth)}<br>
-        <b>Expected Gain/Loss:</b>
-        <span style="color:${expectedGain >= 0 ? "green" : "red"}">
-            ${money(expectedGain)}
-        </span>
-        <br><br>
-
-        <b>Break-even Reward:</b> ${
-            Number.isFinite(breakEvenReward)
-                ? money(breakEvenReward)
-                : "Impossible"
-        }
-    `;
-}
-
-document.querySelectorAll("input").forEach(i =>
-    i.addEventListener("input", updateCalculator)
-);
-
-updateCalculator();
-</script>
+<script type="module" src="/js/insurance.js"></script>
 
 For this example, if you own 50,000€, taking the deal will result in you gaining 25,000€ on average. But I would guess that most people who have 50,000€ would not take this deal. This is because the first 10,000€ are way more important than the tenth 10,000€. Most people don't optimize for money but for utility instead. Money can sometimes be an OK proxy for utility, but it breaks down in cases like this. This should be obvious to you but if it isn't try to imagine getting X€ of money at different levels of net worth.
 
