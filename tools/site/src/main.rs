@@ -5,6 +5,7 @@ mod content;
 mod duplicates;
 mod fsutil;
 mod gallery;
+mod linkcheck;
 mod maintenance;
 #[cfg(feature = "photos")]
 mod photos;
@@ -135,6 +136,7 @@ fn run_main() -> Result<()> {
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
         "check" => site.check(),
+        "check-links" | "links-check" => site.check_links(&args[1..]),
         "update" | "update-and-lint" => site.update(),
         "commit" => {
             let message = (!args[1..].is_empty()).then(|| args[1..].join(" "));
@@ -202,6 +204,7 @@ Commands:
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment
   check                      run Rust, TypeScript, and lint checks
+  check-links [DIR]          check that every local link in public/ resolves
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files
 "

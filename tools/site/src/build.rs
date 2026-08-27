@@ -118,6 +118,19 @@ impl Site {
 
         self.run_bun(&self.root, &args)?;
 
+        // A link that points at nothing is a page that builds, deploys, and
+        // hands the reader the 404 page -- which a browser asked for a video
+        // reports as an unsupported format rather than a missing file. In a
+        // release build that is worth stopping for; in development it is worth
+        // saying, since the page being linked to is often the one being
+        // written next.
+        if let Err(error) = self.check_links(&[]) {
+            match mode {
+                Mode::Prod => return Err(error),
+                Mode::Dev => self.warn(&error.to_string()),
+            }
+        }
+
         let public = self.root.join("public");
         report::write(self, &public, started.elapsed().as_secs())
     }
