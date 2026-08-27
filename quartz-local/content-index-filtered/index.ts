@@ -158,13 +158,25 @@ export const ContentIndexFiltered: QuartzEmitterPlugin<Partial<Options>> = (opts
     const linkIndex: ContentIndexMap = new Map()
     for (const [, file] of content) {
       const data = (file.data as QuartzPluginData & Record<string, unknown>) ?? {}
-      if (data.unlisted === true) continue
+      const properties = (data.frontmatter as Record<string, unknown> | undefined) ?? {}
+
+      // `unlisted` in the frontmatter, as well as on the file data, because
+      // nothing in this pipeline puts the one into the other and the flag is
+      // only useful if a page can ask for it. What it asks for is to be left
+      // out of this index -- and so out of the search, the graph, the feed and
+      // the sitemap -- while still being built and served like any other page.
+      //
+      // It is here for the pages that are dumps rather than writing. The udon
+      // exposure tree is 3.3 MB of generated signatures; indexed, it would be
+      // fourteen times the size of the index every reader downloads, to make
+      // the search answer `Get(Int32)` forty-five thousand times.
+      if (data.unlisted === true || properties.unlisted === true) continue
 
       const slug = data.slug as FullSlug
       const date = dateFor(data) ?? new Date()
       const text = data.text as string | undefined
       if (options.includeEmptyFiles || (text && text !== "")) {
-        const frontmatter = (data.frontmatter as Record<string, unknown> | undefined) ?? {}
+        const frontmatter = properties
         const isEncrypted = data.encrypted === true
         linkIndex.set(slug, {
           slug,

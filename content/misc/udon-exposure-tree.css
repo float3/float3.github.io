@@ -1,0 +1,89 @@
+/* The udon class exposure tree: fifteen hundred folds, one per type.
+   Everything here is about making that many rows of the same shape readable
+   -- the summary line is the only thing on screen until something is opened,
+   so the summary line is what carries the type, its kind and how much of it
+   Udon exposes. */
+
+.udon-note {
+  color: var(--gray);
+}
+
+article details {
+  border-left: 2px solid var(--lightgray);
+  margin: 0.15rem 0;
+  padding-left: 0.6rem;
+}
+
+article details[open] {
+  border-left-color: var(--secondary);
+}
+
+/* A namespace is a fold with a heading in its summary: a real heading, so it
+   keeps its size and its anchor, laid out inline so the fold reads as one
+   line rather than as a triangle with a title dangling beside it. */
+article details.udon-namespace > summary h2,
+article details.udon-namespace > summary h3 {
+  display: inline;
+  margin: 0;
+}
+
+article details.udon-namespace {
+  border-left-width: 3px;
+  margin: 0.6rem 0;
+}
+
+article details.udon-namespace > summary {
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 0.3rem 0;
+}
+
+/* How many types are behind the fold, which is the one thing worth knowing
+   before opening one that holds nine hundred of them. */
+article details.udon-namespace > summary em {
+  color: var(--gray);
+  font-size: 0.8rem;
+  font-style: normal;
+  text-transform: none;
+}
+
+article summary {
+  cursor: pointer;
+  font-family: var(--codeFont, ui-monospace, monospace);
+  font-size: 0.9rem;
+  padding: 0.15rem 0;
+}
+
+article summary:hover {
+  color: var(--secondary);
+}
+
+/* The kind of thing it is -- class, struct, enum, array -- which is worth
+   knowing at a glance and not worth the width of the name. */
+article summary em {
+  color: var(--gray);
+  font-size: 0.75rem;
+  font-style: normal;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Signatures are long and must not be wrapped: a broken line looks like two
+   members. The block scrolls on its own rather than the page doing it. */
+article details pre {
+  background: var(--lightgray);
+  border-radius: 4px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  margin: 0.25rem 0 0.6rem;
+  overflow-x: auto;
+  padding: 0.5rem 0.7rem;
+}
+
+/* The namespace headings sit inside summaries, so their usual top margin
+   would push the triangle away from the text it belongs to. */
+article details.udon-namespace h3 {
+  color: var(--gray);
+  font-family: var(--codeFont, ui-monospace, monospace);
+  font-size: 1rem;
+}
