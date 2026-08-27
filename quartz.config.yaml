@@ -15,6 +15,12 @@ configuration:
     # they belong to. Left in the pipeline they would each become a page of
     # their own, and turn up in search, the graph and the RSS feed.
     - "**/*.comment.*.md"
+    # Unity writes its own page beside every WebGL export, and every export
+    # drops another copy of it next to the player. The page is audiolink's
+    # _index.md; this one is the export's, and copying it into the site
+    # publishes it as `audiolink/index` with no extension, which is not a page
+    # anybody can open.
+    - "audiolink/index.html"
   theme:
     fontOrigin: googleFonts
     cdnCaching: true
