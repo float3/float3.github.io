@@ -578,7 +578,7 @@ o.pos = float4(float2(1, -1) * (v.uv * 2 - 1), 0, 1);
 
 this technique allows you to write in screenspace only to pixels that are affected by a light that has a specific layer mask, allowing you to render over a specific layer with your effect
 
-![volumetricsnanmarching.mp4](volumetricsnanmarching.mp4)
+![volumetricsnanmarching.mp4](/misc/media/volumetricsnanmarching.mp4)
 
 first you need to create a color swatch to get a nan light, or write a script to set a light to nan, then choose your lights layer mask correctly
 

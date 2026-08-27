@@ -45,7 +45,7 @@ Contact
 - [gitlab://float3](https://gitlab.com/float3)
 - [mail](mailto:contact%40hilll.dev)
 
-<noscript> looks like you have javascript disabled, what can I say you're a real [chad](/beating_sir_aloone_damageless.webm) </noscript>
+<noscript> looks like you have javascript disabled, what can I say you're a real [chad](/misc/media/beating_sir_aloone_damageless.webm) </noscript>
 
 built by using quartz by https://github.com/jackyzha0 and using their site as a template https://github.com/jackyzha0/jackyzha0.github.io
 

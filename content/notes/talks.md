@@ -30,4 +30,4 @@ talks I like
 - [Why Isn't Functional Programming the Norm? – Richard Feldman](https://www.youtube.com/watch?v=QyJZzq0v7Z4)
 - [Functional Programming for Pragmatists - Richard Feldman](https://www.youtube.com/watch?v=3n17wHe5wEw)
 
-you can also find all these links [here](/plaintext/talks.txt)
+you can also find all these links [here](/misc/plaintext/talks.txt)

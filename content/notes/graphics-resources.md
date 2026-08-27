@@ -8,7 +8,7 @@ tags:
   - shaders
 ---
 
-you can also find all these links [here](/plaintext/graphics-resources.txt)
+you can also find all these links [here](/misc/plaintext/graphics-resources.txt)
 
 - [Siggraph](#siggraph)
   - [Siggraph 2009](#siggraph-2009)

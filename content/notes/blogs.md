@@ -8,7 +8,7 @@ tags:
   - fp
 ---
 
-you can also find all these links [here](/plaintext/blogs.txt)
+you can also find all these links [here](/misc/plaintext/blogs.txt)
 
 blogs I like
 
