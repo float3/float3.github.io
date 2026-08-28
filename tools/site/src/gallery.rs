@@ -11,17 +11,38 @@
 //!
 //! A gif is the one thing that gets asked what it is rather than told: one
 //! frame is a still like any other, and more than one is an animation, which
-//! keeps its extension and its bytes the way video does.
+//! keeps its extension and its frames the way video keeps its packets.
 //!
 //! It also drops the copies. A folder of saved images holds the same picture
 //! more than once, under two names and often at two sizes; `duplicates` decides
 //! which of those are one picture, and the largest of each set is what stays.
 //!
-//! Re-encoding is what strips the metadata: decoding to pixels and writing a
-//! fresh JPEG leaves nothing of the original file's structure to carry an EXIF
-//! block. That also makes it lossy, so a file already in its final shape —
-//! right name, JPEG, no metadata segments — is copied rather than run through
-//! the encoder again, and rerunning the command costs nothing.
+//! # Nothing but the picture
+//!
+//! Every file published from a gallery carries the picture and nothing else,
+//! and the three kinds reach that state three ways.
+//!
+//! A **still** is decoded to pixels and written again as a JPEG, which leaves
+//! nothing of the original file's structure to carry an EXIF block, and then
+//! has its own encoder's `APPn` header taken off and anything past the
+//! end-of-image marker dropped.
+//!
+//! An **animation** cannot be re-encoded here without losing every frame but
+//! one, so its blocks are walked instead and the ones that are not frames —
+//! the comment, the plain-text extension, an application extension that is not
+//! the loop count, and whatever was appended past the trailer — are left out.
+//!
+//! A **video** cannot be re-encoded here at all, which would mean an encoder
+//! rather than a muxer, so ffmpeg remuxes it without the tags and the data
+//! tracks written around the packets. That one is optional: a gallery without
+//! video in it never needs it, and its absence is a warning here rather than a
+//! refusal. `gallery-from-issue` does refuse, a stranger's video being exactly
+//! the file nobody has looked inside.
+//!
+//! All three ask the same question — would rewriting this change it — and a
+//! file the answer is no for is moved rather than rewritten. That is what makes
+//! rerunning the command free, and what stops a rename putting a picture
+//! through the encoder for a second time.
 
 use crate::content::is_gallery_item;
 use crate::duplicates::{self, Fingerprint, Removal};
@@ -29,6 +50,7 @@ use crate::{Result, Site, SiteError, remove_dir_if_exists};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
+use std::process::Command;
 
 /// Matches `process-photos`, and close enough to whatever the trolley pictures
 /// were encoded with that the two galleries look like one thing.
@@ -53,15 +75,21 @@ const IMAGE_EXTENSIONS: &[&str] = &["jpg", "jpeg", "png", "webp", "gif"];
 /// of the two a file is cannot be read off its name, so [`is_still`] opens it.
 const GIF: &str = "gif";
 
-/// What the gallery renders in a `<video>`, kept as it is: re-encoding video
-/// would mean depending on ffmpeg for the sake of six files.
+/// What the gallery renders in a `<video>`: remuxed rather than re-encoded,
+/// since the packets are not what carries the metadata.
 const VIDEO_EXTENSIONS: &[&str] = &["mp4", "webm", "mov", "m4v", "ogv"];
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum Action {
     /// Decode and write a fresh JPEG, which is also what drops the metadata.
     Transcode,
-    /// Move the bytes unchanged: video, or a still already in its final shape.
+    /// Rewrite the container without the blocks that are not the picture.
+    ///
+    /// What an animation and a video get, neither being re-encodable here: a
+    /// gif keeps every frame and loses its comment and its XMP packet, and a
+    /// video keeps every packet and loses the tags a camera wrote around them.
+    Strip,
+    /// Move the bytes unchanged: nothing in the file left to take out.
     Keep,
 }
 
@@ -114,19 +142,7 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
     let staging = dir.join(STAGING);
     remove_dir_if_exists(&staging)?;
 
-    let mut names = Vec::new();
-    for entry in fs::read_dir(&dir)? {
-        let entry = entry?;
-        if entry.path().is_dir() {
-            continue;
-        }
-
-        let name = entry.file_name().to_string_lossy().into_owned();
-        if is_gallery_item(&name) {
-            names.push(name);
-        }
-    }
-    names.sort();
+    let mut names = names_in(&dir)?;
 
     if names.is_empty() {
         site.warn(&format!("{collection} is empty; nothing to normalize"));
@@ -155,7 +171,10 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
         names.retain(|name| !removals.iter().any(|removal| &removal.dropped == name));
     }
 
-    let plan = settle(plan(&names)?, &dir, options.force)?;
+    // Created before the plan is settled rather than after, because settling it
+    // is what rewrites the video, and that has to land somewhere.
+    fs::create_dir_all(&staging)?;
+    let plan = settle(site, plan(&names)?, &dir, &staging, options.force)?;
 
     for step in &plan {
         if step.source == step.target && step.action == Action::Keep {
@@ -164,23 +183,30 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
 
         let note = match step.action {
             Action::Transcode => "",
+            Action::Strip => " (metadata stripped)",
             Action::Keep => " (unchanged)",
         };
         println!("{collection}: {} -> {}{note}", step.source, step.target);
     }
 
     if options.dry_run {
+        remove_dir_if_exists(&staging)?;
         println!("dry run: {} file(s) left as they are", plan.len());
         return Ok(());
     }
 
-    fs::create_dir_all(&staging)?;
     for step in &plan {
         let source = dir.join(&step.source);
         let staged = staging.join(&step.target);
 
         match step.action {
             Action::Transcode => transcode(&source, &staged, options.quality)?,
+            // A gif is rewritten here; a video already was, by `settle`, which
+            // had to write it in order to find out whether it needed writing.
+            Action::Strip if extension_of(&step.source) == GIF => {
+                strip_gif(&source, &staged)?;
+            }
+            Action::Strip => {}
             Action::Keep => {
                 fs::copy(&source, &staged)?;
             }
@@ -198,6 +224,27 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
     let count = site.generate_index(collection, title)?;
     println!("{collection}: {count} file(s), index regenerated");
     Ok(())
+}
+
+/// Everything in a gallery directory that the gallery publishes, sorted, which
+/// is the order the numbering follows.
+pub(crate) fn names_in(dir: &Path) -> Result<Vec<String>> {
+    let mut names = Vec::new();
+
+    for entry in fs::read_dir(dir)? {
+        let entry = entry?;
+        if entry.path().is_dir() {
+            continue;
+        }
+
+        let name = entry.file_name().to_string_lossy().into_owned();
+        if is_gallery_item(&name) {
+            names.push(name);
+        }
+    }
+
+    names.sort();
+    Ok(names)
 }
 
 /// Assigns every file its number, in the order the gallery already lists them.
@@ -246,36 +293,78 @@ fn plan(names: &[String]) -> Result<Vec<Step>> {
 /// is, since there is no re-encoding an animation into a still without losing
 /// most of it.
 ///
-/// The second is whether a re-encode has anything left to do. A still that is
-/// already a JPEG carrying no metadata segments would come out of the encoder a
-/// little worse and no cleaner, so it is moved as the bytes it already is. That
-/// decision is about the contents and not the name: a gallery renumbers itself
-/// whenever anything joins or leaves the front of it, and a rename is no reason
-/// to put a picture through the encoder again. `--force` skips it and re-encodes
-/// the lot — but not the first question, because that one is not a matter of
-/// taste.
-fn settle(plan: Vec<Step>, dir: &Path, force: bool) -> Result<Vec<Step>> {
+/// The second is whether there is anything left to take out. Every file the
+/// gallery publishes has to end up carrying the picture and nothing else, and
+/// the three kinds get there by three different routes: a still is decoded and
+/// written afresh, an animation and a video have their containers rewritten
+/// without the blocks that are not frames. A file already in that state is
+/// moved as the bytes it is — a still that went through the encoder again would
+/// come out a little worse and no cleaner, and a gallery renumbers itself
+/// whenever anything joins or leaves the front of it, which is no reason to
+/// recompress the lot. `--force` does the work anyway, for when the question is
+/// whether this is right rather than whether it is needed.
+/// Every one of the three asks the same question — would rewriting this change
+/// it — and only the video has to do the rewriting to find out. That one is
+/// left in `staging` under its new name, which is where it was going anyway.
+///
+/// `--force` reaches only the stills, because the other two answers are exact
+/// rather than a judgement about whether the work is worth doing.
+fn settle(
+    site: &Site,
+    plan: Vec<Step>,
+    dir: &Path,
+    staging: &Path,
+    force: bool,
+) -> Result<Vec<Step>> {
     plan.into_iter()
         .map(|step| {
-            if extension_of(&step.source) == GIF {
-                // A gif is never a JPEG with nothing left to strip, so the
-                // question below does not arise for one either way.
-                return Ok(if is_still(dir, &step.source)? {
-                    Step {
+            let extension = extension_of(&step.source);
+            let path = dir.join(&step.source);
+
+            if extension == GIF {
+                let bytes = fs::read(&path)?;
+                if !gif_is_animated(&bytes) {
+                    return Ok(Step {
                         target: with_jpg_extension(&step.target),
                         action: Action::Transcode,
                         ..step
-                    }
-                } else {
-                    step
+                    });
+                }
+
+                return Ok(Step {
+                    action: strip_or_keep(gif_carries_metadata(&bytes)),
+                    ..step
                 });
             }
 
-            if force || step.action != Action::Transcode {
+            if VIDEO_EXTENSIONS.contains(&extension.as_str()) {
+                let stripped = staging.join(&step.target);
+                strip_video(site, &path, &stripped)?;
+
+                // Which is also what makes this idempotent, and the reason the
+                // question is asked this way round rather than by reading the
+                // container: ffmpeg writes boxes of its own, so a file that
+                // "has metadata boxes in it" is what a stripped file looks
+                // like, and normalizing twice would rewrite it every time.
+                if fs::read(&stripped)? == fs::read(&path)? {
+                    fs::remove_file(&stripped)?;
+                    return Ok(Step {
+                        action: Action::Keep,
+                        ..step
+                    });
+                }
+
+                return Ok(Step {
+                    action: Action::Strip,
+                    ..step
+                });
+            }
+
+            if force {
                 return Ok(step);
             }
 
-            let bytes = fs::read(dir.join(&step.source))?;
+            let bytes = fs::read(&path)?;
             Ok(if jpeg_carries_metadata(&bytes) {
                 step
             } else {
@@ -286,6 +375,14 @@ fn settle(plan: Vec<Step>, dir: &Path, force: bool) -> Result<Vec<Step>> {
             })
         })
         .collect()
+}
+
+fn strip_or_keep(carries_metadata: bool) -> Action {
+    if carries_metadata {
+        Action::Strip
+    } else {
+        Action::Keep
+    }
 }
 
 /// Whether the gallery holds this file as a picture rather than as something it
@@ -317,7 +414,7 @@ fn with_jpg_extension(target: &str) -> String {
 /// here and then again by the re-encode, which is a maintenance command reading
 /// a folder twice rather than holding every picture in a gallery in memory at
 /// once.
-fn duplicates(dir: &Path, names: &[String]) -> Result<Vec<Removal>> {
+pub(crate) fn duplicates(dir: &Path, names: &[String]) -> Result<Vec<Removal>> {
     let mut files: Vec<(String, Fingerprint)> = Vec::with_capacity(names.len());
 
     for name in names {
@@ -359,6 +456,155 @@ fn transcode(_: &Path, _: &Path, _: u8) -> Result<()> {
     )))
 }
 
+/// Carries an animation across without the blocks that are not its frames.
+fn strip_gif(source: &Path, target: &Path) -> Result<()> {
+    let bytes = fs::read(source)?;
+
+    match gif_without_metadata(&bytes) {
+        Some(stripped) => Ok(fs::write(target, stripped)?),
+        // Nothing asks for a strip unless that walk already got through the
+        // file once, so this is unreachable; copying is the harmless way to be
+        // wrong about it.
+        None => {
+            fs::copy(source, target)?;
+            Ok(())
+        }
+    }
+}
+
+/// Remuxes a video without the tags written around it.
+///
+/// `-c copy` and nothing else: re-encoding would mean an encoder as well as a
+/// muxer, and the packets are not what carries the metadata. What goes is the
+/// container's own tags, the chapters, and — through mapping only the streams
+/// that are played — any data track alongside them, which on a phone is a
+/// `mebx` track of where and how the thing was held. `+bitexact` stops ffmpeg
+/// stamping its own version into the output, so running this twice writes the
+/// same bytes twice and rerunning the command stays free.
+///
+/// ffmpeg is optional here, since it is only needed by a gallery that has video
+/// in it with something to take out. Its absence is a warning rather than an
+/// error, because refusing to normalize a gallery over it would be worse — but
+/// `gallery-from-issue` does refuse, a stranger's video being exactly the case
+/// where nobody has looked at what is in the file.
+fn strip_video(site: &Site, source: &Path, target: &Path) -> Result<()> {
+    let output = Command::new("ffmpeg")
+        .args(["-hide_banner", "-loglevel", "error", "-nostdin", "-y", "-i"])
+        .arg(source)
+        .args([
+            "-map",
+            "0:v?",
+            "-map",
+            "0:a?",
+            "-map",
+            "0:s?",
+            "-map_metadata",
+            "-1",
+            "-map_chapters",
+            "-1",
+            "-c",
+            "copy",
+            "-fflags",
+            "+bitexact",
+        ])
+        .arg(target)
+        .output();
+
+    match output {
+        Ok(output) if output.status.success() => Ok(()),
+        Ok(output) => Err(Box::new(SiteError::new(format!(
+            "ffmpeg could not strip {}: {}",
+            source.display(),
+            String::from_utf8_lossy(&output.stderr).trim()
+        )))),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            site.warn(&format!(
+                "{} carries container metadata and ffmpeg is not installed, \
+                 so it is being published as it is",
+                source.display()
+            ));
+            fs::copy(source, target)?;
+            Ok(())
+        }
+        Err(error) => Err(Box::new(error)),
+    }
+}
+
+/// The identifiers of the two application extensions that are part of an
+/// animation rather than something written alongside it.
+///
+/// Both say how many times the gif loops. Dropping one turns a looping gif into
+/// a gif that plays once, which is why application extensions are not simply
+/// thrown away as a class — XMP packets ride in one of these too.
+const GIF_LOOP_EXTENSIONS: [&[u8; 11]; 2] = [b"NETSCAPE2.0", b"ANIMEXTS1.0"];
+
+/// Whether a gif holds anything the animation does not need.
+///
+/// Unparseable counts as carrying nothing, which is the opposite of the answer
+/// [`jpeg_carries_metadata`] gives — and for the same reason. A JPEG that
+/// cannot be walked is re-encoded, which fixes it; a gif that cannot be walked
+/// cannot be rewritten either, so claiming there is something to take out would
+/// only mean rewriting it wrong.
+fn gif_carries_metadata(bytes: &[u8]) -> bool {
+    gif_without_metadata(bytes).is_some_and(|stripped| stripped != bytes)
+}
+
+/// The same gif with every block that is not part of the animation removed:
+/// the comment, the plain-text extension, any application extension that is not
+/// the loop count, and anything appended after the trailer.
+///
+/// `None` if this is not a gif this can walk, in which case it is carried
+/// across as it is rather than guessed at.
+fn gif_without_metadata(bytes: &[u8]) -> Option<Vec<u8>> {
+    let start = gif_blocks_offset(bytes)?;
+    let mut kept = Vec::with_capacity(bytes.len());
+    kept.extend_from_slice(&bytes[..start]);
+    let mut offset = start;
+
+    loop {
+        match *bytes.get(offset)? {
+            // The trailer, and the end of everything worth keeping: whatever
+            // somebody appended past it is not part of the picture.
+            0x3B => {
+                kept.push(0x3B);
+                return Some(kept);
+            }
+            0x21 => {
+                let label = *bytes.get(offset + 1)?;
+                let end = gif_skip_sub_blocks(bytes, offset + 2)?;
+                let keep = match label {
+                    // Graphic control: this frame's delay and transparency.
+                    0xF9 => true,
+                    // Application: the loop count, or somebody's metadata.
+                    0xFF => bytes.get(offset + 3..offset + 14).is_some_and(|id| {
+                        GIF_LOOP_EXTENSIONS
+                            .iter()
+                            .any(|identifier| id == identifier.as_slice())
+                    }),
+                    // Comment, plain text, and anything else nobody draws.
+                    _ => false,
+                };
+
+                if keep {
+                    kept.extend_from_slice(bytes.get(offset..end)?);
+                }
+                offset = end;
+            }
+            // An image descriptor and the frame behind it, kept whole. Ten
+            // bytes, the last of them the packed field saying whether a local
+            // colour table follows, then the code size and the frame's data.
+            0x2C => {
+                let packed = *bytes.get(offset + 9)?;
+                let data = offset + 10 + gif_colour_table_len(packed) + 1;
+                let end = gif_skip_sub_blocks(bytes, data)?;
+                kept.extend_from_slice(bytes.get(offset..end)?);
+                offset = end;
+            }
+            _ => return None,
+        }
+    }
+}
+
 /// Two digits, as the trolley problems are numbered, widening only if a gallery
 /// outgrows what two digits can name.
 fn number_width(count: usize) -> usize {
@@ -381,57 +627,27 @@ fn extension_of(name: &str) -> String {
         .unwrap_or_default()
 }
 
-/// Whether a JPEG's header holds anything but the picture.
+/// Whether a JPEG holds anything but the picture.
 ///
-/// EXIF, JFIF, Photoshop resource blocks, and XMP all ride in an `APPn` marker,
-/// and a comment rides in `COM`; a file with neither has nothing to strip. The
-/// scan stops at the scan data, which is where the header ends, and anything it
-/// cannot parse counts as metadata — being wrong in that direction costs one
-/// re-encode, and being wrong in the other publishes somebody's GPS fix.
+/// Phrased as "would stripping it change it", so that the question and the
+/// answer cannot drift apart — one walk of the file decides both. EXIF, JFIF,
+/// Photoshop resource blocks and XMP all ride in an `APPn` marker, a comment
+/// rides in `COM`, and anything appended past the end-of-image marker rides in
+/// no marker at all. A file this cannot walk counts as carrying metadata:
+/// being wrong in that direction costs one re-encode, and being wrong in the
+/// other publishes somebody's GPS fix.
 fn jpeg_carries_metadata(bytes: &[u8]) -> bool {
-    if bytes.len() < 4 || bytes[0] != 0xFF || bytes[1] != 0xD8 {
-        return true;
-    }
-
-    let mut offset = 2;
-    while offset + 1 < bytes.len() {
-        if bytes[offset] != 0xFF {
-            return true;
-        }
-
-        match bytes[offset + 1] {
-            // Fill bytes are allowed to pad any marker.
-            0xFF => offset += 1,
-            // Start of scan: the header ended without any metadata in it.
-            0xDA => return false,
-            // APPn and COM are the segments metadata travels in.
-            0xE0..=0xEF | 0xFE => return true,
-            // Standalone markers, which carry no length to skip past.
-            0x01 | 0xD0..=0xD7 => offset += 2,
-            _ => {
-                let Some(length) = bytes
-                    .get(offset + 2..offset + 4)
-                    .map(|length| usize::from(u16::from_be_bytes([length[0], length[1]])))
-                else {
-                    return true;
-                };
-
-                if length < 2 {
-                    return true;
-                }
-                offset += 2 + length;
-            }
-        }
-    }
-
-    true
+    without_metadata_segments(bytes).is_none_or(|stripped| stripped != bytes)
 }
 
-/// The same JPEG with every `APPn` and `COM` segment removed, or `None` if it
-/// is not a JPEG this can walk.
+/// The same JPEG with every `APPn` and `COM` segment removed and everything
+/// past the end-of-image marker dropped, or `None` if it is not a JPEG this
+/// can walk.
 ///
-/// Everything from the start of the scan is copied across untouched: that is
-/// the picture, and a trailer after it belongs to whoever wrote it.
+/// The trailer goes because a JPEG ends at `FFD9` and a file that carries on
+/// afterwards is carrying something somebody else put there — a second image,
+/// a zip, a thumbnail, an XMP packet no reader would show. The scan data
+/// itself is copied through untouched; that is the picture.
 // Only the re-encode calls this, and only the `photos` feature can re-encode;
 // the tests below still run either way, which is the point of it living out
 // here rather than inside the gate.
@@ -455,8 +671,10 @@ fn without_metadata_segments(bytes: &[u8]) -> Option<Vec<u8>> {
             // Padding before a marker, which the segments below reintroduce as
             // their own leading 0xFF.
             0xFF => offset += 1,
-            0xDA => {
-                kept.extend_from_slice(&bytes[offset..]);
+            // End of image. A progressive JPEG reaches this after several
+            // scans; either way, the file is over.
+            0xD9 => {
+                kept.extend_from_slice(&bytes[offset..offset + 2]);
                 return Some(kept);
             }
             0x01 | 0xD0..=0xD7 => {
@@ -476,7 +694,34 @@ fn without_metadata_segments(bytes: &[u8]) -> Option<Vec<u8>> {
                     kept.extend_from_slice(&bytes[offset..end]);
                 }
                 offset = end;
+
+                // A scan header is followed by entropy-coded data rather than
+                // by the next marker, and that data is the only part of a JPEG
+                // that has to be walked a byte at a time.
+                if marker == 0xDA {
+                    let scan_end = jpeg_end_of_scan(bytes, end)?;
+                    kept.extend_from_slice(&bytes[end..scan_end]);
+                    offset = scan_end;
+                }
             }
+        }
+    }
+}
+
+/// Where a scan's entropy-coded data ends: at the first marker inside it that
+/// is neither a stuffed `0xFF` nor a restart.
+///
+/// A literal `0xFF` byte in the compressed data is written as `FF 00`, and
+/// `FFD0` through `FFD7` punctuate the scan itself, so neither ends it. Every
+/// other `FF` does — in a well-formed file that is `FFD9`, and in a progressive
+/// one it can be the next scan's tables.
+fn jpeg_end_of_scan(bytes: &[u8], mut offset: usize) -> Option<usize> {
+    loop {
+        let at = offset + bytes[offset..].iter().position(|&byte| byte == 0xFF)?;
+
+        match *bytes.get(at + 1)? {
+            0x00 | 0xD0..=0xD7 => offset = at + 2,
+            _ => return Some(at),
         }
     }
 }
@@ -630,9 +875,14 @@ fn print_help() {
         "\
 site normalize-gallery
 
-Renumber a content/misc gallery, re-encode its stills as JPEG, strip their
-metadata, and delete the ones that are copies of another. Video, and any gif
-that moves, keeps its extension and its place in the numbering.
+Renumber a content/misc gallery and leave every file in it carrying the picture
+and nothing else: stills are re-encoded as JPEG, animations lose the blocks that
+are not frames, and video is remuxed without its tags. Copies of another file
+are deleted. Video, and any gif that moves, keeps its extension and its place in
+the numbering.
+
+Remuxing video needs ffmpeg on the path; without it a video that has tags in it
+is published as it is, with a warning.
 
 Usage:
   site normalize-gallery COLLECTION... [--quality N] [--force]
@@ -654,6 +904,14 @@ mod tests {
 
     fn names(values: &[&str]) -> Vec<String> {
         values.iter().map(|value| value.to_string()).collect()
+    }
+
+    /// Only ever asked to print a warning here, so it needs no root.
+    fn site() -> Site {
+        Site {
+            root: std::path::PathBuf::new(),
+            ci: false,
+        }
     }
 
     #[test]
@@ -726,8 +984,12 @@ mod tests {
     fn opens_a_gif_to_decide_which_of_the_two_it_is() {
         let fixture = Fixture::new("gifs", &[("still.gif", gif(1)), ("animated.gif", gif(3))]);
         let plan = settle(
+            &site(),
             plan(&names(&["animated.gif", "still.gif"])).unwrap(),
             &fixture.dir,
+            // Only a video is written while the plan is settled, and there is
+            // none here, so this directory is never created.
+            &fixture.dir.join(STAGING),
             false,
         )
         .unwrap();
@@ -748,7 +1010,14 @@ mod tests {
     #[test]
     fn keeps_an_animation_whole_even_when_forced() {
         let fixture = Fixture::new("forced", &[("00.gif", gif(2))]);
-        let plan = settle(plan(&names(&["00.gif"])).unwrap(), &fixture.dir, true).unwrap();
+        let plan = settle(
+            &site(),
+            plan(&names(&["00.gif"])).unwrap(),
+            &fixture.dir,
+            &fixture.dir.join(STAGING),
+            true,
+        )
+        .unwrap();
 
         assert_eq!(plan[0].target, "00.gif");
         assert_eq!(plan[0].action, Action::Keep);
@@ -862,9 +1131,11 @@ mod tests {
 
     #[test]
     fn sees_nothing_to_strip_in_a_freshly_encoded_jpeg() {
-        // SOI, a quantisation table, then the scan: what the encoder writes.
+        // SOI, a quantisation table, the scan, and the end: what the encoder
+        // writes, and every byte of it the picture.
         let clean = [
-            0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x02,
+            0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x02, 0x99, 0xFF,
+            0xD9,
         ];
         assert!(!jpeg_carries_metadata(&clean));
     }
@@ -875,31 +1146,54 @@ mod tests {
         assert!(jpeg_carries_metadata(&[0x89, b'P', b'N', b'G']));
         // A truncated segment length has nothing to skip past.
         assert!(jpeg_carries_metadata(&[0xFF, 0xD8, 0xFF, 0xDB, 0x00]));
+        // A scan that never reaches the end of the image: the file was cut off
+        // somewhere, and re-encoding is what makes it whole again.
+        assert!(jpeg_carries_metadata(&[
+            0xFF, 0xD8, 0xFF, 0xDA, 0x00, 0x02, 0x99
+        ]));
     }
 
     #[test]
     fn strips_the_segments_and_leaves_the_picture() {
-        // SOI, an empty JFIF header, an EXIF block, a quantisation table, and
-        // the scan. Every length counts its own two bytes.
+        // SOI, an empty JFIF header, an EXIF block, a quantisation table, the
+        // scan, and the end. Every length counts its own two bytes.
         let source = [
             0xFF, 0xD8, // SOI
             0xFF, 0xE0, 0x00, 0x02, // APP0, empty
             0xFF, 0xE1, 0x00, 0x03, b'E', // APP1
             0xFF, 0xDB, 0x00, 0x04, 0x11, 0x22, // DQT
             0xFF, 0xDA, 0x00, 0x02, // SOS
-            0x99, // scan data
+            0x99, 0xFF, 0x00, 0xFF, 0xD0, 0x99, // scan data, a stuffed byte, a restart
+            0xFF, 0xD9, // EOI
         ];
         let stripped = without_metadata_segments(&source).unwrap();
 
         assert_eq!(
             stripped,
             vec![
-                0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x11, 0x22, 0xFF, 0xDA, 0x00, 0x02, 0x99
+                0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x11, 0x22, 0xFF, 0xDA, 0x00, 0x02, 0x99, 0xFF,
+                0x00, 0xFF, 0xD0, 0x99, 0xFF, 0xD9
             ]
         );
         // Which is the point of it: what comes out has nothing left to strip,
         // so the next run can leave the file alone.
         assert!(!jpeg_carries_metadata(&stripped));
+    }
+
+    /// A JPEG ends at `FFD9`. Anything after that was appended by something
+    /// other than the encoder — another image, an archive, an XMP packet — and
+    /// no reader shows it, which is exactly why things get hidden there.
+    #[test]
+    fn drops_whatever_was_appended_after_the_end_of_the_image() {
+        let mut source = vec![
+            0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x04, 0x00, 0x00, 0xFF, 0xDA, 0x00, 0x02, 0x99, 0xFF,
+            0xD9,
+        ];
+        let picture = source.clone();
+        source.extend_from_slice(b"PK\x03\x04and a whole zip file");
+
+        assert!(jpeg_carries_metadata(&source));
+        assert_eq!(without_metadata_segments(&source).unwrap(), picture);
     }
 
     #[test]
@@ -909,6 +1203,49 @@ mod tests {
         assert!(without_metadata_segments(&[0xFF, 0xD8, 0xFF, 0xE1, 0xFF, 0xFF]).is_none());
         // No start of scan anywhere in it.
         assert!(without_metadata_segments(&[0xFF, 0xD8, 0xFF, 0xDB, 0x00, 0x02]).is_none());
+    }
+
+    #[test]
+    fn takes_the_blocks_that_are_not_frames_out_of_a_gif() {
+        let clean = gif(2);
+        assert!(!gif_carries_metadata(&clean));
+        assert_eq!(gif_without_metadata(&clean).unwrap(), clean);
+
+        let commented = gif_with_extension(&[0x21, 0xFE, 0x03, b'h', b'i', b'!', 0x00]);
+        assert!(gif_carries_metadata(&commented));
+        assert_eq!(gif_without_metadata(&commented).unwrap(), gif(2));
+
+        // XMP travels in an application extension, and so does the loop count;
+        // only one of them is part of the animation.
+        let xmp = gif_with_extension(&[
+            0x21, 0xFF, 0x0B, b'X', b'M', b'P', b' ', b'D', b'a', b't', b'a', b'X', b'M', b'P',
+            0x00,
+        ]);
+        assert!(gif_carries_metadata(&xmp));
+        assert_eq!(gif_without_metadata(&xmp).unwrap(), gif(2));
+
+        let looping = gif_with_extension(&[
+            0x21, 0xFF, 0x0B, b'N', b'E', b'T', b'S', b'C', b'A', b'P', b'E', b'2', b'.', b'0',
+            0x03, 0x01, 0x00, 0x00, 0x00,
+        ]);
+        assert!(!gif_carries_metadata(&looping));
+    }
+
+    #[test]
+    fn drops_whatever_a_gif_carries_past_its_trailer() {
+        let mut source = gif(1);
+        source.extend_from_slice(b"appended");
+
+        assert!(gif_carries_metadata(&source));
+        assert_eq!(gif_without_metadata(&source).unwrap(), gif(1));
+    }
+
+    /// The same gif, with one more extension block in front of the frames.
+    fn gif_with_extension(extension: &[u8]) -> Vec<u8> {
+        let mut bytes = gif(2);
+        // Past the six-byte header and the seven-byte screen descriptor.
+        bytes.splice(13..13, extension.iter().copied());
+        bytes
     }
 
     #[test]
