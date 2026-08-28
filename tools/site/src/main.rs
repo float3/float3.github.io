@@ -28,6 +28,7 @@ mod photos {
 mod process;
 mod recursive_ji;
 mod report;
+mod submissions;
 mod tables;
 mod zipf;
 
@@ -135,6 +136,7 @@ fn run_main() -> Result<()> {
         // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
+        "gallery-from-issue" => submissions::from_issue(&site),
         "check" => site.check(),
         "check-links" | "links-check" => site.check_links(&args[1..]),
         "update" | "update-and-lint" => site.update(),
@@ -203,6 +205,8 @@ Commands:
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment
+  gallery-from-issue         CI-only: add the files attached to a submission
+                             issue to the gallery it names
   check                      run Rust, TypeScript, and lint checks
   check-links [DIR]          check that every local link in public/ resolves
   update                     run dependency updates and linters

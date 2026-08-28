@@ -1,0 +1,167 @@
+# Turns a gallery submission issue into a pull request.
+#
+# The submit button on a gallery page opens a prefilled issue and asks for
+# pictures to be dropped into it; GitHub uploads each one and writes a link to
+# it in the body. This picks those up, adds the files to the gallery the issue
+# names, commits them in the issue opener's name, opens a pull request against
+# the default branch and closes the issue. Merging that pull request is what
+# publishes them, so the review step is a diff of the pictures themselves.
+#
+# It opens that pull request and stops. No workflow in this repository merges
+# one, and none ever should: the merge button is the whole of the moderation,
+# and a run that could press it for you is a run that publishes a stranger's
+# pictures unread. Approving is the most any of this may ever do.
+#
+# The whole of the validation is `site gallery-from-issue`; see the module
+# documentation in `tools/site/src/submissions.rs` for what a stranger's issue
+# can and cannot reach. No secret is involved: this authenticates with the
+# `GITHUB_TOKEN` GitHub mints for the run and throws away afterwards, and no
+# personal access token should ever be added for it.
+name: Gallery submission
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  submit:
+    # Keyed off the marker rather than a label, as the comment workflow is:
+    # `?labels=` in a prefilled issue URL is silently dropped for anyone without
+    # triage permission on the repository, which is everyone this is for.
+    if: contains(github.event.issue.body, 'hilll.dev:gallery')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Branched from the default branch, and nothing here reads history.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install --profile minimal stable
+
+      # A video's metadata comes out by remuxing it, and there is no remuxing
+      # without ffmpeg. `gallery-from-issue` refuses video outright when this is
+      # missing rather than publishing a file nobody has looked inside, so
+      # without this step every submission with a clip in it is turned away.
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes ffmpeg
+
+      # Built with default features on, unlike the comment workflow: re-encoding
+      # the stills is the whole point of the exercise, and that is the `photos`
+      # feature.
+      - name: Add the files to the gallery
+        id: add
+        env:
+          # Passed as JSON rather than interpolated into the shell: an issue
+          # body is attacker-controlled text and has no business being parsed
+          # by bash.
+          ISSUE_JSON: ${{ toJSON(github.event.issue) }}
+          CONTENT_DIR: content
+        run: cargo run --locked --manifest-path tools/site/Cargo.toml -- gallery-from-issue
+
+      - name: Say why it was refused
+        if: failure() && steps.add.outputs.rejected != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          REASON: ${{ steps.add.outputs.rejected }}
+        run: |
+          gh issue comment "$ISSUE" --body "This could not be added to the gallery: $REASON
+
+          Nothing has been changed. Open a new issue from the button on the page to try again."
+          gh issue close "$ISSUE" --reason "not planned"
+
+      # The command already refuses to write anywhere but the gallery the issue
+      # names, and cleans up after itself when it refuses. This checks the same
+      # fact a second way, against the working tree rather than against the
+      # code's intentions, because the cost of being wrong is a stranger's issue
+      # changing a file that is not a picture in a gallery.
+      - name: Refuse anything outside the gallery
+        env:
+          DIR: ${{ steps.add.outputs.dir }}
+        run: |
+          set -euo pipefail
+
+          case "$DIR" in
+            *..*) echo "::error::$DIR climbs out of the tree"; exit 1 ;;
+            content/misc/*/*) echo "::error::$DIR is not a gallery directory"; exit 1 ;;
+            content/misc/*) ;;
+            *) echo "::error::$DIR is not under content/misc"; exit 1 ;;
+          esac
+
+          changed="$(git status --porcelain --untracked-files=all)"
+          printf 'changed:\n%s\n' "$changed"
+
+          if [ -z "$changed" ]; then
+            echo "::error::nothing was added"
+            exit 1
+          fi
+
+          printf '%s\n' "$changed" | while IFS= read -r line; do
+            path="${line#???}"
+            case "$path" in
+              # A download that never got renumbered: the run went wrong
+              # somewhere, and none of it should be committed.
+              */submission-*) echo "::error::$path was left half-added"; exit 1 ;;
+              "$DIR"/*) ;;
+              *) echo "::error::$path is not in $DIR"; exit 1 ;;
+            esac
+          done
+
+      - name: Commit them as the person who sent them
+        id: commit
+        env:
+          # GitHub's private-email form for the account. The commit is
+          # attributed to them, not signed by them — the issue they opened is
+          # what stands behind it.
+          AUTHOR_NAME: ${{ github.event.issue.user.login }}
+          AUTHOR_EMAIL: ${{ github.event.issue.user.id }}+${{ github.event.issue.user.login }}@users.noreply.github.com
+          BRANCH: gallery/${{ github.event.issue.number }}
+          DIR: ${{ steps.add.outputs.dir }}
+          COLLECTION: ${{ steps.add.outputs.collection }}
+          COUNT: ${{ steps.add.outputs.count }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          git switch -c "$BRANCH"
+          git add -- "$DIR"
+          git \
+            -c user.name="$AUTHOR_NAME" \
+            -c user.email="$AUTHOR_EMAIL" \
+            commit -m "add $COUNT file(s) to $COLLECTION
+
+          Closes #${ISSUE}."
+          git push origin "$BRANCH"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.commit.outputs.branch }}
+          BASE: ${{ github.event.repository.default_branch }}
+          COLLECTION: ${{ steps.add.outputs.collection }}
+          COUNT: ${{ steps.add.outputs.count }}
+          FILES: ${{ steps.add.outputs.files }}
+          LOGIN: ${{ steps.add.outputs.login }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          set -euo pipefail
+          gh pr create \
+            --base "$BASE" \
+            --head "$BRANCH" \
+            --title "$COUNT file(s) for $COLLECTION (@$LOGIN)" \
+            --body "From #${ISSUE}, opened by @${LOGIN}.
+
+          $(printf '%s\n' $FILES | sed 's/^/- `/; s/$/`/')
+
+          Every still has been re-encoded and every video remuxed, so what is here
+          carries no metadata from wherever it came from. Merging publishes it;
+          closing this without merging discards it."
+          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."

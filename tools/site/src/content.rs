@@ -81,6 +81,24 @@ impl Site {
         ("guesswedoing", "guess we doing"),
     ];
 
+    /// The galleries a stranger may add to.
+    ///
+    /// Separate from the list above, and deliberately shorter than it. Being
+    /// listed there is what makes a directory a gallery; being listed here is
+    /// what lets `gallery-from-issue` write into it, and it is the only thing
+    /// that does — the submit button on a page is an offer, and this is the
+    /// answer. `media` and `blobs` are files the site itself uses and are
+    /// nobody's invitation.
+    const SUBMITTABLE: &'static [&'static str] = &["trolley", "guesswedoing"];
+
+    pub(crate) fn is_submittable(dir: &str) -> bool {
+        Self::SUBMITTABLE.contains(&dir)
+    }
+
+    pub(crate) fn submittable_names() -> Vec<&'static str> {
+        Self::SUBMITTABLE.to_vec()
+    }
+
     pub(crate) fn indices(&self) -> Result<()> {
         for (dir, title) in Self::INDICES {
             self.generate_index(dir, title)?;
@@ -195,7 +213,7 @@ fn manifest(entries: &[String]) -> String {
     out
 }
 
-fn extract_urls(source: &str) -> Vec<String> {
+pub(crate) fn extract_urls(source: &str) -> Vec<String> {
     let mut links = Vec::new();
     let mut offset = 0;
 

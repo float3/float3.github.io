@@ -123,6 +123,107 @@ pub(crate) fn normalize(site: &Site, args: &[String]) -> Result<()> {
     Ok(())
 }
 
+/// One gallery, with the options a submission wants.
+///
+/// `gallery-from-issue` settles duplicates itself, before anything is put in
+/// the directory, because the scan here deletes the smaller copy of a pair and
+/// that is the wrong answer when one of the two is already published under a
+/// number people have linked to.
+pub(crate) fn normalize_submission(site: &Site, collection: &str) -> Result<()> {
+    normalize_collection(
+        site,
+        collection,
+        &Options {
+            collections: vec![collection.to_string()],
+            quality: DEFAULT_QUALITY,
+            force: false,
+            keep_duplicates: true,
+            dry_run: false,
+        },
+    )
+}
+
+/// The name a file's own bytes say it should have, or `None` for anything a
+/// gallery cannot take.
+///
+/// What a file was called where it came from says nothing, and a GitHub
+/// attachment URL does not carry a name at all, so the answer comes from the
+/// first few bytes. Every extension this returns is one [`plan`] accepts, which
+/// is what makes "whatever `normalize-gallery` takes" a true description of
+/// what may be submitted — there is a test below holding the two together.
+pub(crate) fn sniff(bytes: &[u8]) -> Option<&'static str> {
+    let starts = |prefix: &[u8]| bytes.starts_with(prefix);
+
+    if starts(&[0xFF, 0xD8, 0xFF]) {
+        return Some("jpg");
+    }
+    if starts(b"\x89PNG\r\n\x1a\n") {
+        return Some("png");
+    }
+    if starts(b"GIF87a") || starts(b"GIF89a") {
+        return Some(GIF);
+    }
+    if starts(b"RIFF") && bytes.get(8..12) == Some(b"WEBP") {
+        return Some("webp");
+    }
+    if starts(b"OggS") {
+        return Some("ogv");
+    }
+    // Matroska and webm are one format with two names, and only one of them is
+    // a thing a browser plays, so the doctype is what decides rather than the
+    // magic — an mkv renamed to webm is a file that does not open.
+    if starts(&[0x1A, 0x45, 0xDF, 0xA3]) {
+        return bytes
+            .get(..64)
+            .unwrap_or(bytes)
+            .windows(4)
+            .any(|window| window == b"webm")
+            .then_some("webm");
+    }
+    if bytes.get(4..8) == Some(b"ftyp") {
+        // QuickTime and mp4 share the container and differ in the brand.
+        return Some(if bytes.get(8..12) == Some(b"qt  ") {
+            "mov"
+        } else {
+            "mp4"
+        });
+    }
+
+    None
+}
+
+/// Whether an extension names something the gallery renders in a `<video>`,
+/// which is also the answer to whether ffmpeg has to be there to clean it.
+pub(crate) fn is_video(extension: &str) -> bool {
+    VIDEO_EXTENSIONS.contains(&extension)
+}
+
+/// What a page can say a gallery accepts, in the order the reader meets them.
+pub(crate) fn accepted_extensions() -> String {
+    let mut all = IMAGE_EXTENSIONS.to_vec();
+    all.extend_from_slice(VIDEO_EXTENSIONS);
+    all.join(", ")
+}
+
+/// Whether adding these files would move anything already in the gallery.
+///
+/// Numbering follows the sorted order of the directory, so a gallery crossing
+/// a hundred files widens every name in it, and a gallery that was never
+/// normalized renumbers on the first run. Either is fine to do by hand and
+/// neither is fine to do on a stranger's behalf: it changes the address of
+/// every file below the change, and the pages linking to them do not follow.
+pub(crate) fn renumbering(existing: &[String], incoming: &[String]) -> Result<Vec<String>> {
+    let mut names = existing.to_vec();
+    names.extend_from_slice(incoming);
+    names.sort();
+
+    Ok(plan(&names)?
+        .into_iter()
+        .filter(|step| existing.contains(&step.source) && step.target != step.source)
+        .map(|step| step.source)
+        .collect())
+}
+
 fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Result<()> {
     let title = Site::index_title(collection).ok_or_else(|| {
         SiteError::new(format!(
@@ -528,6 +629,15 @@ fn strip_video(site: &Site, source: &Path, target: &Path) -> Result<()> {
         }
         Err(error) => Err(Box::new(error)),
     }
+}
+
+/// Whether ffmpeg is on the path, for a caller that would rather refuse than
+/// publish a video it cannot clean.
+pub(crate) fn ffmpeg_available() -> bool {
+    Command::new("ffmpeg")
+        .args(["-hide_banner", "-loglevel", "error", "-version"])
+        .output()
+        .is_ok_and(|output| output.status.success())
 }
 
 /// The identifiers of the two application extensions that are part of an
@@ -1039,6 +1149,73 @@ mod tests {
         let encoded = fs::read(&target).unwrap();
         assert_eq!(&encoded[..2], &[0xFF, 0xD8]);
         assert!(!jpeg_carries_metadata(&encoded));
+    }
+
+    /// What may be submitted is exactly what this command can take, so the two
+    /// answers have to be the same answer. Every extension the sniffer returns
+    /// is put through the planner here; a kind added to one and not the other
+    /// shows up as a submission accepted and then refused, or refused and then
+    /// silently misfiled.
+    #[test]
+    fn only_ever_names_a_kind_the_planner_accepts() {
+        let files: [(&[u8], &str); 8] = [
+            (&[0xFF, 0xD8, 0xFF, 0xE0], "jpg"),
+            (b"\x89PNG\r\n\x1a\n", "png"),
+            (b"GIF89a and so on", GIF),
+            (b"RIFF\0\0\0\0WEBPVP8 ", "webp"),
+            (b"OggS\0\x02\0\0", "ogv"),
+            (b"\x1A\x45\xDF\xA3 doctype webm follows", "webm"),
+            (b"\0\0\0\x20ftypisom", "mp4"),
+            (b"\0\0\0\x14ftypqt  ", "mov"),
+        ];
+
+        for (bytes, extension) in files {
+            assert_eq!(sniff(bytes), Some(extension));
+            assert!(
+                plan(&names(&[&format!("submission-00.{extension}")])).is_ok(),
+                "{extension} is sniffed and then refused by the planner"
+            );
+        }
+
+        // Matroska is the same container under another name, and not one the
+        // page can play; the doctype is what tells them apart.
+        assert_eq!(sniff(b"\x1A\x45\xDF\xA3 doctype matroska here"), None);
+        // And the things people try to attach that are not pictures at all.
+        assert_eq!(sniff(b"%PDF-1.7"), None);
+        assert_eq!(sniff(b"<svg xmlns="), None);
+        assert_eq!(sniff(b"PK\x03\x04"), None);
+        assert_eq!(sniff(&[]), None);
+    }
+
+    #[test]
+    fn refuses_to_renumber_what_is_already_published() {
+        let existing = names(&["00.jpg", "01.mp4", "02.jpg"]);
+
+        // The ordinary case: the new file lands at the end and nothing moves.
+        assert!(
+            renumbering(&existing, &names(&["submission-00.png"]))
+                .unwrap()
+                .is_empty()
+        );
+
+        // A gallery whose numbering has a hole in it renumbers on the way
+        // through, which is a thing to do by hand rather than to a stranger.
+        let holed = names(&["00.jpg", "02.jpg"]);
+        assert_eq!(
+            renumbering(&holed, &names(&["submission-00.png"])).unwrap(),
+            vec!["02.jpg".to_string()]
+        );
+
+        // And so does the one that takes a full gallery past what two digits
+        // can name, where every file in it widens at once.
+        let full: Vec<String> = (0..100).map(|index| format!("{index:02}.jpg")).collect();
+        assert!(renumbering(&full, &[]).unwrap().is_empty());
+        assert_eq!(
+            renumbering(&full, &names(&["submission-00.png"]))
+                .unwrap()
+                .len(),
+            100
+        );
     }
 
     #[test]

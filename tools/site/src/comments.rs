@@ -45,7 +45,7 @@ impl std::fmt::Display for Rejected {
 
 impl std::error::Error for Rejected {}
 
-fn reject<T>(message: impl Into<String>) -> Result<T> {
+pub(crate) fn reject<T>(message: impl Into<String>) -> Result<T> {
     Err(Box::new(Rejected(message.into())))
 }
 
@@ -207,11 +207,26 @@ pub(crate) struct Submission {
 /// contains an arrow puts `-->` *inside the payload*, and the split lands in
 /// the middle of the JSON. The body may still contain as many as it likes.
 pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
+    let submission = parse_marked_issue(issue_body, ISSUE_MARKER)?;
+
+    if submission.body.is_empty() {
+        return reject("the comment has no text");
+    }
+
+    Ok(submission)
+}
+
+/// The same split, for any of the markers a page can put in an issue.
+///
+/// `gallery-from-issue` reads its issues out of the same shape, differing only
+/// in the marker and in what the part after it has to contain — a comment needs
+/// text and a submission needs files, so neither check lives here.
+pub(crate) fn parse_marked_issue(issue_body: &str, marker: &str) -> Result<Submission> {
     let text = issue_body.replace("\r\n", "\n");
-    let opening = format!("<!--{ISSUE_MARKER}");
+    let opening = format!("<!--{marker}");
 
     let Some(start) = text.find(&opening) else {
-        return reject(format!("this issue carries no {ISSUE_MARKER} marker"));
+        return reject(format!("this issue carries no {marker} marker"));
     };
     let after_marker = start + opening.len();
 
@@ -220,7 +235,7 @@ pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
         .find('\n')
         .map(|at| after_marker + at + 1)
     else {
-        return reject("the comment marker is never closed");
+        return reject(format!("the {marker} marker is never closed"));
     };
     let payload_end = text[payload_start..]
         .find('\n')
@@ -229,22 +244,19 @@ pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
 
     let payload: Value = match serde_json::from_str(text[payload_start..payload_end].trim()) {
         Ok(value) => value,
-        Err(_) => return reject("the comment marker does not contain valid JSON"),
+        Err(_) => return reject(format!("the {marker} marker does not contain valid JSON")),
     };
     if !payload.is_object() {
-        return reject("the comment payload is not an object");
+        return reject(format!("the {marker} payload is not an object"));
     }
 
     let Some(close) = text[payload_end..].find("-->").map(|at| payload_end + at) else {
-        return reject("the comment marker is never closed");
+        return reject(format!("the {marker} marker is never closed"));
     };
 
     let body = text[close + 3..].trim().to_string();
-    if body.is_empty() {
-        return reject("the comment has no text");
-    }
     if body.len() > MAX_BODY {
-        return reject(format!("the comment is longer than {MAX_BODY} bytes"));
+        return reject(format!("the issue is longer than {MAX_BODY} bytes"));
     }
 
     Ok(Submission { payload, body })
@@ -639,7 +651,7 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
     write_output(&outputs)
 }
 
-fn write_output(outputs: &str) -> Result<()> {
+pub(crate) fn write_output(outputs: &str) -> Result<()> {
     if let Ok(path) = env::var("GITHUB_OUTPUT") {
         use std::io::Write;
         let mut file = fs::OpenOptions::new()

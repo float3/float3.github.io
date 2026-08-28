@@ -14,6 +14,7 @@
 
 import { gallery_media_kind, gallery_media_label, gallery_media_src } from "wasm-gallery"
 import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
+import { renderSubmitButton } from "./gallery/submit.js"
 
 /** Written next to the media by `site indices`. */
 const MANIFEST = "index.json"
@@ -33,6 +34,15 @@ interface GalleryConfig {
    * "guess we doing 04".
    */
   caption: string
+  /**
+   * `owner/repo` the submit button opens an issue against, or nothing.
+   *
+   * Its presence is what puts the button on the page. Whether the submission is
+   * then accepted is the repository's own answer, given by `Site::SUBMITTABLE`
+   * in `tools/site/src/content.rs`; a test there refuses a page that offers a
+   * button the workflow would only refuse.
+   */
+  submitRepo?: string
 }
 
 function readConfig(gallery: HTMLElement): GalleryConfig | undefined {
@@ -45,6 +55,7 @@ function readConfig(gallery: HTMLElement): GalleryConfig | undefined {
     noun,
     plural: gallery.dataset.plural?.trim() || `${noun}s`,
     caption: gallery.dataset.caption?.trim() || noun,
+    submitRepo: gallery.dataset.submitRepo?.trim() || undefined,
   }
 }
 
@@ -95,6 +106,17 @@ async function initialise(gallery: HTMLElement): Promise<void> {
   const dialog = gallery
     .closest(".photo-page")
     ?.querySelector<HTMLDialogElement>("dialog.photo-lightbox")
+
+  // Before the manifest is fetched, and not conditional on it: a gallery with
+  // nothing in it yet is the one most worth being able to add to.
+  if (config.submitRepo !== undefined) {
+    renderSubmitButton(section, {
+      repo: config.submitRepo,
+      collection: config.collection,
+      noun: config.noun,
+      label: config.caption,
+    })
+  }
 
   const names = await readManifest(config.collection)
 
