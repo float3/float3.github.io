@@ -16,11 +16,25 @@
 const SANDBOX = [
   // The point of the feature.
   "allow-scripts",
-  // `alert` and `prompt`, which half of all small demos are built on.
-  "allow-modals",
   // Deliberately absent: allow-same-origin, allow-top-navigation,
   // allow-popups, allow-forms, allow-downloads, allow-pointer-lock.
-].join(" ")
+]
+
+/**
+ * `alert` and `prompt`, which half of all small demos are built on — and which
+ * only a frame the reader started themselves gets.
+ *
+ * A modal is the one thing in here that takes the tab rather than the box: it
+ * is drawn by the browser outside the frame, and a loop of them cannot be
+ * scrolled past or clicked away. Frames also start on sight now rather than on
+ * a click, so without this split a comment could wedge the tab of anybody who
+ * scrolled far enough down the page. Pressing "run it" is the reader saying
+ * they want whatever this does; drifting into view is not.
+ */
+const INTERACTIVE = ["allow-modals"]
+
+const sandboxFor = (interactive: boolean) =>
+  (interactive ? [...SANDBOX, ...INTERACTIVE] : SANDBOX).join(" ")
 
 /**
  * Bounds on a height the frame asks for. The number arrives from a document
@@ -53,9 +67,9 @@ function trackHeight(frame: HTMLIFrameElement): () => void {
   return () => window.removeEventListener("message", onMessage)
 }
 
-function frameFor(document_: string): HTMLIFrameElement {
+function frameFor(document_: string, interactive: boolean): HTMLIFrameElement {
   const frame = document.createElement("iframe")
-  frame.setAttribute("sandbox", SANDBOX)
+  frame.setAttribute("sandbox", sandboxFor(interactive))
   frame.setAttribute("referrerpolicy", "no-referrer")
   // Emphatically not `loading="lazy"`: the frame is created by a click, and a
   // comment far enough down the page to be worth scrolling to is exactly the
@@ -90,9 +104,9 @@ export function wireRunner(button: HTMLElement, onToggle: () => void): () => voi
     button.textContent = label
   }
 
-  const start = () => {
+  const start = (interactive: boolean) => {
     if (stage.firstChild !== null) return
-    const frame = frameFor(source)
+    const frame = frameFor(source, interactive)
     untrack = trackHeight(frame)
     stage.append(frame)
     button.textContent = "stop"
@@ -100,7 +114,7 @@ export function wireRunner(button: HTMLElement, onToggle: () => void): () => voi
 
   const click = () => {
     if (stage.firstChild !== null) stop()
-    else start()
+    else start(true)
     onToggle()
   }
 
@@ -118,7 +132,7 @@ export function wireRunner(button: HTMLElement, onToggle: () => void): () => voi
 
   const begin = () => {
     if (stage.firstChild !== null) return
-    start()
+    start(false)
     onToggle()
   }
 

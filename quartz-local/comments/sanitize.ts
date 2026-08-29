@@ -5,8 +5,10 @@
  * but only one of them belongs in this document. Markup renders inline, with a
  * wide allowlist: a comment can lay out a table, draw a details/summary, style
  * its own text. Anything that *executes* is pulled out here and handed to
- * `runnable.ts`, which puts it in a sandboxed frame the reader has to press a
- * button to start.
+ * `runnable.ts`, which puts it in a sandboxed frame: an opaque origin, its own
+ * content security policy, and no `allow-same-origin`. The frame starts when it
+ * comes into view, so the sandbox is the whole of what stands between a comment
+ * and the reader — nobody presses anything first.
  *
  * That split is the whole security model, and it is not about distrusting the
  * commenter — every comment is read before it merges. It is that a merge is a
