@@ -23,6 +23,13 @@ on:
   issues:
     types: [opened]
 
+# As the comment workflow, and more so: a submission also apt-installs ffmpeg
+# and downloads as much as twenty files. One runner at a time per account, and
+# queued rather than cancelled so nothing sent is silently dropped.
+concurrency:
+  group: gallery-${{ github.event.issue.user.login }}
+  cancel-in-progress: false
+
 jobs:
   submit:
     # Keyed off the marker rather than a label, as the comment workflow is:

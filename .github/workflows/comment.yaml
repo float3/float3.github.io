@@ -11,6 +11,16 @@ on:
   issues:
     types: [opened]
 
+# Anybody may open an issue, and every one carrying the marker starts a runner
+# that clones, installs a toolchain and pushes a branch. Grouped by the account
+# that opened it rather than cancelled: two people commenting at once are both
+# served, and one account opening fifty issues gets one runner at a time instead
+# of fifty. Queued rather than cancelled, because a comment that lost its race
+# would be a comment silently dropped.
+concurrency:
+  group: comment-${{ github.event.issue.user.login }}
+  cancel-in-progress: false
+
 jobs:
   comment:
     # Keyed off the marker rather than a label: `?labels=` in a prefilled issue
