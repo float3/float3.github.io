@@ -123,15 +123,52 @@ const SAFE_MEDIA = /^https?:/i
  * Inline CSS is allowed, because a comment that wants to colour a word should
  * be able to. These few declarations are not styling, though — they are ways to
  * leave the comment's own box, phone home, or execute.
+ *
+ * Every function here fetches something. `url()` is the obvious one and the
+ * rest are the ways to say it without saying it: `image-set()` and its
+ * `-webkit-` spelling take a list of urls, `cross-fade()` blends two, and
+ * `element()` and `paint()` pull in a source of their own.
  */
 const FORBIDDEN_CSS =
-  /(position\s*:\s*(fixed|sticky|absolute)|url\s*\(|expression\s*\(|@import|behaviou?r\s*:|-moz-binding)/i
+  /(position\s*:\s*(fixed|sticky|absolute)|(^|[^a-z-])(url|image-set|-webkit-image-set|cross-fade|element|paint|expression)\s*\(|@import|behaviou?r\s*:|-moz-binding)/i
+
+/**
+ * A declaration as the browser's parser will read it, for the filter above to
+ * be applied to.
+ *
+ * The filter matched the text as written, and that is not the text CSS means.
+ * An identifier may spell any of its characters as a backslash escape, so
+ * `\75 rl(https://elsewhere//x)` is `url(...)` to every browser and was not
+ * `url(` to a regular expression — which made the one declaration the filter
+ * exists to catch the one it did not catch. Comments go the same way: they are
+ * removed before tokenising, so they cannot hide a word from a browser and must
+ * not hide one from here.
+ *
+ * This decodes more eagerly than CSS does, escapes inside strings included.
+ * That can only turn a declaration that would have been kept into one that is
+ * dropped, which is the direction to be wrong in.
+ */
+const CSS_ESCAPE = /\\(?:([0-9a-fA-F]{1,6})[ \t\n\r\f]?|([^\n]))/g
+const CSS_COMMENT = /\/\*[\s\S]*?(?:\*\/|$)/g
+
+export function decodeCss(declaration: string): string {
+  return declaration.replace(CSS_COMMENT, "").replace(CSS_ESCAPE, (_whole, hex, literal) => {
+    if (literal !== undefined) return literal as string
+    const point = Number.parseInt(hex as string, 16)
+    // Out of range, a surrogate half, or the null the spec maps to U+FFFD. None
+    // of them can spell a letter of `url`, so any placeholder will do.
+    if (!Number.isFinite(point) || point === 0 || point > 0x10ffff) return "�"
+    if (point >= 0xd800 && point <= 0xdfff) return "�"
+    return String.fromCodePoint(point)
+  })
+}
 
 function cleanStyle(value: string): string | undefined {
+  // The declarations are kept as written and judged as they will be read.
   const kept = value
     .split(";")
     .map((declaration) => declaration.trim())
-    .filter((declaration) => declaration !== "" && !FORBIDDEN_CSS.test(declaration))
+    .filter((declaration) => declaration !== "" && !FORBIDDEN_CSS.test(decodeCss(declaration)))
   return kept.length > 0 ? kept.join("; ") : undefined
 }
 
