@@ -1,6 +1,6 @@
 import fs from "fs"
 import path from "path"
-import { execFileSync, execSync } from "child_process"
+import { execFileSync } from "child_process"
 import git from "isomorphic-git"
 import http from "isomorphic-git/http/node"
 import { styleText } from "util"
@@ -27,10 +27,135 @@ export interface GitPluginSpec {
   repo: string
   /** Git ref (branch, tag, or commit hash). Omit to use the remote's default branch. */
   ref?: string
+  /**
+   * The exact commit this plugin is pinned to, from `quartz.lock.json`.
+   *
+   * A `ref` is a name and names move; this is the thing itself. When it is set,
+   * the clone is of that commit and the working tree is checked against it
+   * afterwards, so what gets built is what the lockfile recorded and not
+   * whatever the default branch has become since.
+   */
+  commit?: string
   /** Optional subdirectory within the repo if plugin is not at root */
   subdir?: string
   /** Whether this is a local path source */
   local?: boolean
+}
+
+/** A full commit id, which is the only form worth pinning to. */
+const COMMIT = /^[0-9a-f]{40}$/i
+
+const LOCKFILE = "quartz.lock.json"
+
+/**
+ * Set to install a plugin the lockfile does not pin.
+ *
+ * Which is a thing to do exactly once per plugin: add it to the config, install
+ * it unpinned, and `quartz plugin` writes the commit into the lockfile, after
+ * which it is pinned like the rest. An environment variable rather than a flag,
+ * so that no script picks it up by habit.
+ */
+const ALLOW_UNPINNED = "QUARTZ_ALLOW_UNPINNED_PLUGINS"
+
+/**
+ * The commit each plugin is pinned to, read once.
+ *
+ * `quartz.lock.json` has always recorded these and nothing ever read them back.
+ * The install path cloned `--depth 1` of whatever the default branch held at
+ * that moment, so the lockfile was a diary rather than a lock, and the thirty
+ * repositories' worth of code this site builds itself out of was whatever those
+ * thirty repositories happened to contain during a deploy. A deploy holds
+ * `pages: write`, so a bad day at any one of them was this site's JavaScript.
+ *
+ * Read here rather than by whoever calls in, because there are two callers:
+ * `install-plugins.ts` up front, and `config-loader.ts` during a build when it
+ * finds a plugin missing. A pin applied at one of those doors is not a pin.
+ */
+let lockedCommits: Map<string, string> | undefined
+
+function commitFromLockfile(name: string): string | undefined {
+  if (lockedCommits === undefined) {
+    lockedCommits = new Map()
+    const lockPath = path.resolve(process.cwd(), LOCKFILE)
+    if (fs.existsSync(lockPath)) {
+      const lock = JSON.parse(fs.readFileSync(lockPath, "utf-8")) as {
+        plugins?: Record<string, { commit?: string }>
+      }
+      for (const [plugin, entry] of Object.entries(lock.plugins ?? {})) {
+        if (entry?.commit) lockedCommits.set(plugin, entry.commit)
+      }
+    }
+  }
+
+  return lockedCommits.get(name)
+}
+
+/** The spec with its pin on, or a refusal to install something unpinned. */
+function pinned(spec: GitPluginSpec): GitPluginSpec {
+  if (spec.local || spec.commit) return spec
+
+  const commit = commitFromLockfile(spec.name)
+  if (commit !== undefined) return { ...spec, commit }
+
+  if (process.env[ALLOW_UNPINNED] !== "1") {
+    throw new Error(
+      `${LOCKFILE} does not pin ${spec.name}, so installing it would run whatever ` +
+        `${spec.repo} holds on its default branch right now. Add it with \`quartz plugin\`, ` +
+        `or set ${ALLOW_UNPINNED}=1 for this one install.`,
+    )
+  }
+
+  console.warn(`! ${spec.name} is unpinned; installing from its default branch`)
+  return spec
+}
+
+function runGit(args: string[], cwd?: string): string {
+  return execFileSync("git", args, { cwd, stdio: ["ignore", "pipe", "pipe"] })
+    .toString()
+    .trim()
+}
+
+/** The commit a clone is actually sitting on, or undefined if it is not a clone. */
+function headOf(dir: string): string | undefined {
+  try {
+    return runGit(["rev-parse", "HEAD"], dir)
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Clones one commit, by its id.
+ *
+ * `git clone --branch` takes a branch or a tag and not a commit, which is why
+ * pinning could not simply be passed to the clone. Fetching the id directly is
+ * the shallow way and GitHub allows it; a remote that does not falls back to
+ * cloning the history and checking out afterwards.
+ */
+function cloneAtCommit(repo: string, commit: string, dir: string, verbose?: boolean): void {
+  fs.mkdirSync(dir, { recursive: true })
+
+  try {
+    runGit(["init", "--quiet"], dir)
+    runGit(["remote", "add", "origin", repo], dir)
+    runGit(["fetch", "--quiet", "--depth", "1", "origin", commit], dir)
+    runGit(["checkout", "--quiet", "--detach", "FETCH_HEAD"], dir)
+  } catch {
+    if (verbose) {
+      console.log(styleText("cyan", `→`), `Shallow fetch of ${commit} refused; cloning in full...`)
+    }
+    fs.rmSync(dir, { recursive: true, force: true })
+    runGit(["clone", "--quiet", repo, dir])
+    runGit(["checkout", "--quiet", "--detach", commit], dir)
+  }
+
+  const head = headOf(dir)
+  if (head?.toLowerCase() !== commit.toLowerCase()) {
+    fs.rmSync(dir, { recursive: true, force: true })
+    throw new Error(
+      `Refusing to install from ${repo}: asked for commit ${commit} and got ${head ?? "nothing"}`,
+    )
+  }
 }
 
 export type PluginInstallSource = string | GitPluginSpec
@@ -426,9 +551,10 @@ interface PluginInstallResult {
  * Returns the plugin directory and any native dependencies it requires.
  */
 export async function installPlugin(
-  spec: GitPluginSpec,
+  requested: GitPluginSpec,
   options: { verbose?: boolean; force?: boolean } = {},
 ): Promise<PluginInstallResult> {
+  const spec = pinned(requested)
   const pluginDir = path.join(PLUGINS_CACHE_DIR, spec.name)
 
   // Local source: symlink instead of clone
@@ -482,11 +608,37 @@ export async function installPlugin(
   }
 
   // Git source: clone
+  if (spec.commit !== undefined && !COMMIT.test(spec.commit)) {
+    throw new Error(
+      `Plugin ${spec.name} is pinned to "${spec.commit}", which is not a full commit id`,
+    )
+  }
+
   // Check if already installed
   if (!options.force && fs.existsSync(pluginDir)) {
-    // For subdir installs, the .git directory is removed after extraction,
-    // so check for package.json instead. For full-repo installs, check git HEAD.
-    if (spec.subdir) {
+    // A pin makes this question a different one. "Is something here" was enough
+    // when the answer only decided whether to spend a clone; it is not enough
+    // when it decides whether the tree gets checked against the lockfile at all,
+    // and a cache filled before the pin existed holds whatever the default
+    // branch was that day.
+    if (spec.commit) {
+      const head = headOf(pluginDir)
+      if (head?.toLowerCase() === spec.commit.toLowerCase()) {
+        if (options.verbose) {
+          console.log(styleText("cyan", `→`), `Plugin ${spec.name} already at ${spec.commit}`)
+        }
+        return { pluginDir, nativeDeps: collectNativeDeps(pluginDir) }
+      }
+      if (options.verbose) {
+        console.log(
+          styleText("cyan", `→`),
+          `Plugin ${spec.name} is at ${head ?? "an unknown commit"}, not ${spec.commit}; re-cloning`,
+        )
+      }
+      // Falls through to the clean-up and clone below.
+    } else if (spec.subdir) {
+      // For subdir installs, the .git directory is removed after extraction,
+      // so check for package.json instead. For full-repo installs, check git HEAD.
       const pkgPath = path.join(pluginDir, "package.json")
       if (fs.existsSync(pkgPath)) {
         if (options.verbose) {
@@ -521,14 +673,24 @@ export async function installPlugin(
     )
   }
 
+  // `execFileSync` rather than a command built by interpolation: a repository
+  // URL or a ref reaching a shell is a shell that gets to read it.
+  const shallowClone = (into: string) => {
+    if (spec.commit) {
+      cloneAtCommit(spec.repo, spec.commit, into, options.verbose)
+      return
+    }
+    const branchArgs = spec.ref ? ["--branch", spec.ref] : []
+    runGit(["clone", "--quiet", "--depth", "1", ...branchArgs, spec.repo, into])
+  }
+
   if (spec.subdir) {
     const tmpDir = pluginDir + ".__tmp__"
     if (fs.existsSync(tmpDir)) {
       fs.rmSync(tmpDir, { recursive: true })
     }
 
-    const branchArg = spec.ref ? ` --branch ${spec.ref}` : ""
-    execSync(`git clone --depth 1${branchArg} "${spec.repo}" "${tmpDir}"`, { stdio: "pipe" })
+    shallowClone(tmpDir)
 
     const subdirPath = path.join(tmpDir, spec.subdir)
     if (!fs.existsSync(subdirPath)) {
@@ -539,8 +701,7 @@ export async function installPlugin(
     fs.renameSync(subdirPath, pluginDir)
     fs.rmSync(tmpDir, { recursive: true })
   } else {
-    const branchArg = spec.ref ? ` --branch ${spec.ref}` : ""
-    execSync(`git clone --depth 1${branchArg} "${spec.repo}" "${pluginDir}"`, { stdio: "pipe" })
+    shallowClone(pluginDir)
   }
 
   buildInstalledPlugin(pluginDir, spec.name, options.verbose)
