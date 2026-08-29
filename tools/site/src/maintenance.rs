@@ -1,6 +1,7 @@
 use crate::{InstallMode, Result, Site, SiteError, os_args};
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use std::{env, fs};
 use toml::Table;
 
@@ -146,12 +147,56 @@ impl Site {
             return Ok(());
         }
 
+        self.refuse_staged_workflow_changes()?;
+
         self.run(
             &self.root,
             "git",
             &os_args(&["commit", "-m", message.as_str()]),
         )?;
         self.run(&self.root, "git", &os_args(&["push"]))
+    }
+
+    /// Refuses to commit a change to a workflow.
+    ///
+    /// `git add -A` is right for these two callers — `generate` and `update`
+    /// between them touch content, lockfiles, formatting and generated
+    /// TypeScript, and enumerating that is a list that would go stale — but it
+    /// means whatever ran just before this decides what gets pushed to the
+    /// default branch. A generator or a dependency that wrote into
+    /// `.github/workflows` would be writing the next run's own instructions,
+    /// with `contents: write` in hand.
+    ///
+    /// GitHub already refuses such a push, because the token it mints for a run
+    /// has no `workflow` scope. That is a fact about GitHub's side rather than
+    /// about this repository, and it fails as a rejected push at the very end
+    /// rather than as a sentence saying what happened. Nothing generated here
+    /// has ever been a workflow.
+    fn refuse_staged_workflow_changes(&self) -> Result<()> {
+        let staged = Command::new("git")
+            .args(["diff", "--cached", "--name-only"])
+            .current_dir(&self.root)
+            .output()?;
+
+        let offending: Vec<String> = String::from_utf8_lossy(&staged.stdout)
+            .lines()
+            .map(str::trim)
+            .filter(|path| {
+                path.starts_with(".github/workflows/") || path.starts_with(".github/actions/")
+            })
+            .map(str::to_string)
+            .collect();
+
+        if offending.is_empty() {
+            return Ok(());
+        }
+
+        Err(Box::new(SiteError::new(format!(
+            "refusing to commit workflow changes from CI: {}. \
+             Nothing this command generates is a workflow, so something has \
+             written one; push it by hand after reading it",
+            offending.join(", ")
+        ))))
     }
 }
 
