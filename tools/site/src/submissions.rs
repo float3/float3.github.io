@@ -150,15 +150,80 @@ fn attachments(body: &str) -> Vec<String> {
     let mut urls = Vec::new();
 
     for url in crate::content::extract_urls(body) {
-        if !ATTACHMENT_HOSTS.iter().any(|host| url.starts_with(host)) {
+        let Some(url) = allowed_attachment(&url) else {
             continue;
-        }
+        };
         if !urls.contains(&url) {
             urls.push(url);
         }
     }
 
     urls
+}
+
+/// The URL to fetch, if the allowlist admits it.
+///
+/// The prefix test has to be applied to the URL curl will actually ask for, not
+/// to the one that was written down, and those are not the same string: curl
+/// resolves `..` in a path before it sends anything, so
+/// `https://github.com/user-attachments/assets/../../owner/repo/raw/main/x`
+/// passes a `starts_with` against the allowlist and then asks for something
+/// else entirely. The host cannot be moved this way and no credential is ever
+/// sent, so the worst of it was fetching a public file from somewhere else on
+/// github.com — but the check and the request disagreeing is the bug, whatever
+/// today's blast radius is. So the path is resolved here, the resolved form is
+/// what gets tested, and the resolved form is what gets fetched.
+fn allowed_attachment(url: &str) -> Option<String> {
+    // A percent-encoded dot or slash exists only to make this function and the
+    // server read one path two ways: curl passes both through untouched, so
+    // whatever the far end does with them, it is not what was resolved here. No
+    // attachment URL has ever contained either.
+    let lowered = url.to_ascii_lowercase();
+    if lowered.contains("%2e") || lowered.contains("%2f") {
+        return None;
+    }
+
+    let normalized = normalize_path(url)?;
+    ATTACHMENT_HOSTS
+        .iter()
+        .any(|host| normalized.starts_with(host))
+        .then_some(normalized)
+}
+
+/// RFC 3986's dot-segment removal, over the path and nothing else.
+///
+/// The authority is left exactly as it was: `..` cannot climb past a host, and
+/// the query and fragment are not paths and are not touched.
+fn normalize_path(url: &str) -> Option<String> {
+    let (scheme, rest) = url.split_once("://")?;
+    let (authority, rest) = match rest.find('/') {
+        Some(at) => (&rest[..at], &rest[at..]),
+        None => (rest, ""),
+    };
+    let (path, suffix) = match rest.find(['?', '#']) {
+        Some(at) => (&rest[..at], &rest[at..]),
+        None => (rest, ""),
+    };
+
+    let mut segments: Vec<&str> = Vec::new();
+    for segment in path.split('/') {
+        match segment {
+            "." => {}
+            // The first segment of an absolute path is the empty string before
+            // the leading slash, and it is the root: `..` stops there.
+            ".." => {
+                if segments.len() > 1 {
+                    segments.pop();
+                }
+            }
+            other => segments.push(other),
+        }
+    }
+
+    Some(format!(
+        "{scheme}://{authority}{}{suffix}",
+        segments.join("/")
+    ))
 }
 
 /// Fetches one attachment.
@@ -501,6 +566,37 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
                 "https://github.com/user-attachments/assets/1111-2222",
                 "https://user-images.githubusercontent.com/1/two.png",
             ]
+        );
+    }
+
+    /// The allowlist has to hold against the URL curl resolves, not the one
+    /// that was written down.
+    #[test]
+    fn climbing_out_of_the_attachment_path_is_not_an_attachment() {
+        for url in [
+            "https://github.com/user-attachments/assets/../../float3/private/raw/main/x.jpg",
+            "https://github.com/user-attachments/assets/..%2f..%2fx.jpg",
+            "https://github.com/user-attachments/assets/%2e%2e/%2e%2e/x.jpg",
+            "https://github.com/user-attachments/../user-attachments/assets/x.jpg/../../../x",
+        ] {
+            assert_eq!(allowed_attachment(url), None, "{url} should not be fetched");
+        }
+
+        // And an ordinary attachment still is one, unchanged.
+        let plain = "https://github.com/user-attachments/assets/1111-2222";
+        assert_eq!(allowed_attachment(plain), Some(plain.to_string()));
+
+        // A `.` segment resolves away rather than being refused; it is not an
+        // attempt at anything, and the resolved form is what gets fetched.
+        assert_eq!(
+            allowed_attachment("https://github.com/user-attachments/./assets/7?x=1").as_deref(),
+            Some("https://github.com/user-attachments/assets/7?x=1")
+        );
+
+        // The authority is never a path: `..` cannot climb into it.
+        assert_eq!(
+            normalize_path("https://github.com/../../../evil").as_deref(),
+            Some("https://github.com/evil")
         );
     }
 
