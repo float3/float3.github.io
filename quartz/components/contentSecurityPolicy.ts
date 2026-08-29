@@ -6,10 +6,10 @@
  * meta element may not carry — `frame-ancestors`, `report-uri` and `sandbox`,
  * all of which are ignored there — and leaves the rest, which is most of it.
  *
- * `script-src` keeps `'unsafe-inline'`, because Quartz bootstraps each page
- * from half a dozen inline scripts it writes itself. So this is not a policy
- * that stops an injected `<script>alert(1)</script>`, and it is not pretending
- * to be one. What it stops is everything around that: a script pulled in from
+ * `script-src` has to keep both `'unsafe-inline'` and `'unsafe-eval'`; the
+ * constant below says which page needs which. So this is not a policy that
+ * stops an injected `<script>alert(1)</script>`, and it is not pretending to be
+ * one. What it stops is everything around that: a script pulled in from
  * somewhere else, a page reparented under a new `<base>`, a form posted off to
  * a host of somebody's choosing, an `<object>`, and — the one that matters most
  * here — a connection opened to anywhere but the two CDNs that are supposed to
@@ -27,8 +27,22 @@
  * reason why.
  */
 
-/** Where the page's own code comes from, plus what the demo frames need. */
-const SCRIPTS = ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"]
+/**
+ * Where the page's own code comes from, plus what the demo frames need.
+ *
+ * Both of the unsafe words are here because something on the page will not run
+ * without them, not because they were cheap to leave in. `unsafe-inline` is
+ * Quartz bootstrapping every page from half a dozen inline scripts it writes
+ * itself. `unsafe-eval` is pixi.js, which the graph draws with and which builds
+ * its shader batches by evaluating strings; without it the graph does not
+ * render, and `postscript.js` throws on the way past. pixi ships a
+ * `pixi.js/unsafe-eval` module that avoids this, but reaching it means editing
+ * the graph plugin, which is somebody else's and pinned to a commit.
+ *
+ * So this does not stop an injected `<script>alert(1)</script>`, and it is not
+ * pretending to. What it stops is the rest.
+ */
+const SCRIPTS = ["'self'", "'unsafe-inline'", "'unsafe-eval'", "'wasm-unsafe-eval'"]
 
 /** The two CDNs: katex and d3 and pixi from one, mermaid from the other. */
 const CDN = ["https://cdn.jsdelivr.net", "https://cdnjs.cloudflare.com"]
@@ -49,21 +63,10 @@ const EMBEDS = ["https://www.shadertoy.com", "https://graphtoy.com", "https://ww
  */
 const ANY_MEDIA = ["'self'", "data:", "blob:", "https:"]
 
-/**
- * The two things a development build needs and a published one must not have.
- *
- * webpack's default devtool in development mode is `eval`, so every module in
- * `content/js` arrives wrapped in one and the page cannot run at all under a
- * policy without `'unsafe-eval'`. In production the devtool is off and the
- * bundles contain no eval, which is the only reason it is safe to forbid: the
- * strict policy is the one that ships, and it is enforced by the same builds
- * that serve the site rather than trusted to hold.
- *
- * The other is the websocket `--serve` reloads the page over.
- */
+/** The websocket `--serve` reloads the page over, and nothing else. */
 function development(wsPort: number): { script: string[]; connect: string[] } {
   return {
-    script: ["'unsafe-eval'"],
+    script: [],
     connect: [`ws://localhost:${wsPort}`, `ws://127.0.0.1:${wsPort}`],
   }
 }
