@@ -625,7 +625,7 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
         Ok(applied) => applied,
         Err(error) => {
             if error.downcast_ref::<Rejected>().is_some() {
-                write_output(&format!("rejected={error}"))?;
+                write_outputs(&[("rejected", error.to_string())])?;
             }
             return Err(error);
         }
@@ -639,28 +639,76 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
         .replace('\\', "/");
 
     let outputs = [
-        format!("action={}", applied.action),
-        format!("id={}", applied.id),
-        format!("file={relative}"),
-        format!("login={}", applied.login),
-        format!("parent={}", applied.parent),
-    ]
-    .join("\n");
+        ("action", applied.action.to_string()),
+        ("id", applied.id),
+        ("file", relative),
+        ("login", applied.login),
+        ("parent", applied.parent),
+    ];
 
-    println!("{outputs}");
-    write_output(&outputs)
+    for (key, value) in &outputs {
+        println!("{key}={value}");
+    }
+    write_outputs(&outputs)
 }
 
-pub(crate) fn write_output(outputs: &str) -> Result<()> {
-    if let Ok(path) = env::var("GITHUB_OUTPUT") {
-        use std::io::Write;
-        let mut file = fs::OpenOptions::new()
-            .append(true)
-            .create(true)
-            .open(path)?;
-        writeln!(file, "{outputs}")?;
+/// Writes step outputs for the workflow to read.
+///
+/// Takes the outputs apart rather than as one blob of text, because every
+/// value here is built from something a stranger wrote — an issue payload, a
+/// refusal quoting a path, the `author` line of a file in somebody's pull
+/// request — and `$GITHUB_OUTPUT` is a format where a newline in a value
+/// starts a new output. A value that could carry one could name any output the
+/// workflow reads: the `file` the comment run stages, the `dir` the gallery run
+/// commits. None of those are reachable today, because a rejection fails the
+/// step and the steps that read those outputs never run. That is an ordering
+/// property of two YAML files, though, and this is the fact itself.
+pub(crate) fn write_outputs(outputs: &[(&str, String)]) -> Result<()> {
+    let Ok(path) = env::var("GITHUB_OUTPUT") else {
+        return Ok(());
+    };
+
+    use std::io::Write;
+    let mut file = fs::OpenOptions::new()
+        .append(true)
+        .create(true)
+        .open(path)?;
+
+    for (key, value) in outputs {
+        write!(file, "{}", render_output(key, value))?;
     }
+
     Ok(())
+}
+
+/// One output, in whichever of the two forms the value needs.
+///
+/// `key=value` for a value that is one line, and the heredoc form for one that
+/// is not — with a delimiter checked against the value rather than a fixed word
+/// the value could contain. `REFUSALS` was such a word, and a comment file
+/// whose `author` field decoded to one containing it closed the block early.
+fn render_output(key: &str, value: &str) -> String {
+    if !value.contains('\n') && !value.contains('\r') {
+        return format!("{key}={value}\n");
+    }
+
+    let delimiter = delimiter_for(value);
+    format!("{key}<<{delimiter}\n{value}\n{delimiter}\n")
+}
+
+/// A delimiter no line of the value is.
+///
+/// The counter is what makes this terminate: the random half only has to make a
+/// deliberate collision impractical to arrange, and the counter makes an
+/// accidental one impossible to sustain.
+fn delimiter_for(value: &str) -> String {
+    for attempt in 0.. {
+        let delimiter = format!("SITEOUTPUT_{}_{attempt}", random_id());
+        if !value.lines().any(|line| line.trim_end() == delimiter) {
+            return delimiter;
+        }
+    }
+    unreachable!("a fresh delimiter is found or the counter never ends")
 }
 
 // ---------------------------------------------------------------------------
@@ -856,9 +904,11 @@ pub(crate) fn check_pull_request(site: &Site) -> Result<()> {
         .collect::<Vec<_>>()
         .join("\n");
     eprintln!("{message}");
-    // Multi-line outputs need a delimiter GitHub can find. The refusals are
-    // built from paths and logins, never from free text.
-    write_output(&format!("refusals<<REFUSALS\n{message}\nREFUSALS"))?;
+    // Multi-line, and built from the `author` fields of files in the pull
+    // request being checked — which is to say from text the person being
+    // refused wrote. `write_outputs` is what keeps it from inventing a second
+    // output; there is nothing to sanitise here.
+    write_outputs(&[("refusals", message.clone())])?;
 
     Err(Box::new(Rejected(message)))
 }
@@ -870,6 +920,79 @@ mod tests {
 
     fn issue_body(payload: &str, body: &str) -> String {
         format!("<!--{ISSUE_MARKER}\n{payload}\n-->\n\n{body}\n")
+    }
+
+    /// `$GITHUB_OUTPUT` is a format, and every value written to it here came
+    /// from a stranger. A value that can start a line can name any output the
+    /// workflow reads — the `file` the comment run stages, the `dir` the
+    /// gallery run commits — so no value may be able to.
+    #[test]
+    fn an_output_value_cannot_invent_a_second_output() {
+        assert_eq!(
+            render_output("file", "content/a.comment.1.md"),
+            "file=content/a.comment.1.md\n"
+        );
+
+        // The shape a comment file's `author` field can take: `frontmatter_field`
+        // decodes a quoted value as a JSON string, and `"a\nREFUSALS\nfile=x"`
+        // decodes to one carrying real newlines.
+        let forged = "belongs to `alice\nREFUSALS\nfile=/etc/passwd`";
+        let written = render_output("refusals", forged);
+
+        let delimiter = written
+            .lines()
+            .next()
+            .unwrap()
+            .strip_prefix("refusals<<")
+            .expect("a multi-line value takes the heredoc form")
+            .to_string();
+
+        // The value is fenced, and the fence is not a word the value contains.
+        assert!(!forged.lines().any(|line| line == delimiter));
+        assert!(written.ends_with(&format!("\n{delimiter}\n")));
+
+        // Which is the whole point: read back the way GitHub reads it, exactly
+        // one output arrives, and `file` is not among them.
+        let parsed = parse_outputs(&written);
+        assert_eq!(parsed.len(), 1);
+        assert_eq!(parsed[0].0, "refusals");
+        assert_eq!(parsed[0].1, forged);
+
+        // And a value that happens to contain a delimiter gets a different one.
+        let awkward = format!("first\n{delimiter}\nlast");
+        let again = render_output("refusals", &awkward);
+        let second = again
+            .lines()
+            .next()
+            .unwrap()
+            .strip_prefix("refusals<<")
+            .unwrap();
+        assert_ne!(second, delimiter);
+        assert_eq!(parse_outputs(&again)[0].1, awkward);
+    }
+
+    /// `$GITHUB_OUTPUT` as the runner reads it: `key=value`, or `key<<DELIM`
+    /// through to a line that is exactly `DELIM`.
+    fn parse_outputs(written: &str) -> Vec<(String, String)> {
+        let mut outputs = Vec::new();
+        let mut lines = written.lines();
+
+        while let Some(line) = lines.next() {
+            if let Some((key, delimiter)) = line.split_once("<<") {
+                let mut value = Vec::new();
+                for line in lines.by_ref() {
+                    if line == delimiter {
+                        break;
+                    }
+                    value.push(line);
+                }
+                outputs.push((key.to_string(), value.join("\n")));
+            } else if let Some((key, value)) = line.split_once('=') {
+                outputs.push((key.to_string(), value.to_string()));
+            }
+        }
+
+        outputs
     }
 
     fn issue(payload: &str, body: &str, login: &str, id: u64) -> Value {

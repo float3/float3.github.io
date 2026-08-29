@@ -32,7 +32,7 @@
 //! - and video is refused outright when ffmpeg is missing, because a video
 //!   nobody has looked at is exactly the file whose metadata matters.
 
-use crate::comments::{Rejected, parse_marked_issue, reject, write_output};
+use crate::comments::{Rejected, parse_marked_issue, reject, write_outputs};
 use crate::gallery;
 use crate::{Result, Site, SiteError, remove_file_if_exists};
 use serde_json::Value;
@@ -494,7 +494,7 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
             // A refusal is said back on the issue by the workflow, so it has to
             // reach it as an output before this exits.
             if error.downcast_ref::<Rejected>().is_some() {
-                write_output(&format!("rejected={error}"))?;
+                write_outputs(&[("rejected", error.to_string())])?;
             }
             return Err(error);
         }
@@ -505,16 +505,17 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
     }
 
     let outputs = [
-        format!("collection={}", applied.collection),
-        format!("login={}", applied.login),
-        format!("count={}", applied.files.len()),
-        format!("files={}", applied.files.join(" ")),
-        format!("dir=content/misc/{}", applied.collection),
-    ]
-    .join("\n");
+        ("collection", applied.collection.clone()),
+        ("login", applied.login),
+        ("count", applied.files.len().to_string()),
+        ("files", applied.files.join(" ")),
+        ("dir", format!("content/misc/{}", applied.collection)),
+    ];
 
-    println!("{outputs}");
-    write_output(&outputs)
+    for (key, value) in &outputs {
+        println!("{key}={value}");
+    }
+    write_outputs(&outputs)
 }
 
 #[cfg(test)]
