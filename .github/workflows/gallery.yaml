@@ -168,7 +168,4 @@ jobs:
 
           $(printf '%s\n' $FILES | sed 's/^/- `/; s/$/`/')
 
-          Every still has been re-encoded and every video remuxed, so what is here
-          carries no metadata from wherever it came from. Merging publishes it;
-          closing this without merging discards it."
           gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
