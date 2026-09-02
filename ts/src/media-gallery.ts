@@ -34,7 +34,11 @@ function createMediaElement(
 ): HTMLImageElement | HTMLVideoElement {
   if (mediaKind(item) === "video") {
     const video = document.createElement("video")
-    video.src = item.src
+    if (preview) {
+      video.dataset.src = item.src
+    } else {
+      video.src = item.src
+    }
     video.preload = "metadata"
     video.playsInline = true
     video.muted = preview
@@ -109,6 +113,26 @@ export function renderMediaGallery(options: GalleryOptions): void {
   }
   if (nextButton) {
     nextButton.hidden = items.length < 2
+  }
+
+  if (gallery) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const video = entry.target as HTMLVideoElement
+          if (video.dataset.src) {
+            video.src = video.dataset.src
+            delete video.dataset.src
+          }
+          observer.unobserve(video)
+        }
+      },
+      { rootMargin: "200px" },
+    )
+    for (const video of gallery.querySelectorAll<HTMLVideoElement>("video[data-src]")) {
+      observer.observe(video)
+    }
   }
 
   closeButton?.addEventListener("click", () => dialog?.close())

@@ -130,6 +130,8 @@
   padding: 0;
   background: var(--photo-surface);
   color: inherit;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 14rem auto 16rem;
   cursor: pointer;
   font: inherit;
   text-align: left;
