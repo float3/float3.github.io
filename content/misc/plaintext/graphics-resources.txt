@@ -166,6 +166,7 @@ https://blog.selfshadow.com/publications/s2017-shading-course/pixar/s2017_pbs_pi
 https://blog.selfshadow.com/publications/s2017-shading-course/walster/s2017_pbs_volumetric_notes.pdf
 https://blog.selfshadow.com/publications/s2017-shading-course/walster/s2017_pbs_volumetric_slides.pdf
 https://blog.selfshadow.com/publications/s2020-shading-course/
+https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf
 https://catlikecoding.com/unity/tutorials/
 https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.2569&rep=rep1&type=pdf
 https://developer.download.nvidia.com/SDK/10.5/opengl/src/cascaded_shadow_maps/doc/cascaded_shadow_maps.pdf
