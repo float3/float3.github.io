@@ -13,15 +13,6 @@ updates:
       - dependency-name: "shiki"
         versions: ["*"]
 
-  - package-ecosystem: "bun"
-    directory: "/ts"
-    schedule:
-      interval: "weekly"
-    groups:
-      production-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -31,62 +22,9 @@ updates:
         applies-to: "version-updates"
         patterns:
           - "*"
+
   - package-ecosystem: "cargo"
-    directory: "/wasm/tuningplayground"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/tuningplayground/keymapping"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/tuningplayground/tuning_systems"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/textprocessing"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/textprocessing/hangeul_conversion"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/glsl2hlsl"
-    schedule:
-      interval: "weekly"
-    groups:
-      rust-dependencies:
-        applies-to: "version-updates"
-        patterns:
-          - "*"
-  - package-ecosystem: "cargo"
-    directory: "/wasm/wasm"
+    directory: "/"
     schedule:
       interval: "weekly"
     groups:
