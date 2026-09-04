@@ -4,7 +4,7 @@ description = "expose my rust libraries to wasm"
 edition = "2024"
 license = "AGPL-3.0"
 name = "tuningplayground"
-repository = "https://github.com/float3/tuningplayground"
+repository = "https://github.com/float3/float3.github.io/tree/master/wasm/tuningplayground"
 version = "1.0.0"
 
 [features]
