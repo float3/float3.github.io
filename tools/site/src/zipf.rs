@@ -3,7 +3,7 @@ use std::ffi::OsStr;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use crate::{Result, Site};
+use crate::{Result, Site, html};
 
 pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
     let content_dir = site.root.join("content");
@@ -26,15 +26,8 @@ pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
     items.sort();
     items.sort_by_key(|b| std::cmp::Reverse(b.1));
 
-    let mut data_entries = Vec::new();
-    for (i, (word, count)) in items.iter().enumerate() {
-        let rank = i + 1;
-        let escaped = escape_js_string(word);
-        data_entries.push(format!("[{}, {}, \"{}\"]", rank, count, escaped));
-    }
-
-    let data_js = format!("const ZIPF_DATA = [{}];", data_entries.join(",\n"));
-    let top_list_html = build_top_list_html(&items, 2000000);
+    let data_js = format!("const ZIPF_DATA = {};", serde_json::to_string(&items)?);
+    let top_list_html = build_top_list_html(&items);
 
     let html = format!(
         r#"<!DOCTYPE html>
@@ -75,7 +68,7 @@ function draw() {{
   const svg = document.getElementById('plot');
   const width = 800, height = 600, pad = 60;
   svg.setAttribute('viewBox', `0 0 ${{width}} ${{height}}`);
-  const data = ZIPF_DATA.map(d => ({{ rank: d[0], count: d[1], word: d[2] }}));
+  const data = ZIPF_DATA.map((d, i) => ({{ rank: i + 1, count: d[1], word: d[0] }}));
   if (data.length === 0) return;
 
   const ranks = data.map(d => d.rank);
@@ -309,35 +302,16 @@ fn tokenize_words(text: &str) -> Vec<String> {
     words
 }
 
-fn escape_js_string(s: &str) -> String {
-    s.replace('\\', "\\\\").replace('\"', "\\\"")
-}
-
-fn build_top_list_html(items: &[(String, u64)], limit: usize) -> String {
+fn build_top_list_html(items: &[(String, u64)]) -> String {
     let mut out = String::new();
     out.push_str("<ol>");
-    for (word, count) in items.iter().take(limit) {
+    for (word, count) in items {
         out.push_str(&format!(
             "<li><strong>{}</strong>: {}</li>",
-            escape_html(word),
+            html::escape(word),
             count
         ));
     }
     out.push_str("</ol>");
     out
-}
-
-fn escape_html(value: &str) -> String {
-    let mut escaped = String::with_capacity(value.len());
-    for ch in value.chars() {
-        match ch {
-            '&' => escaped.push_str("&amp;"),
-            '<' => escaped.push_str("&lt;"),
-            '>' => escaped.push_str("&gt;"),
-            '"' => escaped.push_str("&quot;"),
-            '\'' => escaped.push_str("&#39;"),
-            _ => escaped.push(ch),
-        }
-    }
-    escaped
 }

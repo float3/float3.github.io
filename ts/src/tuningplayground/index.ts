@@ -38,7 +38,6 @@ void (async () => {
     onload()
     playingTonesChanged()
     setTuningPlaygroundStatus("", "ready")
-    // linkInputChange();
   } catch (error: unknown) {
     setTuningPlaygroundStatus(`Could not start tuning playground: ${formatError(error)}`, "error")
     window.setTimeout(() => {
@@ -56,7 +55,6 @@ window.createTone = createTone
 export const playingTones: Record<number, Tone> = []
 export const heldKeys: Record<string, boolean> = {}
 export const markedKeys: number[] = []
-// let recording: boolean;
 
 function formatError(error: unknown): string {
   if (error instanceof Error) {
@@ -98,9 +96,6 @@ export function _noteOn(tone_index: number, velocity?: number, cancel?: boolean)
   tone_index += tranposeValue
   const tone: Tone = wasm.get_tone(tone_index) as Tone
   const volume = Math.pow(volumeValue, 2)
-  // if (velocity) {
-  //   volume *= velocity / 127;
-  // }
   switch (soundMethod.value) {
     case "native":
       playFrequencyNative(tone, volume).catch(reportAudioError)

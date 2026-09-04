@@ -73,7 +73,7 @@ impl Site {
     /// A gallery is nothing but a directory in this list plus a page that names
     /// it, which is the point of it being a list: another one is two lines and
     /// a folder of pictures.
-    const INDICES: &'static [(&'static str, &'static str)] = &[
+    const INDICES: &[(&str, &str)] = &[
         ("media", "media"),
         ("blobs", "blobs"),
         ("plaintext", "plaintext"),
@@ -89,7 +89,7 @@ impl Site {
     /// that does — the submit button on a page is an offer, and this is the
     /// answer. `media` and `blobs` are files the site itself uses and are
     /// nobody's invitation.
-    const SUBMITTABLE: &'static [&'static str] = &["trolley", "guesswedoing"];
+    const SUBMITTABLE: &[&str] = &["trolley", "guesswedoing"];
 
     pub(crate) fn is_submittable(dir: &str) -> bool {
         Self::SUBMITTABLE.contains(&dir)
@@ -155,7 +155,7 @@ impl Site {
         }
 
         fs::write(base.join("index.md"), body)?;
-        fs::write(base.join(MANIFEST), manifest(&entries))?;
+        fs::write(base.join(MANIFEST), manifest(&entries)?)?;
         Ok(entries.len())
     }
 
@@ -185,32 +185,10 @@ pub(crate) fn is_gallery_item(name: &str) -> bool {
 }
 
 /// A JSON array of filenames.
-///
-/// Written by hand rather than with a serialiser: quoting a list of strings is
-/// the whole of the job, and the escape rules for a JSON string are shorter
-/// than the argument for taking on a dependency to apply them.
-fn manifest(entries: &[String]) -> String {
-    let mut out = String::from("[");
-
-    for (index, entry) in entries.iter().enumerate() {
-        if index > 0 {
-            out.push(',');
-        }
-        out.push('"');
-        for ch in entry.chars() {
-            match ch {
-                '"' => out.push_str("\\\""),
-                '\\' => out.push_str("\\\\"),
-                // Control characters cannot appear raw inside a JSON string.
-                c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
-                c => out.push(c),
-            }
-        }
-        out.push('"');
-    }
-
-    out.push_str("]\n");
-    out
+fn manifest(entries: &[String]) -> Result<String> {
+    let mut out = serde_json::to_string(entries)?;
+    out.push('\n');
+    Ok(out)
 }
 
 pub(crate) fn extract_urls(source: &str) -> Vec<String> {
@@ -278,19 +256,22 @@ mod tests {
 
     #[test]
     fn writes_an_empty_manifest_for_an_empty_gallery() {
-        assert_eq!(manifest(&[]), "[]\n");
+        assert_eq!(manifest(&[]).unwrap(), "[]\n");
     }
 
     #[test]
     fn quotes_filenames_into_the_manifest() {
         let entries = vec!["00.jpg".to_string(), "63.mp4".to_string()];
-        assert_eq!(manifest(&entries), "[\"00.jpg\",\"63.mp4\"]\n");
+        assert_eq!(manifest(&entries).unwrap(), "[\"00.jpg\",\"63.mp4\"]\n");
     }
 
     #[test]
     fn escapes_filenames_that_would_break_the_json() {
         let entries = vec!["a\"b.jpg".to_string(), "c\\d.png".to_string()];
-        assert_eq!(manifest(&entries), "[\"a\\\"b.jpg\",\"c\\\\d.png\"]\n");
+        assert_eq!(
+            manifest(&entries).unwrap(),
+            "[\"a\\\"b.jpg\",\"c\\\\d.png\"]\n"
+        );
     }
 
     #[test]

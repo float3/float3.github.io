@@ -182,10 +182,6 @@ export function downloadImage(name: string, contents: string): void {
   a.href = contents
   a.download = name
   links.appendChild(a)
-
-  // document.body.appendChild(a)
-  // a.click()
-  // document.body.removeChild(a)
 }
 
 export function reset(): void {

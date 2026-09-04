@@ -1,27 +1,27 @@
 use std::fs;
 
-use crate::{Result, SiteError};
+use crate::{Result, fail};
 
 pub(crate) fn align(args: &[String]) -> Result<()> {
-    if args.len() != 3 || args.iter().any(|arg| arg == "--help" || arg == "-h") {
+    if args.iter().any(|arg| arg == "--help" || arg == "-h") {
         print_help();
-        if args.len() == 3 {
-            return Ok(());
-        }
-        return Err(Box::new(SiteError::new(
-            "align-tables requires LEFT RIGHT SEP",
-        )));
+        return Ok(());
     }
 
-    let left_lines = read_lines(&args[0])?;
-    let right_lines = read_lines(&args[1])?;
+    let [left, right, separator] = args else {
+        print_help();
+        return fail("align-tables requires LEFT RIGHT SEP");
+    };
+
+    let left_lines = read_lines(left)?;
+    let right_lines = read_lines(right)?;
 
     if left_lines.len() != right_lines.len() {
-        return Err(Box::new(SiteError::new("number of lines must be the same")));
+        return fail("number of lines must be the same");
     }
 
-    for (left, right) in left_lines.iter().zip(right_lines.iter()) {
-        println!("{} {} {}", left.trim(), args[2], right.trim());
+    for (left, right) in left_lines.iter().zip(&right_lines) {
+        println!("{} {separator} {}", left.trim(), right.trim());
     }
 
     Ok(())

@@ -46,7 +46,7 @@
 
 use crate::content::is_gallery_item;
 use crate::duplicates::{self, Fingerprint, Removal};
-use crate::{Result, Site, SiteError, remove_dir_if_exists};
+use crate::{Result, Site, SiteError, fail, remove_dir_if_exists};
 use std::ffi::OsStr;
 use std::fs;
 use std::path::Path;
@@ -234,10 +234,7 @@ fn normalize_collection(site: &Site, collection: &str, options: &Options) -> Res
 
     let dir = site.root.join("content/misc").join(collection);
     if !dir.is_dir() {
-        return Err(Box::new(SiteError::new(format!(
-            "no such gallery directory: {}",
-            dir.display()
-        ))));
+        return fail(format!("no such gallery directory: {}", dir.display()));
     }
 
     let staging = dir.join(STAGING);
@@ -370,11 +367,11 @@ fn plan(names: &[String]) -> Result<Vec<Step>> {
         } else if VIDEO_EXTENSIONS.contains(&extension) {
             (format!("{index:0width$}.{extension}"), Action::Keep)
         } else {
-            return Err(Box::new(SiteError::new(format!(
+            return fail(format!(
                 "{name}: not gallery media; stills may be {} and video may be {}",
                 IMAGE_EXTENSIONS.join(", "),
                 VIDEO_EXTENSIONS.join(", ")
-            ))));
+            ));
         };
 
         steps.push(Step {
@@ -551,10 +548,10 @@ fn transcode(source: &Path, target: &Path, quality: u8) -> Result<()> {
 
 #[cfg(not(feature = "photos"))]
 fn transcode(_: &Path, _: &Path, _: u8) -> Result<()> {
-    Err(Box::new(SiteError::new(
+    fail(
         "normalize-gallery re-encodes images and needs the `photos` feature; \
          rebuild without --no-default-features, or pass --dry-run",
-    )))
+    )
 }
 
 /// Carries an animation across without the blocks that are not its frames.
@@ -613,11 +610,11 @@ fn strip_video(site: &Site, source: &Path, target: &Path) -> Result<()> {
 
     match output {
         Ok(output) if output.status.success() => Ok(()),
-        Ok(output) => Err(Box::new(SiteError::new(format!(
+        Ok(output) => fail(format!(
             "ffmpeg could not strip {}: {}",
             source.display(),
             String::from_utf8_lossy(&output.stderr).trim()
-        )))),
+        )),
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
             site.warn(&format!(
                 "{} carries container metadata and ffmpeg is not installed, \
@@ -956,19 +953,17 @@ fn parse_options(args: &[String]) -> Result<Options> {
                     })?;
             }
             other if other.starts_with('-') => {
-                return Err(Box::new(SiteError::new(format!(
-                    "unknown normalize-gallery option: {other}"
-                ))));
+                return fail(format!("unknown normalize-gallery option: {other}"));
             }
             other => collections.push(other.to_string()),
         }
     }
 
     if collections.is_empty() {
-        return Err(Box::new(SiteError::new(format!(
+        return fail(format!(
             "normalize-gallery needs a gallery to normalize; the listed ones are {}",
             Site::index_names().join(", ")
-        ))));
+        ));
     }
 
     Ok(Options {

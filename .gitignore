@@ -25,3 +25,6 @@ content/.stfolder
 # Unity's own page, rewritten beside the player by every WebGL export. The
 # page this site serves is content/audiolink/_index.md.
 content/audiolink/index.html
+
+.claude/settings.local.json
+.serena/

@@ -7,7 +7,6 @@ const stepSize = document.getElementById("stepSize") as HTMLInputElement
 const fileInput = document.getElementById("fileInput") as HTMLInputElement
 export const soundMethod = document.getElementById("soundMethod") as HTMLSelectElement
 const keymapSelect = document.getElementById("keymapSelect") as HTMLSelectElement
-// const linkInput = document.getElementById("linkInput") as HTMLInputElement;
 
 const logContainer = document.getElementById("logContainer") as HTMLDivElement
 const stepSizeParent = stepSize.parentElement as HTMLDivElement
@@ -121,15 +120,6 @@ function fileInputChange(event: Event): Promise<void> {
     }
   })
 }
-
-// export function linkInputChange(): void {
-//   const link = linkInput.value;
-//   fetch(link)
-//     .then((response) => response.arrayBuffer())
-//     .then((buffer) => {
-//       midiFile = buffer;
-//     });
-// }
 
 function playMarkedKeys(): void {
   markedKeys.forEach((note) => _noteOn(note, undefined, true))
@@ -364,15 +354,6 @@ export function addEvents(key: Element) {
       noteOn(note - tranposeValue)
     }
   })
-
-  // key.addEventListener("mouseup", (event) => {
-  //   let mouseEvent = event as MouseEvent;
-  //   if (mouseEvent.ctrlKey) {
-  //     unmarkKey(note);
-  //   } else {
-  //     noteOff(note);
-  //   }
-  // });
 
   addEvent("mouseup", () => noteOff(note - tranposeValue))
 

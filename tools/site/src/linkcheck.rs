@@ -19,7 +19,7 @@
 //! working, and a fragment is a question about a page rather than about
 //! whether a page is there.
 
-use crate::{Result, Site, SiteError};
+use crate::{Result, Site, fail};
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -36,10 +36,10 @@ impl Site {
         };
 
         if !root.is_dir() {
-            return Err(Box::new(SiteError(format!(
+            return fail(format!(
                 "{} is not a directory; build the site first",
                 root.display()
-            ))));
+            ));
         }
 
         let mut pages = Vec::new();
@@ -76,11 +76,11 @@ impl Site {
             }
         }
 
-        Err(Box::new(SiteError(if broken.len() == 1 {
+        fail(if broken.len() == 1 {
             "one link points at nothing".to_string()
         } else {
             format!("{} links point at nothing", broken.len())
-        })))
+        })
     }
 }
 

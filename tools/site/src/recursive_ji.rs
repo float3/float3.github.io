@@ -1,7 +1,7 @@
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use crate::{Result, Site, SiteError};
+use crate::{Result, Site, SiteError, fail};
 use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
 use recursive_ji_core::{generated_audio_files, generated_media_text_files, generated_text_files};
 use std::collections::HashMap;
@@ -16,9 +16,7 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     }
 
     if args.len() > 1 {
-        return Err(Box::new(SiteError::new(
-            "recursive-ji-music accepts at most one output directory",
-        )));
+        return fail("recursive-ji-music accepts at most one output directory");
     }
 
     let override_dir = args.first().map(|path| site.root.join(path));
@@ -151,7 +149,7 @@ fn update_recursive_ji_notation(post: &Path) -> Result<()> {
     Ok(())
 }
 
-fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
+fn update_recursive_ji_table(post: &Path, csv: &Path) -> Result<()> {
     let csv_text = fs::read_to_string(csv)?;
 
     // New CSV schema:
@@ -206,8 +204,9 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
     table.push('\n');
 
     table.push_str("| ---------- |");
+    let rule = format!(" {}: |", "-".repeat(139));
     for _ in TWELVE_TONE_NAMES.iter() {
-        table.push_str(" -------------------------------------------------------------------------------------------------------------------------------------------: |");
+        table.push_str(&rule);
     }
     table.push('\n');
 
@@ -229,7 +228,7 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
                 " ".to_string()
             } else {
                 let class = note_to_class(col);
-                let data_note = html_escape(col);
+                let data_note = crate::html::escape(col);
 
                 format!(
                     "<span class=\"recursive-note-cell {class}\" data-note=\"{data_note}\"><code>{freq} Hz</code><small class=\"tet-cents\">{cents} cents</small></span>"
@@ -277,10 +276,6 @@ fn note_to_class(name: &str) -> &'static str {
         "B" => "note-b",
         _ => "note-c",
     }
-}
-
-fn html_escape(s: &str) -> String {
-    s.replace('"', "'")
 }
 
 #[cfg(test)]

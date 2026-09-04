@@ -1,4 +1,6 @@
-use crate::{Result, Site, SiteError};
+#[cfg(feature = "photos")]
+use crate::SiteError;
+use crate::{Result, Site, fail};
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -21,10 +23,10 @@ impl Site {
         let content_dir = normalized_root.join("content");
 
         if normalized_path.starts_with(&content_dir) {
-            return Err(Box::new(SiteError::new(format!(
+            return fail(format!(
                 "photo originals must not live under {}; use private/photography/originals or another untracked directory",
                 content_dir.display()
-            ))));
+            ));
         }
 
         Ok(())
@@ -36,9 +38,7 @@ pub(crate) fn find_repo_root() -> Result<PathBuf> {
 
     loop {
         if current.join(".git").exists()
-            && (current.join("quartz.config.ts").exists()
-                || current.join("quartz.config.yaml").exists()
-                || current.join("quartz.ts").exists())
+            && (current.join("quartz.config.yaml").exists() || current.join("quartz.ts").exists())
         {
             return Ok(current);
         }
@@ -48,9 +48,7 @@ pub(crate) fn find_repo_root() -> Result<PathBuf> {
         }
     }
 
-    Err(Box::new(SiteError(
-        "could not find repository root from current directory".to_string(),
-    )))
+    fail("could not find repository root from current directory")
 }
 
 pub(crate) fn remove_dir_if_exists(path: &Path) -> Result<()> {

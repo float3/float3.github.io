@@ -19,7 +19,6 @@ resolver = "2"
 exclude = ["programs"]
 
 [workspace.dependencies]
-# music21-rs = { path = "../blabla/music21-rs" }
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
 wasm-bindgen = { version = "0.2.127" }
 console_error_panic_hook = { version = "0.1.7" }

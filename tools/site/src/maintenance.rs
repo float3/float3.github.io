@@ -1,9 +1,9 @@
-use crate::{InstallMode, Result, Site, SiteError, os_args};
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use crate::{InstallMode, Result, Site, SiteError, fail, os_args};
+use std::collections::BTreeMap;
+use std::path::Path;
 use std::process::Command;
 use std::{env, fs};
-use toml::Table;
+use toml::{Table, Value};
 
 impl Site {
     pub(crate) fn update(&self) -> Result<()> {
@@ -111,9 +111,7 @@ impl Site {
 
     pub(crate) fn commit(&self, message: Option<String>) -> Result<()> {
         if !self.ci {
-            return Err(Box::new(SiteError::new(
-                "commit is CI-only; review and commit local changes with git".to_string(),
-            )));
+            return fail("commit is CI-only; review and commit local changes with git");
         }
 
         let message = message
@@ -191,78 +189,51 @@ impl Site {
             return Ok(());
         }
 
-        Err(Box::new(SiteError::new(format!(
+        fail(format!(
             "refusing to commit workflow changes from CI: {}. \
              Nothing this command generates is a workflow, so something has \
              written one; push it by hand after reading it",
             offending.join(", ")
-        ))))
+        ))
     }
 }
 
+/// Lists every path dependency that more than one workspace member declares
+/// for itself, which is the shape of a dependency that belongs in
+/// `[workspace.dependencies]`.
 pub(crate) fn parse_cargo_toml(site: &Site) -> Result<()> {
-    // find all cargo.tomls
-    let mut cargo_tomls = Vec::new();
-    collect_files_with_name(&site.root, "Cargo.toml", &mut cargo_tomls)?;
+    let root = fs::read_to_string(site.root.join("Cargo.toml"))?.parse::<Table>()?;
+    let members = root
+        .get("workspace")
+        .and_then(Value::as_table)
+        .and_then(|workspace| workspace.get("members"))
+        .and_then(Value::as_array)
+        .ok_or_else(|| SiteError::new("Cargo.toml declares no workspace members"))?;
 
-    // find all duplicate dependencies that are not using the workspace version
-    let mut dependencies: HashMap<String, Vec<PathBuf>> = HashMap::new();
-    for cargo_toml in cargo_tomls {
-        let content = fs::read_to_string(&cargo_toml)?;
-        let parsed = content.parse::<Table>()?;
-        let empty_table = Table::new();
-        let deps = parsed
-            .get("dependencies")
-            .and_then(|d| d.as_table())
-            .unwrap_or(&empty_table);
-        for (name, value) in deps {
-            if value.get("path").and_then(|v| v.as_str()).is_some() {
-                dependencies
-                    .entry(name.clone())
-                    .or_default()
-                    .push(cargo_toml.clone());
+    let mut declared: BTreeMap<String, Vec<&str>> = BTreeMap::new();
+    for member in members.iter().filter_map(Value::as_str) {
+        let manifest =
+            fs::read_to_string(site.root.join(member).join("Cargo.toml"))?.parse::<Table>()?;
+        let Some(dependencies) = manifest.get("dependencies").and_then(Value::as_table) else {
+            continue;
+        };
+
+        for (name, value) in dependencies {
+            if value.get("path").and_then(Value::as_str).is_some() {
+                declared.entry(name.clone()).or_default().push(member);
             }
         }
     }
 
-    for (name, cargo_tomls) in dependencies {
-        if cargo_tomls.len() <= 1 {
+    for (name, members) in declared {
+        if members.len() <= 1 {
             continue;
         }
-        println!(
-            "Dependency {name} is duplicated {} times in crates:",
-            cargo_tomls.len()
-        );
-        for cargo_toml in &cargo_tomls {
-            println!("  {}", display_path(site, cargo_toml.parent().unwrap()));
+        println!("{name} is a path dependency of {} crates:", members.len());
+        for member in members {
+            println!("  {member}");
         }
     }
 
     Ok(())
-}
-
-fn collect_files_with_name(
-    root: &std::path::PathBuf,
-    name: &str,
-    files: &mut Vec<PathBuf>,
-) -> Result<()> {
-    for entry in fs::read_dir(root)? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_files_with_name(&path, name, files)?;
-        } else if path.file_name().and_then(|n| n.to_str()) == Some(name) {
-            files.push(path);
-        }
-    }
-    Ok(())
-}
-
-fn display_path(site: &Site, path: &Path) -> String {
-    let p = match site.relative_git_path(path) {
-        Ok(p) => p,
-        Err(_) => path.display().to_string(),
-    };
-
-    p.to_string().replace(r"\\?\", "")
 }

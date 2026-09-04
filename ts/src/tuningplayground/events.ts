@@ -16,7 +16,6 @@ export function onload(): void {
     markedButtons.style.display = "flex"
     notes.forEach((note) => {
       const index = parseInt(note)
-      // noteOn(index);
       markKey(index)
     })
   } else {
@@ -30,7 +29,6 @@ export function keydown(event: KeyboardEvent): void {
   if (event.code in heldKeys) return
 
   if (document.activeElement?.tagName === "BODY") {
-    // if (recording) { }
     const tone_index: number = wasm.from_keymap(event.code)
     if (tone_index === -1) return
     noteOn(tone_index)
@@ -39,7 +37,6 @@ export function keydown(event: KeyboardEvent): void {
 }
 
 export function keyup(event: KeyboardEvent): void {
-  // if (recording) { }
   const tone_index: number = wasm.from_keymap(event.code)
   if (tone_index === -1) return
   noteOff(tone_index)

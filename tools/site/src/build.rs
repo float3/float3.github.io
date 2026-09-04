@@ -1,6 +1,6 @@
 use crate::report;
 use crate::{
-    ChildGuard, InstallMode, Mode, Result, Site, SiteError, os_args, remove_dir_if_exists,
+    ChildGuard, InstallMode, Mode, Result, Site, SiteError, fail, os_args, remove_dir_if_exists,
     remove_file_if_exists, remove_license_files,
 };
 use serde_json::Value as JsonValue;
@@ -245,7 +245,7 @@ impl Site {
             return Ok(());
         }
 
-        Err(Box::new(SiteError::new(failures.join("\n"))))
+        fail(failures.join("\n"))
     }
 
     /// One tool's package, and the log of building it.
@@ -324,9 +324,7 @@ impl Site {
         tools.sort();
 
         if tools.is_empty() {
-            return Err(Box::new(SiteError::new(
-                "wasm/wasm/Cargo.toml declares no tool features",
-            )));
+            return fail("wasm/wasm/Cargo.toml declares no tool features");
         }
 
         Ok(tools)
@@ -366,10 +364,10 @@ impl Site {
             return Ok(());
         }
 
-        Err(Box::new(SiteError::new(format!(
+        fail(format!(
             "wasm tools declared in wasm/wasm/Cargo.toml are not wired into ts/:\n  {}",
             problems.join("\n  ")
-        ))))
+        ))
     }
 
     /// wasm-pack names every package after the crate; each per-tool copy needs its own
@@ -475,16 +473,14 @@ fn webpack_entry_sources(ts_dir: &Path) -> Result<Vec<PathBuf>> {
         .collect();
 
     if entries.is_empty() {
-        return Err(Box::new(SiteError::new(
-            "ts/webpack.config.ts declares no ./dist/*.js entry points",
-        )));
+        return fail("ts/webpack.config.ts declares no ./dist/*.js entry points");
     }
 
     if let Some(missing) = entries.iter().find(|entry| !entry.is_file()) {
-        return Err(Box::new(SiteError::new(format!(
+        return fail(format!(
             "ts/webpack.config.ts names an entry with no source: {}",
             missing.display()
-        ))));
+        ));
     }
 
     Ok(entries)

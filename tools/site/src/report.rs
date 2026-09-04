@@ -2,7 +2,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
-use crate::{Result, Site, os_args};
+use crate::{Result, Site, html, os_args};
 
 const REPORT_START: &str = "<!-- REPORT START -->";
 const REPORT_END: &str = "<!-- REPORT END -->";
@@ -54,7 +54,7 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
     current_body.push("<h1>Build Report</h1>".to_string());
     current_body.push(format!(
         "<p><strong>Report generated at:</strong> {}</p>",
-        escape_html(&time_str)
+        html::escape(&time_str)
     ));
     if build_time > 0 {
         current_body.push(format!(
@@ -63,7 +63,7 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
     }
     current_body.push(format!(
         "<p><strong>Operating System:</strong> {}</p>",
-        escape_html(&os_version)
+        html::escape(&os_version)
     ));
     current_body.push(version_line("Nix", &nix_version));
     current_body.push(version_line("Quartz", &quartz_version));
@@ -130,8 +130,8 @@ pub(crate) fn write(site: &Site, public: &Path, build_time: u64) -> Result<()> {
 fn version_line(label: &str, value: &str) -> String {
     format!(
         "<p><strong>{}:</strong> {}</p>",
-        escape_html(label),
-        escape_html(value)
+        html::escape(label),
+        html::escape(value)
     )
 }
 
@@ -322,7 +322,7 @@ fn sort_tree(node: &mut TreeNode) {
 }
 
 fn build_tree_html(node: &TreeNode) -> String {
-    let name = escape_html(&node.name);
+    let name = html::escape(&node.name);
     let size = format!("{:.2} MB", node.size as f64 / 1024.0 / 1024.0);
 
     if node.is_dir {
@@ -333,7 +333,7 @@ fn build_tree_html(node: &TreeNode) -> String {
         html.push_str("</details>\n");
         html
     } else {
-        let rel_path = escape_html(&path_for_html(&node.rel_path));
+        let rel_path = html::escape(&path_for_html(&node.rel_path));
         format!(r#"<div><a href="{rel_path}">{name}</a> ({size})</div>"#) + "\n"
     }
 }
@@ -385,21 +385,6 @@ fn extract_body(html: &str) -> Option<String> {
     let start = html.find("<body>")?;
     let end = html.find("</body>")?;
     Some(html[start + "<body>".len()..end].to_string())
-}
-
-fn escape_html(value: &str) -> String {
-    let mut escaped = String::with_capacity(value.len());
-    for ch in value.chars() {
-        match ch {
-            '&' => escaped.push_str("&amp;"),
-            '<' => escaped.push_str("&lt;"),
-            '>' => escaped.push_str("&gt;"),
-            '"' => escaped.push_str("&quot;"),
-            '\'' => escaped.push_str("&#39;"),
-            _ => escaped.push(ch),
-        }
-    }
-    escaped
 }
 
 #[cfg(test)]

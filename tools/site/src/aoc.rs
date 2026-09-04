@@ -8,7 +8,7 @@ use std::process::{Command, Stdio};
 use std::thread;
 use std::time::Duration;
 
-use crate::{Result, Site, SiteError};
+use crate::{Result, Site, SiteError, fail};
 
 const DEFAULT_ROOT: &str = "wasm/adventofcode/src";
 const DEFAULT_PROBLEM_YEAR: u16 = 2025;
@@ -29,10 +29,10 @@ pub(crate) fn download_problem_text(site: &Site, args: &[String]) -> Result<()> 
         .ok()
         .filter(|value| !value.is_empty());
     if !options.dry_run && options.parts.contains(&2) && session.is_none() {
-        return Err(Box::new(SiteError::new(format!(
+        return fail(format!(
             "part 2 problem text requires an Advent of Code session cookie. Set {}=... or run with --parts 1.",
             options.session_env
-        ))));
+        ));
     }
 
     let mut wrote = 0usize;
@@ -115,9 +115,7 @@ pub(crate) fn download_problem_text(site: &Site, args: &[String]) -> Result<()> 
     );
 
     if missing > 0 || failed > 0 {
-        Err(Box::new(SiteError::new(
-            "one or more AoC problem downloads failed",
-        )))
+        fail("one or more AoC problem downloads failed")
     } else {
         Ok(())
     }
@@ -132,10 +130,10 @@ pub(crate) fn download_inputs(site: &Site, args: &[String]) -> Result<()> {
         .ok()
         .filter(|value| !value.is_empty());
     if !options.dry_run && session.is_none() {
-        return Err(Box::new(SiteError::new(format!(
+        return fail(format!(
             "puzzle inputs require an Advent of Code session cookie. Set {}=...",
             options.session_env
-        ))));
+        ));
     }
 
     let mut wrote = 0usize;
@@ -202,9 +200,7 @@ pub(crate) fn download_inputs(site: &Site, args: &[String]) -> Result<()> {
     );
 
     if failed > 0 {
-        Err(Box::new(SiteError::new(
-            "one or more AoC input downloads failed",
-        )))
+        fail("one or more AoC input downloads failed")
     } else {
         Ok(())
     }
@@ -279,9 +275,7 @@ impl ProblemOptions {
                     "--overwrite" => overwrite = true,
                     "--dry-run" => dry_run = true,
                     other => {
-                        return Err(Box::new(SiteError::new(format!(
-                            "unknown aoc-problems option: {other}"
-                        ))));
+                        return fail(format!("unknown aoc-problems option: {other}"));
                     }
                 }
             }
@@ -345,9 +339,7 @@ impl InputOptions {
                     "--overwrite" => overwrite = true,
                     "--dry-run" => dry_run = true,
                     other => {
-                        return Err(Box::new(SiteError::new(format!(
-                            "unknown aoc-inputs option: {other}"
-                        ))));
+                        return fail(format!("unknown aoc-inputs option: {other}"));
                     }
                 }
             }
@@ -379,10 +371,10 @@ fn option_value(args: &[String], index: &mut usize, name: &str) -> Result<Option
     let arg = &args[*index];
     if arg == name {
         *index += 1;
-        return args.get(*index).cloned().map(Some).ok_or_else(|| {
-            Box::new(SiteError::new(format!("{name} requires a value")))
-                as Box<dyn std::error::Error>
-        });
+        return match args.get(*index) {
+            Some(value) => Ok(Some(value.clone())),
+            None => fail(format!("{name} requires a value")),
+        };
     }
 
     let prefix = format!("{name}=");
@@ -405,9 +397,7 @@ fn parse_days(spec: &str) -> Result<Vec<u8>> {
             let start = parse_day(start.trim())?;
             let end = parse_day(end.trim())?;
             if start > end {
-                return Err(Box::new(SiteError::new(format!(
-                    "invalid AoC day range: {chunk}"
-                ))));
+                return fail(format!("invalid AoC day range: {chunk}"));
             }
             days.extend(start..=end);
         } else {
@@ -423,7 +413,7 @@ fn parse_day(value: &str) -> Result<u8> {
         .parse::<u8>()
         .map_err(|source| SiteError::new(format!("invalid AoC day {value:?}: {source}")))?;
     if !(1..=25).contains(&day) {
-        return Err(Box::new(SiteError::new(format!("invalid AoC day: {day}"))));
+        return fail(format!("invalid AoC day: {day}"));
     }
     Ok(day)
 }
@@ -433,39 +423,31 @@ fn parse_parts(value: &str) -> Result<Vec<u8>> {
         "all" => Ok(vec![1, 2]),
         "1" => Ok(vec![1]),
         "2" => Ok(vec![2]),
-        other => Err(Box::new(SiteError::new(format!(
+        other => fail(format!(
             "invalid --parts value: {other}; expected all, 1, or 2"
-        )))),
+        )),
     }
 }
 
 fn parse_year(value: &str, option: &str) -> Result<u16> {
-    value.parse::<u16>().map_err(|source| {
-        Box::new(SiteError::new(format!(
-            "invalid {option} value {value:?}: {source}"
-        ))) as Box<dyn std::error::Error>
-    })
+    Ok(value
+        .parse::<u16>()
+        .map_err(|source| SiteError::new(format!("invalid {option} value {value:?}: {source}")))?)
 }
 
 fn parse_nonnegative_f64(value: &str, option: &str) -> Result<f64> {
-    let parsed = value.parse::<f64>().map_err(|source| {
-        Box::new(SiteError::new(format!(
-            "invalid {option} value {value:?}: {source}"
-        ))) as Box<dyn std::error::Error>
-    })?;
+    let parsed = value
+        .parse::<f64>()
+        .map_err(|source| SiteError::new(format!("invalid {option} value {value:?}: {source}")))?;
     if !parsed.is_finite() || parsed < 0.0 {
-        return Err(Box::new(SiteError::new(format!(
-            "{option} must be a non-negative finite number"
-        ))));
+        return fail(format!("{option} must be a non-negative finite number"));
     }
     Ok(parsed)
 }
 
 fn validate_year_range(start_year: u16, end_year: u16) -> Result<()> {
     if start_year > end_year {
-        return Err(Box::new(SiteError::new(
-            "--start-year must be <= --end-year",
-        )));
+        return fail("--start-year must be <= --end-year");
     }
     Ok(())
 }

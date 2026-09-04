@@ -5,25 +5,18 @@ mod content;
 mod duplicates;
 mod fsutil;
 mod gallery;
+mod html;
 mod linkcheck;
 mod maintenance;
 #[cfg(feature = "photos")]
 mod photos;
 #[cfg(not(feature = "photos"))]
 mod photos {
-    use crate::{Result, Site, SiteError};
+    use crate::{Result, Site, fail};
 
     pub(crate) fn process(_: &Site, _: &[String]) -> Result<()> {
-        Err(Box::new(SiteError::new(
-            "process-photos requires the `photos` feature; rebuild without --no-default-features",
-        )))
+        fail("process-photos requires the `photos` feature; rebuild without --no-default-features")
     }
-
-    // pub(crate) fn setup_nightshade(_: &Site, _: &[String]) -> Result<()> {
-    //     Err(Box::new(SiteError::new(
-    //         "setup-nightshade requires the `photos` feature; rebuild without --no-default-features",
-    //     )))
-    // }
 }
 mod process;
 mod recursive_ji;
@@ -60,6 +53,10 @@ impl fmt::Display for SiteError {
 }
 
 impl Error for SiteError {}
+
+pub(crate) fn fail<T>(message: impl Into<String>) -> Result<T> {
+    Err(Box::new(SiteError::new(message)))
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Mode {
@@ -133,7 +130,6 @@ fn run_main() -> Result<()> {
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
         "process-photos" => photos::process(&site, &args[1..]),
         "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
-        // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
         "gallery-from-issue" => submissions::from_issue(&site),
@@ -148,7 +144,7 @@ fn run_main() -> Result<()> {
             print_help();
             Ok(())
         }
-        other => Err(Box::new(SiteError(format!("unknown command: {other}")))),
+        other => fail(format!("unknown command: {other}")),
     }
 }
 
@@ -160,16 +156,12 @@ fn parse_mode(args: &[String], default: Mode) -> Result<Mode> {
             "--dev" | "dev" => Mode::Dev,
             "--prod" | "prod" | "--release" | "release" => Mode::Prod,
             other => {
-                return Err(Box::new(SiteError(format!(
-                    "unknown mode argument: {other}"
-                ))));
+                return fail(format!("unknown mode argument: {other}"));
             }
         };
 
         if mode.replace(parsed).is_some() {
-            return Err(Box::new(SiteError::new(
-                "mode can only be specified once".to_string(),
-            )));
+            return fail("mode can only be specified once");
         }
     }
 
@@ -191,10 +183,12 @@ Commands:
   generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
+  textprocessing-examples    regenerate the worked examples on the transform cards
   normalize-gallery COLLECTION...
                              renumber a misc gallery, re-encode its stills as
                              JPEG, and strip their metadata
   report [seconds]           write public/report.html build report
+  zipf                       write public/zipf.html, the word frequencies of content/
   align-tables LEFT RIGHT SEP merge matching lines from two files
   recursive-ji-music [OUTPUT]
                              render recursive just-intonation examples
@@ -202,6 +196,7 @@ Commands:
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
   process-photos [INPUT] [OUTPUT]
                              classify and publish source photos
+  parse-cargo-toml           list path dependencies declared by more than one crate
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment

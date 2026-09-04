@@ -34,7 +34,7 @@
 
 use crate::comments::{Rejected, parse_marked_issue, reject, write_outputs};
 use crate::gallery;
-use crate::{Result, Site, SiteError, remove_file_if_exists};
+use crate::{Result, Site, SiteError, fail, remove_file_if_exists};
 use serde_json::Value;
 use std::env;
 use std::fs;
@@ -425,10 +425,10 @@ fn install(
     // The check above was an argument about what the normalizer would do; this
     // is the fact about what it did. Nothing already published may have moved.
     if let Some(vanished) = existing.iter().find(|name| !after.contains(name)) {
-        return Err(Box::new(SiteError::new(format!(
+        return fail(format!(
             "{vanished} is no longer in {collection}; the gallery was renumbered after all, \
              and nothing here should be committed"
-        ))));
+        ));
     }
 
     let files = after
@@ -438,9 +438,7 @@ fn install(
         .collect::<Vec<_>>();
 
     if files.is_empty() {
-        return Err(Box::new(SiteError::new(format!(
-            "nothing was added to {collection}"
-        ))));
+        return fail(format!("nothing was added to {collection}"));
     }
 
     Ok(Installed { files, duplicates })
