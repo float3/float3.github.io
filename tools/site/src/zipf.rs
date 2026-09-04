@@ -13,9 +13,10 @@ pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
     let mut counts: HashMap<String, u64> = HashMap::new();
 
     for path in md_paths {
-        if let Ok(text) = fs::read_to_string(&path) {
-            let stripped = strip_links(&text);
-            let stripped = strip_html(&stripped);
+        if let Ok(text) = fs::read_to_string(&path)
+            && !is_list_page(&text)
+        {
+            let stripped = strip_entities(&strip_html(&strip_links(&text)));
             for word in tokenize_words(&stripped) {
                 *counts.entry(word).or_insert(0) += 1;
             }
@@ -29,32 +30,39 @@ pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
     let data_js = format!("const ZIPF_DATA = {};", serde_json::to_string(&items)?);
     let top_list_html = build_top_list_html(&items);
 
+    let word_count: u64 = items.iter().map(|(_, count)| count).sum();
+    let unique = items.len();
+
     let html = format!(
         r#"<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Zipf Distribution</title>
   <style>
-    body {{ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; padding: 20px; }}
-    .container {{ display: flex; gap: 20px; flex-wrap: wrap; }}
+    body {{ font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; margin: 0; padding: 20px; color: #222; background: #fff; }}
+    .container {{ display: flex; gap: 20px; flex-wrap: wrap; align-items: flex-start; }}
     .plot {{ flex: 1 1 480px; min-width: 300px; }}
-    .list {{ width: 360px; max-height: 80vh; overflow: auto; }}
-    svg {{ width: 100%; height: 600px; border: 1px solid #ddd; background: #fff; }}
+    .list {{ flex: 0 1 320px; max-height: 80vh; overflow: auto; }}
+    svg {{ width: 100%; height: auto; border: 1px solid #ddd; background: #fff; }}
     .axis {{ stroke: #666; stroke-width: 1; }}
-    .point {{ fill: steelblue; opacity: 0.9; }}
-    .label {{ font-size: 12px; fill: #333; }}
+    .fit {{ stroke: #c33; stroke-width: 1; stroke-dasharray: 4 4; }}
+    .point {{ fill: steelblue; opacity: 0.8; }}
+    .point:hover {{ fill: #c33; opacity: 1; }}
+    .label {{ font-size: 11px; fill: #333; }}
+    .word {{ font-size: 11px; fill: #333; pointer-events: none; }}
   </style>
 </head>
 <body>
-  <h1>Zipf Distribution of Words in /content</h1>
-  <p>Scatter plot of rank vs frequency (log-log). Right column lists the top words.</p>
+  <h1>Zipf distribution of the words in /content</h1>
+  <p>{word_count} words, {unique} distinct. Rank against frequency, both logarithmic. The dashed line is what Zipf's law predicts from the most common word alone. The most common words are labelled; hover any point for its word, or find it in the list.</p>
   <div class="container">
     <div class="plot">
-      <svg id="plot" viewBox="0 0 800 600" preserveAspectRatio="none"></svg>
+      <svg id="plot" viewBox="0 0 800 600" role="img" aria-label="rank against frequency"></svg>
     </div>
     <div class="list">
-      <h2>Top words</h2>
+      <h2>All words</h2>
       {top_list_html}
     </div>
   </div>
@@ -62,88 +70,122 @@ pub(crate) fn write(site: &Site, public: &Path) -> Result<()> {
   <script>
 {data_js}
 
-function log10(x) {{ return Math.log(x) / Math.LN10; }}
+const LABELLED = 25;
+const POINTS = 5000;
 
 function draw() {{
   const svg = document.getElementById('plot');
   const width = 800, height = 600, pad = 60;
-  svg.setAttribute('viewBox', `0 0 ${{width}} ${{height}}`);
-  const data = ZIPF_DATA.map((d, i) => ({{ rank: i + 1, count: d[1], word: d[0] }}));
+  const data = ZIPF_DATA.slice(0, POINTS).map((d, i) => ({{ rank: i + 1, count: d[1], word: d[0] }}));
   if (data.length === 0) return;
 
-  const ranks = data.map(d => d.rank);
-  const counts = data.map(d => d.count);
-  const xmin = Math.max(1, Math.min(...ranks));
-  const xmax = Math.max(...ranks);
-  const ymin = Math.max(1, Math.min(...counts));
-  const ymax = Math.max(...counts);
+  const log10 = Math.log10;
+  const lxmax = Math.max(log10(ZIPF_DATA.length), 1);
+  const lymax = Math.max(log10(data[0].count), 1);
+  const sx = x => pad + (log10(x) / lxmax) * (width - pad * 2);
+  const sy = y => height - pad - (log10(y) / lymax) * (height - pad * 2);
 
-  const lxmin = log10(xmin), lxmax = log10(xmax);
-  const lymin = log10(ymin), lymax = log10(ymax);
-
-  function sx(x) {{ return pad + ((log10(x) - lxmin) / (lxmax - lxmin)) * (width - pad * 2); }}
-  function sy(y) {{ return height - pad - ((log10(y) - lymin) / (lymax - lymin)) * (height - pad * 2); }}
-
-  svg.innerHTML = '';
   const ns = 'http://www.w3.org/2000/svg';
-  function el(name, attrs) {{
+  function el(name, attrs, parent) {{
     const e = document.createElementNS(ns, name);
     for (const k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || svg).appendChild(e);
     return e;
   }}
 
-  svg.appendChild(el('rect', {{ x:0, y:0, width:width, height:height, fill:'white' }}));
-  svg.appendChild(el('line', {{ x1: pad, y1: height-pad, x2: width-pad, y2: height-pad, class:'axis' }}));
-  svg.appendChild(el('line', {{ x1: pad, y1: pad, x2: pad, y2: height-pad, class:'axis' }}));
+  el('line', {{ x1: pad, y1: height - pad, x2: width - pad, y2: height - pad, class: 'axis' }});
+  el('line', {{ x1: pad, y1: pad, x2: pad, y2: height - pad, class: 'axis' }});
 
-  for (let e = Math.ceil(lxmin); e <= Math.floor(lxmax); e++) {{
-    const x = Math.pow(10, e);
-    const xPos = sx(x);
-    svg.appendChild(el('line', {{ x1:xPos, y1:height-pad, x2:xPos, y2:height-pad+6, stroke:'#666' }}));
-    svg.appendChild(el('text', {{ x:xPos, y:height-pad+20, 'text-anchor':'middle', class:'label' }})).textContent = '10^' + e;
+  for (let e = 0; e <= Math.floor(lxmax); e++) {{
+    const x = sx(Math.pow(10, e));
+    el('line', {{ x1: x, y1: height - pad, x2: x, y2: height - pad + 6, class: 'axis' }});
+    el('text', {{ x, y: height - pad + 20, 'text-anchor': 'middle', class: 'label' }}).textContent = Math.pow(10, e).toLocaleString();
+  }}
+  el('text', {{ x: width / 2, y: height - pad + 40, 'text-anchor': 'middle', class: 'label' }}).textContent = 'rank';
+
+  for (let e = 0; e <= Math.floor(lymax); e++) {{
+    const y = sy(Math.pow(10, e));
+    el('line', {{ x1: pad - 6, y1: y, x2: pad, y2: y, class: 'axis' }});
+    el('text', {{ x: pad - 10, y: y + 4, 'text-anchor': 'end', class: 'label' }}).textContent = Math.pow(10, e).toLocaleString();
+  }}
+  el('text', {{ x: 16, y: height / 2, 'text-anchor': 'middle', class: 'label', transform: `rotate(-90 16 ${{height / 2}})` }}).textContent = 'occurrences';
+
+  const top = data[0].count;
+  const end = Math.min(ZIPF_DATA.length, top);
+  el('line', {{ x1: sx(1), y1: sy(top), x2: sx(end), y2: sy(top / end), class: 'fit' }});
+
+  for (const d of data) {{
+    const point = el('circle', {{ cx: sx(d.rank), cy: sy(d.count), r: 2, class: 'point' }});
+    el('title', {{}}, point).textContent = `${{d.rank}}. ${{d.word}} (${{d.count}})`;
   }}
 
-  for (let e = Math.ceil(lymin); e <= Math.floor(lymax); e++) {{
-    const y = Math.pow(10, e);
-    const yPos = sy(y);
-    svg.appendChild(el('line', {{ x1:pad-6, y1:yPos, x2:pad, y2:yPos, stroke:'#666' }}));
-    svg.appendChild(el('text', {{ x:pad-10, y:yPos+4, 'text-anchor':'end', class:'label' }})).textContent = '10^' + e;
-  }}
-
-  const limit = Math.min(data.length, 5000);
-  for (let i = 0; i < limit; i++) {{
-    const d = data[i];
-    svg.appendChild(el('circle', {{ cx: sx(d.rank), cy: sy(d.count), r: 2, class: 'point' }}));
-  }}
-
-  for (let i = 0; i < Math.min(2000000, data.length); i++) {{
-    const d = data[i];
-    const t = el('text', {{ x: sx(d.rank) + 6, y: sy(d.count) + 4, class:'label' }});
-    t.textContent = `${{i+1}}: ${{d.word}} (${{d.count}})`;
-    svg.appendChild(t);
+  let lastY = -Infinity;
+  for (const d of data.slice(0, LABELLED)) {{
+    const y = sy(d.count);
+    if (Math.abs(y - lastY) < 12) continue;
+    lastY = y;
+    el('text', {{ x: sx(d.rank) + 6, y: y + 4, class: 'word' }}).textContent = d.word;
   }}
 }}
 
-window.addEventListener('load', draw);
-window.addEventListener('resize', draw);
+draw();
   </script>
 </body>
 </html>
-"#,
-        data_js = data_js,
-        top_list_html = top_list_html
+"#
     );
 
     fs::write(public.join("zipf.html"), html)?;
     Ok(())
 }
 
-const FILE_BLACKLIST: &[&str] = &["content/misc/posts/index.md"];
+/// Whether a page is an index rather than prose: anything tagged `list`, which
+/// covers the post listing, the gallery indices, and the 3 MB Udon exposure
+/// dump that would otherwise be half of every count on the page.
+fn is_list_page(text: &str) -> bool {
+    let Some(body) = text.strip_prefix("---") else {
+        return false;
+    };
+    let Some(end) = body.find("\n---") else {
+        return false;
+    };
 
-fn is_blacklisted(path: &Path) -> bool {
-    FILE_BLACKLIST
-        .iter()
-        .any(|blocked| path.ends_with(Path::new(blocked)))
+    body[..end].lines().any(|line| {
+        let line = line.trim();
+        line == "- list"
+            || line
+                .strip_prefix("tags:")
+                .is_some_and(|tags| tags.split(['[', ']', ',']).any(|tag| tag.trim() == "list"))
+    })
+}
+
+/// Drops `&lt;`, `&#39;` and the rest: an entity renders as punctuation, and
+/// left in it counts as a word called `lt`.
+fn strip_entities(text: &str) -> String {
+    let mut out = String::with_capacity(text.len());
+    let mut rest = text;
+
+    while let Some(start) = rest.find('&') {
+        out.push_str(&rest[..start]);
+        let after = &rest[start + 1..];
+        let entity = after.find(';').filter(|&end| {
+            end <= 10
+                && after[..end]
+                    .chars()
+                    .all(|c| c.is_ascii_alphanumeric() || c == '#')
+        });
+
+        match entity {
+            Some(end) => rest = &after[end + 1..],
+            None => {
+                out.push('&');
+                rest = after;
+            }
+        }
+    }
+
+    out.push_str(rest);
+    out
 }
 
 fn collect_md_files(dir: &Path, out: &mut Vec<PathBuf>) -> std::io::Result<()> {
@@ -166,7 +208,7 @@ fn collect_md_files(dir: &Path, out: &mut Vec<PathBuf>) -> std::io::Result<()> {
             .and_then(OsStr::to_str)
             .is_some_and(|ext| ext.eq_ignore_ascii_case("md"));
 
-        if is_md && !is_blacklisted(&path) {
+        if is_md {
             out.push(path);
         }
     }
@@ -287,9 +329,16 @@ fn tokenize_words(text: &str) -> Vec<String> {
     let mut words = Vec::new();
     let mut buf = String::new();
 
-    for ch in text.chars() {
-        if ch.is_alphabetic() {
-            buf.push(ch.to_ascii_lowercase());
+    let mut chars = text.chars().peekable();
+    while let Some(ch) = chars.next() {
+        let apostrophe = matches!(ch, '\'' | '’');
+        let joins =
+            apostrophe && !buf.is_empty() && chars.peek().is_some_and(|next| next.is_alphabetic());
+
+        if apostrophe && joins {
+            buf.push('\'');
+        } else if ch.is_alphabetic() {
+            buf.extend(ch.to_lowercase());
         } else if !buf.is_empty() {
             words.push(std::mem::take(&mut buf));
         }
@@ -314,4 +363,46 @@ fn build_top_list_html(items: &[(String, u64)]) -> String {
     }
     out.push_str("</ol>");
     out
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn leaves_indices_out_of_the_count() {
+        assert!(is_list_page(
+            "---\ntitle: posts\ntags:\n  - list\n---\n\nbody"
+        ));
+        assert!(is_list_page("---\ntags: [unity, list]\n---\n"));
+        assert!(!is_list_page(
+            "---\ntitle: a list of things\n---\n\n- list\n"
+        ));
+        assert!(!is_list_page("no frontmatter\n---\n  - list\n"));
+    }
+
+    #[test]
+    fn an_entity_is_not_a_word() {
+        assert_eq!(strip_entities("a &lt;b&gt; &amp; c&#39;s"), "a b  cs");
+        assert_eq!(strip_entities("tom & jerry"), "tom & jerry");
+        assert_eq!(
+            strip_entities("&notanentity because it is too long;"),
+            "&notanentity because it is too long;"
+        );
+    }
+
+    #[test]
+    fn counts_the_words_of_the_prose_and_nothing_else() {
+        let text = "See [the docs](https://example.com/x) and <em>this</em> &mdash; https://a.b/c.";
+        let words = tokenize_words(&strip_entities(&strip_html(&strip_links(text))));
+        assert_eq!(words, ["see", "and", "this"]);
+    }
+
+    #[test]
+    fn keeps_a_contraction_together_and_drops_the_quotes_around_a_word() {
+        assert_eq!(
+            tokenize_words("Don't ‘stop’, it’s 'fine' École"),
+            ["don't", "stop", "it's", "fine", "école"]
+        );
+    }
 }

@@ -132,6 +132,7 @@ impl Site {
         }
 
         let public = self.root.join("public");
+        crate::zipf::write(self, &public)?;
         report::write(self, &public, started.elapsed().as_secs())
     }
 
