@@ -109,6 +109,34 @@ Dario Amodei ([@DarioAmodei](https://x.com/DarioAmodei)) co-wrote the 2020 scali
 
 ---
 
+## Dean Ball
+
+**Known for**: Hyperdimensional; the 2025 AI Action Plan; OpenAI's strategic futures team
+
+**Alias**: [@deanwball](https://x.com/deanwball)
+
+**Correct Forecasts**: AI progress would be faster in 2025 than in 2024 (January 2025)
+
+**Unresolved Forecasts**: Machines more intelligent than humans within a decade (2023); American companies controlling nearly half a dozen gigawatt-scale datacenters by the end of 2026 (December 2025); major scientific results from AI in the mid to late 2030s (March 2025)
+
+Dean Ball ([@deanwball](https://x.com/deanwball)) writes Hyperdimensional, a newsletter on AI policy, and was a senior fellow at the Foundation for American Innovation. From April to August 2025 he was senior policy advisor for AI at the White House Office of Science and Technology Policy, where he was the [organising author of the AI Action Plan](https://www.meritalk.com/articles/dean-ball-departs-ostp-returns-to-fai/). In July 2026 he [joined OpenAI](https://www.thefai.org/posts/dean-ball-joins-openai-as-head-of-strategic-futures) as head of strategic futures, a team he says covers catastrophic risk, recursive self-improvement and labour-market effects. In [January 2025](https://www.hyperdimensional.co/p/2025-a-look-ahead) he put about 25% on an AI solving or meaningfully advancing an unsolved mathematics problem by the end of the year, expected models in the top 1% of humans at maths and coding by then, and said progress in 2025 would be faster than in 2024. In [December 2025](https://www.hyperdimensional.co/p/dice-in-the-air) he wrote that the last of these had been right against the conventional wisdom, and did not grade the others; his predictions for 2026 in the same post carry no probabilities, by his own statement, and include that malicious actors will cause meaningful harm with AI agents and that vastly more compute will be added than in 2025. In [March 2025](https://www.hyperdimensional.co/p/where-we-are-headed) he wrote that fully automated jobs were unlikely within a few years, that automation of AI research could begin by the end of 2025 or later, and that cancer cures and fusion propulsion from AI were probably a matter for the mid to late 2030s. In a [March 2026 essay](https://www.hyperdimensional.co/p/2023) on his thinking in 2023 he wrote that he strongly suspected machines more intelligent than humans within the decade. He has not published a doom probability.
+
+---
+
+## Dwarkesh Patel
+
+![Dwarkesh Patel](/misc/media/people-who-talk-about-ai/patel.jpg)
+
+**Known for**: The Dwarkesh Podcast; _The Scaling Era_
+
+**Alias**: [@dwarkesh_sp](https://x.com/dwarkesh_sp)
+
+**Unresolved Forecasts**: 50% that an AI does a small business's taxes end to end by 2028 (June 2025); 50% that an AI learns on the job the way a person does by 2032 (June 2025); AGI by 2030 or, failing that, much later (May 2025)
+
+Dwarkesh Patel ([@dwarkesh_sp](https://x.com/dwarkesh_sp)) was born in 2000 and has run his podcast since 2020, at first as The Lunar Society; his guests have included Ilya Sutskever, Andrej Karpathy, Mark Zuckerberg, Satya Nadella and Elon Musk. With Gavin Leech he published [_The Scaling Era_](https://en.wikipedia.org/wiki/Dwarkesh_Patel) with Stripe Press in July 2025. In May 2025 he wrote that AGI timelines are [bimodal, by 2030 or bust](https://x.com/dwarkesh_sp/status/1926364571104653555), because training compute has grown 3.55 times a year and cannot keep doing so past the decade. In June 2025, in [Why I don't think AGI is right around the corner](https://www.dwarkesh.com/p/timelines-june-2025), he gave 50% to an AI doing a small business's taxes end to end by 2028 and 50% to on-the-job learning like a person's by 2032, wrote that models get more impressive at the rate short-timeline people predict and more useful at the rate long-timeline people predict, and said that preparing for a misaligned superintelligence in 2028 still made sense. In 2026 he said progress had been faster than his earlier scepticism allowed, and in [August 2026](https://www.dwarkesh.com/p/era-of-continual-learning) he published eight predictions about what continual learning would do to the industry, none with a date. He has not published a doom probability.
+
+---
+
 ## Eli Lifland
 
 **Known for**: Forecasting; Samotsvety; _AI 2027_
@@ -360,4 +388,4 @@ Zvi Mowshowitz ([@TheZvi](https://x.com/TheZvi)) is a former professional Magic:
 
 ---
 
-Photographs: Tetraspace's is from [her site](https://thetetra.space/). The rest are from Wikimedia Commons: [Aella](https://commons.wikimedia.org/wiki/File:Aella.jpg) by Aella, CC BY 4.0. [Connor Leahy](https://commons.wikimedia.org/wiki/File:Connor_Leahy_at_Web_Summit_Rio_2026.jpg) by Felipe.bzra, CC BY-SA 4.0. [Dario Amodei](https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg), UK Prime Minister's Office, CC BY 2.0. [Eliezer Yudkowsky](https://commons.wikimedia.org/wiki/File:Eliezer_Yudkowsky,_Stanford_2006_(square_crop).jpg) by null0, CC BY-SA 2.0. [Geoffrey Hinton](https://commons.wikimedia.org/wiki/File:Geoffrey_E._Hinton,_2024_Nobel_Prize_Laureate_in_Physics_(cropped1).jpg) by Arthur Petron, CC BY-SA 4.0. [Holden Karnofsky](https://commons.wikimedia.org/wiki/File:Holden_Karnofsky.jpg) by GiveWell, CC BY 3.0. [Nate Soares](https://commons.wikimedia.org/wiki/File:Nate_Soares_at_Politics_and_Prose_at_The_Wharf,_September_2025_(cropped).jpg) by M bourgon, CC0. [Nick Bostrom](https://commons.wikimedia.org/wiki/File:Prof_Nick_Bostrom_324-1_(cropped_more).jpg), Future of Humanity Institute, CC BY 4.0. [Robin Hanson](https://commons.wikimedia.org/wiki/File:Robin_Hanson_at_Manifest_2023.jpg) by Nikita Sokolsky, CC BY-SA 4.0. [Toby Ord](https://commons.wikimedia.org/wiki/File:Toby_Ord.jpg) by David Fisher, CC BY-SA 3.0. [Zvi Mowshowitz](https://commons.wikimedia.org/wiki/File:Zvi_Mowshowitz_playing_poker_at_Manifest_2023.jpg) by Nikita Sokolsky, CC BY-SA 4.0.
+Photographs: Tetraspace's is from [her site](https://thetetra.space/). The rest are from Wikimedia Commons: [Aella](https://commons.wikimedia.org/wiki/File:Aella.jpg) by Aella, CC BY 4.0. [Connor Leahy](https://commons.wikimedia.org/wiki/File:Connor_Leahy_at_Web_Summit_Rio_2026.jpg) by Felipe.bzra, CC BY-SA 4.0. [Dario Amodei](https://commons.wikimedia.org/wiki/File:Dario_Amodei_in_2023.jpg), UK Prime Minister's Office, CC BY 2.0. [Dwarkesh Patel](https://commons.wikimedia.org/wiki/File:Dwarkesh_Patel_2025_(cropped).jpg) by TechCrunch, CC BY 4.0. [Eliezer Yudkowsky](https://commons.wikimedia.org/wiki/File:Eliezer_Yudkowsky,_Stanford_2006_(square_crop).jpg) by null0, CC BY-SA 2.0. [Geoffrey Hinton](https://commons.wikimedia.org/wiki/File:Geoffrey_E._Hinton,_2024_Nobel_Prize_Laureate_in_Physics_(cropped1).jpg) by Arthur Petron, CC BY-SA 4.0. [Holden Karnofsky](https://commons.wikimedia.org/wiki/File:Holden_Karnofsky.jpg) by GiveWell, CC BY 3.0. [Nate Soares](https://commons.wikimedia.org/wiki/File:Nate_Soares_at_Politics_and_Prose_at_The_Wharf,_September_2025_(cropped).jpg) by M bourgon, CC0. [Nick Bostrom](https://commons.wikimedia.org/wiki/File:Prof_Nick_Bostrom_324-1_(cropped_more).jpg), Future of Humanity Institute, CC BY 4.0. [Robin Hanson](https://commons.wikimedia.org/wiki/File:Robin_Hanson_at_Manifest_2023.jpg) by Nikita Sokolsky, CC BY-SA 4.0. [Toby Ord](https://commons.wikimedia.org/wiki/File:Toby_Ord.jpg) by David Fisher, CC BY-SA 3.0. [Zvi Mowshowitz](https://commons.wikimedia.org/wiki/File:Zvi_Mowshowitz_playing_poker_at_Manifest_2023.jpg) by Nikita Sokolsky, CC BY-SA 4.0.
