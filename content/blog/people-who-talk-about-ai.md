@@ -4,7 +4,7 @@ tags:
   - writing
   - ai
 ---
-I recently that the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list, so i decided to write a list myself this is a non-exhaustive list about people worried for the future of humanity. Request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
+I recently had the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list, so i decided to write a list myself this is a non-exhaustive list about people worried for the future of humanity. Request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
 
 
 ---
