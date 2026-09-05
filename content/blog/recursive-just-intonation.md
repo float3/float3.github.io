@@ -13,7 +13,7 @@ Recursive just intonation is a novel toy-tuning system that I came up with durin
 
 Equal temperament gives us one frequency table. Every C# is the same C#, every G is the
 same G, and every semitone is the same distance from the last one. That is very
-convenient, at the cost of shaving almost every interval a little. The intervals
+convenient, at the cost of slightly altering almost every interval. The intervals
 are close enough to simple ratios that they work, but all of them are not
 exact.
 
@@ -171,7 +171,7 @@ fixed C just G#/Ab    = 13/8 = 1.625
 recursive E-major G#  = 25/16 = 1.5625
 ```
 
-Those are different notes hiding under the same name.
+Those are different frequencies sharing the same name.
 
 The general formula is:
 
@@ -272,19 +272,19 @@ chord-local purity becomes easier to hear.
         <td>
           <figure class="audio-figure" data-oscilloscope>
             <audio controls src="/misc/media/fixed-c-ji-sine-progression.wav"></audio>
-            <figcaption>C stays beautiful; remote chords lean hard.</figcaption>
+            <figcaption>C sounds pure; remote chords are noticeably out of tune.</figcaption>
           </figure>
         </td>
         <td>
           <figure class="audio-figure" data-oscilloscope>
             <audio controls src="/misc/media/fixed-c-ji-progression.wav"></audio>
-            <figcaption>C stays beautiful; the added harmonics make the leaning easier to hear.</figcaption>
+            <figcaption>C sounds pure; the added harmonics make the mistuning of remote chords easier to hear.</figcaption>
           </figure>
         </td>
         <td>
           <figure class="audio-figure" data-oscilloscope>
             <audio controls src="/misc/media/fixed-c-ji-c-drone-progression.wav"></audio>
-            <figcaption>Fixed-C tuning stays tied to the drone while the harmony travels.</figcaption>
+            <figcaption>Fixed-C tuning remains consistent with the drone as the harmony moves to other keys.</figcaption>
           </figure>
         </td>
       </tr>
@@ -305,7 +305,7 @@ chord-local purity becomes easier to hear.
         <td>
           <figure class="audio-figure" data-oscilloscope>
             <audio controls src="/misc/media/recursive-ji-c-drone-progression.wav"></audio>
-            <figcaption>The drone exposes when chord-local roots move away from global C.</figcaption>
+            <figcaption>The drone makes it audible when chord-local roots diverge from global C.</figcaption>
           </figure>
         </td>
       </tr>
@@ -326,7 +326,7 @@ hybrid_frequency(root, degree) =
 So the root grid keeps equal temperament's transposition symmetry, while each
 row still has just local intervals. The tradeoff is that the row roots no
 longer come from the original C-based just scale; they are the familiar piano
-frequencies with just chords hanging from them.
+frequencies with just chords built on them.
 
 <figure class="audio-figure" data-oscilloscope>
   <audio controls src="/misc/media/twelve-tet-rooted-ji-progression.wav"></audio>
@@ -374,8 +374,8 @@ relationship, even if the chord root is not C. E major does not inherit C's
 G#/Ab; it gets its own G#/Ab. F major does not inherit C's A; it gets its own A.
 
 That lines up with how I hear harmony. When a chord arrives, the ear can accept
-the chord root as a local center. Recursive just intonation follows that local
-center instead of forcing every chord to negotiate with one global keyboard.
+the chord root as a local center. Recursive just intonation uses that local
+center instead of constraining every chord to one global keyboard.
 
 It is also a useful programming model. A chord can be rendered as:
 
@@ -394,11 +394,11 @@ In 12-TET, G#/Ab is one frequency per octave. In fixed C just intonation, G#/Ab
 is also one frequency per octave, just a different one. In recursive just
 intonation, G#/Ab depends on why you are playing it.
 
-A few consequences fall out of that:
+A few consequences of that:
 
-- A melody can wobble if a held pitch is reinterpreted by the next chord.
+- A melody can shift pitch if a held note is reinterpreted by the next chord.
 - Enharmonic spelling starts to matter, but a 12-key interface usually hides it.
-- Modulation becomes a negotiation between smooth voice-leading and pure local
+- Modulation requires balancing smooth voice-leading against pure local
   chords.
 - Instruments with fixed frets, keys, or holes cannot do this without pitch
   bending or multiple samples per pitch class.

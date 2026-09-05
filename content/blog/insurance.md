@@ -62,7 +62,7 @@ Remember:
 If the loss would be catastrophic and you can't comfortably absorb it, buy the insurance.  
 If the loss is merely inconvenient and you can comfortably cover it yourself, decline the insurance.
 
-The second argument is that insurance companies want to pay as little claims as possible, and in many parts of the world they employ, full-time, huge stables of employees that make it harder or try to prevent you from getting your money and huge stables of lawyers that will try to deter you from going to and beat you in court.
+The second argument is that insurance companies want to pay as little claims as possible, and in many parts of the world they employ, full-time, large teams of employees that make it harder or try to prevent you from getting your money and large teams of lawyers that will try to deter you from going to and beat you in court.
 
 
 Some people I've talked to seem to deal with very severe anxiety regarding all sorts of things, if this is you, these bad insurances could give you peace of mind, which might seem like a worth tradeoff for you, but I think you should be aware that you're committing a (mathematical) mistake, the question of whether to buy an insurance always has a correct answer. Of course you are responsible for your own financial decisions; please don't sue me for any damages you suffer from not having insurance.
