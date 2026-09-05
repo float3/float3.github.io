@@ -5,7 +5,7 @@ tags:
   - politics
 ---
 
-I recently that the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list I decided to write one inspired by [Jette Steckel](https://www.muenchner-kammerspiele.de/de/wir/13725-jette-steckel). Everyone this one is a writer, poet, journalist, publisher, scholar or lawyer whom a government put in prison, or tried to, for something they wrote or said. Each entry links to its sources, and it was current in the first week of September 2026. Request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
+I recently had the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list I decided to write one inspired by [Jette Steckel](https://www.muenchner-kammerspiele.de/de/wir/13725-jette-steckel). Everyone this one is a writer, poet, journalist, publisher, scholar or lawyer whom a government put in prison, or tried to, for something they wrote or said. Each entry links to its sources, and it was current in the first week of September 2026. Request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
 
 ---
 
