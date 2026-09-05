@@ -72,4 +72,5 @@ tags:
 [65.jpg](/misc/trolley/65.jpg) \
 [66.jpg](/misc/trolley/66.jpg) \
 [67.jpg](/misc/trolley/67.jpg) \
-[68.jpg](/misc/trolley/68.jpg)
+[68.jpg](/misc/trolley/68.jpg) \
+[69.jpg](/misc/trolley/69.jpg)
