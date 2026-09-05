@@ -201,7 +201,8 @@ Commands:
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment
   gallery-from-issue         CI-only: add the files attached to a submission
-                             issue to the gallery it names
+                             issue, and the videos it links to, to the gallery
+                             it names
   check                      run Rust, TypeScript, and lint checks
   check-links [DIR]          check that every local link in public/ resolves
   update                     run dependency updates and linters

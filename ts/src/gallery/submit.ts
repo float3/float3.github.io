@@ -46,7 +46,8 @@ function guidance(noun: string): string {
   return (
     `<!-- Drop your ${noun}s in below, under this line: drag the files onto the box, or\n` +
     "     paste them in. GitHub uploads each one and writes a link to it. As many as you\n" +
-    "     like in one issue.\n" +
+    "     like in one issue. A link to a video somewhere else works too: paste the\n" +
+    "     address of the page it is on, and yt-dlp fetches the clip behind it.\n" +
     "\n" +
     "     Then press the green Create button. A workflow adds them and closes this issue;\n" +
     "     they appear on the page once the pull request it opens has been merged. -->"

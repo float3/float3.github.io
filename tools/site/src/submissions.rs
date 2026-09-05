@@ -9,6 +9,12 @@
 //! the pictures — moderation is the merge button and nothing else, exactly as
 //! it is for comments.
 //!
+//! A link to a video somewhere else is taken too: anything in the body that is
+//! not a GitHub attachment is handed to yt-dlp, which resolves the page to the
+//! file behind it. The file then goes through exactly the same checks as an
+//! attachment does, because from the moment it is on disk nothing about it is
+//! different.
+//!
 //! One issue carries as many files as somebody cares to drop into it; they are
 //! numbered in the order the body mentions them and land in one pull request.
 //!
@@ -22,9 +28,10 @@
 //!
 //! - the collection has to be one of `Site::SUBMITTABLE`, and the pages are
 //!   held to that same list by a test in this file;
-//! - a URL is fetched only if it is on one of GitHub's own attachment hosts,
-//!   because this runs with a token that can push and must never fetch a URL
-//!   of somebody else's choosing;
+//! - curl fetches a URL only if it is on one of GitHub's own attachment hosts,
+//!   and every other URL goes to yt-dlp, which never holds a credential, is
+//!   told exactly where to write, and is asked for one video of bounded length
+//!   and size;
 //! - the file's kind comes from its first bytes, never from the URL;
 //! - the name it lands under is built here, never taken from the payload;
 //! - a submission that would renumber files already published is refused
@@ -64,17 +71,50 @@ pub(crate) const WORKFLOW: &str = ".github/workflows/submission.yaml";
 const MAX_FILES: usize = 20;
 
 /// The most one file may weigh. GitHub's own ceiling on an issue attachment is
-/// lower than this for every type it accepts, so this only ever catches
-/// something unexpected.
+/// lower than this for every type it accepts, so for an attachment this only
+/// ever catches something unexpected; for a link it is the real limit, since
+/// the file is going into a git repository.
 const MAX_BYTES: u64 = 32 * 1024 * 1024;
+
+/// The longest video a link may resolve to.
+///
+/// A gallery entry is a clip, not a programme, and a longer one would run into
+/// the size ceiling anyway; saying so before the download is what turns a
+/// twenty-minute fetch into an immediate answer on the issue. Five minutes is
+/// also about where the audio alone starts crowding out the picture in the
+/// budget below.
+const MAX_LINK_SECONDS: u32 = 300;
+
+/// The tallest rendition yt-dlp is asked for. Lower ones are preferred where
+/// they are the only way under the size ceiling, and taller ones are never
+/// worth the bytes on a page of thumbnails.
+const MAX_LINK_HEIGHT: u32 = 1080;
+
+/// How much of [`MAX_BYTES`] the picture may take, and how much the sound.
+///
+/// Told to yt-dlp as format filters rather than left to `--max-filesize`,
+/// because that flag is a tripwire and not a choice: it aborts the download of
+/// a 1080p rendition thirty megabytes in, where a filter picks the 720p one
+/// that fits and gets on with it. The two together stay under the ceiling, so
+/// a merged file that passes both passes the check after the download as
+/// well; `--max-filesize` stays as the guard for a site that reports no size.
+const LINK_VIDEO_BYTES: u64 = 24 * 1024 * 1024;
+const LINK_AUDIO_BYTES: u64 = 6 * 1024 * 1024;
+const _: () = assert!(LINK_VIDEO_BYTES + LINK_AUDIO_BYTES <= MAX_BYTES);
+
+/// The exit code yt-dlp uses when a video was found and turned down by
+/// `--break-match-filters`, as distinct from one it could not fetch at all.
+const YT_DLP_REJECTED: i32 = 101;
 
 /// Where GitHub puts a file somebody dropped into an issue.
 ///
-/// An allowlist of prefixes rather than a pattern, and the single most
-/// important line in this file: the workflow that calls it can push to the
-/// repository, so the one thing it must never do is fetch a URL of a
-/// stranger's choosing. Both of these are GitHub's own attachment hosts, and
-/// neither needs a credential for a public repository — nothing here sends one.
+/// An allowlist of prefixes rather than a pattern, and the one thing that
+/// decides which of the two fetchers a URL goes to. curl is given these and
+/// nothing else, because a plain fetch of a stranger's URL with nothing checked
+/// on the way is not something a run that can push should do; anything else
+/// goes to yt-dlp, which is a program built to be pointed at strangers' pages.
+/// Neither host needs a credential for a public repository — nothing here sends
+/// one to either.
 const ATTACHMENT_HOSTS: [&str; 2] = [
     "https://github.com/user-attachments/assets/",
     "https://user-images.githubusercontent.com/",
@@ -94,6 +134,23 @@ fn staged_name(index: usize, extension: &str) -> String {
 
 fn is_staged(name: &str) -> bool {
     name.starts_with(STAGED_PREFIX)
+}
+
+/// Where one submission comes from.
+#[derive(Clone, Debug, PartialEq, Eq)]
+enum Source {
+    /// A file GitHub is hosting because somebody dropped it into the issue.
+    Attachment(String),
+    /// A page somewhere else with a video on it, for yt-dlp to resolve.
+    Link(String),
+}
+
+impl Source {
+    fn url(&self) -> &str {
+        match self {
+            Source::Attachment(url) | Source::Link(url) => url,
+        }
+    }
 }
 
 /// The files staged in a gallery directory, removed if anything goes wrong.
@@ -120,7 +177,7 @@ impl Drop for Staged {
 struct Fetched {
     staged: String,
     path: PathBuf,
-    source: String,
+    source: Source,
 }
 
 /// One file the gallery gained, and where it came from — which is what the
@@ -163,26 +220,35 @@ fn collection_of(payload: &Value) -> Result<String> {
     Ok(collection.to_string())
 }
 
-/// The attachment links in an issue body, in the order they appear.
+/// Every URL in an issue body, sorted into the two fetchers, in the order they
+/// appear.
 ///
-/// GitHub writes one of these for every file dropped into the compose box,
-/// either as markdown or as an `img` tag, and [`crate::content::extract_urls`]
-/// reads both. Everything else in the body — a link somebody typed, a
-/// screenshot hosted elsewhere, the guidance the button wrote — is not an
-/// attachment and is not fetched.
-fn attachments(body: &str) -> Vec<String> {
-    let mut urls = Vec::new();
+/// GitHub writes an attachment link for every file dropped into the compose
+/// box, either as markdown or as an `img` tag, and [`crate::content::extract_urls`]
+/// reads both. Everything else with `https://` in front of it is taken to be a
+/// link to a video and goes to yt-dlp — including a link that turns out not to
+/// be one, which is then a refusal saying so rather than a file quietly not
+/// added. Plain `http://` is refused outright: nothing here fetches in the
+/// clear.
+fn sources(body: &str) -> Result<Vec<Source>> {
+    let mut sources = Vec::new();
 
     for url in crate::content::extract_urls(body) {
-        let Some(url) = allowed_attachment(&url) else {
-            continue;
+        let source = match allowed_attachment(&url) {
+            Some(url) => Source::Attachment(url),
+            None if url.starts_with("https://") => Source::Link(url),
+            None => {
+                return reject(format!(
+                    "{url} is not https, and nothing here fetches over plain http"
+                ));
+            }
         };
-        if !urls.contains(&url) {
-            urls.push(url);
+        if !sources.contains(&source) {
+            sources.push(source);
         }
     }
 
-    urls
+    Ok(sources)
 }
 
 /// The URL to fetch, if the allowlist admits it.
@@ -258,7 +324,7 @@ fn normalize_path(url: &str) -> Option<String> {
 /// on the time, and no credential of any kind. `--` keeps a URL that begins
 /// with a dash from being read as an option, which the allowlist already rules
 /// out and which costs nothing to rule out twice.
-fn download(url: &str, target: &Path) -> Result<Vec<u8>> {
+fn download(url: &str, target: &Path) -> Result<()> {
     let output = Command::new("curl")
         .args([
             "-sS",
@@ -290,7 +356,141 @@ fn download(url: &str, target: &Path) -> Result<Vec<u8>> {
         ));
     }
 
-    Ok(fs::read(target)?)
+    Ok(())
+}
+
+/// The yt-dlp invocation for one link, writing to `template`.
+///
+/// Every flag is a bound on what a stranger's link can make the runner do. No
+/// configuration file and no cache, so the run is the arguments and nothing
+/// else; one video even when the link names a playlist; a size ceiling, a
+/// duration ceiling and no live streams, all refused before a byte is fetched
+/// where the site says enough in advance; two retries rather than ten, because
+/// a link that does not answer is a refusal to write on the issue, not a thing
+/// to wait for. `--print after_move:filepath` is how the final name comes back
+/// — the extension is yt-dlp's to choose until the remux settles it — and it
+/// implies `--simulate` unless told otherwise, hence `--no-simulate`. The
+/// format selector is [`format_selector`]'s; `--remux-video` catches whatever
+/// container it lands on, and the sniffer afterwards still decides what the
+/// file actually is.
+fn yt_dlp(url: &str, template: &Path) -> Command {
+    let mut command = Command::new("yt-dlp");
+    command
+        .args([
+            "--no-config",
+            "--no-cache-dir",
+            "--no-update",
+            "--no-progress",
+            "--no-playlist",
+            "--playlist-items",
+            "1",
+            "--no-simulate",
+            "--print",
+            "after_move:filepath",
+            "--socket-timeout",
+            "30",
+            "--retries",
+            "2",
+            "--max-filesize",
+            &MAX_BYTES.to_string(),
+            "--break-match-filters",
+            &format!("!is_live & duration<={MAX_LINK_SECONDS}"),
+            "-f",
+            &format_selector(),
+            "--merge-output-format",
+            "mp4",
+            "--remux-video",
+            "mp4",
+            "-o",
+        ])
+        .arg(template)
+        .arg("--")
+        .arg(url);
+    command
+}
+
+/// Which rendition yt-dlp is to fetch, best first.
+///
+/// mp4 video and m4a audio before anything else, because those merge into an
+/// mp4 without re-encoding, and H.264 first among them, because a gallery is
+/// played in a `<video>` tag on whatever phone is to hand and AV1 — which is
+/// what YouTube otherwise serves as its best mp4 — does not decode on most of
+/// them yet. Every alternative carries the height and the size budgets, and
+/// the size ones are asked twice: `filesize` is what a site reports and
+/// `filesize_approx` is what yt-dlp works out from bitrate and duration when it
+/// does not, and a format has one or the other. The `?` lets a format that has
+/// neither through, to `--max-filesize` and the check after the download.
+fn format_selector() -> String {
+    let height = MAX_LINK_HEIGHT;
+    let size = |bytes: u64| format!("[filesize<?{bytes}][filesize_approx<?{bytes}]");
+    let video = format!("[height<={height}]{}", size(LINK_VIDEO_BYTES));
+    let audio = size(LINK_AUDIO_BYTES);
+    let whole = format!("[height<={height}]{}", size(MAX_BYTES));
+
+    [
+        format!("bv*[vcodec^=avc1]{video}+ba[ext=m4a]{audio}"),
+        format!("bv*[ext=mp4]{video}+ba[ext=m4a]{audio}"),
+        format!("b[ext=mp4]{whole}"),
+        format!("bv*{video}+ba{audio}"),
+        format!("b{whole}"),
+    ]
+    .join("/")
+}
+
+/// Resolves one link to a file under `downloads`, and says which.
+fn resolve(url: &str, downloads: &Path, index: usize) -> Result<PathBuf> {
+    let template = downloads.join(format!("{index:02}.%(ext)s"));
+    let output = yt_dlp(url, &template).output()?;
+
+    if !output.status.success() {
+        if output.status.code() == Some(YT_DLP_REJECTED) {
+            return reject(format!(
+                "{url} is a live stream or longer than {} minutes, and a gallery takes neither",
+                MAX_LINK_SECONDS / 60
+            ));
+        }
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        let reason = stderr
+            .lines()
+            .rev()
+            .find(|line| line.starts_with("ERROR"))
+            .or_else(|| stderr.lines().last())
+            .unwrap_or_default()
+            .trim();
+        return reject(format!("{url} could not be resolved to a video: {reason}"));
+    }
+
+    let stdout = String::from_utf8_lossy(&output.stdout);
+    let Some(path) = stdout
+        .lines()
+        .rev()
+        .map(str::trim)
+        .find(|line| !line.is_empty())
+        .map(PathBuf::from)
+    else {
+        return reject(format!(
+            "{url} did not resolve to a file; yt-dlp fetched nothing and said nothing"
+        ));
+    };
+
+    // yt-dlp was told where to write. A path anywhere else means the two of us
+    // disagree about what happened, and that is not a thing to carry on from.
+    if !path.starts_with(downloads) || !path.is_file() {
+        return fail(format!(
+            "yt-dlp reported {} for {url}, which is not a file under {}",
+            path.display(),
+            downloads.display()
+        ));
+    }
+
+    Ok(path)
+}
+
+fn yt_dlp_available() -> bool {
+    Command::new("yt-dlp")
+        .args(["--no-config", "--version"])
+        .output()
+        .is_ok_and(|output| output.status.success())
 }
 
 /// The whole job: validate, fetch, normalize, and report.
@@ -328,19 +528,41 @@ pub(crate) fn apply(
         return reject(format!("there is no gallery directory for `{collection}`"));
     }
 
-    let urls = attachments(&submission.body);
-    if urls.is_empty() {
+    let sources = sources(&submission.body)?;
+    if sources.is_empty() {
         return reject(
-            "there are no files attached to this issue. Drop pictures into the issue body \
-             — GitHub uploads them and writes the links — then open it again",
+            "there is nothing in this issue to add. Drop pictures into the issue body — \
+             GitHub uploads them and writes the links — or paste a link to a video, then \
+             open it again",
         );
     }
-    if urls.len() > MAX_FILES {
+    if sources.len() > MAX_FILES {
         return reject(format!(
             "{} files is more than one issue takes; the limit is {MAX_FILES}, and there is \
              nothing stopping a second issue",
-            urls.len()
+            sources.len()
         ));
+    }
+
+    // Asked before the first download rather than after: a link needs both
+    // programs, and a runner missing one of them is a fact about the runner
+    // that the person who sent the link can be told straight away.
+    if sources
+        .iter()
+        .any(|source| matches!(source, Source::Link(_)))
+    {
+        if !yt_dlp_available() {
+            return reject(
+                "links cannot be taken right now: yt-dlp is not installed on the runner. \
+                 Attach the file to the issue instead",
+            );
+        }
+        if !gallery::ffmpeg_available() {
+            return reject(
+                "links cannot be taken right now: the video behind one has to be remuxed \
+                 before it is published, and ffmpeg is not installed on the runner",
+            );
+        }
     }
 
     // Fetched into a directory of their own first: nothing a stranger sent goes
@@ -348,9 +570,25 @@ pub(crate) fn apply(
     fs::create_dir_all(downloads)?;
     let mut fetched = Vec::new();
 
-    for (index, url) in urls.iter().enumerate() {
-        let path = downloads.join(format!("{index:02}"));
-        let bytes = download(url, &path)?;
+    for (index, source) in sources.iter().enumerate() {
+        let path = match source {
+            Source::Attachment(url) => {
+                let path = downloads.join(format!("{index:02}"));
+                download(url, &path)?;
+                path
+            }
+            Source::Link(url) => resolve(url, downloads, index)?,
+        };
+        let url = source.url();
+
+        let bytes = fs::read(&path)?;
+        if bytes.len() as u64 > MAX_BYTES {
+            return reject(format!(
+                "{url} is {} MB, and a gallery takes nothing over {} MB",
+                bytes.len() / (1024 * 1024),
+                MAX_BYTES / (1024 * 1024)
+            ));
+        }
 
         let Some(extension) = gallery::sniff(&bytes) else {
             return reject(format!(
@@ -369,7 +607,7 @@ pub(crate) fn apply(
         fetched.push(Fetched {
             staged: staged_name(index, extension),
             path,
-            source: url.clone(),
+            source: source.clone(),
         });
     }
 
@@ -487,7 +725,7 @@ fn install(site: &Site, collection: &str, dir: &Path, fetched: &[Fetched]) -> Re
         .zip(survivors)
         .map(|(name, file)| Added {
             path: format!("content/misc/{collection}/{name}"),
-            source: file.source.clone(),
+            source: file.source.url().to_string(),
         })
         .collect();
     let duplicates = dropped
@@ -641,22 +879,33 @@ mod tests {
         assert!(collection_of(&climbing.payload).is_err());
     }
 
+    /// GitHub's own hosts go to curl; everything else is a link for yt-dlp,
+    /// including a host dressed up to look like GitHub's.
     #[test]
-    fn fetches_only_what_github_itself_is_hosting() {
+    fn sorts_every_url_into_one_of_the_two_fetchers() {
         let body = "\
 ![one](https://github.com/user-attachments/assets/1111-2222)
 <img src=\"https://user-images.githubusercontent.com/1/two.png\" width=\"200\">
-and a link somebody typed: https://example.com/trolley.jpg
+and a link somebody typed: https://www.youtube.com/watch?v=abc
 and one dressed up as an attachment: https://github.com.evil.example/user-attachments/assets/3
 and the same file twice: https://github.com/user-attachments/assets/1111-2222";
 
         assert_eq!(
-            attachments(body),
+            sources(body).unwrap(),
             vec![
-                "https://github.com/user-attachments/assets/1111-2222",
-                "https://user-images.githubusercontent.com/1/two.png",
+                Source::Attachment("https://github.com/user-attachments/assets/1111-2222".into()),
+                Source::Attachment("https://user-images.githubusercontent.com/1/two.png".into()),
+                Source::Link("https://www.youtube.com/watch?v=abc".into()),
+                Source::Link("https://github.com.evil.example/user-attachments/assets/3".into()),
             ]
         );
+
+        // Nothing is fetched in the clear, and the refusal names the link.
+        let error = sources("see http://example.com/clip.mp4").unwrap_err();
+        assert!(error.downcast_ref::<Rejected>().is_some());
+        assert!(error.to_string().contains("http://example.com/clip.mp4"));
+
+        assert!(sources("nothing here but words").unwrap().is_empty());
     }
 
     /// The allowlist has to hold against the URL curl resolves, not the one
@@ -690,6 +939,64 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
         );
     }
 
+    /// The bounds on what a link may do are all command-line flags, so this is
+    /// where they are held: every one of them present, the URL last and behind
+    /// `--`, and the output confined to the template it was given.
+    #[test]
+    fn asks_yt_dlp_for_one_bounded_video_written_where_it_was_told() {
+        let template = Path::new("/tmp/downloads/03.%(ext)s");
+        let command = yt_dlp("-https://example.com/watch?v=1", template);
+        let args: Vec<String> = command
+            .get_args()
+            .map(|arg| arg.to_string_lossy().into_owned())
+            .collect();
+
+        for flag in [
+            "--no-config",
+            "--no-cache-dir",
+            "--no-playlist",
+            "--no-simulate",
+            "--break-match-filters",
+            "--max-filesize",
+            "--remux-video",
+        ] {
+            assert!(args.contains(&flag.to_string()), "{flag} is missing");
+        }
+
+        let position = |flag: &str| args.iter().position(|arg| arg == flag).unwrap();
+        assert_eq!(args[position("--print") + 1], "after_move:filepath");
+        assert_eq!(args[position("--playlist-items") + 1], "1");
+        assert_eq!(args[position("--max-filesize") + 1], MAX_BYTES.to_string());
+        assert_eq!(
+            args[position("--break-match-filters") + 1],
+            format!("!is_live & duration<={MAX_LINK_SECONDS}")
+        );
+        assert_eq!(
+            args[position("-o") + 1],
+            template.to_string_lossy().into_owned()
+        );
+
+        // Every alternative in the selector is bounded in height and in size,
+        // so no branch of the fallback can be the one that fetches a film.
+        let selector = &args[position("-f") + 1];
+        for alternative in selector.split('/') {
+            assert!(
+                alternative.contains(&format!("[height<={MAX_LINK_HEIGHT}]")),
+                "{alternative} has no height bound"
+            );
+            assert!(
+                alternative.contains("[filesize<?") && alternative.contains("[filesize_approx<?"),
+                "{alternative} has no size bound"
+            );
+        }
+        assert!(selector.starts_with("bv*[vcodec^=avc1]"));
+
+        // A URL that begins with a dash is a URL, not an option.
+        let last = args.len() - 1;
+        assert_eq!(args[last - 1], "--");
+        assert_eq!(args[last], "-https://example.com/watch?v=1");
+    }
+
     #[test]
     fn names_a_download_after_what_its_bytes_say_it_is() {
         assert_eq!(staged_name(0, "jpg"), "submission-00.jpg");
@@ -716,8 +1023,8 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
                     source: "https://github.com/user-attachments/assets/7a4a".into(),
                 },
                 Added {
-                    path: "content/misc/trolley/70.jpg".into(),
-                    source: "https://user-images.githubusercontent.com/1/two.png".into(),
+                    path: "content/misc/trolley/70.mp4".into(),
+                    source: "https://www.youtube.com/watch?v=abc".into(),
                 },
             ],
             duplicates: vec!["submission-01.png is a copy of 00.jpg".into()],
@@ -728,7 +1035,7 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
             "From #156, opened by @somebody.\n\
              \n\
              - `content/misc/trolley/69.jpg`, from <https://github.com/user-attachments/assets/7a4a>\n\
-             - `content/misc/trolley/70.jpg`, from <https://user-images.githubusercontent.com/1/two.png>\n\
+             - `content/misc/trolley/70.mp4`, from <https://www.youtube.com/watch?v=abc>\n\
              \n\
              submission-01.png is a copy of 00.jpg, and was not added.\n\
              \n\
@@ -754,6 +1061,11 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
         assert!(
             workflow.contains(&format!("\"{ISSUE_MARKER}\"")),
             "{WORKFLOW} does not route on the {ISSUE_MARKER} marker"
+        );
+        // The refusal for a missing yt-dlp promises the workflow installs it.
+        assert!(
+            workflow.contains("yt-dlp"),
+            "{WORKFLOW} does not install yt-dlp"
         );
     }
 
@@ -831,17 +1143,17 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
             Fetched {
                 staged: staged_name(0, "png"),
                 path: downloads.join("one.png"),
-                source: "https://github.com/user-attachments/assets/1".into(),
+                source: Source::Attachment("https://github.com/user-attachments/assets/1".into()),
             },
             Fetched {
                 staged: staged_name(1, "png"),
                 path: downloads.join("two.png"),
-                source: "https://github.com/user-attachments/assets/2".into(),
+                source: Source::Attachment("https://github.com/user-attachments/assets/2".into()),
             },
             Fetched {
                 staged: staged_name(2, "png"),
                 path: downloads.join("three.png"),
-                source: "https://github.com/user-attachments/assets/3".into(),
+                source: Source::Link("https://example.com/three".into()),
             },
         ];
 
@@ -863,10 +1175,7 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
                     "content/misc/trolley/01.jpg",
                     "https://github.com/user-attachments/assets/1"
                 ),
-                (
-                    "content/misc/trolley/02.jpg",
-                    "https://github.com/user-attachments/assets/3"
-                ),
+                ("content/misc/trolley/02.jpg", "https://example.com/three"),
             ]
         );
         assert_eq!(installed.duplicates.len(), 1);

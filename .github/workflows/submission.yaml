@@ -2,12 +2,12 @@
 #
 # Two kinds of issue arrive through the site: a comment, written into the
 # compose box on a page, and a gallery submission, pictures dropped into the
-# issue. Both are handled here, in one workflow rather than one each, because
-# GitHub records a run for every workflow that listens to an event whether its
-# job ran or not — with two workflows, every comment produced a skipped gallery
-# run and every gallery submission a skipped comment run, and the list of runs
-# was half noise. `route` reads the issue once and says which kind it is; the
-# other job is skipped inside the same run.
+# issue or links to videos pasted in. Both are handled here, in one workflow
+# rather than one each, because GitHub records a run for every workflow that
+# listens to an event whether its job ran or not — with two workflows, every
+# comment produced a skipped gallery run and every gallery submission a skipped
+# comment run, and the list of runs was half noise. `route` reads the issue
+# once and says which kind it is; the other job is skipped inside the same run.
 #
 # Either way the shape is the same: a job checks out the default branch, runs
 # the one `site` subcommand that does the whole of the validation, checks the
@@ -237,8 +237,9 @@ jobs:
     needs: route
     if: needs.route.outputs.kind == 'gallery'
     runs-on: ubuntu-latest
-    # A ceiling on the whole job: as many as twenty downloads from GitHub, and
-    # a re-encode of each, should never come near this.
+    # A ceiling on the whole job, because a link a stranger pasted is a download
+    # from wherever they like at whatever speed it answers. yt-dlp is given its
+    # own limits; this is the one behind them.
     timeout-minutes: 30
     permissions:
       contents: write
@@ -266,6 +267,24 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --no-install-recommends --yes ffmpeg
+
+      # yt-dlp resolves a pasted link to the video behind it. The release
+      # binary rather than a pinned package, because sites change how they
+      # serve video every few weeks and an old yt-dlp is one that no longer
+      # works; the project's own release is the one source with nothing between
+      # it and us. Deno is the JavaScript runtime it needs for YouTube, which
+      # is where most of these links will point.
+      - name: Install yt-dlp
+        run: |
+          set -euo pipefail
+          curl -sS --fail --location --proto '=https' --proto-redir '=https' \
+            --output /usr/local/bin/yt-dlp \
+            https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+          sudo chmod a+rx /usr/local/bin/yt-dlp
+          yt-dlp --version
+      - uses: denoland/setup-deno@22d081ff2d3a40755e97629de92e3bcbfa7cf2ed # v2.0.5
+        with:
+          deno-version: v2.x
 
       # Built with default features on, unlike the comment job: re-encoding the
       # stills is the whole point of the exercise, and that is the `photos`
