@@ -9,7 +9,7 @@ pull request is what publishes it — moderation is done entirely through the me
 
 | route               | what happens                                                                                                                                                               |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **issue** (default) | Opens a prefilled GitHub issue. `.github/workflows/comment.yaml` writes the file, commits it **in the issue opener's name**, opens the pull request, and closes the issue. |
+| **issue** (default) | Opens a prefilled GitHub issue. `.github/workflows/submission.yaml` writes the file, commits it **in the issue opener's name**, opens the pull request, and closes the issue. |
 | **pull request**    | Opens GitHub's "create a new file" editor with the path and body filled in, forking the repository if the reader cannot push. They commit and propose it themselves.       |
 | **email**           | A `mailto:` link. No GitHub account at all; the comment gets added by hand.                                                                                                |
 
@@ -221,12 +221,17 @@ plugin that should be scrutinized in a diff.
 
 ## The workflow
 
-`.github/workflows/comment.yaml` fires on `issues: opened` and keys off the
+`.github/workflows/submission.yaml` fires on `issues: opened` and keys off the
 `hilll.dev:comment` marker in the body rather than off a label — `?labels=` in a
 prefilled issue URL is silently dropped for anyone without triage permission,
-which is everyone this feature exists for.
+which is everyone this feature exists for. The same file handles gallery
+submissions, which carry a different marker: a `route` job reads the issue once
+and the other job is skipped inside the same run, so a comment does not also
+produce a skipped gallery run. It can be dispatched by hand with an issue number
+too, for an issue whose run failed — re-running a failed run reuses the workflow
+as it was, so a fix never reaches it that way.
 
-It runs `site comment-from-issue`, which is the whole of the validation.
+The comment job runs `site comment-from-issue`, which is the whole of the validation.
 Everything that script reads was written by a stranger, so nothing is trusted
 further than it has been checked:
 

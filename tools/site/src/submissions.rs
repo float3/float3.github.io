@@ -49,6 +49,13 @@ use std::process::Command;
 /// which is everyone this feature exists for.
 pub(crate) const ISSUE_MARKER: &str = "hilll.dev:gallery";
 
+/// The workflow that runs this, relative to the repository root.
+///
+/// One file for comments and galleries both: two workflows on the same event
+/// meant every submission also produced a skipped run of the other one.
+#[cfg(test)]
+pub(crate) const WORKFLOW: &str = ".github/workflows/submission.yaml";
+
 /// How many files one issue may carry.
 ///
 /// Generous, because several at once is the point of it, and finite, because
@@ -108,12 +115,29 @@ impl Drop for Staged {
     }
 }
 
+/// One file on disk, under the name it will be staged as, and where it came
+/// from.
+struct Fetched {
+    staged: String,
+    path: PathBuf,
+    source: String,
+}
+
+/// One file the gallery gained, and where it came from — which is what the
+/// pull request says, so that whoever presses merge can see the original.
+pub(crate) struct Added {
+    /// Repo-relative path.
+    pub path: String,
+    pub source: String,
+}
+
 /// What the command did, for the workflow's outputs and the pull request.
 pub(crate) struct Applied {
     pub collection: String,
     pub login: String,
-    /// Repo-relative paths of the files added, in the order they were numbered.
-    pub files: Vec<String>,
+    pub number: u64,
+    /// The files added, in the order they were numbered.
+    pub files: Vec<Added>,
     /// The submissions that were copies of something, and what of.
     pub duplicates: Vec<String>,
 }
@@ -295,6 +319,9 @@ pub(crate) fn apply(
     else {
         return reject("the issue has no author");
     };
+    let Some(number) = issue.get("number").and_then(Value::as_u64) else {
+        return fail("the issue has no number");
+    };
 
     let dir = content_dir.join("misc").join(&collection);
     if !dir.is_dir() {
@@ -339,7 +366,11 @@ pub(crate) fn apply(
             );
         }
 
-        fetched.push((staged_name(index, extension), path));
+        fetched.push(Fetched {
+            staged: staged_name(index, extension),
+            path,
+            source: url.clone(),
+        });
     }
 
     let installed = install(site, &collection, &dir, &fetched)?;
@@ -347,13 +378,14 @@ pub(crate) fn apply(
     Ok(Applied {
         collection,
         login: login.to_string(),
+        number,
         files: installed.files,
         duplicates: installed.duplicates,
     })
 }
 
 struct Installed {
-    files: Vec<String>,
+    files: Vec<Added>,
     duplicates: Vec<String>,
 }
 
@@ -363,14 +395,9 @@ struct Installed {
 /// here is a list of files on disk under the names they will be staged as,
 /// which is what makes the numbering, the re-encoding and the duplicate rules
 /// testable without GitHub in the room.
-fn install(
-    site: &Site,
-    collection: &str,
-    dir: &Path,
-    fetched: &[(String, PathBuf)],
-) -> Result<Installed> {
+fn install(site: &Site, collection: &str, dir: &Path, fetched: &[Fetched]) -> Result<Installed> {
     let existing = gallery::names_in(dir)?;
-    let incoming: Vec<String> = fetched.iter().map(|(name, _)| name.clone()).collect();
+    let incoming: Vec<String> = fetched.iter().map(|file| file.staged.clone()).collect();
 
     // Asked before anything is written, because the answer is a refusal rather
     // than a thing to do: a gallery crossing what two digits can name, or one
@@ -391,12 +418,12 @@ fn install(
         dir: dir.to_path_buf(),
         names: incoming.clone(),
     };
-    for (name, path) in fetched {
-        fs::copy(path, dir.join(name))?;
+    for file in fetched {
+        fs::copy(&file.path, dir.join(&file.staged))?;
     }
 
-    let duplicates = match drop_duplicates(dir, &existing, &incoming) {
-        Ok(duplicates) => duplicates,
+    let dropped = match drop_duplicates(dir, &existing, &incoming) {
+        Ok(dropped) => dropped,
         // Every step of that decodes a file a stranger sent, so a failure is
         // far likelier to be a file that is not the picture its first bytes
         // claimed than a fault worth failing the run over. Said back on the
@@ -409,7 +436,7 @@ fn install(
         Err(error) => return Err(error),
     };
 
-    if duplicates.len() == incoming.len() {
+    if dropped.len() == incoming.len() {
         return reject(
             "every picture in this issue is already in the gallery. Nothing has been changed",
         );
@@ -431,21 +458,48 @@ fn install(
         ));
     }
 
-    let files = after
+    // The normalizer numbers in name order and the staged names sort in the
+    // order they were fetched, so the new numbers and the surviving sources
+    // line up one to one. That is an argument; the length check is the fact.
+    let survivors: Vec<&Fetched> = fetched
+        .iter()
+        .filter(|file| !dropped.iter().any(|(goes, _)| *goes == file.staged))
+        .collect();
+    let names: Vec<&String> = after
         .iter()
         .filter(|name| !existing.contains(name))
-        .map(|name| format!("content/misc/{collection}/{name}"))
-        .collect::<Vec<_>>();
+        .collect();
 
-    if files.is_empty() {
+    if names.is_empty() {
         return fail(format!("nothing was added to {collection}"));
     }
+    if names.len() != survivors.len() {
+        return fail(format!(
+            "{} file(s) were added to {collection} for {} that survived the duplicate scan, \
+             so which came from where cannot be said",
+            names.len(),
+            survivors.len()
+        ));
+    }
+
+    let files = names
+        .iter()
+        .zip(survivors)
+        .map(|(name, file)| Added {
+            path: format!("content/misc/{collection}/{name}"),
+            source: file.source.clone(),
+        })
+        .collect();
+    let duplicates = dropped
+        .into_iter()
+        .map(|(goes, stays)| format!("{goes} is a copy of {stays}"))
+        .collect();
 
     Ok(Installed { files, duplicates })
 }
 
 /// Deletes the submissions that are copies of something already in the gallery,
-/// or of each other.
+/// or of each other, and says which went and what for.
 ///
 /// The scan itself is `normalize-gallery`'s, run over the whole directory at
 /// once so that a submission is weighed against every published file. What is
@@ -454,7 +508,11 @@ fn install(
 /// number people have linked to. So the file that goes is always the one that
 /// arrived today, and two files that were both already here are left alone —
 /// tidying the gallery is not a stranger's issue's business.
-fn drop_duplicates(dir: &Path, existing: &[String], incoming: &[String]) -> Result<Vec<String>> {
+fn drop_duplicates(
+    dir: &Path,
+    existing: &[String],
+    incoming: &[String],
+) -> Result<Vec<(String, String)>> {
     let mut names = existing.to_vec();
     names.extend_from_slice(incoming);
     names.sort();
@@ -469,10 +527,37 @@ fn drop_duplicates(dir: &Path, existing: &[String], incoming: &[String]) -> Resu
         };
 
         remove_file_if_exists(&dir.join(&goes))?;
-        dropped.push(format!("{goes} is a copy of {stays}"));
+        dropped.push((goes, stays));
     }
 
     Ok(dropped)
+}
+
+/// The pull request's description, written here so that the workflow never
+/// has to compose markdown in a shell.
+///
+/// It names every file with where it came from, so that reviewing the pull
+/// request is comparing the picture with its original rather than taking the
+/// diff's word for it, and says which submissions were dropped as copies.
+fn pull_request_body(applied: &Applied) -> String {
+    let mut body = format!(
+        "From #{}, opened by @{}.\n\n",
+        applied.number, applied.login
+    );
+
+    for file in &applied.files {
+        body.push_str(&format!("- `{}`, from <{}>\n", file.path, file.source));
+    }
+
+    if !applied.duplicates.is_empty() {
+        body.push('\n');
+        for note in &applied.duplicates {
+            body.push_str(&format!("{note}, and was not added.\n"));
+        }
+    }
+
+    body.push_str("\nMerging publishes them. Closing this without merging discards them.\n");
+    body
 }
 
 pub(crate) fn from_issue(site: &Site) -> Result<()> {
@@ -502,12 +587,18 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
         println!("{}: {note}, and was not added", applied.collection);
     }
 
+    let files = applied
+        .files
+        .iter()
+        .map(|file| file.path.as_str())
+        .collect::<Vec<_>>();
     let outputs = [
         ("collection", applied.collection.clone()),
-        ("login", applied.login),
-        ("count", applied.files.len().to_string()),
-        ("files", applied.files.join(" ")),
+        ("login", applied.login.clone()),
+        ("count", files.len().to_string()),
+        ("files", files.join(" ")),
         ("dir", format!("content/misc/{}", applied.collection)),
+        ("body", pull_request_body(&applied)),
     ];
 
     for (key, value) in &outputs {
@@ -613,6 +704,38 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
         assert_eq!(names[1], "submission-00.jpg");
     }
 
+    #[test]
+    fn the_pull_request_says_where_every_file_came_from() {
+        let applied = Applied {
+            collection: "trolley".into(),
+            login: "somebody".into(),
+            number: 156,
+            files: vec![
+                Added {
+                    path: "content/misc/trolley/69.jpg".into(),
+                    source: "https://github.com/user-attachments/assets/7a4a".into(),
+                },
+                Added {
+                    path: "content/misc/trolley/70.jpg".into(),
+                    source: "https://user-images.githubusercontent.com/1/two.png".into(),
+                },
+            ],
+            duplicates: vec!["submission-01.png is a copy of 00.jpg".into()],
+        };
+
+        assert_eq!(
+            pull_request_body(&applied),
+            "From #156, opened by @somebody.\n\
+             \n\
+             - `content/misc/trolley/69.jpg`, from <https://github.com/user-attachments/assets/7a4a>\n\
+             - `content/misc/trolley/70.jpg`, from <https://user-images.githubusercontent.com/1/two.png>\n\
+             \n\
+             submission-01.png is a copy of 00.jpg, and was not added.\n\
+             \n\
+             Merging publishes them. Closing this without merging discards them.\n"
+        );
+    }
+
     /// The button writes the marker and this reads it, and they are in two
     /// languages that cannot see each other. If they ever disagree, every
     /// submission is quietly a normal issue that nobody answers, so the one
@@ -626,9 +749,12 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
             source.contains(&format!("ISSUE_MARKER = \"{ISSUE_MARKER}\"")),
             "ts/src/gallery/submit.ts does not write the {ISSUE_MARKER} marker"
         );
-        // And the workflow fires on it, which is a third spelling of it again.
-        let workflow = fs::read_to_string(root.join(".github/workflows/gallery.yaml")).unwrap();
-        assert!(workflow.contains(&format!("'{ISSUE_MARKER}'")));
+        // And the workflow routes on it, which is a third spelling of it again.
+        let workflow = fs::read_to_string(root.join(WORKFLOW)).unwrap();
+        assert!(
+            workflow.contains(&format!("\"{ISSUE_MARKER}\"")),
+            "{WORKFLOW} does not route on the {ISSUE_MARKER} marker"
+        );
     }
 
     /// The submit button appears on a page because the page says so, and the
@@ -675,7 +801,8 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
 
     /// The whole of the disk half, over a gallery of its own: three files
     /// arrive, one of them a picture already in the gallery under another
-    /// format, and what comes out is numbered, re-encoded, and one shorter.
+    /// format, and what comes out is numbered, re-encoded, one shorter, and
+    /// still knows where each file came from.
     #[cfg(feature = "photos")]
     #[test]
     fn numbers_re_encodes_and_deduplicates_what_arrives() {
@@ -690,25 +817,58 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
 
         let red = RgbImage::from_pixel(64, 48, Rgb([220, 30, 30]));
         let blue = RgbImage::from_pixel(64, 48, Rgb([30, 30, 220]));
+        let green = RgbImage::from_pixel(64, 48, Rgb([30, 220, 30]));
 
         // What the gallery already holds, published under a number.
         red.save(dir.join("00.jpg")).unwrap();
 
-        // What arrives: a PNG, a second picture, and the same red square again
-        // as a PNG, which shares no byte with the JPEG of it above.
+        // What arrives: a PNG, the same red square again as a PNG, which
+        // shares no byte with the JPEG of it above, and a third picture.
         blue.save(downloads.join("one.png")).unwrap();
         red.save(downloads.join("two.png")).unwrap();
+        green.save(downloads.join("three.png")).unwrap();
         let fetched = vec![
-            (staged_name(0, "png"), downloads.join("one.png")),
-            (staged_name(1, "png"), downloads.join("two.png")),
+            Fetched {
+                staged: staged_name(0, "png"),
+                path: downloads.join("one.png"),
+                source: "https://github.com/user-attachments/assets/1".into(),
+            },
+            Fetched {
+                staged: staged_name(1, "png"),
+                path: downloads.join("two.png"),
+                source: "https://github.com/user-attachments/assets/2".into(),
+            },
+            Fetched {
+                staged: staged_name(2, "png"),
+                path: downloads.join("three.png"),
+                source: "https://github.com/user-attachments/assets/3".into(),
+            },
         ];
 
         let site = Site { root, ci: false };
         let installed = install(&site, "trolley", &dir, &fetched).unwrap();
 
-        // The new picture is a JPEG under the next number, and the copy of one
-        // already here is gone rather than published twice.
-        assert_eq!(installed.files, vec!["content/misc/trolley/01.jpg"]);
+        // The new pictures are JPEGs under the next numbers, each still paired
+        // with its origin, and the copy of one already here is gone rather
+        // than published twice.
+        let added: Vec<(&str, &str)> = installed
+            .files
+            .iter()
+            .map(|file| (file.path.as_str(), file.source.as_str()))
+            .collect();
+        assert_eq!(
+            added,
+            vec![
+                (
+                    "content/misc/trolley/01.jpg",
+                    "https://github.com/user-attachments/assets/1"
+                ),
+                (
+                    "content/misc/trolley/02.jpg",
+                    "https://github.com/user-attachments/assets/3"
+                ),
+            ]
+        );
         assert_eq!(installed.duplicates.len(), 1);
         assert!(installed.duplicates[0].starts_with("submission-01.png is a copy of 00.jpg"));
 
@@ -716,10 +876,10 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
         // fetches names exactly what is there.
         assert_eq!(
             gallery::names_in(&dir).unwrap(),
-            vec!["00.jpg".to_string(), "01.jpg".to_string()]
+            vec!["00.jpg".to_string(), "01.jpg".into(), "02.jpg".into()]
         );
         let manifest = fs::read_to_string(dir.join("index.json")).unwrap();
-        assert_eq!(manifest.trim(), r#"["00.jpg","01.jpg"]"#);
+        assert_eq!(manifest.trim(), r#"["00.jpg","01.jpg","02.jpg"]"#);
 
         let _ = fs::remove_dir_all(&site.root);
     }

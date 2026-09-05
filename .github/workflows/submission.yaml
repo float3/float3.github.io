@@ -1,0 +1,380 @@
+# Turns a submission issue into a pull request.
+#
+# Two kinds of issue arrive through the site: a comment, written into the
+# compose box on a page, and a gallery submission, pictures dropped into the
+# issue. Both are handled here, in one workflow rather than one each, because
+# GitHub records a run for every workflow that listens to an event whether its
+# job ran or not — with two workflows, every comment produced a skipped gallery
+# run and every gallery submission a skipped comment run, and the list of runs
+# was half noise. `route` reads the issue once and says which kind it is; the
+# other job is skipped inside the same run.
+#
+# Either way the shape is the same: a job checks out the default branch, runs
+# the one `site` subcommand that does the whole of the validation, checks the
+# working tree against what that command is allowed to touch, commits in the
+# issue opener's name, pushes a branch, opens a pull request against the
+# default branch and closes the issue. Merging that pull request is what
+# publishes, so the review step is the diff itself.
+#
+# It opens that pull request and stops. Nothing in this repository merges one,
+# and nothing ever should: the merge button is the whole of the moderation,
+# and a run that could press it for you is a run that publishes a stranger's
+# words or pictures unread. Approving is the most any of this may ever do.
+#
+# No secret is involved: this authenticates with the `GITHUB_TOKEN` GitHub
+# mints for the run and throws away afterwards, and no personal access token
+# should ever be added for it. What a stranger's issue can and cannot reach is
+# set out in `quartz-local/comments/README.md` and in the module documentation
+# of `tools/site/src/submissions.rs`.
+#
+# There is deliberately no `concurrency` block. There used to be one, grouping
+# runs by the account that opened the issue so that fifty issues from one
+# account got one runner at a time. GitHub holds at most one *pending* run per
+# group, though, and cancels the older pending run when a newer one arrives:
+# three submissions in a minute meant the second was cancelled, and a cancelled
+# run here is a submission silently dropped. The queue is not worth that.
+name: Submission
+
+on:
+  issues:
+    types: [opened]
+  # Doing an issue again by hand, for one whose run failed: re-running a failed
+  # run uses the workflow as it was when the run was first made, so a fix to
+  # this file never reaches it. This does, and it is also how an issue that
+  # arrived while the workflow was broken gets processed at all.
+  workflow_dispatch:
+    inputs:
+      issue:
+        description: The number of the issue to process
+        required: true
+        type: number
+
+permissions: {}
+
+jobs:
+  # Reads the issue once, for both jobs below. Nothing here is interpolated
+  # into a shell: the body is read by jq, and every output but the issue itself
+  # is a number or a login, which GitHub has already validated.
+  route:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: read
+    outputs:
+      kind: ${{ steps.issue.outputs.kind }}
+      number: ${{ steps.issue.outputs.number }}
+      login: ${{ steps.issue.outputs.login }}
+      id: ${{ steps.issue.outputs.id }}
+      issue: ${{ steps.issue.outputs.issue }}
+    steps:
+      - name: Read the issue
+        id: issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED: ${{ inputs.issue }}
+        run: |
+          set -euo pipefail
+
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            gh api "repos/$GITHUB_REPOSITORY/issues/$REQUESTED" > issue.json
+          else
+            jq '.issue' "$GITHUB_EVENT_PATH" > issue.json
+          fi
+
+          # The issues endpoint answers for a pull request's number as well, and
+          # a pull request is not a submission.
+          if jq -e '.pull_request' issue.json > /dev/null; then
+            echo "::error::#$(jq -r .number issue.json) is a pull request"
+            exit 1
+          fi
+
+          # Keyed off a marker in the body rather than a label: `?labels=` in a
+          # prefilled issue URL is silently dropped for anyone without triage
+          # permission on the repository, which is everyone this is for. A body
+          # carrying both markers is neither, rather than a guess at which.
+          comment="$(jq -r '(.body // "") | contains("hilll.dev:comment")' issue.json)"
+          gallery="$(jq -r '(.body // "") | contains("hilll.dev:gallery")' issue.json)"
+          kind=none
+          if [ "$comment" = true ] && [ "$gallery" = false ]; then kind=comment; fi
+          if [ "$gallery" = true ] && [ "$comment" = false ]; then kind=gallery; fi
+          echo "#$(jq -r .number issue.json) is a $kind"
+
+          # `jq -c` writes the whole issue on one line, with every newline in
+          # the body escaped, which is what lets it be an output at all.
+          {
+            echo "kind=$kind"
+            echo "number=$(jq -r .number issue.json)"
+            echo "login=$(jq -r .user.login issue.json)"
+            echo "id=$(jq -r .user.id issue.json)"
+            echo "issue=$(jq -c . issue.json)"
+          } >> "$GITHUB_OUTPUT"
+
+  comment:
+    needs: route
+    if: needs.route.outputs.kind == 'comment'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      ISSUE: ${{ needs.route.outputs.number }}
+      BRANCH: comment/${{ needs.route.outputs.number }}
+      BASE: ${{ github.event.repository.default_branch }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # Branched from the default branch, and nothing here reads history.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install --profile minimal stable
+
+      - name: Write the comment file
+        id: write
+        env:
+          # Passed as JSON rather than interpolated into the shell: an issue body
+          # is attacker-controlled text and has no business being parsed by bash.
+          ISSUE_JSON: ${{ needs.route.outputs.issue }}
+          CONTENT_DIR: content
+        run: cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- comment-from-issue
+
+      - name: Say why it was refused
+        if: failure() && steps.write.outputs.rejected != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REASON: ${{ steps.write.outputs.rejected }}
+        run: |
+          gh issue comment "$ISSUE" --body "This could not be turned into a comment: $REASON
+
+          Nothing has been changed. Edit the issue and reopen it, or write the file by hand — see \`quartz-local/comments/README.md\`."
+          gh issue close "$ISSUE" --reason "not planned"
+
+      # The writer already refuses to write anything but a comment file, and
+      # `git add` below names a single path. This checks the same fact a third
+      # way, against the working tree rather than against the code's intentions,
+      # because the cost of being wrong here is a stranger's issue changing a
+      # file that is not a comment.
+      - name: Refuse anything that is not a comment
+        env:
+          FILE: ${{ steps.write.outputs.file }}
+        run: |
+          set -euo pipefail
+
+          case "$FILE" in
+            *..*) echo "::error::$FILE climbs out of the tree"; exit 1 ;;
+            content/*.comment.*.md) ;;
+            *) echo "::error::$FILE is not a comment file under content/"; exit 1 ;;
+          esac
+
+          changed="$(git status --porcelain --untracked-files=all)"
+          printf 'changed:\n%s\n' "$changed"
+
+          if [ "$(printf '%s' "$changed" | grep -c .)" -ne 1 ]; then
+            echo "::error::expected exactly one changed file"
+            exit 1
+          fi
+          case "$changed" in
+            *"$FILE") ;;
+            *) echo "::error::the changed file is not the comment that was written"; exit 1 ;;
+          esac
+
+      - name: Commit it as the person who wrote it
+        env:
+          # GitHub's private-email form for the account, which is what
+          # `quartz-local/comments/authors.ts` reads back when it needs to fall
+          # back to the commit. The commit is attributed to them, not signed by
+          # them — the issue they opened is what stands behind it.
+          AUTHOR_NAME: ${{ needs.route.outputs.login }}
+          AUTHOR_EMAIL: ${{ needs.route.outputs.id }}+${{ needs.route.outputs.login }}@users.noreply.github.com
+          FILE: ${{ steps.write.outputs.file }}
+          ACTION: ${{ steps.write.outputs.action }}
+          PARENT: ${{ steps.write.outputs.parent }}
+        run: |
+          set -euo pipefail
+          git switch -c "$BRANCH"
+          git add -- "$FILE"
+          git \
+            -c user.name="$AUTHOR_NAME" \
+            -c user.email="$AUTHOR_EMAIL" \
+            commit -m "$ACTION a comment on ${PARENT%.md}
+
+          Closes #${ISSUE}."
+          # The branch is named after the issue and belongs to it, so a second
+          # run for the same issue replaces what the first one pushed rather
+          # than being refused by it.
+          git push --force origin "$BRANCH"
+
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ACTION: ${{ steps.write.outputs.action }}
+          LOGIN: ${{ steps.write.outputs.login }}
+          PARENT: ${{ steps.write.outputs.parent }}
+          FILE: ${{ steps.write.outputs.file }}
+        run: |
+          set -euo pipefail
+          TITLE="$ACTION a comment on ${PARENT%.md} (@$LOGIN)"
+          BODY="From #${ISSUE}, opened by @${LOGIN}.
+
+          \`$FILE\`
+
+          Merging publishes the comment. Closing this without merging discards it."
+
+          # A second run for the same issue updates the pull request the first
+          # one opened, because `gh pr create` refuses when one exists.
+          existing="$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$TITLE" --body "$BODY"
+          else
+            gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY"
+          fi
+          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
+
+  gallery:
+    needs: route
+    if: needs.route.outputs.kind == 'gallery'
+    runs-on: ubuntu-latest
+    # A ceiling on the whole job: as many as twenty downloads from GitHub, and
+    # a re-encode of each, should never come near this.
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    env:
+      ISSUE: ${{ needs.route.outputs.number }}
+      BRANCH: gallery/${{ needs.route.outputs.number }}
+      BASE: ${{ github.event.repository.default_branch }}
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # Branched from the default branch, and nothing here reads history.
+          ref: ${{ github.event.repository.default_branch }}
+
+      - name: Install Rust toolchain
+        run: rustup toolchain install --profile minimal stable
+
+      # A video's metadata comes out by remuxing it, and there is no remuxing
+      # without ffmpeg. `gallery-from-issue` refuses video outright when this is
+      # missing rather than publishing a file nobody has looked inside, so
+      # without this step every submission with a clip in it is turned away.
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends --yes ffmpeg
+
+      # Built with default features on, unlike the comment job: re-encoding the
+      # stills is the whole point of the exercise, and that is the `photos`
+      # feature.
+      - name: Add the files to the gallery
+        id: add
+        env:
+          # Passed as JSON rather than interpolated into the shell: an issue
+          # body is attacker-controlled text and has no business being parsed
+          # by bash.
+          ISSUE_JSON: ${{ needs.route.outputs.issue }}
+          CONTENT_DIR: content
+        run: cargo run --locked --manifest-path tools/site/Cargo.toml -- gallery-from-issue
+
+      - name: Say why it was refused
+        if: failure() && steps.add.outputs.rejected != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REASON: ${{ steps.add.outputs.rejected }}
+        run: |
+          gh issue comment "$ISSUE" --body "This could not be added to the gallery: $REASON
+
+          Nothing has been changed. Open a new issue from the button on the page to try again."
+          gh issue close "$ISSUE" --reason "not planned"
+
+      # The command already refuses to write anywhere but the gallery the issue
+      # names, and cleans up after itself when it refuses. This checks the same
+      # fact a second way, against the working tree rather than against the
+      # code's intentions, because the cost of being wrong is a stranger's issue
+      # changing a file that is not a picture in a gallery.
+      - name: Refuse anything outside the gallery
+        env:
+          DIR: ${{ steps.add.outputs.dir }}
+        run: |
+          set -euo pipefail
+
+          case "$DIR" in
+            *..*) echo "::error::$DIR climbs out of the tree"; exit 1 ;;
+            content/misc/*/*) echo "::error::$DIR is not a gallery directory"; exit 1 ;;
+            content/misc/*) ;;
+            *) echo "::error::$DIR is not under content/misc"; exit 1 ;;
+          esac
+
+          changed="$(git status --porcelain --untracked-files=all)"
+          printf 'changed:\n%s\n' "$changed"
+
+          if [ -z "$changed" ]; then
+            echo "::error::nothing was added"
+            exit 1
+          fi
+
+          printf '%s\n' "$changed" | while IFS= read -r line; do
+            path="${line#???}"
+            case "$path" in
+              # A download that never got renumbered: the run went wrong
+              # somewhere, and none of it should be committed.
+              */submission-*) echo "::error::$path was left half-added"; exit 1 ;;
+              "$DIR"/*) ;;
+              *) echo "::error::$path is not in $DIR"; exit 1 ;;
+            esac
+          done
+
+      - name: Commit them as the person who sent them
+        env:
+          # GitHub's private-email form for the account. The commit is
+          # attributed to them, not signed by them — the issue they opened is
+          # what stands behind it.
+          AUTHOR_NAME: ${{ needs.route.outputs.login }}
+          AUTHOR_EMAIL: ${{ needs.route.outputs.id }}+${{ needs.route.outputs.login }}@users.noreply.github.com
+          DIR: ${{ steps.add.outputs.dir }}
+          COLLECTION: ${{ steps.add.outputs.collection }}
+          COUNT: ${{ steps.add.outputs.count }}
+        run: |
+          set -euo pipefail
+          git switch -c "$BRANCH"
+          git add -- "$DIR"
+          git \
+            -c user.name="$AUTHOR_NAME" \
+            -c user.email="$AUTHOR_EMAIL" \
+            commit -m "add $COUNT file(s) to $COLLECTION
+
+          Closes #${ISSUE}."
+          # The branch is named after the issue and belongs to it, so a second
+          # run for the same issue replaces what the first one pushed rather
+          # than being refused by it — which is what happened to #154.
+          git push --force origin "$BRANCH"
+
+      # The description is written by `gallery-from-issue`, file by file with
+      # where each came from, and arrives here as an output. It used to be
+      # composed in this script, which is how a backtick in a `sed` expression
+      # inside a double-quoted string became an unclosed command substitution
+      # and failed every run at the last step, after the branch was pushed.
+      - name: Open the pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COLLECTION: ${{ steps.add.outputs.collection }}
+          COUNT: ${{ steps.add.outputs.count }}
+          LOGIN: ${{ steps.add.outputs.login }}
+          BODY: ${{ steps.add.outputs.body }}
+        run: |
+          set -euo pipefail
+          TITLE="$COUNT file(s) for $COLLECTION (@$LOGIN)"
+
+          # A second run for the same issue updates the pull request the first
+          # one opened, because `gh pr create` refuses when one exists.
+          existing="$(gh pr list --head "$BRANCH" --base "$BASE" --state open --json number --jq '.[0].number // empty')"
+          if [ -n "$existing" ]; then
+            gh pr edit "$existing" --title "$TITLE" --body "$BODY"
+          else
+            gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY"
+          fi
+          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
