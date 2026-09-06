@@ -16,6 +16,16 @@
 # default branch and closes the issue. Merging that pull request is what
 # publishes, so the review step is the diff itself.
 #
+# A pull request that has sat unmerged while another one landed in the same
+# gallery conflicts: both numbered their files from the same `master`, and
+# the second to merge claims names the first already took. Writing `/redo` as
+# a comment on the pull request runs the whole thing again for its issue,
+# from the `master` of that moment, so the branch is rebuilt with fresh numbers
+# and force-pushed under the same pull request — the same run a
+# `workflow_dispatch` for the issue would make, reachable from where the
+# conflict is seen. Only someone who could merge the pull request may say it:
+# an owner, member or collaborator. Anyone else's `/redo` is skipped.
+#
 # It opens that pull request and stops. Nothing in this repository merges one,
 # and nothing ever should: the merge button is the whole of the moderation,
 # and a run that could press it for you is a run that publishes a stranger's
@@ -38,6 +48,11 @@ name: Submission
 on:
   issues:
     types: [opened]
+  # `/redo` on a pull request this workflow opened. Every comment on every
+  # issue and pull request starts a run that `route`'s `if` then skips; that
+  # is how GitHub does it, and the skipped runs are the price of the command.
+  issue_comment:
+    types: [created]
   # Doing an issue again by hand, for one whose run failed: re-running a failed
   # run uses the workflow as it was when the run was first made, so a fix to
   # this file never reaches it. This does, and it is also how an issue that
@@ -56,30 +71,67 @@ jobs:
   # into a shell: the body is read by jq, and every output but the issue itself
   # is a number or a login, which GitHub has already validated.
   route:
+    # A comment counts only when it is `/redo`, on a pull request, from
+    # someone who could merge it. The association is GitHub's word for the
+    # commenter, not the comment's; the body is compared whole, so `/redo
+    # please` is not a command.
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (
+        github.event.issue.pull_request &&
+        github.event.comment.body == '/redo' &&
+        contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association)
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       issues: read
+      pull-requests: read
     outputs:
       kind: ${{ steps.issue.outputs.kind }}
       number: ${{ steps.issue.outputs.number }}
       login: ${{ steps.issue.outputs.login }}
       id: ${{ steps.issue.outputs.id }}
       issue: ${{ steps.issue.outputs.issue }}
+      redo: ${{ steps.issue.outputs.redo }}
     steps:
       - name: Read the issue
         id: issue
         env:
           GH_TOKEN: ${{ github.token }}
           REQUESTED: ${{ inputs.issue }}
+          COMMENTED_ON: ${{ github.event.issue.number }}
         run: |
           set -euo pipefail
 
-          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
-            gh api "repos/$GITHUB_REPOSITORY/issues/$REQUESTED" > issue.json
-          else
-            jq '.issue' "$GITHUB_EVENT_PATH" > issue.json
-          fi
+          redo=''
+          case "$GITHUB_EVENT_NAME" in
+            workflow_dispatch)
+              gh api "repos/$GITHUB_REPOSITORY/issues/$REQUESTED" > issue.json
+              ;;
+            issue_comment)
+              # The pull request's branch is named after its issue, `gallery/N`
+              # or `comment/N`, and that is the only link from one to the other
+              # that a stranger cannot edit: the body says "From #N" too, but a
+              # body is text. A pull request whose branch is named some other
+              # way was not opened here and is not redone here.
+              head="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$COMMENTED_ON" --jq '.head.ref')"
+              case "$head" in
+                gallery/*|comment/*) ;;
+                *) echo "::error::#$COMMENTED_ON was not opened by this workflow (branch $head)"; exit 1 ;;
+              esac
+              number="${head#*/}"
+              case "$number" in
+                ''|*[!0-9]*) echo "::error::$head does not name an issue"; exit 1 ;;
+              esac
+              gh api "repos/$GITHUB_REPOSITORY/issues/$number" > issue.json
+              redo="$COMMENTED_ON"
+              echo "redoing #$number for pull request #$COMMENTED_ON"
+              ;;
+            *)
+              jq '.issue' "$GITHUB_EVENT_PATH" > issue.json
+              ;;
+          esac
 
           # The issues endpoint answers for a pull request's number as well, and
           # a pull request is not a submission.
@@ -107,6 +159,8 @@ jobs:
             echo "login=$(jq -r .user.login issue.json)"
             echo "id=$(jq -r .user.id issue.json)"
             echo "issue=$(jq -c . issue.json)"
+            # The pull request being redone, or empty on a first run.
+            echo "redo=$redo"
           } >> "$GITHUB_OUTPUT"
 
   comment:
@@ -146,7 +200,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REASON: ${{ steps.write.outputs.rejected }}
+          REDO: ${{ needs.route.outputs.redo }}
         run: |
+          if [ -n "$REDO" ]; then
+            gh pr comment "$REDO" --body "The redo was refused: $REASON
+
+          The pull request is as it was."
+            exit 0
+          fi
           gh issue comment "$ISSUE" --body "This could not be turned into a comment: $REASON
 
           Nothing has been changed. Edit the issue and reopen it, or write the file by hand — see \`quartz-local/comments/README.md\`."
@@ -214,6 +275,7 @@ jobs:
           LOGIN: ${{ steps.write.outputs.login }}
           PARENT: ${{ steps.write.outputs.parent }}
           FILE: ${{ steps.write.outputs.file }}
+          REDO: ${{ needs.route.outputs.redo }}
         run: |
           set -euo pipefail
           TITLE="$ACTION a comment on ${PARENT%.md} (@$LOGIN)"
@@ -231,7 +293,13 @@ jobs:
           else
             gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY"
           fi
-          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
+          # On a redo the issue was closed the first time round, and the
+          # pull request is where the person who asked is looking.
+          if [ -n "$REDO" ]; then
+            gh pr comment "$REDO" --body "Rebuilt from the current \`$BASE\`, from #${ISSUE} again."
+          else
+            gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
+          fi
 
   gallery:
     needs: route
@@ -304,7 +372,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REASON: ${{ steps.add.outputs.rejected }}
+          REDO: ${{ needs.route.outputs.redo }}
         run: |
+          if [ -n "$REDO" ]; then
+            gh pr comment "$REDO" --body "The redo was refused: $REASON
+
+          The pull request is as it was."
+            exit 0
+          fi
           gh issue comment "$ISSUE" --body "This could not be added to the gallery: $REASON
 
           Nothing has been changed. Open a new issue from the button on the page to try again."
@@ -384,6 +459,7 @@ jobs:
           COUNT: ${{ steps.add.outputs.count }}
           LOGIN: ${{ steps.add.outputs.login }}
           BODY: ${{ steps.add.outputs.body }}
+          REDO: ${{ needs.route.outputs.redo }}
         run: |
           set -euo pipefail
           TITLE="$COUNT file(s) for $COLLECTION (@$LOGIN)"
@@ -396,4 +472,10 @@ jobs:
           else
             gh pr create --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY"
           fi
-          gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
+          # On a redo the issue was closed the first time round, and the
+          # pull request is where the person who asked is looking.
+          if [ -n "$REDO" ]; then
+            gh pr comment "$REDO" --body "Rebuilt from the current \`$BASE\`, from #${ISSUE} again."
+          else
+            gh issue close "$ISSUE" --reason completed --comment "Opened a pull request for this. It appears on the page once that merges."
+          fi
