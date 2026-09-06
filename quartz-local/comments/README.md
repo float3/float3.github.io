@@ -231,6 +231,16 @@ produce a skipped gallery run. It can be dispatched by hand with an issue number
 too, for an issue whose run failed — re-running a failed run reuses the workflow
 as it was, so a fix never reaches it that way.
 
+Writing `/redo` as a comment on a pull request the workflow opened runs the
+same thing again for that pull request's issue, from the current `master`, and
+force-pushes the rebuilt branch under the same pull request. That is for a
+pull request that has come to conflict — two gallery submissions branched from
+the same `master` number their files the same way, and whichever merges second
+collides with the first. Only an owner, member or collaborator is heard; the
+issue is found from the branch name, `gallery/N` or `comment/N`, not from the
+body. Every comment on every issue and pull request starts a run that is then
+skipped; that is the cost of the command.
+
 The comment job runs `site comment-from-issue`, which is the whole of the validation.
 Everything that script reads was written by a stranger, so nothing is trusted
 further than it has been checked:
