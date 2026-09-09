@@ -1246,14 +1246,15 @@ dependencies = [
 
 [[package]]
 name = "music21-rs"
-version = "0.3.0"
-source = "git+https://github.com/float3/music21-rs.git#4ed32c50b92d0041eb824dd2b8b36e7ea8b84a58"
+version = "0.4.0"
+source = "git+https://github.com/float3/music21-rs.git#422716acfefcfb78d0712e21ae4c7bc361d3dcad"
 dependencies = [
  "fraction",
  "itertools 0.15.0",
  "num",
  "num-traits",
  "ordered-float",
+ "thiserror",
 ]
 
 [[package]]
