@@ -116,13 +116,6 @@ plugins:
       position: right
       priority: 20
       display: desktop-only
-  - source: github:quartz-community/table-of-contents
-    enabled: true
-    order: 50
-    layout:
-      position: left
-      priority: 70
-      display: desktop-only
   - source: github:quartz-community/crawl-links
     enabled: true
     options:
