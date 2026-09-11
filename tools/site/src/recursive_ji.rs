@@ -59,6 +59,7 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
 
     if post_path.exists() {
         update_recursive_ji_notation(&post_path)?;
+        update_split_points_table(&post_path)?;
         println!(
             "engraved the notation in {}",
             site.relative_path(&post_path)
@@ -142,6 +143,38 @@ fn update_recursive_ji_notation(post: &Path) -> Result<()> {
     }
 
     fs::write(post, markdown)?;
+    Ok(())
+}
+
+/// Writes the table of split points into the post, over the table whose header
+/// starts `| chord context`.
+///
+/// It used to be typed by hand, and went on quoting the harmonic-series tuning
+/// for weeks after the audio, the notation and the frequency table beside it had
+/// moved to five-limit.
+fn update_split_points_table(post: &Path) -> Result<()> {
+    let markdown = fs::read_to_string(post)?;
+    let lines: Vec<&str> = markdown.lines().collect();
+    let start = lines
+        .iter()
+        .position(|line| line.starts_with("| chord context"))
+        .ok_or_else(|| {
+            SiteError::new(format!("{} has no table of split points", post.display()))
+        })?;
+    let end = lines[start..]
+        .iter()
+        .position(|line| !line.trim_start().starts_with('|'))
+        .map_or(lines.len(), |offset| start + offset);
+
+    let mut rewritten = lines[..start].join("\n");
+    rewritten.push('\n');
+    rewritten.push_str(&recursive_ji_core::split_points_table());
+    rewritten.push_str(&lines[end..].join("\n"));
+    if markdown.ends_with('\n') {
+        rewritten.push('\n');
+    }
+
+    fs::write(post, rewritten)?;
     Ok(())
 }
 
@@ -298,6 +331,7 @@ mod tests {
         let rewrite = || {
             update_recursive_ji_table(&post, &csv).unwrap();
             update_recursive_ji_notation(&post).unwrap();
+            update_split_points_table(&post).unwrap();
             fs::read_to_string(&post).unwrap()
         };
 

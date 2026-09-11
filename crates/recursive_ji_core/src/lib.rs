@@ -401,6 +401,10 @@ fn progression() -> [Chord; 12] {
     ]
 }
 
+/// Notes that fixed-C and recursive just intonation play differently, one staff
+/// and one line of the post's table each. Every one of them has to split: in
+/// five-limit F major's A and G7's F are the same pitch either way, since 5/3
+/// and 4/3 already sit a just third and a just seventh above their roots.
 fn split_pairs() -> [SplitPair; 4] {
     [
         SplitPair {
@@ -410,24 +414,103 @@ fn split_pairs() -> [SplitPair; 4] {
             offset: 4,
         },
         SplitPair {
-            note: "A",
-            abc_pitch: "A4",
-            chord: Chord::major("F", 5),
-            offset: 4,
-        },
-        SplitPair {
             note: "C#/Db",
             abc_pitch: "C#5",
             chord: Chord::major("A", 9),
             offset: 4,
         },
         SplitPair {
-            note: "F",
-            abc_pitch: "F4",
-            chord: Chord::dominant("G7", 7),
-            offset: 10,
+            note: "F#/Gb",
+            abc_pitch: "F#4",
+            chord: Chord::major("D", 2),
+            offset: 4,
+        },
+        SplitPair {
+            note: "A",
+            abc_pitch: "A4",
+            chord: Chord::major("D", 2),
+            offset: 7,
         },
     ]
+}
+
+/// The post's table of split points, from the same pairs the audio and the
+/// notation are made of: the pitch fixed-C just intonation plays, the one the
+/// chord plays, and the distance between them.
+pub fn split_points_table() -> String {
+    const HEADER: [&str; 5] = [
+        "chord context",
+        "note",
+        "fixed C JI",
+        "recursive JI",
+        "difference",
+    ];
+    const NUMERIC: [bool; 5] = [false, false, true, true, true];
+
+    let rows: Vec<[String; 5]> = split_pairs()
+        .iter()
+        .map(|pair| {
+            let fixed = note_frequency(FIXED_C_JUST, pair.chord, pair.offset);
+            let recursive = note_frequency(RECURSIVE_JUST, pair.chord, pair.offset);
+            let difference = format_signed_cents(cents_between(recursive, fixed));
+            [
+                chord_context_label(pair.chord),
+                pair.note.to_string(),
+                format!("`{fixed:.3} Hz`"),
+                format!("`{recursive:.3} Hz`"),
+                format!("`{difference} cents`"),
+            ]
+        })
+        .collect();
+
+    let widths: Vec<usize> = (0..HEADER.len())
+        .map(|column| {
+            rows.iter()
+                .map(|row| row[column].chars().count())
+                .chain([HEADER[column].len()])
+                .max()
+                .unwrap_or(0)
+        })
+        .collect();
+
+    let line = |cells: Vec<String>| format!("| {} |\n", cells.join(" | "));
+    let pad = |text: &str, column: usize| {
+        if NUMERIC[column] {
+            format!("{text:>width$}", width = widths[column])
+        } else {
+            format!("{text:<width$}", width = widths[column])
+        }
+    };
+
+    let mut table = line(
+        HEADER
+            .iter()
+            .enumerate()
+            .map(|(column, text)| pad(text, column))
+            .collect(),
+    );
+    table.push_str(&line(
+        widths
+            .iter()
+            .zip(NUMERIC)
+            .map(|(width, numeric)| {
+                if numeric {
+                    format!("{}:", "-".repeat(width - 1))
+                } else {
+                    "-".repeat(*width)
+                }
+            })
+            .collect(),
+    ));
+    for row in &rows {
+        table.push_str(&line(
+            row.iter()
+                .enumerate()
+                .map(|(column, text)| pad(text, column))
+                .collect(),
+        ));
+    }
+    table
 }
 
 fn notated_pitches(chord: Chord) -> Result<Vec<Pitch>> {
@@ -635,6 +718,31 @@ mod tests {
         // is the diesis, 128/125. music21-rs is the source of truth for the
         // number.
         assert!((cents_between(recursive, fixed) + 41.059).abs() < 0.01);
+    }
+
+    /// A pair that sounds the same pitch both ways demonstrates nothing, and two
+    /// of the four did once the post moved to five-limit.
+    #[test]
+    fn every_split_pair_splits() {
+        for pair in split_pairs() {
+            let recursive = note_frequency(RECURSIVE_JUST, pair.chord, pair.offset);
+            let fixed = note_frequency(FIXED_C_JUST, pair.chord, pair.offset);
+            assert!(
+                cents_between(recursive, fixed).abs() > 1.0,
+                "{} in {} does not split",
+                pair.note,
+                chord_context_label(pair.chord)
+            );
+        }
+
+        let table = split_points_table();
+        assert!(table.contains("| D major       | A     |"), "{table}");
+        assert!(
+            table.contains("`+21.506 cents`"),
+            "the syntonic comma: {table}"
+        );
+        assert!(table.contains("`-19.553 cents`"), "{table}");
+        assert_eq!(table.lines().count(), 2 + split_pairs().len());
     }
 
     #[test]

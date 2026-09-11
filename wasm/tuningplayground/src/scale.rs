@@ -11,7 +11,7 @@
 //! C4, step 69 is A4. In any other scale step `5·n` is the root and each step
 //! up is the next degree, wrapping at the period.
 
-use music21_rs::tuningsystem::adaptive::RECURSIVE_JI;
+use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
 use music21_rs::tuningsystem::{
     ALL_TUNING_SYSTEMS, C4, CN1, COMMON_EQUAL_TEMPERAMENTS, EqualDivision, HISTORICAL_TEMPERAMENTS,
     TWELVE_TONE_NAMES_SHARP, TuningSystem, WIKI_TEMPERAMENTS,
@@ -234,7 +234,12 @@ pub fn library() -> Library {
             note: note.to_string(),
         })
         .collect();
-    equal.sort_by_key(|preset| (preset.numerator * 100 + preset.denominator, preset.divisions));
+    equal.sort_by_key(|preset| {
+        (
+            preset.numerator * 100 + preset.denominator,
+            preset.divisions,
+        )
+    });
 
     Library {
         systems,
@@ -290,7 +295,11 @@ fn temperament_facts(named: &music21_rs::tuningsystem::NamedTemperament) -> Temp
             })
             .collect(),
         optimization: named.optimization.to_string(),
-        commas: named.commas.iter().map(|comma| (*comma).to_string()).collect(),
+        commas: named
+            .commas
+            .iter()
+            .map(|comma| (*comma).to_string())
+            .collect(),
         published_moments: named
             .moments
             .iter()
@@ -431,8 +440,14 @@ fn built_in(tuning: TuningSystem, root_hz: f64) -> Scale {
     }
 }
 
+/// The table the adaptive scale places its keys on is music21-rs's own, so the
+/// two cannot drift apart. It was once written here as `CarlosHarmonic`, which
+/// kept the harmonic series under the keys after music21-rs moved to five-limit.
 fn adaptive(root_hz: f64) -> Scale {
-    let mut scale = built_in(TuningSystem::CarlosHarmonic, root_hz);
+    let AdaptiveTuningSystem::Recursive {
+        root_tuning_system, ..
+    } = RECURSIVE_JI;
+    let mut scale = built_in(root_tuning_system, root_hz);
     scale.id = ADAPTIVE_ID.to_string();
     scale.name = "Recursive just intonation".to_string();
     scale.family = "Adaptive".to_string();
@@ -713,6 +728,17 @@ mod tests {
         assert!((scale.frequency_from(64, 68) - C4 * 25.0 / 16.0).abs() < 1e-9);
         assert!((scale.frequency_from(60, 72) - 2.0 * C4).abs() < 1e-9);
         assert!((scale.frequency_from(64, 60) - C4).abs() < 1e-9);
+    }
+
+    /// Keys are tuned from the lowest one held, so a chord in inversion is tuned
+    /// from its bass. It is the same chord only because five-limit's fourth and
+    /// sixths complement its fifth and thirds.
+    #[test]
+    fn a_chord_in_inversion_is_the_same_chord() {
+        let scale = realize(ADAPTIVE_ID, C4).unwrap();
+        assert!((scale.frequency(65) - C4 * 4.0 / 3.0).abs() < 1e-9);
+        assert!((scale.frequency_from(67, 72) - 2.0 * C4).abs() < 1e-9);
+        assert!((scale.frequency_from(64, 72) - 2.0 * C4).abs() < 1e-9);
     }
 
     #[test]
