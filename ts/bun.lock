@@ -17,6 +17,7 @@
         "wasm-textprocessing_chinese": "file:../wasm/wasm/pkg/textprocessing_chinese",
         "wasm-textprocessing_korean": "file:../wasm/wasm/pkg/textprocessing_korean",
         "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground",
+        "wasm-wager": "file:../wasm/wasm/pkg/wager",
       },
       "devDependencies": {
         "@eslint/js": "^10.0.1",
@@ -709,6 +710,8 @@
     "wasm-textprocessing_korean": ["wasm@file:../wasm/wasm/pkg/textprocessing_korean", {}],
 
     "wasm-tuningplayground": ["wasm-tuningplayground@file:../wasm/wasm/pkg/tuningplayground", {}],
+
+    "wasm-wager": ["wasm-wager@file:../wasm/wasm/pkg/wager", {}],
 
     "watchpack": ["watchpack@2.5.2", "", { "dependencies": { "graceful-fs": "^4.1.2" } }, "sha512-6i/00NBjP4yGPs+caKSyRfpTF/8Torsu0MOW3mMzIbhgISFder8i7xbqgHlLMwJrdiN8ndBV3UA1/AfzPSr+jg=="],
 

@@ -44,6 +44,7 @@ const config: Configuration = {
     audiolink: "./dist/audiolink.js",
     insurance: "./dist/insurance.js",
     comments: "./dist/comments.js",
+    pascal: "./dist/pascal.js",
   },
   output: {
     path: path.resolve(contentJsDir),

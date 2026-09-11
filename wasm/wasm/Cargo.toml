@@ -27,6 +27,7 @@ pokemon = ["dep:krabby"]
 textprocessing_chinese = ["textprocessing", "textprocessing/chinese"]
 textprocessing_korean = ["textprocessing", "textprocessing/korean"]
 tuningplayground = ["dep:tuningplayground", "dep:music21-rs"]
+wager = []
 
 [package.metadata.site]
 # Tools kept in the tree but left out of the build. `site` skips these, so the

@@ -23,6 +23,8 @@ pub mod photography;
 #[cfg(feature = "polyrhythm")]
 pub mod polyrhythm;
 pub mod random;
+#[cfg(feature = "wager")]
+pub mod wager;
 
 use wasm_bindgen::prelude::*;
 

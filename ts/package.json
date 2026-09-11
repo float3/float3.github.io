@@ -36,7 +36,8 @@
     "wasm-textprocessing": "file:../wasm/wasm/pkg/textprocessing",
     "wasm-textprocessing_chinese": "file:../wasm/wasm/pkg/textprocessing_chinese",
     "wasm-textprocessing_korean": "file:../wasm/wasm/pkg/textprocessing_korean",
-    "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground"
+    "wasm-tuningplayground": "file:../wasm/wasm/pkg/tuningplayground",
+    "wasm-wager": "file:../wasm/wasm/pkg/wager"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
