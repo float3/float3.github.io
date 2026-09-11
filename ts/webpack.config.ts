@@ -30,6 +30,7 @@ const config: Configuration = {
     glsl2hlsl: "./dist/glsl.js",
     adventofcode: "./dist/aoc.js",
     tuningplayground: "./dist/tuningplayground.js",
+    recursivetuning: "./dist/recursivetuning.js",
     textprocessing: "./dist/textprocessing.js",
     polyrhythm: "./dist/polyrhythm.js",
     therenderingequation: "./dist/therenderingequation.js",

@@ -13,6 +13,7 @@ use std::sync::Mutex;
 use wasm_bindgen::prelude::*;
 
 pub mod midi;
+pub mod recursive;
 pub mod scale;
 
 use music21_rs::Pitch;
@@ -64,7 +65,9 @@ impl KeyMap {
     /// The step a physical key plays in a scale of `count` degrees, or `None`
     /// for a key the layout does not use.
     pub fn step(self, code: &str, count: usize) -> Option<i64> {
-        use keymapping::{AZERTY_KEYMAP, GERMAN_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP};
+        use keymapping::{
+            AZERTY_KEYMAP, GERMAN_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP,
+        };
         let count = count.max(1) as i64;
         let root = scale::ROOT_PERIOD * count;
         let piano = |map: &std::collections::HashMap<&'static str, i32>| {
@@ -211,6 +214,101 @@ pub fn step_frequency(step: i32, context: i32) -> f64 {
 #[wasm_bindgen]
 pub fn step_name(step: i32) -> String {
     current().note_name(i64::from(step))
+}
+
+// ---------------------------------------------------------------------------
+// Recursive tuning
+
+/// The pair of scales on the recursive tuning post, which has one.
+#[cfg(feature = "wasm")]
+static PAIR: Mutex<Option<recursive::Pair>> = Mutex::new(None);
+
+#[cfg(feature = "wasm")]
+fn with_pair<T>(answer: impl FnOnce(&recursive::Pair) -> T, otherwise: T) -> T {
+    PAIR.lock()
+        .expect("couldn't lock the pair")
+        .as_ref()
+        .map_or(otherwise, answer)
+}
+
+/// Puts a pair in place, the first scale placing roots and the second tuning
+/// above them, and describes it as the matrix the page draws, as JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_select(global_id: &str, local_id: &str, root_hz: f64) -> Result<String, JsError> {
+    let pair = recursive::Pair::realize(global_id, local_id, root_hz)
+        .map_err(|message| JsError::new(&message))?;
+    let json = to_json(&pair.matrix());
+    *PAIR.lock().expect("couldn't lock the pair") = Some(pair);
+    Ok(json)
+}
+
+/// The note `step` local degrees above global degree `root`, in hertz.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_frequency(root: i32, step: i32) -> f64 {
+    with_pair(|pair| pair.frequency(i64::from(root), i64::from(step)), 0.0)
+}
+
+/// What the global scale plays for that note on its own, in hertz.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_fixed_frequency(root: i32, step: i32) -> f64 {
+    with_pair(
+        |pair| pair.fixed_frequency(i64::from(root), i64::from(step)),
+        0.0,
+    )
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_note_name(root: i32, step: i32) -> String {
+    with_pair(
+        |pair| pair.note_name(i64::from(root), i64::from(step)),
+        String::new(),
+    )
+}
+
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_note_class(root: i32, step: i32) -> usize {
+    with_pair(|pair| pair.note(i64::from(root), i64::from(step)), 0)
+}
+
+/// The local steps of the chord nearest a major triad, over any root.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_triad() -> Vec<i32> {
+    with_pair(
+        |pair| {
+            pair.chord(recursive::MAJOR)
+                .into_iter()
+                .map(|(step, _)| step as i32)
+                .collect()
+        },
+        Vec::new(),
+    )
+}
+
+/// The progression, as each rendering plays it, as JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_progression_json() -> String {
+    to_json(&with_pair(recursive::Pair::progression, Vec::new()))
+}
+
+/// The global degree a physical key picks, or -1.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_root_key(code: &str) -> i32 {
+    recursive::root_key(code).map_or(-1, |root| root as i32)
+}
+
+/// The local step a physical key plays, or -1.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_note_key(code: &str) -> i32 {
+    recursive::note_key(code).map_or(-1, |step| step as i32)
 }
 
 // ---------------------------------------------------------------------------
