@@ -2875,9 +2875,10 @@ name = "tuningplayground"
 version = "1.0.0"
 dependencies = [
  "engrave",
- "js-sys",
  "keymapping",
  "music21-rs",
+ "serde",
+ "serde_json",
  "wasm-bindgen",
 ]
 

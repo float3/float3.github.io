@@ -1,179 +1,242 @@
-use std::str::FromStr;
+//! The tuning playground's wasm: which scale is under the keys, what each key
+//! sounds and is called, the chord being held engraved as a bar of notation,
+//! and the reading of MIDI files.
+//!
+//! The scale itself is [`scale::Scale`], and everything here that answers a
+//! question about a step asks it. State is three globals -- the scale, the
+//! keyboard layout, and the name of the last chord engraved -- because the
+//! page has one of each.
+
 use std::sync::LazyLock;
 use std::sync::Mutex;
 #[cfg(feature = "wasm")]
 use wasm_bindgen::prelude::*;
 
 pub mod midi;
+pub mod scale;
 
 use music21_rs::Pitch;
 use music21_rs::chord::Chord;
-use music21_rs::tuningsystem::{ALL_TUNING_SYSTEMS, TuningSystem};
+use scale::Scale;
 
-#[cfg(feature = "wasm")]
-static TUNING_SYSTEM: LazyLock<Mutex<TuningSystem>> =
-    LazyLock::new(|| Mutex::new(TuningSystem::EqualTemperament { octave_size: 12 }));
-#[cfg(feature = "wasm")]
+static CURRENT: LazyLock<Mutex<Scale>> = LazyLock::new(|| Mutex::new(Scale::default_scale()));
 static KEYMAP: Mutex<KeyMap> = Mutex::new(KeyMap::Us);
 static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
 
-#[cfg(feature = "wasm")]
-#[derive(Clone, Copy)]
-enum KeyMap {
+fn current() -> std::sync::MutexGuard<'static, Scale> {
+    CURRENT.lock().expect("couldn't lock the scale")
+}
+
+/// How the computer keyboard is laid over the scale.
+///
+/// The piano layouts come from the `keymapping` crate and name physical keys
+/// by where a US layout prints a letter, which is what `KeyboardEvent.code`
+/// reports whatever the keyboard prints; the QWERTZ and AZERTY variants are for
+/// whoever would rather press the key that has the letter on it. `Rows` walks
+/// the four rows of the keyboard degree by degree, and `Periods` starts each
+/// row a period higher, which is what makes sense of a scale that does not
+/// have twelve notes.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+pub enum KeyMap {
     Us,
     UsExtended,
     Qwertz,
     German,
     Azerty,
-    Linear,
+    Rows,
+    Periods,
 }
 
-#[cfg(feature = "wasm")]
 impl KeyMap {
-    fn from_str(keymap: &str) -> Option<Self> {
+    pub fn parse(keymap: &str) -> Option<Self> {
         match keymap.to_lowercase().as_str() {
-            "us" | "qwerty" => Some(Self::Us),
+            "us" | "qwerty" | "piano" => Some(Self::Us),
             "us-extended" | "extended" | "qwerty-extended" => Some(Self::UsExtended),
             "qwertz" => Some(Self::Qwertz),
             "de" | "german" => Some(Self::German),
             "azerty" | "fr" | "french" => Some(Self::Azerty),
-            "linear" | "chromatic" => Some(Self::Linear),
+            "rows" | "linear" | "chromatic" => Some(Self::Rows),
+            "periods" | "octaves" => Some(Self::Periods),
             _ => None,
+        }
+    }
+
+    /// The step a physical key plays in a scale of `count` degrees, or `None`
+    /// for a key the layout does not use.
+    pub fn step(self, code: &str, count: usize) -> Option<i64> {
+        use keymapping::{AZERTY_KEYMAP, GERMAN_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP};
+        let count = count.max(1) as i64;
+        let root = scale::ROOT_PERIOD * count;
+        let piano = |map: &std::collections::HashMap<&'static str, i32>| {
+            // The crate's maps start two octaves below middle C; the keyboard
+            // is played one octave lower than the root and up, which is where
+            // a chord over the root falls under two hands.
+            map.get(code).map(|note| i64::from(*note) + 24)
+        };
+        match self {
+            Self::Us => piano(&US_KEYMAP),
+            Self::UsExtended => piano(&US_EXTENDED_KEYMAP),
+            Self::Qwertz => piano(&QWERTZ_KEYMAP),
+            Self::German => piano(&GERMAN_KEYMAP),
+            Self::Azerty => piano(&AZERTY_KEYMAP),
+            Self::Rows => KEY_ROWS
+                .iter()
+                .flat_map(|row| row.iter())
+                .position(|key| *key == code)
+                .map(|index| root + index as i64),
+            Self::Periods => KEY_ROWS.iter().enumerate().find_map(|(row, keys)| {
+                let column = keys.iter().position(|key| *key == code)? as i64;
+                (column <= count).then(|| root + row as i64 * count + column)
+            }),
         }
     }
 }
 
+/// The four rows of a keyboard, bottom to top, by physical position.
+pub const KEY_ROWS: [&[&str]; 4] = [
+    &[
+        "KeyZ", "KeyX", "KeyC", "KeyV", "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash",
+    ],
+    &[
+        "KeyA",
+        "KeyS",
+        "KeyD",
+        "KeyF",
+        "KeyG",
+        "KeyH",
+        "KeyJ",
+        "KeyK",
+        "KeyL",
+        "Semicolon",
+        "Quote",
+    ],
+    &[
+        "KeyQ",
+        "KeyW",
+        "KeyE",
+        "KeyR",
+        "KeyT",
+        "KeyY",
+        "KeyU",
+        "KeyI",
+        "KeyO",
+        "KeyP",
+        "BracketLeft",
+        "BracketRight",
+    ],
+    &[
+        "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9",
+        "Digit0", "Minus", "Equal",
+    ],
+];
+
+fn to_json<T: serde::Serialize>(value: &T) -> String {
+    serde_json::to_string(value).expect("the playground's types serialise")
+}
+
+// ---------------------------------------------------------------------------
+// Scale
+
+/// Everything the picker lists, as JSON.
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-extern "C" {
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn debug(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn error(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn warn(s: &str);
-    #[cfg(debug_assertions)]
-    #[wasm_bindgen(js_namespace = console)]
-    fn info(s: &str);
+pub fn library_json() -> String {
+    to_json(&scale::library())
+}
 
-    fn createTone(
-        index: usize,
-        frequency: f64,
-        cents: f64,
-        name: String,
-        tuning_system: JsValue,
-    ) -> JsValue;
+/// Scala scales matching `query`, as JSON; every one of them for an empty query.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn scala_search_json(query: &str, limit: usize) -> String {
+    to_json(&scale::scala_search(query, limit))
+}
+
+/// Puts the scale a share id names under the keys, and describes it as JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn select_scale(id: &str, root_hz: f64) -> Result<String, JsError> {
+    let scale = scale::realize(id, root_hz).map_err(|message| JsError::new(&message))?;
+    let json = to_json(&scale);
+    *current() = scale;
+    Ok(json)
+}
+
+/// Puts a scale from the text of a `.scl` file under the keys.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn select_scl(name: &str, contents: &str, root_hz: f64) -> Result<String, JsError> {
+    let scale =
+        scale::realize_scl(name, contents, root_hz).map_err(|message| JsError::new(&message))?;
+    let json = to_json(&scale);
+    *current() = scale;
+    Ok(json)
+}
+
+/// The scale under the keys, as JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn scale_json() -> String {
+    to_json(&*current())
+}
+
+/// The keys the page should draw for the scale under them, as JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn keyboard_json() -> String {
+    to_json(&current().keyboard())
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn get_tone(index: usize) -> JsValue {
-    // Get the current tuning system and calculate frequency using it
-    let tuning_system = TUNING_SYSTEM.lock().expect("couldn't lock");
-    let frequency = tuning_system.frequency_at(index as f64);
-    let octave_size = tuning_system.octave_size() as f64;
-
-    // Calculate cents relative to the tuning system's octave
-    let cents =
-        ((index as f64 - 69.0) * 100.0 * 12.0 / octave_size) % (1200.0 * 12.0 / octave_size);
-
-    let note_names = music21_rs::tuningsystem::TWELVE_TONE_NAMES_SHARP;
-    let pitch_class = note_names[index % 12];
-
-    // Calculate octave: A4 (MIDI 69) is in octave 4, so octave changes at C.
-    // C is MIDI 0 (octave -1), C1 is MIDI 12, C4 is MIDI 60, etc.
-    // Octave = (MIDI note - 12) / 12, then round down (floor)
-    let octave = (index as i32 - 12) / 12;
-    let note_name = format!("{}N{}", pitch_class, octave);
-
-    createTone(index, frequency, cents, note_name, JsValue::NULL)
+pub fn scale_count() -> usize {
+    current().count
 }
 
+/// The pitch of a step in hertz, given the lowest step held, or a negative
+/// `context` when nothing else is.
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn get_tuning_size() -> usize {
-    TUNING_SYSTEM.lock().expect("couldn't lock").octave_size() as usize
+pub fn step_frequency(step: i32, context: i32) -> f64 {
+    let scale = current();
+    if context < 0 {
+        scale.frequency(i64::from(step))
+    } else {
+        scale.frequency_from(i64::from(context), i64::from(step))
+    }
 }
+
+/// A step's name as music21 spells it, which is what the staff and the chord
+/// namer read.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn step_name(step: i32) -> String {
+    current().note_name(i64::from(step))
+}
+
+// ---------------------------------------------------------------------------
+// Keyboard layout
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn from_keymap(key: &str) -> i32 {
-    use keymapping::{
-        AZERTY_KEYMAP, GERMAN_KEYMAP, LINEAR_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP,
-    };
-
-    match *KEYMAP.lock().expect("couldn't lock") {
-        KeyMap::Us => *US_KEYMAP.get(key).unwrap_or(&-1),
-        KeyMap::UsExtended => *US_EXTENDED_KEYMAP.get(key).unwrap_or(&-1),
-        KeyMap::Qwertz => *QWERTZ_KEYMAP.get(key).unwrap_or(&-1),
-        KeyMap::German => *GERMAN_KEYMAP.get(key).unwrap_or(&-1),
-        KeyMap::Azerty => *AZERTY_KEYMAP.get(key).unwrap_or(&-1),
-        KeyMap::Linear => *LINEAR_KEYMAP.get(key).unwrap_or(&-1),
-    }
+    let count = current().count;
+    KEYMAP
+        .lock()
+        .expect("couldn't lock")
+        .step(key, count)
+        .map_or(-1, |step| step as i32)
 }
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
 pub fn set_keymap(keymap: &str) {
-    match KeyMap::from_str(keymap) {
-        Some(keymap) => {
-            *KEYMAP.lock().expect("couldn't lock") = keymap;
-        }
-        None => {
-            #[cfg(debug_assertions)]
-            error("Invalid keymap");
-        }
+    if let Some(keymap) = KeyMap::parse(keymap) {
+        *KEYMAP.lock().expect("couldn't lock") = keymap;
     }
 }
 
-fn normalize_tuning_system_name(name: &str) -> String {
-    name.trim()
-        .to_ascii_lowercase()
-        .chars()
-        .filter(|c| c.is_ascii_alphanumeric())
-        .collect()
-}
-
-fn parse_tuning_system(tuning_system: &str, octave_size: usize) -> Option<TuningSystem> {
-    let normalized = normalize_tuning_system_name(tuning_system);
-    if normalized.is_empty() {
-        return None;
-    }
-
-    if normalized == "12tet" {
-        return Some(TuningSystem::EqualTemperament {
-            octave_size: octave_size.max(1) as _,
-        });
-    }
-
-    for tuning in ALL_TUNING_SYSTEMS {
-        let id = normalize_tuning_system_name(tuning.id());
-        let display = normalize_tuning_system_name(tuning.display_name());
-        if normalized == id || normalized == display {
-            return Some(match tuning {
-                TuningSystem::EqualTemperament { .. } => TuningSystem::EqualTemperament {
-                    octave_size: octave_size.max(1) as _,
-                },
-                other => other,
-            });
-        }
-    }
-
-    TuningSystem::from_str(tuning_system)
-        .ok()
-        .map(|tuning| match tuning {
-            TuningSystem::EqualTemperament { .. } => TuningSystem::EqualTemperament {
-                octave_size: octave_size.max(1) as _,
-            },
-            other => other,
-        })
-}
+// ---------------------------------------------------------------------------
+// Chords and the staff
 
 pub fn chordname_core(input: &str) -> Result<String, String> {
     Chord::new(input)
@@ -200,14 +263,6 @@ pub fn chord_details_core(input: &str) -> Result<String, String> {
     ))
 }
 
-fn positive_integer_core(value: &str, fallback: usize) -> usize {
-    value
-        .parse::<usize>()
-        .ok()
-        .filter(|value| *value > 0)
-        .unwrap_or(fallback)
-}
-
 fn tuning_marked_hash_core(keys: &str) -> String {
     let mut keys = keys
         .split(',')
@@ -220,15 +275,6 @@ fn tuning_marked_hash_core(keys: &str) -> String {
         .map(|key| key.to_string())
         .collect::<Vec<_>>()
         .join(",")
-}
-
-fn tuning_hash_or_fallback_core(keys: &str, fallback_hash: &str) -> String {
-    let hash = tuning_marked_hash_core(keys);
-    if hash.is_empty() {
-        fallback_hash.trim_start_matches('#').to_string()
-    } else {
-        hash
-    }
 }
 
 fn parse_octave(note: &str) -> Option<i32> {
@@ -259,8 +305,7 @@ fn parse_octave(note: &str) -> Option<i32> {
 ///
 /// The name this builds is music21's, where a flat is `-`, because music21 is
 /// what names the chord and the engraver reads the staff position back off the
-/// same pitch. It used to build an ABC token instead, for abcjs to parse again
-/// in the browser; that round trip through a second notation is gone.
+/// same pitch.
 fn parse_note_token(note: &str) -> Result<Pitch, String> {
     let note = note.trim();
     let mut chars = note.chars().peekable();
@@ -299,11 +344,8 @@ fn set_chord_name(chord: &str) {
     chord_name.push_str(chord);
 }
 
-/// The chord being held down, engraved as one labelled bar of SVG.
-///
-/// This used to return ABC for abcjs to lay out in the browser, which is 1.3 MB
-/// of JavaScript fetched to draw a single bar of a single chord. The staff is
-/// drawn here instead, in the wasm the page has already loaded.
+/// The chord being held down, engraved as one labelled bar of SVG, in the wasm
+/// the page has already loaded.
 pub fn convert_notes_core(input: Vec<String>) -> String {
     let mut pitches = Vec::new();
     let mut names = Vec::new();
@@ -339,41 +381,6 @@ pub fn empty_staff_core() -> String {
 fn failed_bar(message: &str) -> String {
     set_chord_name(message);
     engrave::chord_svg(message, &[]).unwrap_or_default()
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn names_common_chords_from_generated_lookup() {
-        assert_eq!(chordname_core("C E G").unwrap(), "C-major triad");
-        assert_eq!(
-            chordname_core("C Eb G Bb").unwrap(),
-            "C-minor seventh chord"
-        );
-    }
-
-    #[test]
-    fn chord_details_core_reports_primary_name_and_pitch_classes() {
-        let details = chord_details_core("C E G").unwrap();
-        assert!(details.contains("Name: C-major triad"));
-        assert!(details.contains("Pitch classes: 0, 4, 7"));
-        assert!(details.contains("Forte class:"));
-    }
-
-    #[test]
-    fn parses_positive_integers_with_fallbacks() {
-        assert_eq!(positive_integer_core("24", 12), 24);
-        assert_eq!(positive_integer_core("0", 12), 12);
-        assert_eq!(positive_integer_core("nope", 12), 12);
-    }
-
-    #[test]
-    fn canonicalizes_marked_key_hashes() {
-        assert_eq!(tuning_marked_hash_core("5,3,5,-1"), "-1,3,5");
-        assert_eq!(tuning_hash_or_fallback_core("", "#12,14"), "12,14");
-    }
 }
 
 #[cfg(feature = "wasm")]
@@ -430,47 +437,61 @@ pub fn parse_midi(bytes: &[u8]) -> Result<Vec<f64>, JsError> {
 
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
-pub fn tuning_positive_integer(value: &str, fallback: usize) -> usize {
-    positive_integer_core(value, fallback)
-}
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
 pub fn tuning_marked_hash(keys: &str) -> String {
     tuning_marked_hash_core(keys)
 }
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
-pub fn tuning_hash_or_fallback(keys: &str, fallback_hash: &str) -> String {
-    tuning_hash_or_fallback_core(keys, fallback_hash)
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
-pub fn set_tuning_system(tuning_system: &str, octave_size: usize, _step_size: usize) {
-    let new_system =
-        parse_tuning_system(tuning_system, octave_size).unwrap_or(TuningSystem::EqualTemperament {
-            octave_size: octave_size.max(12) as _,
-        });
-
-    let mut ts = TUNING_SYSTEM.lock().expect("couldn't lock");
-    *ts = new_system;
-}
-
-#[cfg(feature = "wasm")]
-#[wasm_bindgen]
-pub fn available_tuning_systems() -> js_sys::Array {
-    let arr = js_sys::Array::new();
-
-    for tuning in ALL_TUNING_SYSTEMS {
-        let obj = js_sys::Object::new();
-        let id = JsValue::from_str(tuning.id());
-        let display = JsValue::from_str(tuning.display_name());
-        js_sys::Reflect::set(&obj, &JsValue::from_str("id"), &id).unwrap();
-        js_sys::Reflect::set(&obj, &JsValue::from_str("display"), &display).unwrap();
-        arr.push(&obj);
+    #[test]
+    fn names_common_chords_from_generated_lookup() {
+        assert_eq!(chordname_core("C E G").unwrap(), "C-major triad");
+        assert_eq!(
+            chordname_core("C Eb G Bb").unwrap(),
+            "C-minor seventh chord"
+        );
     }
 
-    arr
+    #[test]
+    fn chord_details_core_reports_primary_name_and_pitch_classes() {
+        let details = chord_details_core("C E G").unwrap();
+        assert!(details.contains("Name: C-major triad"));
+        assert!(details.contains("Pitch classes: 0, 4, 7"));
+        assert!(details.contains("Forte class:"));
+    }
+
+    #[test]
+    fn canonicalizes_marked_key_hashes() {
+        assert_eq!(tuning_marked_hash_core("5,3,5,-1"), "-1,3,5");
+        assert_eq!(tuning_marked_hash_core(""), "");
+    }
+
+    #[test]
+    fn the_staff_reads_the_names_the_scale_writes() {
+        let scale = Scale::default_scale();
+        let names: Vec<String> = [60, 64, 67].iter().map(|s| scale.note_name(*s)).collect();
+        assert_eq!(names, ["CN4", "EN4", "GN4"]);
+        let svg = convert_notes_core(names);
+        assert!(svg.contains("<svg"));
+        assert_eq!(get_chord_name_core(), "C-major triad");
+    }
+
+    fn get_chord_name_core() -> String {
+        CHORD_NAME.lock().unwrap().clone()
+    }
+
+    #[test]
+    fn keymaps_cover_the_root() {
+        assert_eq!(KeyMap::Us.step("KeyZ", 12), Some(48));
+        assert_eq!(KeyMap::Us.step("KeyQ", 12), Some(60));
+        assert_eq!(KeyMap::Rows.step("KeyZ", 7), Some(35));
+        assert_eq!(KeyMap::Rows.step("KeyA", 7), Some(45));
+        assert_eq!(KeyMap::Periods.step("KeyA", 7), Some(42));
+        assert_eq!(KeyMap::Periods.step("Quote", 7), None);
+        assert_eq!(KeyMap::Periods.step("Nothing", 7), None);
+        assert_eq!(KeyMap::parse("piano"), Some(KeyMap::Us));
+        assert_eq!(KeyMap::parse("nope"), None);
+    }
 }

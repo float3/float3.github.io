@@ -1,44 +1,50 @@
-import { heldKeys, noteOn, noteOff } from "./index.js"
-import { stopAllTones } from "./index.js"
-import { markKey, markedButtons } from "./UI.js"
-import { wasm } from "./index.js"
+import { heldKeys, noteOff, noteOn, shift, stopAllTones, wasm } from "./index.js"
+import { markKey, showMarkedButtons, unmarkAll } from "./UI.js"
 
 export function visibilityChange(): void {
-  if (document.hidden) {
-    stopAllTones()
-  }
+  if (document.hidden) stopAllTones()
 }
 
-export function onload(): void {
+/** The marked notes travel in the hash, as a comma-separated list of steps. */
+export function readMarkedFromHash(): void {
+  unmarkAll()
   const hash = window.location.hash.substring(1)
-  if (hash) {
-    const notes = hash.split(",")
-    markedButtons.style.display = "flex"
-    notes.forEach((note) => {
-      const index = parseInt(note)
-      markKey(index)
-    })
-  } else {
-    markedButtons.style.display = "none"
+  if (!hash) {
+    showMarkedButtons(false)
+    return
   }
+  for (const note of hash.split(",")) {
+    const step = parseInt(note, 10)
+    if (Number.isFinite(step)) markKey(step)
+  }
+  showMarkedButtons(true)
+}
+
+function typing(): boolean {
+  const active = document.activeElement
+  if (!active) return false
+  return (
+    ["INPUT", "TEXTAREA", "SELECT"].includes(active.tagName) ||
+    (active as HTMLElement).isContentEditable
+  )
 }
 
 export function keydown(event: KeyboardEvent): void {
-  if (!document.hasFocus()) return
-  if (event.repeat) return
-  if (event.code in heldKeys) return
+  if (!document.hasFocus() || event.repeat || typing()) return
+  if (event.metaKey || event.ctrlKey || event.altKey) return
+  if (heldKeys.has(event.code)) return
 
-  if (document.activeElement?.tagName === "BODY") {
-    const tone_index: number = wasm.from_keymap(event.code)
-    if (tone_index === -1) return
-    noteOn(tone_index)
-    heldKeys[event.code] = true
-  }
+  const step = wasm.from_keymap(event.code)
+  if (step === -1) return
+  event.preventDefault()
+  heldKeys.add(event.code)
+  noteOn(step + shift())
 }
 
 export function keyup(event: KeyboardEvent): void {
-  const tone_index: number = wasm.from_keymap(event.code)
-  if (tone_index === -1) return
-  noteOff(tone_index)
-  delete heldKeys[event.code]
+  if (!heldKeys.has(event.code)) return
+  heldKeys.delete(event.code)
+  const step = wasm.from_keymap(event.code)
+  if (step === -1) return
+  noteOff(step + shift())
 }

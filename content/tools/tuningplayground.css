@@ -1,122 +1,366 @@
-:root {
-  --white-key-height: 100px;
-  --white-key-width: calc(var(--white-key-height) * (23 / 120));
-  --black-key-width: calc(var(--white-key-width) * (15 / 23));
-  --black-key-height: calc(var(--white-key-height) * (80 / 120));
+/* Tuning playground: what is particular to it beyond the shared tool design is
+   the library the scale is picked from and the keyboard, a piano for
+   twelve-tone tunings and a row of the tuning's own divisions for the rest. */
+
+.tp {
+  --tp-key-white: #f6f6f4;
+  --tp-key-white-edge: #c9c9c4;
+  --tp-key-black: #1c1c1e;
+  --tp-flat-tonic: color-mix(in srgb, var(--tool-accent) 14%, var(--tool-surface));
 }
 
-.container {
-  display: flex;
-}
-
-.keyboard {
-  display: flex;
-  flex-direction: row;
-}
-
-.octave {
-  display: flex;
+/* Library */
+.tp-library {
   position: relative;
 }
-
-.white-key {
-  background-color: #fff;
-  border: 1px solid #000;
-  height: var(--white-key-height);
-  width: var(--white-key-width);
-  display: inline-block;
-  position: relative;
-  z-index: 1;
-  outline: 2px solid #000;
+.tp-panel {
+  border: 1px solid var(--tool-border);
+  border-radius: 8px;
+  background: var(--tool-surface);
+  margin-top: 0.5rem;
+  overflow: hidden;
 }
-
-.black-key {
-  background-color: #000;
-  height: var(--black-key-height);
-  width: var(--black-key-width);
-  position: absolute;
-  margin-left: -7.5px;
-  z-index: 2;
-  outline: 2px solid #000;
-}
-
-.white-key:nth-child(1) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (17.5 / 120));
-}
-
-.white-key:nth-child(3) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (40.5 / 120));
-}
-
-.white-key:nth-child(5) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (88.5 / 120));
-}
-
-.white-key:nth-child(6) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (92.5 / 120));
-}
-
-.white-key:nth-child(8) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (117.5 / 120));
-}
-
-.white-key:nth-child(10) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (141.5 / 120));
-}
-
-.white-key:nth-child(12) ~ .black-key {
-  margin-left: calc(var(--white-key-height) * (180.5 / 120));
-}
-
-.white-key.key-active {
-  background: #a0a0a0;
-}
-
-.black-key.key-active {
-  background: #404040;
-}
-
-.key-marked {
-  background: #d77914;
-}
-
-.key-active.key-marked {
-  background: #92520d;
-}
-
-#markedButtons {
-  display: none;
-}
-
-#tuningPlaygroundStatus {
-  margin: 8px 0;
-}
-
-#tuningPlaygroundStatus[data-state="ready"] {
-  display: none;
-}
-
-#tuningPlaygroundStatus[data-state="error"] {
-  color: #b00020;
-}
-
-#chordTools {
+.tp-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 0.35rem;
+  padding: 0.6rem;
+  border-bottom: 1px solid var(--tool-border);
+}
+.tp-chips button,
+.tp-sizes button {
+  font-size: 0.78rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  color: var(--tool-text-muted);
+}
+.tp-chips button small {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+.tp-chips button.is-active,
+.tp-sizes button.is-active {
+  border-color: var(--tool-accent);
+  background: color-mix(in srgb, var(--tool-accent) 14%, var(--tool-surface));
+  color: var(--dark);
+}
+.tp-list {
+  max-height: min(24rem, 55vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.tp-group {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0.75rem;
+  border-bottom: 1px solid var(--tool-border);
+  background: var(--tool-surface-strong);
+  color: var(--tool-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.tp .tp-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.1rem 0.75rem;
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  border: 0;
+  border-bottom: 1px solid var(--tool-border);
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 0.88rem;
+}
+.tp .tp-item:hover,
+.tp .tp-item:focus-visible {
+  background: color-mix(in srgb, var(--tool-accent) 10%, var(--tool-surface));
+  color: var(--dark);
+}
+.tp .tp-item.is-active {
+  background: color-mix(in srgb, var(--tool-accent) 14%, var(--tool-surface));
+  box-shadow: inset 3px 0 0 var(--tool-accent);
+}
+.tp-item-name {
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tp-item-aside {
+  color: var(--tool-text-muted);
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.tp-item-sub {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--tool-text-muted);
+  font-size: 0.76rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.tp-note {
+  padding: 0.6rem 0.75rem;
+  color: var(--tool-text-muted);
+  font-size: 0.82rem;
+}
+.tp-form {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--tool-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: end;
+}
+.tp-form textarea {
+  min-width: 16rem;
+  min-height: 7rem;
+}
+
+/* Head */
+.tp-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.tp-title {
+  margin: 0;
+  font-family: var(--headerFont);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.tp-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 1rem;
+  margin: 0;
+  color: var(--tool-text-muted);
+  font-size: 0.85rem;
+}
+.tp-facts input {
+  width: 6.5rem;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+.tp-sizes:empty {
+  display: none;
+}
+.tp-sizes button {
+  font-variant-numeric: tabular-nums;
+}
+
+.tp-chord-name {
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
+
+/* Keyboard */
+.tp-keyboard {
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.35rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tp-key {
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+}
+.tp-key kbd {
+  font-family: var(--codeFont, monospace);
+  font-size: 0.6rem;
+  line-height: 1;
+  opacity: 0.55;
+}
+
+/* Piano layout (twelve-tone) */
+.tp-keyboard.is-piano {
+  height: 136px;
+}
+.tp-keyboard.is-piano .tp-piano {
+  position: relative;
+  height: 128px;
+}
+.tp-key.white {
+  position: absolute;
+  top: 0;
+  height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  margin: 8px 0;
+  gap: 2px;
+  padding-bottom: 6px;
+  background: var(--tp-key-white);
+  border: 1px solid var(--tp-key-white-edge);
+  border-radius: 0 0 4px 4px;
+  color: #444;
+  z-index: 1;
+}
+.tp-key.white .tp-key-label {
+  font-size: 0.6rem;
+  opacity: 0.7;
+}
+.tp-key.black {
+  position: absolute;
+  top: 0;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  padding-bottom: 5px;
+  background: var(--tp-key-black);
+  border: 1px solid #000;
+  border-radius: 0 0 3px 3px;
+  color: #ddd;
+  z-index: 2;
+}
+.tp-key.white.is-active {
+  background: var(--tool-accent);
+  color: #fff;
+}
+.tp-key.black.is-active {
+  background: color-mix(in srgb, var(--tool-accent) 70%, black);
+}
+.tp-key.is-marked::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: var(--tool-accent);
+}
+.tp-key.black.is-marked::after {
+  background: #fff;
 }
 
-#chordInput {
-  min-width: 220px;
+/* Flat degree row (every non-twelve tuning) */
+.tp-keyboard.is-flat {
+  display: flex;
+  gap: 2px;
+  height: 136px;
+}
+.tp-keyboard.is-flat .tp-key {
+  position: relative;
+  flex: 0 0 auto;
+  width: 2.6rem;
+  height: 128px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.4rem 0.2rem;
+  background: var(--tool-surface);
+  border: 1px solid var(--tool-border);
+  border-radius: 4px;
+  color: var(--darkgray);
+}
+.tp-keyboard.is-flat .tp-key[data-degree="0"] {
+  background: var(--tp-flat-tonic);
+  border-color: var(--tool-accent);
+  color: var(--dark);
+}
+.tp-keyboard.is-flat .tp-key.is-active {
+  background: var(--tool-accent);
+  border-color: var(--tool-accent);
+  color: #fff;
+}
+.tp-keyboard.is-flat .tp-key-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.tp-keyboard.is-flat .tp-key-cents {
+  font-size: 0.6rem;
+  opacity: 0.7;
+  font-variant-numeric: tabular-nums;
+}
+.tp-keyboard.is-flat .tp-key.is-marked {
+  box-shadow: inset 0 0 0 2px var(--tool-accent);
 }
 
-#chordNameOutput,
-#chordDetailsOutput {
-  flex-basis: 100%;
+/* Degrees */
+.tp-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.6rem;
+}
+.tp-degrees {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  margin: 0;
+}
+.tp-degrees th,
+.tp-degrees td {
+  padding: 0.3rem 0.6rem;
+  border-bottom: 1px solid var(--tool-border);
+  text-align: left;
+  white-space: nowrap;
+}
+.tp-degrees th {
+  color: var(--tool-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.tp-degrees tbody tr {
+  cursor: pointer;
+}
+.tp-degrees tbody tr:hover td {
+  background: color-mix(in srgb, var(--tool-accent) 8%, transparent);
+}
+.tp-degrees tr.is-playing td {
+  background: color-mix(in srgb, var(--tool-accent) 16%, transparent);
+}
+.tp-ratio {
+  font-family: var(--codeFont, monospace);
+  font-size: 0.8rem;
+}
+.tp-cents {
+  display: inline-grid;
+  grid-template-columns: 4.2rem 5rem;
+  gap: 0.5rem;
+  align-items: center;
+}
+.tp-cents-track {
+  position: relative;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--tool-border);
+}
+.tp-cents-fill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  background: var(--tool-accent);
+}
+.tp-cents-fill.is-negative {
+  right: 50%;
+  left: auto;
+  background: #c08835;
 }
 
-.keyboard {
-  padding-top: 20px;
+.tp #midiButton.is-on {
+  border-color: var(--tool-accent);
+  color: var(--tool-accent);
 }

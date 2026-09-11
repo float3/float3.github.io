@@ -587,9 +587,23 @@ pre.poetry {
 // The tuning playground engraves the chord being held down. One bar wants a
 // bar's worth of room, not the width of the page, and it is drawn in
 // currentColor so it follows the theme the way the post's figures do.
+//
+// The box is a fixed size so the staff holds still as chords come and go and as
+// the window resizes; the engraved SVG scales to fit inside it, centred, rather
+// than stretching to whatever width is on offer.
 .chord-staff {
   color: var(--dark);
-  max-width: 20rem;
+  width: 20rem;
+  max-width: 100%;
+  height: 8rem;
+}
+.chord-staff[hidden] {
+  display: none;
+}
+
+.chord-staff .engraved-notation {
+  height: 100%;
+  width: 100%;
 }
 
 .engraved-notation text {
