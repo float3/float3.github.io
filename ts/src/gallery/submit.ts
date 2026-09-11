@@ -13,15 +13,9 @@
  * review step is a diff rather than a moderation queue.
  */
 
-/**
- * The marker the workflow looks for.
- *
- * An HTML comment, so GitHub renders the issue as just the pictures with the
- * machine-readable part invisible. The workflow keys off this string rather
- * than off a label, because a label set through `?labels=` is silently dropped
- * for anyone without triage permission on the repository, which is everyone
- * this feature is for.
- */
+import { markerLines, newIssueUrl } from "../github.js"
+
+/** The marker the workflow looks for, carried the way `markerLines` describes. */
 export const ISSUE_MARKER = "hilll.dev:gallery"
 
 export interface SubmitTarget {
@@ -57,20 +51,17 @@ function guidance(noun: string): string {
 export function buildIssueBody(target: SubmitTarget): string {
   return [
     guidance(target.noun),
-    `<!--${ISSUE_MARKER}`,
-    JSON.stringify({ collection: target.collection }),
-    "-->",
+    ...markerLines(ISSUE_MARKER, { collection: target.collection }),
     "",
     "",
   ].join("\n")
 }
 
 export function issueUrl(target: SubmitTarget): string {
-  const query = new URLSearchParams({
+  return newIssueUrl(target.repo, {
     title: `${target.label} submission`,
     body: buildIssueBody(target),
   })
-  return `https://github.com/${target.repo}/issues/new?${query.toString()}`
 }
 
 /** "a trolley problem", "an entry". */

@@ -11,6 +11,8 @@
  * without a GitHub account at all.
  */
 
+import { markerLines, newIssueUrl } from "../github.js"
+
 export interface CommentTarget {
   repo: string
   branch: string
@@ -75,15 +77,7 @@ export function buildCommentFile(target: CommentTarget, draft: CommentDraft): st
 // ---------------------------------------------------------------------------
 // The issue route
 
-/**
- * The marker the workflow looks for.
- *
- * It is an HTML comment, so GitHub renders the issue as just the comment's own
- * text with the machine-readable part invisible — the issue reads as what it
- * is. The workflow keys off this string rather than off a label, because a
- * label set through `?labels=` is silently dropped for anyone without triage
- * permission on the repository, which is everyone this feature is for.
- */
+/** The marker the workflow looks for, carried the way `markerLines` describes. */
 export const ISSUE_MARKER = "hilll.dev:comment"
 
 interface IssuePayload {
@@ -111,9 +105,7 @@ export function buildIssueBody(target: CommentTarget, draft: CommentDraft): stri
     // the raw markdown — so it is read exactly where it is useful — and renders
     // nothing once the issue exists, where it would only be a stale instruction.
     GUIDANCE,
-    `<!--${ISSUE_MARKER}`,
-    JSON.stringify(payload),
-    "-->",
+    ...markerLines(ISSUE_MARKER, payload),
     "",
     draft.body.trim(),
     "",
@@ -133,12 +125,11 @@ function issueTitle(target: CommentTarget, draft: CommentDraft): string {
 // Routes
 
 function issueUrl(target: CommentTarget, draft: CommentDraft): string {
-  const query = new URLSearchParams({
+  return newIssueUrl(target.repo, {
     title: issueTitle(target, draft),
     body: buildIssueBody(target, draft),
     labels: "comment",
   })
-  return `https://github.com/${target.repo}/issues/new?${query.toString()}`
 }
 
 /**
@@ -204,7 +195,7 @@ export interface Submission {
    * can paste beats grey-ing the button out and naming no destination.
    */
   fallbackUrl: string
-  /** What to do once there, since it is now two steps rather than one. */
+  /** What to do once there, since it is two steps rather than one. */
   fallbackNote: string
 }
 
