@@ -6,10 +6,8 @@
  * this reads one and renders the other. The trolley problems and "guess we
  * doing" are two directories and two pages, sharing all of this.
  *
- * The manifest is why: the old version of this probed sixty-four numbered paths
- * with a HEAD request each, guessing `.jpg` and falling back to `.mp4`, because
- * it had no way to know what was in the directory. One fetch replaces all of
- * that, and adding a collection stops meaning editing a hardcoded count.
+ * The manifest is what tells this what is in the directory: one fetch, and
+ * adding a collection is a directory, a line in `Site::INDICES` and a page.
  */
 
 import { gallery_media_kind, gallery_media_label, gallery_media_src } from "wasm-gallery"

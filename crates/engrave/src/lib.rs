@@ -1,17 +1,12 @@
 //! Staff notation, drawn as SVG.
 //!
-//! Everything here used to be ABC strings handed to abcjs in the browser. The
-//! recursive just intonation post stopped doing that first, because its two
-//! figures never change and cost every reader about a megabyte of JavaScript to
-//! draw; this crate is that engraver pulled out of the post so the tuning
-//! playground can use it too. The playground's case is not a fixed picture —
-//! it draws whatever chord is being held down — but it was asking a full ABC
-//! parser and layout engine to render one bar of one chord, which it can now
-//! do here instead, in the wasm it already loads.
+//! The recursive just intonation post draws its two figures with this at build
+//! time, and the tuning playground draws whatever chord is being held down with
+//! it, in the wasm the page already loads. Neither page loads a notation parser
+//! or layout engine of its own.
 //!
-//! The glyph outlines are abcjs's own (see [`glyphs`]), so the notation keeps
-//! the shapes it has always had. Everything is stroked and filled in
-//! `currentColor`, so a figure follows the page into dark mode.
+//! The glyph outlines are abcjs's (see [`glyphs`]). Everything is stroked and
+//! filled in `currentColor`, so a figure follows the page into dark mode.
 
 use std::error::Error;
 use std::fmt::Write as _;

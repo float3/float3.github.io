@@ -7,9 +7,8 @@
 //! their contents.
 //!
 //! The manifest carries names rather than an index range because the files are
-//! not a contiguous run: `63.mp4` sits among sixty-odd jpgs, and probing for
-//! each one's extension used to cost a request per item before the first
-//! picture appeared.
+//! not a contiguous run: `63.mp4` sits among sixty-odd jpgs, and the manifest
+//! is what tells the page each file's extension.
 
 use crate::random::random_index_core;
 use wasm_bindgen::prelude::wasm_bindgen;

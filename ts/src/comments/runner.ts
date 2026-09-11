@@ -26,8 +26,8 @@ const SANDBOX = [
  *
  * A modal is the one thing in here that takes the tab rather than the box: it
  * is drawn by the browser outside the frame, and a loop of them cannot be
- * scrolled past or clicked away. Frames also start on sight now rather than on
- * a click, so without this split a comment could wedge the tab of anybody who
+ * scrolled past or clicked away. Frames start on sight rather than on a
+ * click, so without this split a comment could wedge the tab of anybody who
  * scrolled far enough down the page. Pressing "run it" is the reader saying
  * they want whatever this does; drifting into view is not.
  */

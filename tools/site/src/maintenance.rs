@@ -26,12 +26,8 @@ impl Site {
         self.node_update(&self.root.join("ts"), "src")?;
 
         // Every Rust crate here is a member of the one root workspace, and each
-        // command below carries --workspace, so running this from the root covers
-        // all of them once. It used to run a directory at a time over a list that
-        // named `wasm/tuningplayground/tuning_systems` -- a crate renamed to
-        // chord_generator -- so the first thing `update` did was fail on a
-        // directory that does not exist, and the six passes after it would have
-        // been six repeats of the same workspace-wide work anyway.
+        // command below carries --workspace, so running this once from the root
+        // covers all of them.
         self.cargo_update(&self.root)
     }
 

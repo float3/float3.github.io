@@ -35,13 +35,10 @@ fn workers(tools: usize) -> usize {
 /// Removes anything in the package directory that is not one of this build's
 /// tools.
 ///
-/// Nothing had ever cleared it, so it still held a whole package from before
-/// the split into one package per tool -- `wasm.js`, `wasm_bg.wasm` and a
-/// LICENSE, a month stale. Being stale is the smaller half: a package left
-/// behind for a tool that is no longer built goes on answering `ts/`'s `file:`
-/// dependency on it, so the bundle can keep resolving a tool the build has
-/// stopped producing, which is the shape of the `pokemon` bug the wiring check
-/// exists to catch.
+/// A package left behind for a tool that is not built goes on answering
+/// `ts/`'s `file:` dependency on it, so the bundle keeps resolving a tool the
+/// build does not produce, which is the shape of bug the wiring check exists
+/// to catch.
 ///
 /// The live packages are left where they are for wasm-pack to write over.
 /// Emptying the directory outright looks tidier and is not: bun installs a
@@ -141,7 +138,7 @@ impl Site {
         // fills it and `site wasm` runs on its own. webpack writes into the
         // directory without clearing it and names every wasm chunk after its
         // contents, so a directory nobody empties keeps a copy of every chunk
-        // ever built: 110 MB of them had piled up before this moved.
+        // ever built.
         let content_js = self.root.join("content/js");
         remove_dir_if_exists(&content_js)?;
 
@@ -186,12 +183,10 @@ impl Site {
     /// Builds every tool's package, several at a time.
     ///
     /// They are independent -- one package per tool, each into its own output
-    /// directory -- but they were built one after another, and for most of a
-    /// build the machine had nothing to do. Cargo locks the shared target
-    /// directory, so the compiles still take their turn; what now overlaps is
-    /// one tool's wasm-bindgen and wasm-opt with the next tool's compile, and
-    /// wasm-opt over the 10 MB Chinese dictionary is the longest single step
-    /// there is.
+    /// directory. Cargo locks the shared target directory, so the compiles
+    /// still take their turn; what overlaps is one tool's wasm-bindgen and
+    /// wasm-opt with the next tool's compile, and wasm-opt over the 10 MB
+    /// Chinese dictionary is the longest single step there is.
     fn build_wasm_tools(
         &self,
         wasm_dir: &Path,
@@ -332,9 +327,8 @@ impl Site {
     }
 
     /// A tool the bundler never depends on builds fine and then silently does nothing.
-    /// Asking only "does some file under ts/src name this package" is not enough: that
-    /// is exactly what kept `pokemon` alive for four months after webpack stopped
-    /// bundling it, because ts/src/pokemon.ts went on naming it into the void. So the
+    /// Asking only "does some file under ts/src name this package" is not enough: a
+    /// file webpack never bundles can go on naming a package into the void. So the
     /// question is whether a file webpack can actually *reach* imports it.
     fn check_wasm_tool_wiring(&self, tools: &[String]) -> Result<()> {
         let ts_dir = self.root.join("ts");
@@ -390,15 +384,11 @@ impl Site {
     }
 
     pub(crate) fn check(&self) -> Result<()> {
-        // glsl2hlsl, textprocessing and tuningplayground are all members of the root
-        // workspace, so one `--workspace` check covers them and compiles the shared
-        // dependency graph once. Checking them a manifest at a time, each into its own
-        // --target-dir, built that graph three more times over into 489 MB of
-        // duplicate artifacts that CI got to pay for from cold on every run.
+        // Every crate here is a member of the root workspace, so one `--workspace`
+        // check covers them all and compiles the shared dependency graph once.
         //
-        // The tests run over the workspace too. Running them for `site` alone is how
-        // two red tests in recursive-ji-core went unnoticed long enough for the
-        // tuning system underneath them to be renamed out from under the post.
+        // The tests run over the workspace too: a red test in a crate the site is
+        // built from is a broken site, whichever crate it is in.
         let mut check_args = os_args(&["check", "--locked", "--workspace"]);
         let mut test_args = os_args(&["test", "--locked", "--workspace"]);
 

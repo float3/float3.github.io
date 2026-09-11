@@ -409,8 +409,8 @@ mod tests {
             Path::new("/site/notes/x.mp4")
         );
         assert_eq!(resolve(root, page, "../x.mp4"), Path::new("/site/x.mp4"));
-        // The bug this was written for: one directory up from /notes/ is the
-        // site root, and the file is in /misc/media.
+        // One directory up from /notes/ is the site root, so that is where the
+        // link is checked, wherever the file actually is.
         assert_eq!(
             resolve(root, page, "../volumetrics.mp4"),
             Path::new("/site/volumetrics.mp4")

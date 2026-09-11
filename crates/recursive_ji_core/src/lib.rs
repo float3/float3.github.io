@@ -633,7 +633,7 @@ mod tests {
 
         // 25/16 (a pure third above a pure third) against the scale's 8/5, which
         // is the diesis, 128/125. music21-rs is the source of truth for the
-        // number; the 34.282 this used to expect predates its tuning tables.
+        // number.
         assert!((cents_between(recursive, fixed) + 41.059).abs() < 0.01);
     }
 

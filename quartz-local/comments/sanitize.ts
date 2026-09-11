@@ -138,13 +138,12 @@ const FORBIDDEN_CSS =
  * A declaration as the browser's parser will read it, for the filter above to
  * be applied to.
  *
- * The filter matched the text as written, and that is not the text CSS means.
+ * The filter matches the text as written, and that is not the text CSS means.
  * An identifier may spell any of its characters as a backslash escape, so
- * `\75 rl(https://elsewhere//x)` is `url(...)` to every browser and was not
- * `url(` to a regular expression — which made the one declaration the filter
- * exists to catch the one it did not catch. Comments go the same way: they are
- * removed before tokenising, so they cannot hide a word from a browser and must
- * not hide one from here.
+ * `\75 rl(https://elsewhere//x)` is `url(...)` to every browser and not
+ * `url(` to a regular expression — the one declaration the filter exists to
+ * catch. Comments go the same way: they are removed before tokenising, so they
+ * cannot hide a word from a browser and must not hide one from here.
  *
  * This decodes more eagerly than CSS does, escapes inside strings included.
  * That can only turn a declaration that would have been kept into one that is

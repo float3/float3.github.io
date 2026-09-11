@@ -47,10 +47,9 @@ pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
 /// Whether a problem has a solution behind it, rather than the `todo!()` a day
 /// starts life as.
 ///
-/// The page needs this for all 205 problems to mark its tabs, and used to get
-/// it by pulling every highlighted solution across into JavaScript and looking
-/// for `todo!` there -- 205 strings copied and converted to answer 205 yes/no
-/// questions. The looking happens on this side now.
+/// The page needs this for all 205 problems to mark its tabs, and asks here
+/// rather than pulling every highlighted solution across into JavaScript to
+/// look for `todo!` itself.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn aoc_solved(year: u32, day: u32, problem: u8) -> bool {
@@ -59,8 +58,7 @@ pub fn aoc_solved(year: u32, day: u32, problem: u8) -> bool {
 
 /// The colours the highlighted solutions refer to by class, in both themes.
 ///
-/// One stylesheet the page installs once, rather than a second coloured copy of
-/// every solution and a re-render of all of them whenever the theme changes.
+/// One stylesheet the page installs once; a theme switch is then a CSS matter.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn highlight_css() -> String {

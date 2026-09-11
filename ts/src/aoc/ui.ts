@@ -14,8 +14,7 @@ import {
 } from "wasm-aoc"
 
 // The solutions are highlighted once and coloured by class, so the palette is
-// one stylesheet installed once. It used to be two coloured copies of every
-// solution in the wasm, re-rendered into all 205 panels on a theme change.
+// one stylesheet installed once.
 function installHighlightStyles(): void {
   const id = "aoc-highlight-styles"
   if (document.getElementById(id)) return
@@ -130,9 +129,8 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   // happens to exist.
   const puzzleInputs = new Map<string, string>()
 
-  // A panel is built the first time it is looked at. All 205 of them used to be
-  // built at load -- five elements and a parse of the highlighted solution
-  // each -- so that one could be shown and the rest hidden.
+  // A panel is built the first time it is looked at: five elements and a parse
+  // of the highlighted solution each, for 205 of them.
   function fieldsFor(y: number, d: number, p: number): HTMLDivElement {
     const key = `${y}-${d}-${p}`
     const existing = fieldsMap.get(key)

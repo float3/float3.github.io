@@ -1,11 +1,8 @@
 //! The worked example shown on each transform card.
 //!
-//! These used to be produced in the browser, which meant the page ran every
-//! transform in the table before a visitor had typed anything — and so had to
-//! have every language's dictionary in hand just to draw itself. They are fixed
-//! strings run through fixed transforms, so they are computed here instead and
-//! written into the bundle as text, and the page now loads no wasm at all until
-//! somebody actually uses it.
+//! They are fixed strings run through fixed transforms, so they are computed
+//! here and written into the bundle as text, and the page loads no wasm at all
+//! until somebody actually uses it.
 
 use crate::wasm::transform_text;
 

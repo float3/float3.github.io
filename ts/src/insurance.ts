@@ -7,11 +7,8 @@
  * let anyone put their own numbers in and see the expectation come out
  * positive while the bet stays one they would not take.
  *
- * It used to be a `<script>` in the markdown, which is the one place in this
- * repository where code is neither compiled nor checked. It also read
- * `document.querySelectorAll("input")` and listened to every one of them: the
- * search box at the top of the page recalculated the bet on each keystroke.
- * The fields are found inside the calculator now, and it hears only them.
+ * The fields are found inside the calculator, and it listens only to them: the
+ * search box at the top of the page is an input too.
  */
 
 const CALCULATOR = "insurance-calculator"

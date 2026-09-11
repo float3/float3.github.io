@@ -1,16 +1,10 @@
 //! Syntax-highlights every solution once, at build time.
 //!
-//! It used to highlight each of them twice, into `solutionN-dark.html` and
-//! `solutionN-light.html` with the colours written inline on every span, and
-//! `include_str!` both into the wasm. Every reader of the page downloaded two
-//! coloured copies of all 205 solutions in order to read one of them in one
-//! theme, and switching theme re-rendered all 205 from the wasm.
-//!
-//! The two copies only ever differed in their colours, so what is written now
-//! is one copy of the markup, with each span carrying a short class instead of
-//! a colour, and one small stylesheet giving those classes their colour in each
-//! theme. Solarized uses sixteen colours, so the palette is sixteen rules long
-//! however many solutions there are, and a theme switch is a CSS matter again.
+//! Each solution is written as one copy of the markup, with each span carrying
+//! a short class instead of a colour, and one small stylesheet gives those
+//! classes their colour in each theme. Solarized uses sixteen colours, so the
+//! palette is sixteen rules long however many solutions there are, and a theme
+//! switch is a CSS matter.
 
 use std::collections::HashMap;
 use std::fmt::Write as _;
