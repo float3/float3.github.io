@@ -1,9 +1,9 @@
-import { execFileSync } from "child_process"
 import path from "path"
-import { styleText } from "util"
 import type { Root } from "mdast"
 import type { VFile } from "vfile"
 import type { QuartzTransformerPlugin } from "../../quartz/plugins/types"
+import { defaultBranch, git, originRemote, repoRoot, webUrl } from "../shared/git"
+import { warn } from "../shared/warn"
 import { excludedKeepPaths, excludedShas, isExcluded } from "./excluded-commits"
 
 declare module "vfile" {
@@ -26,48 +26,9 @@ type Repo = {
   branch: string
 }
 
-// `git@github.com:owner/repo.git` and `https://github.com/owner/repo.git` both need
-// to become a browsable `https://github.com/owner/repo`.
-function webUrl(remote: string): string | undefined {
-  // Checked before the scp-like form below, whose `host:path` shape would otherwise
-  // swallow the `https:` scheme as a hostname.
-  const url = /^(?:https?|ssh|git):\/\/(?:[^@/]+@)?(.+?)(?:\.git)?\/?$/.exec(remote)
-  if (url) return `https://${url[1]}`
-
-  const scp = /^(?:[^@/]+@)?([^:/]+):(.+?)(?:\.git)?$/.exec(remote)
-  if (scp) return `https://${scp[1]}/${scp[2]}`
-
-  return undefined
-}
-
-// The remote's default branch, not the one checked out: feature branches disappear
-// and would leave the links 404ing.
 function readRepo(cwd: string): Repo | undefined {
-  let base: string | undefined
-  try {
-    base = webUrl(
-      execFileSync("git", ["remote", "get-url", "origin"], { cwd, encoding: "utf8" }).trim(),
-    )
-  } catch {
-    return undefined
-  }
-  if (base === undefined) return undefined
-
-  let branch = "master"
-  try {
-    // CI checkouts often fetch a single ref and never write origin/HEAD.
-    branch =
-      execFileSync("git", ["symbolic-ref", "--short", "refs/remotes/origin/HEAD"], {
-        cwd,
-        encoding: "utf8",
-      })
-        .trim()
-        .replace(/^origin\//, "") || branch
-  } catch {
-    /* keep the fallback */
-  }
-
-  return { base, branch }
+  const base = webUrl(originRemote(cwd) ?? "")
+  return base === undefined ? undefined : { base, branch: defaultBranch(cwd) }
 }
 
 const encodePath = (file: string) => file.split("/").map(encodeURIComponent).join("/")
@@ -80,14 +41,15 @@ const isBotAuthor = (email: string) =>
   email.endsWith("@users.noreply.github.com") && email.includes("[bot]")
 
 // One `git log` for the entire repository, rather than one per file. `--name-status`
-// with `-M` gives us rename records, which is what lets us thread a file back through
-// its old names without the per-file `--follow` this used to cost.
-function readHistory(cwd: string): Map<string, Commit[]> {
-  const output = execFileSync(
-    "git",
+// with `-M` gives rename records, which is what threads a file back through its
+// old names without a per-file `--follow`.
+function readHistory(cwd: string): Map<string, Commit[]> | undefined {
+  const output = git(
+    cwd,
     ["log", "--format=%x00%H%x1f%aI%x1f%ae", "--name-status", "-M", "--no-show-signature"],
-    { cwd, encoding: "utf8", maxBuffer: 512 * 1024 * 1024 },
+    512 * 1024 * 1024,
   )
+  if (output === undefined) return undefined
 
   const history = new Map<string, Commit[]>()
   const renamedTo = new Map<string, string>()
@@ -149,24 +111,17 @@ function readHistory(cwd: string): Map<string, Commit[]> {
   // rotted rather than done its job.
   const strayPaths = excludedKeepPaths().filter((file) => !history.has(file))
   if (strayPaths.length > 0) {
-    console.log(
-      styleText(
-        "yellow",
-        `
-Warning: excluded-commits.ts keeps ${strayPaths.length} path(s) no file has: ` +
-          strayPaths.join(", "),
-      ),
+    warn(
+      `excluded-commits.ts keeps ${strayPaths.length} path(s) no file has: ` +
+        strayPaths.join(", "),
     )
   }
 
   const missing = excludedShas().filter((sha) => !seen.has(sha))
   if (missing.length > 0) {
-    console.log(
-      styleText(
-        "yellow",
-        `\nWarning: excluded-commits.ts lists ${missing.length} commit(s) not in this history: ` +
-          missing.map((sha) => sha.slice(0, 8)).join(", "),
-      ),
+    warn(
+      `excluded-commits.ts lists ${missing.length} commit(s) not in this history: ` +
+        missing.map((sha) => sha.slice(0, 8)).join(", "),
     )
   }
 
@@ -174,41 +129,26 @@ Warning: excluded-commits.ts keeps ${strayPaths.length} path(s) no file has: ` +
 }
 
 // Quartz may parse in worker threads; keep one map per process.
-const cached = new Map<string, Map<string, Commit[]>>()
+const cached = new Map<string, Map<string, Commit[]> | undefined>()
 const cachedRepos = new Map<string, Repo | undefined>()
 
 export const GitHistory: QuartzTransformerPlugin = () => ({
   name: "GitHistory",
   markdownPlugins(ctx) {
-    let root: string | undefined
+    const root = repoRoot(ctx.argv.directory)
     let history: Map<string, Commit[]> | undefined
     let repo: Repo | undefined
 
-    try {
-      root = execFileSync("git", ["rev-parse", "--show-toplevel"], {
-        cwd: ctx.argv.directory,
-        encoding: "utf8",
-      }).trim()
-
+    if (root !== undefined) {
+      if (!cached.has(root)) {
+        cached.set(root, readHistory(root))
+        cachedRepos.set(root, readRepo(root))
+      }
       history = cached.get(root)
-      if (!history) {
-        history = readHistory(root)
-        cached.set(root, history)
-      }
-
-      if (cachedRepos.has(root)) {
-        repo = cachedRepos.get(root)
-      } else {
-        repo = readRepo(root)
-        cachedRepos.set(root, repo)
-      }
-    } catch {
-      console.log(
-        styleText(
-          "yellow",
-          "\nWarning: no git history available, falling back to frontmatter dates",
-        ),
-      )
+      repo = cachedRepos.get(root)
+    }
+    if (history === undefined) {
+      warn("no git history available, falling back to frontmatter dates")
     }
 
     return [

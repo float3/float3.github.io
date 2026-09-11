@@ -14,7 +14,7 @@
  * that has always been the only gate here.
  */
 
-import { execFileSync } from "child_process"
+import { git } from "../shared/git"
 import type { CommentAuthor } from "./types"
 
 /**
@@ -103,25 +103,21 @@ function authorFromEmail(email: string): CommentAuthor {
 export function readCommentAuthors(cwd: string): Map<string, CommentCommit> {
   const authors = new Map<string, CommentCommit>()
 
-  let output: string
-  try {
-    output = execFileSync(
-      "git",
-      [
-        "log",
-        "--format=%x00%aI%x1f%an%x1f%ae",
-        "--name-only",
-        "--diff-filter=A",
-        "--no-show-signature",
-        "--",
-        "*.comment.*.md",
-      ],
-      { cwd, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 },
-    )
-  } catch {
-    // No git, no shallow history, no authors. The thread still renders.
-    return authors
-  }
+  const output = git(
+    cwd,
+    [
+      "log",
+      "--format=%x00%aI%x1f%an%x1f%ae",
+      "--name-only",
+      "--diff-filter=A",
+      "--no-show-signature",
+      "--",
+      "*.comment.*.md",
+    ],
+    64 * 1024 * 1024,
+  )
+  // No git, no shallow history, no authors. The thread still renders.
+  if (output === undefined) return authors
 
   for (const block of output.split("\0")) {
     if (block.trim() === "") continue

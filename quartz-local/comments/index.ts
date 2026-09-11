@@ -8,12 +8,12 @@
  * would turn a linear cost into a quadratic one.
  */
 
-import { execFileSync } from "child_process"
 import path from "path"
-import { styleText } from "util"
 import type { Root } from "mdast"
 import type { VFile } from "vfile"
 import type { QuartzTransformerPlugin } from "../../quartz/plugins/types"
+import { defaultBranch, originRemote, ownerRepo, repoRoot } from "../shared/git"
+import { warn } from "../shared/warn"
 import { scanComments } from "./parse"
 import type { CommentRecord } from "./types"
 
@@ -40,34 +40,16 @@ interface Repo {
   prefix: string
 }
 
-/** Pulls `owner/repo` out of whichever URL form the remote happens to use. */
-function parseRemote(remote: string): string | undefined {
-  const match = /github\.com[:/]+([^/]+)\/(.+?)(?:\.git)?\/?$/.exec(remote.trim())
-  return match ? `${match[1]}/${match[2]}` : undefined
-}
-
 function readRepo(contentDir: string, options: Options): Repo | undefined {
-  const git = (args: string[]): string | undefined => {
-    try {
-      return execFileSync("git", args, { cwd: contentDir, encoding: "utf8" }).trim()
-    } catch {
-      return undefined
-    }
-  }
-
-  const root = git(["rev-parse", "--show-toplevel"])
+  const root = repoRoot(contentDir)
   if (root === undefined) return undefined
 
-  const repo = options.repo ?? parseRemote(git(["remote", "get-url", "origin"]) ?? "")
+  const repo = options.repo ?? ownerRepo(originRemote(contentDir) ?? "")
   if (repo === undefined) return undefined
-
-  // The remote's default branch, not the checked-out one: a pull request opened
-  // against a branch that only ever existed on my machine helps nobody.
-  const head = git(["symbolic-ref", "--short", "refs/remotes/origin/HEAD"])
 
   return {
     repo,
-    branch: options.branch ?? head?.replace(/^origin\//, "") ?? "master",
+    branch: options.branch ?? defaultBranch(contentDir),
     root,
     prefix: path.relative(root, contentDir).split(path.sep).join("/"),
   }
@@ -92,12 +74,7 @@ export const Comments: QuartzTransformerPlugin<Partial<Options>> = (userOptions)
         repo = readRepo(contentDir, options)
         cachedRepos.set(contentDir, repo)
         if (repo === undefined) {
-          console.log(
-            styleText(
-              "yellow",
-              "\nWarning: no GitHub remote found, so comment threads will render read-only",
-            ),
-          )
+          warn("no GitHub remote found, so comment threads will render read-only")
         }
       }
 
