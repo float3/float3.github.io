@@ -1,5 +1,5 @@
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use crate::{Result, Site, SiteError, fail};
 use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
@@ -31,19 +31,19 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     for file in generated_audio_files()? {
         let path = audio_output_dir.join(file.name);
         fs::write(&path, file.bytes)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     for file in generated_media_text_files() {
         let path = audio_output_dir.join(file.name);
         fs::write(&path, file.text)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     for file in generated_text_files() {
         let path = text_output_dir.join(file.name);
         fs::write(&path, file.text)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     // Update the blog post table in-place so site `generate` keeps the HTML in
@@ -61,15 +61,11 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
         update_recursive_ji_notation(&post_path)?;
         println!(
             "engraved the notation in {}",
-            relative_to_root(site, &post_path).display()
+            site.relative_path(&post_path)
         );
     }
 
     Ok(())
-}
-
-fn relative_to_root(site: &Site, path: &Path) -> PathBuf {
-    path.strip_prefix(&site.root).unwrap_or(path).to_path_buf()
 }
 
 fn print_help() {
@@ -110,8 +106,8 @@ Text files:
     );
 }
 
-/// Writes the engraved notation into the post, inside the `data-recursive-ji-abc`
-/// containers that used to be filled in by abcjs at read time.
+/// Writes the engraved notation into the post, inside its `data-recursive-ji-abc`
+/// containers.
 ///
 /// Rewriting in place, the way the frequency table above is handled, keeps the
 /// post the one file that holds the post.

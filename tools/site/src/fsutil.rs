@@ -6,6 +6,15 @@ use std::fs;
 use std::path::{Path, PathBuf};
 
 impl Site {
+    /// A path as the repository knows it: relative to the root, with forward
+    /// slashes, for messages and for the workflow.
+    pub(crate) fn relative_path(&self, path: &Path) -> String {
+        path.strip_prefix(&self.root)
+            .unwrap_or(path)
+            .to_string_lossy()
+            .replace('\\', "/")
+    }
+
     #[cfg(feature = "photos")]
     pub(crate) fn resolve_path(&self, path: &str) -> PathBuf {
         let path = PathBuf::from(path);

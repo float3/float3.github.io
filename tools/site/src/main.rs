@@ -23,6 +23,7 @@ mod recursive_ji;
 mod report;
 mod submissions;
 mod tables;
+mod workflow;
 mod zipf;
 
 use std::env;

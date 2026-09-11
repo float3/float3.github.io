@@ -11,6 +11,10 @@
 //! no arguments; the workflows in `.github/workflows/comment*.yaml` are the only
 //! callers.
 
+use crate::workflow::{
+    Rejected, Submission, issue_from_env, parse_marked_issue, publish_outputs, random_id, reject,
+    report_rejection, write_outputs,
+};
 use crate::{Result, Site, SiteError};
 use serde_json::Value;
 use std::env;
@@ -18,36 +22,9 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// The marker the compose box writes into an issue body.
-///
-/// The workflow keys off this rather than off a label, because a label set
-/// through `?labels=` in a prefilled issue URL is silently dropped for anyone
-/// without triage permission on the repository — which is everyone this feature
-/// exists for.
+/// The marker the compose box writes into an issue body; see
+/// [`parse_marked_issue`].
 const ISSUE_MARKER: &str = "hilll.dev:comment";
-
-/// Long enough for any comment worth reading, short enough to bound the damage.
-const MAX_BODY: usize = 64 * 1024;
-
-/// A refusal, phrased for whoever will read it on the issue or pull request.
-///
-/// Separate from the ordinary error type so the workflow can tell "this input
-/// was not acceptable", which it reports back and closes, from "this command
-/// broke", which is mine to fix.
-#[derive(Debug)]
-pub(crate) struct Rejected(pub String);
-
-impl std::fmt::Display for Rejected {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(&self.0)
-    }
-}
-
-impl std::error::Error for Rejected {}
-
-pub(crate) fn reject<T>(message: impl Into<String>) -> Result<T> {
-    Err(Box::new(Rejected(message.into())))
-}
 
 // ---------------------------------------------------------------------------
 // Shared shapes
@@ -184,28 +161,6 @@ impl Comment {
 }
 
 /// What the compose box put in the issue: the payload, and the comment's text.
-pub(crate) struct Submission {
-    pub payload: Value,
-    pub body: String,
-}
-
-/// Splits the machine-readable half of an issue body from the comment itself.
-///
-/// The shape is fixed by line rather than by searching for the closing `-->`:
-///
-/// ```text
-/// <!--hilll.dev:comment
-/// {"parent":"blog/page.md"}
-/// -->
-///
-/// the comment
-/// ```
-///
-/// The payload is whatever sits on the line after the marker, because
-/// serialised JSON never contains a raw newline. Delimiting it by the first
-/// `-->` instead looks equivalent and is not: a comment quoting a passage that
-/// contains an arrow puts `-->` *inside the payload*, and the split lands in
-/// the middle of the JSON. The body may still contain as many as it likes.
 pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
     let submission = parse_marked_issue(issue_body, ISSUE_MARKER)?;
 
@@ -214,52 +169,6 @@ pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
     }
 
     Ok(submission)
-}
-
-/// The same split, for any of the markers a page can put in an issue.
-///
-/// `gallery-from-issue` reads its issues out of the same shape, differing only
-/// in the marker and in what the part after it has to contain — a comment needs
-/// text and a submission needs files, so neither check lives here.
-pub(crate) fn parse_marked_issue(issue_body: &str, marker: &str) -> Result<Submission> {
-    let text = issue_body.replace("\r\n", "\n");
-    let opening = format!("<!--{marker}");
-
-    let Some(start) = text.find(&opening) else {
-        return reject(format!("this issue carries no {marker} marker"));
-    };
-    let after_marker = start + opening.len();
-
-    // Past the remainder of the marker's own line, onto the payload's.
-    let Some(payload_start) = text[after_marker..]
-        .find('\n')
-        .map(|at| after_marker + at + 1)
-    else {
-        return reject(format!("the {marker} marker is never closed"));
-    };
-    let payload_end = text[payload_start..]
-        .find('\n')
-        .map(|at| payload_start + at)
-        .unwrap_or(text.len());
-
-    let payload: Value = match serde_json::from_str(text[payload_start..payload_end].trim()) {
-        Ok(value) => value,
-        Err(_) => return reject(format!("the {marker} marker does not contain valid JSON")),
-    };
-    if !payload.is_object() {
-        return reject(format!("the {marker} payload is not an object"));
-    }
-
-    let Some(close) = text[payload_end..].find("-->").map(|at| payload_end + at) else {
-        return reject(format!("the {marker} marker is never closed"));
-    };
-
-    let body = text[close + 3..].trim().to_string();
-    if body.len() > MAX_BODY {
-        return reject(format!("the issue is longer than {MAX_BODY} bytes"));
-    }
-
-    Ok(Submission { payload, body })
 }
 
 fn payload_string(payload: &Value, field: &str) -> Option<String> {
@@ -379,33 +288,6 @@ fn new_id(parent_path: &Path) -> Result<String> {
         }
     }
     reject("could not find a free comment id")
-}
-
-/// Four bytes of hex from the OS.
-///
-/// Only has to be unique within one page's thread — the filename already
-/// carries the page — and nothing about a comment id is a secret.
-fn random_id() -> String {
-    let mut bytes = [0u8; 4];
-    getrandom(&mut bytes);
-    bytes.iter().map(|byte| format!("{byte:02x}")).collect()
-}
-
-fn getrandom(bytes: &mut [u8; 4]) {
-    // No `rand` dependency for four bytes: the clock and the process id are
-    // mixed only to keep two runs in the same second apart, and collisions are
-    // checked against the directory anyway.
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|since| since.as_nanos())
-        .unwrap_or(0);
-    let seed = (now as u64) ^ ((std::process::id() as u64) << 32);
-    // SplitMix64, which is short enough to read and good enough for a filename.
-    let mut z = seed.wrapping_add(0x9E37_79B9_7F4A_7C15);
-    z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
-    z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
-    z ^= z >> 31;
-    bytes.copy_from_slice(&(z as u32).to_be_bytes());
 }
 
 /// Reads back a comment this module wrote, for the edit path.
@@ -613,102 +495,16 @@ fn civil_from_days(days: i64) -> (i64, u32, u32) {
 }
 
 pub(crate) fn from_issue(site: &Site) -> Result<()> {
-    let issue: Value = serde_json::from_str(&env::var("ISSUE_JSON").unwrap_or_default())
-        .map_err(|error| SiteError::new(format!("ISSUE_JSON is not valid JSON: {error}")))?;
-    let content_dir = site
-        .root
-        .join(env::var("CONTENT_DIR").unwrap_or_else(|_| "content".into()));
+    let (issue, content_dir) = issue_from_env(site)?;
+    let applied = apply(&issue, &content_dir, &now_iso8601()).or_else(report_rejection)?;
 
-    // A refusal is reported back on the issue by the workflow, so it has to
-    // reach it as an output before this exits.
-    let applied = match apply(&issue, &content_dir, &now_iso8601()) {
-        Ok(applied) => applied,
-        Err(error) => {
-            if error.downcast_ref::<Rejected>().is_some() {
-                write_outputs(&[("rejected", error.to_string())])?;
-            }
-            return Err(error);
-        }
-    };
-
-    let relative = applied
-        .file
-        .strip_prefix(&site.root)
-        .unwrap_or(&applied.file)
-        .to_string_lossy()
-        .replace('\\', "/");
-
-    let outputs = [
+    publish_outputs(&[
         ("action", applied.action.to_string()),
         ("id", applied.id),
-        ("file", relative),
+        ("file", site.relative_path(&applied.file)),
         ("login", applied.login),
         ("parent", applied.parent),
-    ];
-
-    for (key, value) in &outputs {
-        println!("{key}={value}");
-    }
-    write_outputs(&outputs)
-}
-
-/// Writes step outputs for the workflow to read.
-///
-/// Takes the outputs apart rather than as one blob of text, because every
-/// value here is built from something a stranger wrote — an issue payload, a
-/// refusal quoting a path, the `author` line of a file in somebody's pull
-/// request — and `$GITHUB_OUTPUT` is a format where a newline in a value
-/// starts a new output. A value that could carry one could name any output the
-/// workflow reads: the `file` the comment run stages, the `dir` the gallery run
-/// commits. None of those are reachable today, because a rejection fails the
-/// step and the steps that read those outputs never run. That is an ordering
-/// property of two YAML files, though, and this is the fact itself.
-pub(crate) fn write_outputs(outputs: &[(&str, String)]) -> Result<()> {
-    let Ok(path) = env::var("GITHUB_OUTPUT") else {
-        return Ok(());
-    };
-
-    use std::io::Write;
-    let mut file = fs::OpenOptions::new()
-        .append(true)
-        .create(true)
-        .open(path)?;
-
-    for (key, value) in outputs {
-        write!(file, "{}", render_output(key, value))?;
-    }
-
-    Ok(())
-}
-
-/// One output, in whichever of the two forms the value needs.
-///
-/// `key=value` for a value that is one line, and the heredoc form for one that
-/// is not — with a delimiter checked against the value rather than a fixed word
-/// the value could contain. `REFUSALS` was such a word, and a comment file
-/// whose `author` field decoded to one containing it closed the block early.
-fn render_output(key: &str, value: &str) -> String {
-    if !value.contains('\n') && !value.contains('\r') {
-        return format!("{key}={value}\n");
-    }
-
-    let delimiter = delimiter_for(value);
-    format!("{key}<<{delimiter}\n{value}\n{delimiter}\n")
-}
-
-/// A delimiter no line of the value is.
-///
-/// The counter is what makes this terminate: the random half only has to make a
-/// deliberate collision impractical to arrange, and the counter makes an
-/// accidental one impossible to sustain.
-fn delimiter_for(value: &str) -> String {
-    for attempt in 0.. {
-        let delimiter = format!("SITEOUTPUT_{}_{attempt}", random_id());
-        if !value.lines().any(|line| line.trim_end() == delimiter) {
-            return delimiter;
-        }
-    }
-    unreachable!("a fresh delimiter is found or the counter never ends")
+    ])
 }
 
 // ---------------------------------------------------------------------------
@@ -919,80 +715,7 @@ mod tests {
     use std::collections::HashMap;
 
     fn issue_body(payload: &str, body: &str) -> String {
-        format!("<!--{ISSUE_MARKER}\n{payload}\n-->\n\n{body}\n")
-    }
-
-    /// `$GITHUB_OUTPUT` is a format, and every value written to it here came
-    /// from a stranger. A value that can start a line can name any output the
-    /// workflow reads — the `file` the comment run stages, the `dir` the
-    /// gallery run commits — so no value may be able to.
-    #[test]
-    fn an_output_value_cannot_invent_a_second_output() {
-        assert_eq!(
-            render_output("file", "content/a.comment.1.md"),
-            "file=content/a.comment.1.md\n"
-        );
-
-        // The shape a comment file's `author` field can take: `frontmatter_field`
-        // decodes a quoted value as a JSON string, and `"a\nREFUSALS\nfile=x"`
-        // decodes to one carrying real newlines.
-        let forged = "belongs to `alice\nREFUSALS\nfile=/etc/passwd`";
-        let written = render_output("refusals", forged);
-
-        let delimiter = written
-            .lines()
-            .next()
-            .unwrap()
-            .strip_prefix("refusals<<")
-            .expect("a multi-line value takes the heredoc form")
-            .to_string();
-
-        // The value is fenced, and the fence is not a word the value contains.
-        assert!(!forged.lines().any(|line| line == delimiter));
-        assert!(written.ends_with(&format!("\n{delimiter}\n")));
-
-        // Which is the whole point: read back the way GitHub reads it, exactly
-        // one output arrives, and `file` is not among them.
-        let parsed = parse_outputs(&written);
-        assert_eq!(parsed.len(), 1);
-        assert_eq!(parsed[0].0, "refusals");
-        assert_eq!(parsed[0].1, forged);
-
-        // And a value that happens to contain a delimiter gets a different one.
-        let awkward = format!("first\n{delimiter}\nlast");
-        let again = render_output("refusals", &awkward);
-        let second = again
-            .lines()
-            .next()
-            .unwrap()
-            .strip_prefix("refusals<<")
-            .unwrap();
-        assert_ne!(second, delimiter);
-        assert_eq!(parse_outputs(&again)[0].1, awkward);
-    }
-
-    /// `$GITHUB_OUTPUT` as the runner reads it: `key=value`, or `key<<DELIM`
-    /// through to a line that is exactly `DELIM`.
-    fn parse_outputs(written: &str) -> Vec<(String, String)> {
-        let mut outputs = Vec::new();
-        let mut lines = written.lines();
-
-        while let Some(line) = lines.next() {
-            if let Some((key, delimiter)) = line.split_once("<<") {
-                let mut value = Vec::new();
-                for line in lines.by_ref() {
-                    if line == delimiter {
-                        break;
-                    }
-                    value.push(line);
-                }
-                outputs.push((key.to_string(), value.join("\n")));
-            } else if let Some((key, value)) = line.split_once('=') {
-                outputs.push((key.to_string(), value.to_string()));
-            }
-        }
-
-        outputs
+        crate::workflow::marked_issue(ISSUE_MARKER, payload, body)
     }
 
     fn issue(payload: &str, body: &str, login: &str, id: u64) -> Value {

@@ -105,7 +105,7 @@ pub(crate) fn download_problem_text(site: &Site, args: &[String]) -> Result<()> 
 
                 fs::write(&path, article)?;
                 wrote += 1;
-                println!("wrote {}", display_path(site, &path));
+                println!("wrote {}", site.relative_path(&path));
             }
         }
     }
@@ -159,7 +159,7 @@ pub(crate) fn download_inputs(site: &Site, args: &[String]) -> Result<()> {
             if options.dry_run {
                 println!(
                     "would fetch {year} day {day} input -> {}",
-                    display_path(site, &path)
+                    site.relative_path(&path)
                 );
                 continue;
             }
@@ -191,7 +191,7 @@ pub(crate) fn download_inputs(site: &Site, args: &[String]) -> Result<()> {
 
             fs::write(&path, input_text)?;
             wrote += 1;
-            println!("wrote {}", display_path(site, &path));
+            println!("wrote {}", site.relative_path(&path));
         }
     }
 
@@ -499,13 +499,6 @@ fn input_path(root: &Path, year: u16, day: u8) -> PathBuf {
     root.join(format!("aoc{year}"))
         .join(format!("day{day:02}"))
         .join("input.txt")
-}
-
-fn display_path(site: &Site, path: &Path) -> String {
-    path.strip_prefix(&site.root)
-        .unwrap_or(path)
-        .to_string_lossy()
-        .replace('\\', "/")
 }
 
 fn wait_between_requests(first_request: &mut bool, delay: Duration) {

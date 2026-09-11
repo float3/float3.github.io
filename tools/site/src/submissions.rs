@@ -39,27 +39,25 @@
 //! - and video is refused outright when ffmpeg is missing, because a video
 //!   nobody has looked at is exactly the file whose metadata matters.
 
-use crate::comments::{Rejected, parse_marked_issue, reject, write_outputs};
 use crate::gallery;
-use crate::{Result, Site, SiteError, fail, remove_file_if_exists};
+use crate::workflow::{
+    Rejected, issue_from_env, parse_marked_issue, publish_outputs, reject, report_rejection,
+};
+use crate::{Result, Site, fail, remove_file_if_exists};
 use serde_json::Value;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// The marker the submit button writes into an issue body.
-///
-/// Keyed off this rather than off a label, for the same reason the comment
-/// workflow is: a label set through `?labels=` in a prefilled issue URL is
-/// silently dropped for anyone without triage permission on the repository,
-/// which is everyone this feature exists for.
+/// The marker the submit button writes into an issue body; see
+/// [`parse_marked_issue`].
 pub(crate) const ISSUE_MARKER: &str = "hilll.dev:gallery";
 
 /// The workflow that runs this, relative to the repository root.
 ///
-/// One file for comments and galleries both: two workflows on the same event
-/// meant every submission also produced a skipped run of the other one.
+/// One file for comments and galleries both: a second workflow on the same
+/// event puts a skipped run beside every real one.
 #[cfg(test)]
 pub(crate) const WORKFLOW: &str = ".github/workflows/submission.yaml";
 
@@ -253,16 +251,16 @@ fn sources(body: &str) -> Result<Vec<Source>> {
 
 /// The URL to fetch, if the allowlist admits it.
 ///
-/// The prefix test has to be applied to the URL curl will actually ask for, not
-/// to the one that was written down, and those are not the same string: curl
+/// The prefix test is applied to the URL curl will actually ask for, not to
+/// the one that was written down, and those are not the same string: curl
 /// resolves `..` in a path before it sends anything, so
 /// `https://github.com/user-attachments/assets/../../owner/repo/raw/main/x`
-/// passes a `starts_with` against the allowlist and then asks for something
-/// else entirely. The host cannot be moved this way and no credential is ever
-/// sent, so the worst of it was fetching a public file from somewhere else on
-/// github.com — but the check and the request disagreeing is the bug, whatever
-/// today's blast radius is. So the path is resolved here, the resolved form is
-/// what gets tested, and the resolved form is what gets fetched.
+/// passes a `starts_with` as written and then asks for something else
+/// entirely. The host cannot be moved this way and no credential is ever sent,
+/// so what that reaches is a public file somewhere else on github.com; the
+/// check and the request have to agree regardless. So the path is resolved
+/// here, the resolved form is what gets tested, and the resolved form is what
+/// gets fetched.
 fn allowed_attachment(url: &str) -> Option<String> {
     // A percent-encoded dot or slash exists only to make this function and the
     // server read one path two ways: curl passes both through untouched, so
@@ -799,27 +797,12 @@ fn pull_request_body(applied: &Applied) -> String {
 }
 
 pub(crate) fn from_issue(site: &Site) -> Result<()> {
-    let issue: Value = serde_json::from_str(&env::var("ISSUE_JSON").unwrap_or_default())
-        .map_err(|error| SiteError::new(format!("ISSUE_JSON is not valid JSON: {error}")))?;
-    let content_dir = site
-        .root
-        .join(env::var("CONTENT_DIR").unwrap_or_else(|_| "content".into()));
+    let (issue, content_dir) = issue_from_env(site)?;
     let downloads = env::temp_dir().join(format!("site-submission-{}", std::process::id()));
 
     let applied = apply(site, &issue, &content_dir, &downloads);
     let _ = fs::remove_dir_all(&downloads);
-
-    let applied = match applied {
-        Ok(applied) => applied,
-        Err(error) => {
-            // A refusal is said back on the issue by the workflow, so it has to
-            // reach it as an output before this exits.
-            if error.downcast_ref::<Rejected>().is_some() {
-                write_outputs(&[("rejected", error.to_string())])?;
-            }
-            return Err(error);
-        }
-    };
+    let applied = applied.or_else(report_rejection)?;
 
     for note in &applied.duplicates {
         println!("{}: {note}, and was not added", applied.collection);
@@ -830,19 +813,14 @@ pub(crate) fn from_issue(site: &Site) -> Result<()> {
         .iter()
         .map(|file| file.path.as_str())
         .collect::<Vec<_>>();
-    let outputs = [
+    publish_outputs(&[
         ("collection", applied.collection.clone()),
         ("login", applied.login.clone()),
         ("count", files.len().to_string()),
         ("files", files.join(" ")),
         ("dir", format!("content/misc/{}", applied.collection)),
         ("body", pull_request_body(&applied)),
-    ];
-
-    for (key, value) in &outputs {
-        println!("{key}={value}");
-    }
-    write_outputs(&outputs)
+    ])
 }
 
 #[cfg(test)]
@@ -850,7 +828,7 @@ mod tests {
     use super::*;
 
     fn issue_body(payload: &str, body: &str) -> String {
-        format!("<!--{ISSUE_MARKER}\n{payload}\n-->\n\n{body}\n")
+        crate::workflow::marked_issue(ISSUE_MARKER, payload, body)
     }
 
     #[test]
