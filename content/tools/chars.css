@@ -1,5 +1,8 @@
-#output {
-  font-family: monospace;
-  /* width: 20ch;
-    white-space: pre; */
+.chars-output {
+  font-family: var(--codeFont, monospace);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  min-height: 10rem;
+  overflow-wrap: anywhere;
+  word-break: break-all;
 }

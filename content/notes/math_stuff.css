@@ -36,8 +36,8 @@
   --bayes-prior: #fe7fb3;
   --bayes-evidence: #dd6fff;
   --bayes-neutral: #4d8dc3;
-  --bayes-card: color-mix(in srgb, var(--light) 94%, var(--dark) 6%);
-  --bayes-border: color-mix(in srgb, var(--lightgray) 74%, var(--darkgray));
+  --bayes-card: var(--tool-surface);
+  --bayes-border: var(--tool-border);
 
   display: grid;
   gap: 0.75rem;
