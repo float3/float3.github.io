@@ -26,27 +26,14 @@ Heads: lose everything you own
 Tails: you get 100,000€ (replace with an amount that's reasonable for your financial situation)
 
 
-<div id="insurance-calculator" style="max-width:600px;padding:1em;border:1px solid ccc;border-radius:8px">
-
-<label>
-Chance of Tails (%):
-<br>
-<input id="tailsProb" type="number" value="50" min="0" max="100" step="0.1">
-</label>
-<br>
-<label>
-Current Net Worth (€):
-<br>
-<input id="netWorth" type="number" value="50000" min="0" step="1000">
-</label>
-<br>
-<label>
-Reward if Tails (€):
-<br>
-<input id="reward" type="number" value="100000" min="0" step="1000">
-</label>
-
-<div id="results"></div>
+<div id="insurance-calculator" class="tool tool-panel insurance">
+<div class="tool-bar">
+<label class="tool-field"><span>Chance of tails</span><input id="tailsProb" type="number" value="50" min="0" max="100" step="0.1" /> </label>
+<label class="tool-field"><span>Net worth, €</span><input id="netWorth" type="number" value="50000" min="0" step="1000" /></label>
+<label class="tool-field"><span>Reward if tails, €</span><input id="reward" type="number" value="100000" min="0" step="1000" /></label>
+</div>
+<div id="results" class="insurance-results"></div>
+</div>
 
 </div>
 

@@ -1639,3 +1639,17 @@ html[data-bg="gl"] {
     display: none !important;
   }
 }
+
+// The insurance post's coin flip: three fields and the figures they give.
+.insurance {
+  max-width: 40rem;
+  margin: 1.25rem 0;
+}
+.insurance .tool-field input {
+  width: 9rem;
+}
+.insurance-results p {
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
