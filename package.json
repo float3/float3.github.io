@@ -36,7 +36,7 @@
     "quartz": "./quartz/bootstrap-cli.mts"
   },
   "dependencies": {
-    "@clack/prompts": "^1.7.0",
+    "@clack/prompts": "^1.8.0",
     "@floating-ui/dom": "^1.8.0",
     "@myriaddreamin/rehype-typst": "^0.8.0-rc3",
     "@napi-rs/simple-git": "1.1.0",
@@ -48,7 +48,7 @@
     "globby": "^16.2.4",
     "hast-util-from-html": "^2.0.3",
     "hast-util-to-jsx-runtime": "^2.3.6",
-    "isomorphic-git": "^1.41.9",
+    "isomorphic-git": "^1.42.2",
     "lightningcss": "^1.33.0",
     "micromorph": "^0.4.5",
     "minimatch": "^10.2.6",
@@ -68,7 +68,7 @@
     "vfile": "^6.0.3",
     "workerpool": "^10.0.3",
     "ws": "^8.21.3",
-    "yaml": "^2.9.0",
+    "yaml": "^2.9.1",
     "yargs": "^18.1.0"
   },
   "devDependencies": {
@@ -76,7 +76,7 @@
     "@quartz-community/utils": "git+https://github.com/quartz-community/utils.git#7a43501ac1c728e8a7bfa75db35e8791bfa1f41c",
     "@types/hast": "^3.0.5",
     "@types/mdast": "^4.0.4",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.5.1",
     "@types/pretty-time": "^1.1.5",
     "@types/source-map-support": "^0.5.10",
     "@types/ws": "^8.18.1",
