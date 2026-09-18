@@ -3,7 +3,7 @@ name = "wasm"
 version = "0.1.0"
 authors = ["hill"]
 edition = "2024"
-license = "agpl-3.0"
+license = "AGPL-3.0-only"
 description = "WebAssembly"
 repository = "https://github.com/float3/float3.github.io/tree/master/wasm/wasm"
 
