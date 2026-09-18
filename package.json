@@ -5,7 +5,7 @@
   "version": "5.0.0",
   "type": "module",
   "author": "jackyzha0 <j.zhao2k19@gmail.com>",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "homepage": "https://quartz.jzhao.xyz",
   "repository": {
     "type": "git",
