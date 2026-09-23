@@ -380,7 +380,7 @@ mod tests {
         let just = pair("FiveLimit", "FiveLimit");
         for root in 0..12 {
             for step in 0..=12 {
-                let expected = RECURSIVE_JI.frequency_at(root as f64, step as f64, None) / CN1 * C4;
+                let expected = RECURSIVE_JI.frequency_at(root as f64, step as f64) / CN1 * C4;
                 assert!(
                     (just.frequency(root, step) - expected).abs() < 1e-9,
                     "row {root}, column {step}"

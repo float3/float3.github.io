@@ -143,7 +143,7 @@ fn cents_of(ratio: f64) -> f64 {
 fn family_of(tuning: TuningSystem) -> &'static str {
     use TuningSystem::*;
     match tuning {
-        EqualTemperament { .. } | WholeTone | QuarterTone => "Equal divisions",
+        Equal(_) => "Equal divisions",
         CarlosHarmonic | CarlosHarmonic24 => "Harmonic series",
         PythagoreanTuning | FiveLimit | ElevenLimit | FortyThreeTone | PtolemyIntenseDiatonic => {
             "Just intonation"
@@ -191,7 +191,7 @@ pub fn library() -> Library {
             name: tuning.display_name().to_string(),
             family: family_of(tuning).to_string(),
             description: tuning.description().to_string(),
-            count: tuning.octave_size() as usize,
+            count: tuning.degrees_per_period() as usize,
         })
         .collect();
     systems.push(SystemEntry {
@@ -207,8 +207,10 @@ pub fn library() -> Library {
     let mut equal: Vec<EqualPreset> = COMMON_EQUAL_TEMPERAMENTS
         .into_iter()
         .filter_map(|tuning| match tuning {
-            TuningSystem::EqualTemperament { octave_size } if octave_size != 12 => {
-                Some((octave_size, 2, 1, edo_note(octave_size)))
+            TuningSystem::Equal(division)
+                if division.period_ratio() == Some((2, 1)) && division.divisions() != 12 =>
+            {
+                Some((division.divisions(), 2, 1, edo_note(division.divisions())))
             }
             _ => None,
         })
@@ -379,10 +381,9 @@ pub fn realize(id: &str, root_hz: f64) -> Result<Scale, String> {
             root_hz,
         );
     }
-    let tuning = ALL_TUNING_SYSTEMS
-        .into_iter()
-        .find(|tuning| tuning.id() == id)
-        .ok_or_else(|| format!("no tuning is named {id}"))?;
+    let tuning: TuningSystem = id
+        .parse()
+        .map_err(|_| format!("no tuning is named {id}"))?;
     Ok(built_in(tuning, root_hz))
 }
 
@@ -404,18 +405,17 @@ pub fn realize_scl(name: &str, contents: &str, root_hz: f64) -> Result<Scale, St
 }
 
 fn built_in(tuning: TuningSystem, root_hz: f64) -> Scale {
-    let count = tuning.octave_size() as usize;
-    let equal_step = 1200.0 / count as f64;
+    let count = tuning.degrees_per_period() as usize;
+    let period_cents = tuning.period_cents();
+    let equal_step = period_cents / count as f64;
     let degrees = (0..=count)
         .map(|degree| {
-            let fraction = tuning.fraction(degree);
-            let ratio = fraction.ratio();
+            let ratio = tuning.ratio(degree);
             let cents = cents_of(ratio);
             Degree {
-                ratio_label: if fraction.base() == 0 {
-                    fraction.label()
-                } else {
-                    format!("{degree}\\{count}")
+                ratio_label: match tuning.fraction(degree) {
+                    Some(fraction) if fraction.base() == 0 => fraction.label(),
+                    _ => format!("{degree}\\{count}"),
                 },
                 ratio,
                 cents,
@@ -430,11 +430,11 @@ fn built_in(tuning: TuningSystem, root_hz: f64) -> Scale {
         family: family_of(tuning).to_string(),
         description: tuning.description().to_string(),
         count,
-        period_ratio: 2.0,
-        period_cents: 1200.0,
+        period_ratio: 2f64.powf(period_cents / 1200.0),
+        period_cents,
         root_hz,
         adaptive: false,
-        twelve_tone: count == 12,
+        twelve_tone: count == 12 && tuning.repeats_at_the_octave(),
         degrees,
         temperament: None,
     }
@@ -581,7 +581,7 @@ fn equal_division(
 impl Scale {
     /// Twelve-tone equal temperament over C4 at its usual pitch.
     pub fn default_scale() -> Self {
-        built_in(TuningSystem::EqualTemperament { octave_size: 12 }, C4)
+        built_in(TuningSystem::EQUAL_TEMPERAMENT, C4)
     }
 
     /// Which period a step falls in, and which degree of it.
@@ -608,7 +608,7 @@ impl Scale {
             return self.frequency(step);
         }
         let local = (step - context) as f64;
-        let above_context = RECURSIVE_JI.frequency_at(0.0, local, None) / CN1;
+        let above_context = RECURSIVE_JI.frequency_at(0.0, local) / CN1;
         self.frequency(context) * above_context
     }
 

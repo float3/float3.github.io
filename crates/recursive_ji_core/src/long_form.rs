@@ -9,7 +9,7 @@ use crate::{GeneratedBinary, GeneratedText, Result, SAMPLE_RATE};
 
 const MIDDLE_C_PITCH_SPACE: f64 = 60.0;
 const JUST_INTONATION: TuningSystem = TuningSystem::FiveLimit;
-const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EQUAL_TEMPERAMENT;
 const MOZART_DIES_IRAE_MIDI: &[u8] = include_bytes!("../../../content/misc/blobs/jm_mozdi.mid");
 const LONG2_TITLE: &str = "Twelve Rooms for One Piano";
 const LONG2_AUDIO_FILE: &str = "recursive-just-intonation-composition.wav";

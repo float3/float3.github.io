@@ -14,7 +14,7 @@ pub type Result<T> = std::result::Result<T, Box<dyn Error>>;
 pub const SAMPLE_RATE: u32 = 44_100;
 const MIDDLE_C_PITCH_SPACE: f64 = 60.0;
 
-const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EqualTemperament { octave_size: 12 };
+const EQUAL_TEMPERAMENT: TuningSystem = TuningSystem::EQUAL_TEMPERAMENT;
 const JUST_INTONATION: TuningSystem = TuningSystem::FiveLimit;
 
 /// Interval definitions derived from music21-rs chord analysis.
@@ -23,7 +23,7 @@ const MAJOR_INTERVALS: &[i32] = &[0, 4, 7];
 const DOMINANT_INTERVALS: &[i32] = &[0, 4, 7, 10];
 
 const TWELVE_TET: AnyTuningSystem =
-    AnyTuningSystem::Fixed(TuningSystem::EqualTemperament { octave_size: 12 });
+    AnyTuningSystem::Fixed(TuningSystem::EQUAL_TEMPERAMENT);
 
 const FIXED_C_JUST: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::FiveLimit);
 
@@ -31,7 +31,7 @@ const RECURSIVE_JUST: AnyTuningSystem = AnyTuningSystem::Adaptive(RECURSIVE_JI);
 
 const TWELVE_TET_ROOTED_JUST: AnyTuningSystem =
     AnyTuningSystem::Adaptive(AdaptiveTuningSystem::Recursive {
-        root_tuning_system: TuningSystem::EqualTemperament { octave_size: 12 },
+        root_tuning_system: TuningSystem::EQUAL_TEMPERAMENT,
         local_tuning_system: TuningSystem::FiveLimit,
     });
 
