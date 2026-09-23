@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "bun"
-    directory: "/"
+    directories: ["/", "/ts"]
     schedule:
       interval: "weekly"
     groups:
@@ -24,7 +24,7 @@ updates:
           - "*"
 
   - package-ecosystem: "cargo"
-    directory: "/"
+    directories: ["/", "/programs/conversations-blogpost", "/programs/count_movies"]
     schedule:
       interval: "weekly"
     groups:
