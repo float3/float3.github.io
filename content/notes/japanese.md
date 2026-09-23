@@ -1,3 +1,4 @@
+```
 ---
 title: Japanese
 tags:
@@ -39,23 +40,23 @@ tags:
 
 ## Kana
 
-|         | **∅**                                                       | **k**                                                         | **s**                                                           | **t**                                                           | **n**                                                         | **h**                                                         | **m**                                                         | **y**                                                           | **r**                                                         | **w**                                                           |
-| ------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- |
-| **a**   | [あア](<https://en.wikipedia.org/wiki/A_(kana)> "A (kana)") | [かカ](<https://en.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") | [さサ](<https://en.wikipedia.org/wiki/Sa_(kana)> "Sa (kana)")   | [たタ](<https://en.wikipedia.org/wiki/Ta_(kana)> "Ta (kana)")   | [なナ](<https://en.wikipedia.org/wiki/Na_(kana)> "Na (kana)") | [はハ](<https://en.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [まマ](<https://en.wikipedia.org/wiki/Ma_(kana)> "Ma (kana)") | [やヤ](<https://en.wikipedia.org/wiki/Ya_(kana)> "Ya (kana)")   | [らラ](<https://en.wikipedia.org/wiki/Ra_(kana)> "Ra (kana)") | [わワ](<https://en.wikipedia.org/wiki/Wa_(kana)> "Wa (kana)")   |
-| **i**   | [いイ](<https://en.wikipedia.org/wiki/I_(kana)> "I (kana)") | [きキ](<https://en.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [しシ](<https://en.wikipedia.org/wiki/Shi_(kana)> "Shi (kana)") | [ちチ](<https://en.wikipedia.org/wiki/Chi_(kana)> "Chi (kana)") | [にニ](<https://en.wikipedia.org/wiki/Ni_(kana)> "Ni (kana)") | [ひヒ](<https://en.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [みミ](<https://en.wikipedia.org/wiki/Mi_(kana)> "Mi (kana)") | [𛀆𛄠](<https://en.wikipedia.org/wiki/Yi_(kana)> "Yi (kana)")\* | [りリ](<https://en.wikipedia.org/wiki/Ri_(kana)> "Ri (kana)") | [ゐヰ](<https://en.wikipedia.org/wiki/Wi_(kana)> "Wi (kana)")   |
-| **u**   | [うウ](<https://en.wikipedia.org/wiki/U_(kana)> "U (kana)") | [くク](<https://en.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") | [すス](<https://en.wikipedia.org/wiki/Su_(kana)> "Su (kana)")   | [つツ](<https://en.wikipedia.org/wiki/Tsu_(kana)> "Tsu (kana)") | [ぬヌ](<https://en.wikipedia.org/wiki/Nu_(kana)> "Nu (kana)") | [ふフ](<https://en.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [むム](<https://en.wikipedia.org/wiki/Mu_(kana)> "Mu (kana)") | [ゆユ](<https://en.wikipedia.org/wiki/Yu_(kana)> "Yu (kana)")   | [るル](<https://en.wikipedia.org/wiki/Ru_(kana)> "Ru (kana)") | [𛄟𛄢](<https://en.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)")\* |
-| **e**   | [えエ](<https://en.wikipedia.org/wiki/E_(kana)> "E (kana)") | [けケ](<https://en.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [せセ](<https://en.wikipedia.org/wiki/Se_(kana)> "Se (kana)")   | [てテ](<https://en.wikipedia.org/wiki/Te_(kana)> "Te (kana)")   | [ねネ](<https://en.wikipedia.org/wiki/Ne_(kana)> "Ne (kana)") | [へヘ](<https://en.wikipedia.org/wiki/He_(kana)> "He (kana)") | [めメ](<https://en.wikipedia.org/wiki/Me_(kana)> "Me (kana)") | [𛀁𛄡](<https://en.wikipedia.org/wiki/Ye_(kana)> "Ye (kana)")\* | [れレ](<https://en.wikipedia.org/wiki/Re_(kana)> "Re (kana)") | [ゑヱ](<https://en.wikipedia.org/wiki/We_(kana)> "We (kana)")   |
-| **o**   | [おオ](<https://en.wikipedia.org/wiki/O_(kana)> "O (kana)") | [こコ](<https://en.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [そソ](<https://en.wikipedia.org/wiki/So_(kana)> "So (kana)")   | [とト](<https://en.wikipedia.org/wiki/To_(kana)> "To (kana)")   | [のノ](<https://en.wikipedia.org/wiki/No_(kana)> "No (kana)") | [ほホ](<https://en.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [もモ](<https://en.wikipedia.org/wiki/Mo_(kana)> "Mo (kana)") | [よヨ](<https://en.wikipedia.org/wiki/Yo_(kana)> "Yo (kana)")   | [ろロ](<https://en.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") | [をヲ](<https://en.wikipedia.org/wiki/Wo_(kana)> "Wo (kana)")   |
-| **(n)** | [んン](<https://en.wikipedia.org/wiki/N_(kana)> "N (kana)") |                                                               |                                                                 |                                                                 |                                                               |                                                               |                                                               |                                                                 |                                                               |                                                                 |
+|         | **∅**                                                       | **k**                                                         | **s**                                                           | **t**                                                           | **n**                                                         | **h**                                                         | **m**                                                         | **y**                                                         | **r**                                                         | **w**                                                         |
+| ------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
+| **a**   | [あア](<https://en.wikipedia.org/wiki/A_(kana)> "A (kana)") | [かカ](<https://en.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") | [さサ](<https://en.wikipedia.org/wiki/Sa_(kana)> "Sa (kana)")   | [たタ](<https://en.wikipedia.org/wiki/Ta_(kana)> "Ta (kana)")   | [なナ](<https://en.wikipedia.org/wiki/Na_(kana)> "Na (kana)") | [はハ](<https://en.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [まマ](<https://en.wikipedia.org/wiki/Ma_(kana)> "Ma (kana)") | [やヤ](<https://en.wikipedia.org/wiki/Ya_(kana)> "Ya (kana)") | [らラ](<https://en.wikipedia.org/wiki/Ra_(kana)> "Ra (kana)") | [わワ](<https://en.wikipedia.org/wiki/Wa_(kana)> "Wa (kana)") |
+| **i**   | [いイ](<https://en.wikipedia.org/wiki/I_(kana)> "I (kana)") | [きキ](<https://en.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [しシ](<https://en.wikipedia.org/wiki/Shi_(kana)> "Shi (kana)") | [ちチ](<https://en.wikipedia.org/wiki/Chi_(kana)> "Chi (kana)") | [にニ](<https://en.wikipedia.org/wiki/Ni_(kana)> "Ni (kana)") | [ひヒ](<https://en.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [みミ](<https://en.wikipedia.org/wiki/Mi_(kana)> "Mi (kana)") | [𛀆𛄠](<https://en.wikipedia.org/wiki/Yi_(kana)> "Yi (kana)")\* | [りリ](<https://en.wikipedia.org/wiki/Ri_(kana)> "Ri (kana)") | [ゐヰ](<https://en.wikipedia.org/wiki/Wi_(kana)> "Wi (kana)") |
+| **u**   | [うウ](<https://en.wikipedia.org/wiki/U_(kana)> "U (kana)") | [くク](<https://en.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") | [すス](<https://en.wikipedia.org/wiki/Su_(kana)> "Su (kana)")   | [つツ](<https://en.wikipedia.org/wiki/Tsu_(kana)> "Tsu (kana)") | [ぬヌ](<https://en.wikipedia.org/wiki/Nu_(kana)> "Nu (kana)") | [ふフ](<https://en.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [むム](<https://en.wikipedia.org/wiki/Mu_(kana)> "Mu (kana)") | [ゆユ](<https://en.wikipedia.org/wiki/Yu_(kana)> "Yu (kana)") | [るル](<https://en.wikipedia.org/wiki/Ru_(kana)> "Ru (kana)") | [𛄟𛄢](<https://en.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)")\* |
+| **e**   | [えエ](<https://en.wikipedia.org/wiki/E_(kana)> "E (kana)") | [けケ](<https://en.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [せセ](<https://en.wikipedia.org/wiki/Se_(kana)> "Se (kana)")   | [てテ](<https://en.wikipedia.org/wiki/Te_(kana)> "Te (kana)")   | [ねネ](<https://en.wikipedia.org/wiki/Ne_(kana)> "Ne (kana)") | [へヘ](<https://en.wikipedia.org/wiki/He_(kana)> "He (kana)") | [めメ](<https://en.wikipedia.org/wiki/Me_(kana)> "Me (kana)") | [𛀁𛄡](<https://en.wikipedia.org/wiki/Ye_(kana)> "Ye (kana)")\* | [れレ](<https://en.wikipedia.org/wiki/Re_(kana)> "Re (kana)") | [ゑヱ](<https://en.wikipedia.org/wiki/We_(kana)> "We (kana)") |
+| **o**   | [おオ](<https://en.wikipedia.org/wiki/O_(kana)> "O (kana)") | [こコ](<https://en.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [そソ](<https://en.wikipedia.org/wiki/So_(kana)> "So (kana)")   | [とト](<https://en.wikipedia.org/wiki/To_(kana)> "To (kana)")   | [のノ](<https://en.wikipedia.org/wiki/No_(kana)> "No (kana)") | [ほホ](<https://en.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [もモ](<https://en.wikipedia.org/wiki/Mo_(kana)> "Mo (kana)") | [よヨ](<https://en.wikipedia.org/wiki/Yo_(kana)> "Yo (kana)") | [ろロ](<https://en.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") | [をヲ](<https://en.wikipedia.org/wiki/Wo_(kana)> "Wo (kana)") |
+| **(n)** | [んン](<https://en.wikipedia.org/wiki/N_(kana)> "N (kana)") |                                                               |                                                                 |                                                                 |                                                               |                                                               |                                                               |                                                               |                                                               |                                                               |
 
 kana marked with \* are obsolete
 
 ### Archaic Kana
 
-|       |                        **y**                        |                              **w**                              |
-| :---: | :-------------------------------------------------: | :-------------------------------------------------------------: |
+|       |                       **y**                       |                              **w**                              |
+| :---: | :-----------------------------------------------: | :-------------------------------------------------------------: |
 | **i** | [𛀆𛄠](<https://en.m.wikipedia.org/wiki/Yi_(kana)>) | [ゐヰ](<https://en.m.wikipedia.org/wiki/Wi_(kana)> "Wi (kana)") |
-| **u** |                                                     | [𛄟𛄢](<https://en.m.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)") |
+| **u** |                                                   |  [𛄟𛄢](<https://en.m.wikipedia.org/wiki/Wu_(kana)> "Wu (kana)")  |
 | **e** | [𛀁𛄡](<https://en.m.wikipedia.org/wiki/Ye_(kana)>) | [ゑヱ](<https://en.m.wikipedia.org/wiki/We_(kana)> "We (kana)") |
 
 - There are presently no kana for _ye_, _yi_ or _wu_, as corresponding syllables do not occur natively in modern Japanese.
@@ -66,16 +67,16 @@ kana marked with \* are obsolete
 - Although removed from the standard orthography with the _gendai kanazukai_ reforms, _wi_ and _we_ still see stylistic use, as in ウヰスキー for _whisky_ and ヱビス or ゑびす for Japanese kami [Ebisu](<https://en.m.wikipedia.org/wiki/Ebisu_(mythology)> "Ebisu (mythology)"), and [Yebisu](https://en.m.wikipedia.org/wiki/Yebisu "Yebisu"), a brand of beer named after Ebisu. Hiragana _wi_ and _we_ are preserved in certain [Okinawan scripts](https://en.m.wikipedia.org/wiki/Okinawan_scripts "Okinawan scripts"), while katakana _wi_ and _we_ are preserved in the [Ainu language](https://en.m.wikipedia.org/wiki/Ainu_language "Ainu language").
 - _wo_ is preserved only as the [accusative](https://en.m.wikipedia.org/wiki/Accusative_case "Accusative case") [particle](https://en.m.wikipedia.org/wiki/Japanese_particles "Japanese particles"), normally occurring only in hiragana.
 - _si_, _ti_, _tu_, _hu_, _wi_, _we_ and _wo_ are usually romanized respectively as _shi_, _chi_, _tsu_, _fu_, _i_, _e_ and _o_ instead, according to contemporary pronunciation.
-- the [sokuon](https://en.m.wikipedia.org/wiki/Sokuon "Sokuon") or small _tsu_ (っ/ッ) indicates [gemination](https://en.m.wikipedia.org/wiki/Gemination "Gemination") and is romanized by repeating the following consonant. For example, って is romanized _tte_ (exception: っち becomes _tchi_).
+- the [sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon") or small _tsu_ (っ/ッ) indicates [gemination](https://en.wikipedia.org/wiki/Gemination "Gemination") of the following consonant. In Hepburn-style romanization, for example, って is _tte_ and ショック is _shokku_. Exact romanization conventions vary by system.
 
 ### Hiragana Ligature
 
 | historical/Hepburn           | image                                                                                                                                                                                            | character                                            | origin     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ---------- |
-| かしこ/kashiko               | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Hiragana_kashiko.svg/20px-Hiragana_kashiko.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_kashiko.svg)                   | -                                                    | 𛀚しこ     |
+| かしこ/kashiko               | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Hiragana_kashiko.svg/20px-Hiragana_kashiko.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_kashiko.svg)                   | -                                                    | 𛀚しこ      |
 | こと/koto                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Hiragana_koto.svg/20px-Hiragana_koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_koto.svg)                            | -                                                    | こと       |
-| ごと/goto                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Hiragana_koto.svg/20px-Hiragana_koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_koto.svg)゙                          | -                                                    | ごと       |
-| さま/sama                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hiragana_sama_1.svg/20px-Hiragana_sama_1.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_sama_1.svg)                      | -                                                    | さ𛃅       |
+| ごと/goto                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Hiragana_koto.svg/20px-Hiragana_koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_koto.svg)゙                           | -                                                    | ごと       |
+| さま/sama                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Hiragana_sama_1.svg/20px-Hiragana_sama_1.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_sama_1.svg)                      | -                                                    | さ𛃅        |
 |                              | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Hiragana_sama_2.svg/20px-Hiragana_sama_2.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_sama_2.svg)                      | -                                                    |            |
 | まゐらせさうらふ/mairasesōrō | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/Hiragana_mairasesoro_1.svg/20px-Hiragana_mairasesoro_1.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_mairasesoro_1.svg) | -                                                    | 参らせ候ふ |
 |                              | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Hiragana_mairasesoro_2.svg/20px-Hiragana_mairasesoro_2.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_mairasesoro_2.svg) | -                                                    |            |
@@ -85,18 +86,18 @@ kana marked with \* are obsolete
 
 | historical/Hepburn | image                                                                                                                                                                 | character | origin |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------ |
-| なり/nari          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hiragana_nari.svg/20px-Hiragana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_nari.svg) | 𬼂        | 也     |
+| なり/nari          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hiragana_nari.svg/20px-Hiragana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_nari.svg) | 𬼂         | 也     |
 
 ### Katakana ligature
 
-| historical/Hepburn | image                                                                                                                                                                       | character                                                                                                                | origin |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ | ------ |
-| トイフ/toyū        | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Katakana-toiu.svg/20px-Katakana-toiu.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-toiu.svg)       | -                                                                                                                        | ト云   |
-| トキ/toki          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Katakana_toki_1.svg/20px-Katakana_toki_1.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_toki_1.svg) | -                                                                                                                        | トキ   |
-| トテ/tote          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Katakana-tote.svg/20px-Katakana-tote.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-tote.svg)       | -                                                                                                                        | トテ   |
+| historical/Hepburn | image                                                                                                                                                                       | character                                                                                                               | origin |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ |
+| トイフ/toyū        | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/Katakana-toiu.svg/20px-Katakana-toiu.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-toiu.svg)       | -                                                                                                                       | ト云   |
+| トキ/toki          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Katakana_toki_1.svg/20px-Katakana_toki_1.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_toki_1.svg) | -                                                                                                                       | トキ   |
+| トテ/tote          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Katakana-tote.svg/20px-Katakana-tote.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-tote.svg)       | -                                                                                                                       | トテ   |
 | トモ/tomo          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Katakana_tomo.svg/20px-Katakana_tomo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_tomo.svg)       | [𪜈](https://en.m.wikipedia.org/w/index.php?title=%E3%81%A8%E3%82%82&action=edit&redlink=1 "とも (page does not exist)") | トモ   |
-| ドモ/domo          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Katakana_domo.svg/25px-Katakana_domo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_domo.svg)       | -                                                                                                                        | ドモ   |
-| ヨリ/yori          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Katakana-yori.svg/20px-Katakana-yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-yori.svg)       | -                                                                                                                        | ヨリ   |
+| ドモ/domo          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Katakana_domo.svg/25px-Katakana_domo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_domo.svg)       | -                                                                                                                       | ドモ   |
+| ヨリ/yori          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Katakana-yori.svg/20px-Katakana-yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-yori.svg)       | -                                                                                                                       | ヨリ   |
 
 ### Polysyllabic katakana
 
@@ -104,9 +105,9 @@ kana marked with \* are obsolete
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------ |
 | イフ/yū            | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Katakana_ifu.svg/20px-Katakana_ifu.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_ifu.svg)                            | -                                                    | 云     |
 | コト/koto          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Katakana_digraph_Koto.svg/20px-Katakana_digraph_Koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_digraph_Koto.svg) | [ヿ](https://en.m.wikipedia.org/wiki/%E3%83%BF "ヿ") | 事     |
-| シテ/shite         | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Katakana_shite.svg/20px-Katakana_shite.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_shite.svg)                      | 𬼀                                                   | 為     |
+| シテ/shite         | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Katakana_shite.svg/20px-Katakana_shite.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_shite.svg)                      | 𬼀                                                    | 為     |
 | トキ/toki          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Katakana_toki_2.svg/20px-Katakana_toki_2.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_toki_2.svg)                   | -                                                    | 時     |
-| ナリ/nari          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Katakana_nari.svg/20px-Katakana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_nari.svg)                         | 𬻿                                                   | 也     |
+| ナリ/nari          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Katakana_nari.svg/20px-Katakana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_nari.svg)                         | 𬻿                                                    | 也     |
 
 | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Hiragana_digraph_Yori.svg/24px-Hiragana_digraph_Yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_digraph_Yori.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Katakana_digraph_Koto.svg/24px-Katakana_digraph_Koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_digraph_Koto.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Katakana_tomo.svg/24px-Katakana_tomo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_tomo.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Katakana_nari.svg/24px-Katakana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_nari.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Katakana_shite.svg/24px-Katakana_shite.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_shite.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hiragana_nari.svg/24px-Hiragana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_nari.svg) |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -153,17 +154,19 @@ kana marked with \* are obsolete
 | **w** | ワ    | ヰ    | 𛄢     | ヱ    | ヲ    |         |
 -->
 
-### diacritics
+### Diacritics
 
-|       |                              **g**                              |                               **z**                               |                               **d**                               |                              **b**                              |                              **p**                              |                               **ng**                                |                                **l**                                |
-| :---: | :-------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+|       |                              **g**                              |                               **z**                               |                               **d**                               |                              **b**                              |                              **p**                              |                              **ng**                               |                               **l**                               |
+| :---: | :-------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: |
 | **a** | [がガ](<https://en.m.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") |  [ざザ](<https://en.m.wikipedia.org/wiki/Sa_(kana)> "Sa (kana)")  |  [だダ](<https://en.m.wikipedia.org/wiki/Ta_(kana)> "Ta (kana)")  | [ばバ](<https://en.m.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [ぱパ](<https://en.m.wikipedia.org/wiki/Ha_(kana)> "Ha (kana)") | [か゚カ゚](<https://en.m.wikipedia.org/wiki/Ka_(kana)> "Ka (kana)") | [ら゚ラ゚](<https://en.m.wikipedia.org/wiki/Ra_(kana)> "Ra (kana)") |
 | **i** | [ぎギ](<https://en.m.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [じジ](<https://en.m.wikipedia.org/wiki/Shi_(kana)> "Shi (kana)") | [ぢヂ](<https://en.m.wikipedia.org/wiki/Chi_(kana)> "Chi (kana)") | [びビ](<https://en.m.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [ぴピ](<https://en.m.wikipedia.org/wiki/Hi_(kana)> "Hi (kana)") | [き゚キ゚](<https://en.m.wikipedia.org/wiki/Ki_(kana)> "Ki (kana)") | [り゚リ゚](<https://en.m.wikipedia.org/wiki/Ri_(kana)> "Ri (kana)") |
 | **u** | [ぐグ](<https://en.m.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") |  [ずズ](<https://en.m.wikipedia.org/wiki/Su_(kana)> "Su (kana)")  | [づヅ](<https://en.m.wikipedia.org/wiki/Tsu_(kana)> "Tsu (kana)") | [ぶブ](<https://en.m.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [ぷプ](<https://en.m.wikipedia.org/wiki/Fu_(kana)> "Fu (kana)") | [く゚ク゚](<https://en.m.wikipedia.org/wiki/Ku_(kana)> "Ku (kana)") | [る゚ル゚](<https://en.m.wikipedia.org/wiki/Ru_(kana)> "Ru (kana)") |
 | **e** | [げゲ](<https://en.m.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") |  [ぜゼ](<https://en.m.wikipedia.org/wiki/Se_(kana)> "Se (kana)")  |  [でデ](<https://en.m.wikipedia.org/wiki/Te_(kana)> "Te (kana)")  | [べベ](<https://en.m.wikipedia.org/wiki/He_(kana)> "He (kana)") | [ぺペ](<https://en.m.wikipedia.org/wiki/He_(kana)> "He (kana)") | [け゚ケ゚](<https://en.m.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [れ゚レ゚](<https://en.m.wikipedia.org/wiki/Re_(kana)> "Re (kana)") |
 | **o** | [ごゴ](<https://en.m.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") |  [ぞゾ](<https://en.m.wikipedia.org/wiki/So_(kana)> "So (kana)")  |  [どド](<https://en.m.wikipedia.org/wiki/To_(kana)> "To (kana)")  | [ぼボ](<https://en.m.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [ぽポ](<https://en.m.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [こ゚コ゚](<https://en.m.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [ろ゚ロ゚](<https://en.m.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") |
 
-### digraphs
+In modern standard Japanese, **じ and ぢ** are generally pronounced alike, as are **ず and づ**. Their spellings remain distinct because of historical and orthographic conventions, including particular lexical and rendaku patterns.
+
+### Digraphs
 
 |        |                              **k**                              |                              **s**                              |                              **t**                              |                              **n**                              |                              **h**                              |                              **m**                              |                              **r**                              |
 | :----: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -177,8 +180,8 @@ kana marked with \* are obsolete
 - In earlier Japanese, digraphs could also be formed with _w_-kana. Although obsolete in modern Japanese, the digraphs くゎ (/kʷa/) and くゐ/くうぃ(/kʷi/), are preserved in certain Okinawan orthographies. In addition, the kana え can be used in Okinawan to form the digraph くぇ, which represents the /kʷe/ sound.
 - In loanwords, digraphs with a small _e_-kana [can be formed](https://en.wikipedia.org/wiki/Katakana#Extended_katakana "Katakana"). For example, キェ (or きぇ in hiragana), which is transcribed as _kye_.
 
-|        |                               **g**                               |                             **j (z)**                             |                             **j (d)**                             |                               **b**                               |                               **p**                               |                                     **ng**                                     |
-| :----: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :----------------------------------------------------------------------------: |
+|        |                               **g**                               |                             **j (z)**                             |                             **j (d)**                             |                               **b**                               |                               **p**                               |                                    **ng**                                    |
+| :----: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :--------------------------------------------------------------------------: |
 | **ya** | [ぎゃ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%83 "ぎゃ") | [じゃ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%83 "じゃ") | [ぢゃ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%83 "ぢゃ") | [びゃ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%83 "びゃ") | [ぴゃ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%83 "ぴゃ") | [き゚ゃ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%83 "き゚ゃ") |
 | **yu** | [ぎゅ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%85 "ぎゅ") | [じゅ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%85 "じゅ") | [ぢゅ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%85 "ぢゅ") | [びゅ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%85 "びゅ") | [ぴゅ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%85 "ぴゅ") | [き゚ゅ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%85 "き゚ゅ") |
 | **yo** | [ぎょ](https://en.m.wikipedia.org/wiki/%E3%81%8E%E3%82%87 "ぎょ") | [じょ](https://en.m.wikipedia.org/wiki/%E3%81%98%E3%82%87 "じょ") | [ぢょ](https://en.m.wikipedia.org/wiki/%E3%81%A2%E3%82%87 "ぢょ") | [びょ](https://en.m.wikipedia.org/wiki/%E3%81%B3%E3%82%87 "びょ") | [ぴょ](https://en.m.wikipedia.org/wiki/%E3%81%B4%E3%82%87 "ぴょ") | [き゚ょ](https://en.m.wikipedia.org/wiki/%E3%81%8D%E3%82%9A%E3%82%87 "き゚ょ") |
@@ -186,7 +189,7 @@ kana marked with \* are obsolete
 - Note that the き゚ゃ, き゚ゅ and き゚ょ, though they exist, [are not used in standard Japanese orthography](https://en.wikipedia.org/wiki/Dakuten_and_handakuten#Phonetic_shifts "Dakuten and handakuten").
 - _zi_+_y_\* and _di_+_y_\* are often transcribed _j_\* instead of _zy_\* and _dy_\*, according to contemporary pronunciation. The form [_jy_\*](https://en.wikipedia.org/wiki/W%C4%81puro_r%C5%8Dmaji#Spelling_conventions "Wāpuro rōmaji") is also used in some cases.
 
-### uncommon kana
+### Uncommon Kana
 
 https://dl.ndl.go.jp/pid/854017/1/22
 
@@ -259,31 +262,36 @@ and therefore also:
 - き゚ゅ
 - き゚ょ
 
-these are only used in spoken, not written language, for example by older people in the Yamagata Prefecture (山形弁)
+These are phonetic/extended forms rather than part of standard written Japanese; they may appear in dialectal or phonetic notation, including descriptions of older speech in Yamagata Prefecture (山形弁).
 
 ### ん
 
-the pronounciation of ん changes:
-These are a few of the ways it can change:
+The kana **ん** represents a moraic nasal. Its exact phonetic realization changes according to the following sound and its position in the phrase.
 
-- n (before n, t, d, r, ts, and z)
-- m (before m, p and b)
-- ŋ (before k and g)
-- ɲ (before ni, ch and j)
-- ɴ (at the end of utterances)[a]
-- ɯ͍̃ (before vowels, palatal approximants (y), consonants h, f, s, sh and w)
-- ĩ (after the vowel i if another vowel, palatal approximant or consonant f, s, sh, h or w follows
+Common realizations include:
 
-### おう/えい
+- **[n]** before alveolar consonants such as /n, t, d, r, ts, z/
+- **[m]** before /m, p, b/
+- **[ŋ]** before /k, g/
+- **[ɲ]** in contexts before palatal consonants, such as /ɲ, tɕ, dʑ/
+- **[ɴ]** at the end of an utterance or in other contexts where a uvular realization occurs
+- **Nasalization of the preceding vowel** or related nasal realizations can occur in other environments
 
-a sequence of おう becomes おー \
-so \
-(き)のう as in 昨日 is pronounced きのー \
-行こう -> 行こー \
-会おう -> あおー \
-unless the お is the core vowel like in 匂う(におう) it won’t be におー
+The exact phonetic realization is context-dependent; the important orthographic point is that **ん counts as one mora**.
 
-the same is true for えい → えー
+### おう / えい
+
+In modern Japanese pronunciation, sequences such as **おう** and **えい** often correspond approximately to long vowels, [oː] and [eː], respectively. The spelling normally remains **おう** or **えい**.
+
+Examples:
+
+- 昨日（きのう） is commonly pronounced approximately *kinō*.
+- 行こう（いこう） is commonly pronounced approximately *ikō*.
+- 先生（せんせい） is commonly pronounced approximately *senseː*.
+
+This is a pronunciation pattern, not a rule that changes the written kana. Individual words and dialects can differ, so **おう → おー** and **えい → えー** should not be treated as universal spelling rules.
+
+A sequence such as におう（匂う） remains written **におう**; pronunciation does not change the orthography.
 
 ### 一ヶ
 
@@ -291,59 +299,86 @@ note that ヶ is not ケ \
 一ヶ is pronounced 一カ \
 ヶ a graphical abbreviation of 箇
 
-### は
+### は / へ / を
 
-は is pronounced わ if it's used as a grammatical particle (topic marker)
+Some grammatical particles have pronunciations that differ from their ordinary kana readings:
 
-### haku（拍）or mōra（モーラ）
+- **は** is pronounced **/wa/** when it is the topic particle.
+  - これは本です。(*Kore wa hon desu.*)
+- **へ** is pronounced **/e/** when it is the directional particle.
+  - 東京へ行く。(*Tōkyō e iku.*)
+- **を** is pronounced **/o/** in modern standard Japanese when it is the object particle.
+  - 本を読む。(*Hon o yomu.*)
 
-- **Single Kana = One Mora**: Each kana (e.g., あ, か, し) represents one mora.
-  - Example: かき (ka-ki) has **two morae**.
-- **Nasal Sound (ん)**: The nasal sound "ん" (n) is a single mora on its own.
-  - Example: ほん (ho-n) has **two morae**.
-- **Double Consonants (っ)**: The small "っ" (sokuon) counts as a mora and represents a pause or glottal stop.
-  - Example: かった (ka-t-ta) has **three morae**.
-- **Long Vowels**: A long vowel (e.g., おう or えい) counts as two morae.
-  - Example: おおきい (o-o-ki-i) has **four morae**.
-- **Combination Sounds (e.g., きゃ)**: These are considered one mora because they are a single sound unit.
-  - Example: きゃく (kya-ku) has **two morae**.
+### Haku（拍）or Mōra（モーラ）
+
+A **mora** is a unit of timing used in Japanese phonology. It is not identical to a written kana character: some kana combinations contain two characters but count as a single mora.
+
+- **Ordinary kana** generally represent one mora.
+  - かき (*ka-ki*) has **two morae**.
+- **ん** counts as one mora.
+  - ほん (*ho-n*) has **two morae**.
+- **っ** counts as one mora and marks consonant gemination.
+  - かった (*ka-t-ta*) has **three morae**.
+- **Long vowels** add a mora when the vowel is lengthened.
+  - おおきい (*o-o-ki-i*) has **four morae**.
+- **Yōon combinations** such as きゃ, しゅ, and ちょ count as **one mora**, even though they use two kana characters.
+  - きゃく (*kya-ku*) has **two morae**.
 
 Examples:
 
-1. **おと (oto)** vs. **おっと (otto)**
-   - **おと (oto)**: Sound
-   - **おっと (otto)**: Husband
-2. **かき (kaki)** vs. **かっき (kakki)**
-   - **かき (kaki)**: Persimmon or oyster (context-dependent)
-   - **かっき (kakki)**: Vigor or liveliness
-3. **はし (hashi)** vs. **はっし (hasshi)** vs. **はっしー (hasshī)**
-   - **はし (hashi)**: Bridge or chopsticks (context-dependent)
-   - **はっし (hasshi)**: Abbreviation of 発信 (_hasshin_, transmission)
-   - **はっしー (hasshī)**: A nickname, often informal or casual.
+1. **おと（oto）** vs. **おっと（otto）**
+   - **音（おと）**: sound
+   - **夫（おっと）**: husband
+2. **かき（kaki）**
+   - **柿（かき）**: persimmon
+   - **牡蠣（かき）**: oyster
+3. **きて（kite）** vs. **きって（kitte）**
+   - **きて**: forms such as “come and ...” or “wear and ...”, depending on context
+   - **切手（きって）**: postage stamp
 
-this is important for haikus, tanka and Pitch Accent and sometimes japanese music
+Morae are relevant to **haiku, tanka, pitch accent, rhythm, and aspects of Japanese music**. In traditional poetry, what is counted is morae rather than English-style syllables.
 
-### w kana
+### W kana
 
-when pronouncing some kana that start with a w speakers only pronounce the vowel
+The historical **w-kana** ゐ, ゑ, and を are obsolete in modern standard orthography. Their modern pronunciations have merged with vowels in ordinary speech:
 
-を　ー＞　お \
-ゑ　ー＞　え
+- ゐ → **い / i**
+- ゑ → **え / e**
+- を → **お / o**
+- わ → **わ / wa**
 
-but
-
-わ（は）ー＞　わ（wa）
+The modern kana **を** is still actively used as the object particle, even though it is pronounced /o/.
 
 ## Rendaku
 
-## Pitch accent
+**Rendaku (連濁)** is a phenomenon in which the initial consonant of the second element of a compound becomes voiced.
+
+Examples:
+
+- 手 + 紙 → 手紙（てがみ, *tegami*）
+- 山 + 火 → 山火事（やまかじ, *yamakaji*）
+- 折り + 紙 → 折り紙（おりがみ, *origami*）
+
+Rendaku is not completely predictable. Some compounds do not undergo rendaku, and there are important restrictions such as **Lyman's law**, which generally blocks rendaku when the second element already contains a voiced obstruent.
+
+## Pitch Accent
+
+Japanese is generally described as having a **pitch-accent** system rather than the stress-accent system familiar from English. Morae can be realized with different relative pitch levels, and the location of a pitch drop can distinguish words or grammatical forms.
+
+For example, in Tokyo Japanese, **はし** can have different pitch patterns for:
+
+- 箸（はし）: chopsticks
+- 橋（はし）: bridge
+
+The exact pitch pattern depends on the word and can also vary by dialect. Pitch accent is therefore a property of pronunciation, not a change in spelling.
 
 ## Functional Marks
 
 | mark                                   | name                                                                                                                                                                                           | effect                                                                                                                                                                                                            |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [っ](https://en.wikipedia.org/wiki/っ) | _[sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon")_ (促音, "double consonant")                                                                                                           | Doubles the sound of the next consonant. For example, "かた" /kata/ becomes "かった" /katta/, and "ショク" /shoku/ becomes "ショック" /shokku/                                                                    |
-| [ッ](https://en.wikipedia.org/wiki/ッ) | _[sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon")_ (促音, "double consonant")                                                                                                           | Doubles the sound of the next consonant. For example, "かた" /kata/ becomes "かった" /katta/, and "ショク" /shoku/ becomes "ショック" /shokku/                                                                    |
+| [っ](https://en.wikipedia.org/wiki/っ) | _[sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon")_ (促音, "double consonant")                                                                                                           | Marks consonant gemination. For example, かた /kata/ becomes かった /katta/, and ショク /shoku/ becomes ショック /shokku/                                                                                         |
+| [ッ](https://en.wikipedia.org/wiki/ッ) | _[sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon")_ (促音, "double consonant")                                                                                                           | Marks consonant gemination. For example, かた /kata/ becomes かった /katta/, and ショク /shoku/ becomes ショック /shokku/                                                                                         |
 | ー                                     | _[chōonpu](https://en.wikipedia.org/wiki/Ch%C5%8Donpu "Chōonpu")_ (長音符, "long sound symbol") <br>_onbiki_ (音引き) <br>_bōbiki_ (棒引き) <br>_bōsen_ (棒線, "bar line")                     | Indicates a lengthened vowel sound. Often used with katakana. The direction of writing depends on the direction of text.                                                                                          |
 | ゛                                     | _[dakuten](https://en.wikipedia.org/wiki/Dakuten "Dakuten")_ (濁点, "voiced point") <br>_nigori_ (濁り, "voiced") <br>_ten-ten_ (点[々](https://en.wikipedia.org/wiki/%E3%80%85 "々"), "dots") | Used with both hiragana and katakana to indicate a [voiced](<https://en.wikipedia.org/wiki/Voice_(phonetics)> "Voice (phonetics)") sound. For example, _ta_ (た) becomes _da_ (だ), _shi_ (し) becomes _ji_ (じ). |
 | ゜                                     | _[handakuten](https://en.wikipedia.org/wiki/Handakuten "Handakuten")_ (半濁点, "half-voice point") <br>_handaku_ (半濁, "half-voiced") <br>_maru_ (丸, "circle")                               | Used with hiragana and katakana to indicate a change from a _hahifuheho_ sound to a _papipupepo_ sound.                                                                                                           |
@@ -354,7 +389,7 @@ but
 | ----------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------- |
 | [々](https://en.wikipedia.org/wiki/々#Japanese) | _noma_ (ノマ) <br>_kuma_ (クマ) <br>_kurikaeshi_ (繰り返し) <br>_dō no jiten_ (同の字点) | [Kanji iteration mark](https://en.wikipedia.org/wiki/Kanji_iteration_mark "Kanji iteration mark"). For example, 様様 could be written 様々. From 仝 (below).                                                                            | [仝](https://en.wiktionary.org/wiki/%E4%BB%9D "wikt:仝"), a **va**riant of "**sa**me" ([同](https://en.wiktionary.org/wiki/%E5%90%8C "wikt:同")) |                                                                 |
 | 仝                                              | _dō no jiten_ (同の字点)                                                                 | Kanji repetition mark                                                                                                                                                                                                                   |                                                                                                                                                  |                                                                 |
-| [〻](https://en.wikipedia.org/wiki/〻#Japanese) |                                                                                          | repeat the previous kanj (vertical writing only)                                                                                                                                                                                        |                                                                                                                                                  |                                                                 |
+| [〻](https://en.wikipedia.org/wiki/〻#Japanese) |                                                                                          | repeat the previous kanji (vertical writing only)                                                                                                                                                                                       |                                                                                                                                                  |                                                                 |
 | [ゝ](https://en.wikipedia.org/wiki/ゝ#Japanese) | _hiraganagaeshi_ (ひらがながえし)<br>                                                    | [_Hiragana_ iteration mark](https://en.wikipedia.org/wiki/Kana_iteration_mark "Kana iteration mark"). For example, はは (_haha_) could be written はゝ.                                                                                 |                                                                                                                                                  | can be combined with dakuten (denoting that it is voiced): ゞ   |
 | ゞ                                              | _kurikaeshi_ (くりかえし)                                                                | Hiragana iteration mark with a dakuten (voiced consonant). For example, はば (_haba_) could be written はゞ.                                                                                                                            |                                                                                                                                                  |                                                                 |
 | [ヽ](https://en.wikipedia.org/wiki/ヽ#Japanese) | _katakanagaeshi_ (かたかながえし)                                                        | [_Katakana_ iteration mark](https://en.wikipedia.org/wiki/Kana_iteration_mark "Kana iteration mark")                                                                                                                                    |                                                                                                                                                  | can be combined with a dakuten (denoting that it is voiced): ヾ |
@@ -369,17 +404,17 @@ but
 
 ### Readings
 
-kanji can have up to three different types of readings
+Kanji readings are commonly classified into **on'yomi (音読み)**, **kun'yomi (訓読み)**, and **nanori (名乗り)**. These are categories rather than a three-reading limit: a kanji can have multiple readings within one category, and not every kanji has all three types.
 
-|                 | **on'yomi (音読み)**                                                                                                                                           | **kun'yomi (訓読み)**                                                                                              | **nanori (名乗り)**                                                                                                                     |
-| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| **description** | The Chinese reading of a kanji, used primarily in compound words (熟語). It often reflects the original Chinese pronunciation when the character was borrowed. | The native Japanese reading of a kanji, used for standalone words or when combined with okurigana (kana suffixes). | A specialized reading used for proper nouns, especially names (given names and family names). It often deviates from standard readings. |
-| **examples:**   | --------------------------                                                                                                                                     | -----------------------                                                                                            | -------------------------                                                                                                               |
-| **山**          | さん                                                                                                                                                           | やま                                                                                                               | は                                                                                                                                      |
-| **学**          | がく                                                                                                                                                           | まなぶ                                                                                                             | まな                                                                                                                                    |
-| **水**          | すい                                                                                                                                                           | みず                                                                                                               | み                                                                                                                                      |
-| **大**          | だい                                                                                                                                                           | おおきい                                                                                                           | まさ、おお                                                                                                                              |
-| **石**          | せき                                                                                                                                                           | いし                                                                                                               | あら                                                                                                                                    |
+|                 | **on'yomi (音読み)**                                                                                                                                             | **kun'yomi (訓読み)**                                                                                                      | **nanori (名乗り)**                                                                                                                                      |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **description** | A reading derived historically from Chinese pronunciation and adapted to Japanese. It is common in compounds (熟語), although it is not restricted to compounds. | A native Japanese reading associated with a kanji's meaning, often used for standalone words or with okurigana (送り仮名). | A specialized reading used especially in proper names, particularly personal names and place names. It can differ from the ordinary on'yomi or kun'yomi. |
+| **examples:**   | --------------------------                                                                                                                                       | -----------------------                                                                                                    | -------------------------                                                                                                                                |
+| **山**          | さん                                                                                                                                                             | やま                                                                                                                       | は                                                                                                                                                       |
+| **学**          | がく                                                                                                                                                             | まなぶ                                                                                                                     | まな                                                                                                                                                     |
+| **水**          | すい                                                                                                                                                             | みず                                                                                                                       | み                                                                                                                                                       |
+| **大**          | だい                                                                                                                                                             | おおきい                                                                                                                   | まさ、おお                                                                                                                                               |
+| **石**          | せき                                                                                                                                                             | いし                                                                                                                       | あら                                                                                                                                                     |
 
 ### Weird Kanji
 
@@ -387,3 +422,5 @@ kanji can have up to three different types of readings
 〆
 
 #### Kanji that are unique in JP (different from both traditional and simplified chinese)
+
+```

@@ -7,15 +7,30 @@ tags:
 
 - [stød](#stød)
 - [blødt d](#blødt-d)
+- [Vowels](#vowels)
+- [Other useful pronunciation features](#other-useful-pronunciation-features)
 
-danish has 26 vowel phonemes
+Standard Danish is commonly analyzed as having **26 vowel phonemes** (14 short and 12 long), although the exact inventory can vary somewhat by analysis and variety.
 
 ## stød
 
-it is a form of [laryngealization](https://en.wikipedia.org/wiki/Laryngealization "Laryngealization") or [creaky voice](https://en.wikipedia.org/wiki/Creaky_voice "Creaky voice"), that affects the phonation of a syllable by dividing it into two phases. The first phase has a relativelyhigh intensity and a high pitch (measured as [F0](https://en.wikipedia.org/wiki/Fundamental_frequency "Fundamental frequency")), whereas the second phase sees a drop in intensity and pitch
+[Stød](https://en.wikipedia.org/wiki/St%C3%B8d) is a phonemic prosodic feature involving laryngealization (often described acoustically as creaky voice). It is commonly transcribed in IPA with **[ˀ]**. It occurs in particular stressed syllables, especially those containing a long vowel or a short vowel followed by a sonorant. Its acoustic realization can vary and may affect both phonation and pitch; it is not simply a universal two-phase fall in intensity and pitch.
 
-danish is not the only language with stød, languages like Livonian also have it.
+Danish is not the only language with a feature called **stød**; related glottal or laryngeal phenomena occur in several languages, although they are not necessarily phonetically or phonologically identical.
 
 ## blødt d
 
-a [soft D](https://en.wiktionary.org/w/index.php?title=soft_D&action=edit&redlink=1 "soft D (page does not exist)"); a [voiced](https://en.wiktionary.org/wiki/voiced "voiced") [dental](https://en.wiktionary.org/wiki/dental "dental") [fricative](https://en.wiktionary.org/wiki/fricative "fricative") [ð] or some similar sound such as [ð̠˕ˠ] in Standard Modern Danish
+[Blødt d](https://en.wikipedia.org/wiki/Danish_phonology) (“soft d”) is conventionally associated with the phoneme **/ð/**. In Standard Danish it is typically realized as a **velarized laminal alveolar approximant**, often narrowly transcribed around **[ð̠˕ˠ]**, rather than as the dental fricative [ð] of English *this*.
+
+## Vowels
+
+A common analysis distinguishes 26 vowel phonemes: 14 short and 12 long. Danish vowel quality is also strongly affected by surrounding consonants, especially **/r/**, and vowel inventories differ somewhat between varieties.
+
+Vowel **length** is phonemic, and long vowels can combine with stød in environments where stød is licensed.
+
+## Other useful pronunciation features
+
+- Danish has extensive **lenition** of plosives.
+- The phoneme /v/ is often realized as an approximant [ʋ], and can have a syllable-final realization closer to [w].
+- The “soft d” /ð/ is an approximant-like sound and does **not** correspond directly to English /ð/.
+- /r/ is commonly realized as a uvular consonant in Standard Danish and may also influence neighboring vowels.

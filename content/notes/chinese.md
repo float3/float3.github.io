@@ -7,13 +7,15 @@ tags:
 
 - [Mandarin](#mandarin)
   - [Pinyin](#pinyin)
+  - [Pinyin syllable structure](#pinyin-syllable-structure)
   - [Tones](#tones)
 - [Taiwanese Mandarin](#taiwanese-mandarin)
   - [Zhuyin](#zhuyin)
     - [Zhuyin origin](#zhuyin-origin)
   - [Tones](#tones-1)
   - [Reduction](#reduction)
-    - [phonetic reduction](#phonetic-reduction)
+    - [Phonetic reduction](#phonetic-reduction)
+  - [Notes requiring verification](#notes-requiring-verification)
     - [dropping initials in compound words](#dropping-initials-in-compound-words)
 - [Hokkien](#hokkien)
 - [Grammar](#grammar)
@@ -26,51 +28,59 @@ tags:
 
 ### Pinyin
 
-|          |  -   | **b** | **p** | **m** | **f** | **d** | **t** | **n** | **l** | **g** | **k** | **h** | **j** | **q** | **x** | **z** | **c** | **s** | **zh** | **ch** | **sh** | **r** |
-| :------: | :--: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :----: | :----: | :----: | :---: |
-|  **i**   |      |       |       |       |       |       |       |       |       |       |       |       |       |       |       |  zi   |  ci   |  si   |  zhi   |  chi   |  shi   |  ri   |
-|  **a**   |  a   |  ba   |  pa   |  ma   |  fa   |  da   |  ta   |  na   |  la   |  ga   |  ka   |  ha   |       |       |       |  za   |  ca   |  sa   |  zha   |  cha   |  sha   |       |
-|  **ai**  |  ai  |  bai  |  pai  |  mai  |       |  dai  |  tai  |  nai  |  lai  |  gai  |  kai  |  hai  |       |       |       |  zai  |  cai  |  sai  |  zhai  |  chai  |  shai  |       |
-|  **an**  |  an  |  ban  |  pan  |  man  |  fan  |  dan  |  tan  |  nan  |  lan  |  gan  |  kan  |  han  |       |       |       |  zan  |  can  |  san  |  zhan  |  chan  |  shan  |  ran  |
-| **ang**  | ang  | bang  | pang  | mang  | fang  | dang  | tang  | nang  | lang  | gang  | kang  | hang  |       |       |       | zang  | cang  | sang  | zhang  | chang  | shang  | rang  |
-|  **ao**  |  ao  |  bao  |  pao  |  mao  |       |  dao  |  tao  |  nao  |  lao  |  gao  |  kao  |  hao  |       |       |       |  zao  |  cao  |  sao  |  zhao  |  chao  |  shao  |  rao  |
-|  **e**   |  e   |       |       |  me   |       |  de   |  te   |  ne   |  le   |  ge   |  ke   |  he   |       |       |       |  ze   |  ce   |  se   |  zhe   |  che   |  she   |  re   |
-|  **ei**  |  ei  |  bei  |  pei  |  mei  |  fei  |  dei  |       |  nei  |  lei  |  gei  |       |  hei  |       |       |       |  zei  |       |       |  zhei  |        |  shei  |       |
-|  **en**  |  en  |  ben  |  pen  |  men  |  fen  |       |       |  nen  |       |  gen  |  ken  |  hen  |       |       |       |  zen  |  cen  |  sen  |  zhen  |  chen  |  shen  |  ren  |
-| **eng**  | eng  | beng  | peng  | meng  | feng  | deng  | teng  | neng  | leng  | geng  | keng  | heng  |       |       |       | zeng  | ceng  | seng  | zheng  | cheng  | sheng  | reng  |
-|  **er**  |  er  |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
-|  **i**   |  yi  |  bi   |  pi   |  mi   |       |  di   |  ti   |  ni   |  li   |       |       |       |  ji   |  qi   |  xi   |       |       |       |        |        |        |       |
-|  **ia**  |  ya  |       |       |       |       |  dia  |       |       |  lia  |       |       |       |  jia  |  qia  |  xia  |       |       |       |        |        |        |       |
-| **ian**  | yan  | bian  | pian  | mian  |       | dian  | tian  | nian  | lian  |       |       |       | jian  | qian  | xian  |       |       |       |        |        |        |       |
-| **iang** | yang |       |       |       |       |       |       | niang | liang |       |       |       | jiang | qiang | xiang |       |       |       |        |        |        |       |
-| **iao**  | yao  | biao  | piao  | miao  |       | diao  | tiao  | niao  | liao  |       |       |       | jiao  | qiao  | xiao  |       |       |       |        |        |        |       |
-|  **ie**  |  ye  |  bie  |  pie  |  mie  |       |  die  |  tie  |  nie  |  lie  |       |       |       |  jie  |  qie  |  xie  |       |       |       |        |        |        |       |
-|  **in**  | yin  |  bin  |  pin  |  min  |       |       |       |  nin  |  lin  |       |       |       |  jin  |  qin  |  xin  |       |       |       |        |        |        |       |
-| **ing**  | ying | bing  | ping  | ming  |       | ding  | ting  | ning  | ling  |       |       |       | jing  | qing  | xing  |       |       |       |        |        |        |       |
-| **iong** | yong |       |       |       |       |       |       |       |       |       |       |       | jiong | qiong | xiong |       |       |       |        |        |        |       |
-| **iou**  | you  |       |       |  miu  |       |  diu  |       |  niu  |  liu  |       |       |       |  jiu  |  qiu  |  xiu  |       |       |       |        |        |        |       |
-|  **o**   |  o   |  bo   |  po   |  mo   |  fo   |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
-| **ong**  |      |       |       |       |       | dong  | tong  | nong  | long  | gong  | kong  | hong  |       |       |       | zong  | cong  | song  | zhong  | chong  |        | rong  |
-|  **ou**  |  ou  |       |  pou  |  mou  |  fou  |  dou  |  tou  |       |  lou  |  gou  |  kou  |  hou  |       |       |       |  zou  |  cou  |  sou  |  zhou  |  chou  |  shou  |  rou  |
-|  **u**   |  wu  |  bu   |  pu   |  mu   |  fu   |  du   |  tu   |  nu   |  lu   |  gu   |  ku   |  hu   |       |       |       |  zu   |  cu   |  su   |  zhu   |  chu   |  shu   |  ru   |
-|  **ua**  |  wa  |       |       |       |       |       |       |       |       |  gua  |  kua  |  hua  |       |       |       |       |       |       |  zhua  |        |  shua  |       |
-| **uai**  | wai  |       |       |       |       |       |       |       |       | guai  | kuai  | huai  |       |       |       |       |       |       | zhuai  | chuai  | shuai  |       |
-| **uan**  | wan  |       |       |       |       | duan  | tuan  | nuan  | luan  | guan  | kuan  | huan  |       |       |       | zuan  | cuan  | suan  | zhuan  | chuan  | shuan  | ruan  |
-| **uang** | wang |       |       |       |       |       |       |       |       | guang | kuang | huang |       |       |       |       |       |       | zhuang | chuang | shuang |       |
-| **uei**  | wei  |       |       |       |       |  dui  |  tui  |       |       |  gui  |  kui  |  hui  |       |       |       |  zui  |  cui  |  sui  |  zhui  |  chui  |  shui  |  rui  |
-| **uen**  | wen  |       |       |       |       |  dun  |  tun  |       |  lun  |  gun  |  kun  |  hun  |       |       |       |  zun  |  cun  |  sun  |  zhun  |  chun  |  shun  |  run  |
-| **ueng** | weng |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
-|  **uo**  |  wo  |       |       |       |       |  duo  |  tuo  |  nuo  |  luo  |  guo  |  kuo  |  huo  |       |       |       |  zuo  |  cuo  |  suo  |  zhuo  |  chuo  |  shuo  |  ruo  |
-|  **ü**   |  yu  |       |       |       |       |       |       |  nü   |  lü   |       |       |       |  ju   |  qu   |  xu   |       |       |       |        |        |        |       |
-| **üan**  | yuan |       |       |       |       |       |       |       |       |       |       |       | juan  | quan  | xuan  |       |       |       |        |        |        |       |
-|  **üe**  | yue  |       |       |       |       |       |       |  nüe  |  lüe  |       |       |       |  jue  |  que  |  xue  |       |       |       |        |        |        |       |
-|  **ün**  | yun  |       |       |       |       |       |       |       |       |       |       |       |  jun  |  qun  |  xun  |       |       |       |        |        |        |       |
+|              |   -   | **b** | **p** | **m** | **f** | **d** | **t** | **n** | **l** | **g** | **k** | **h** | **j** | **q** | **x** | **z** | **c** | **s** | **zh** | **ch** | **sh** | **r** |
+| :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :----: | :----: | :----: | :---: |
+| **apical i** |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |  zi   |  ci   |  si   |  zhi   |  chi   |  shi   |  ri   |
+|    **a**     |   a   |  ba   |  pa   |  ma   |  fa   |  da   |  ta   |  na   |  la   |  ga   |  ka   |  ha   |       |       |       |  za   |  ca   |  sa   |  zha   |  cha   |  sha   |       |
+|    **ai**    |  ai   |  bai  |  pai  |  mai  |       |  dai  |  tai  |  nai  |  lai  |  gai  |  kai  |  hai  |       |       |       |  zai  |  cai  |  sai  |  zhai  |  chai  |  shai  |       |
+|    **an**    |  an   |  ban  |  pan  |  man  |  fan  |  dan  |  tan  |  nan  |  lan  |  gan  |  kan  |  han  |       |       |       |  zan  |  can  |  san  |  zhan  |  chan  |  shan  |  ran  |
+|   **ang**    |  ang  | bang  | pang  | mang  | fang  | dang  | tang  | nang  | lang  | gang  | kang  | hang  |       |       |       | zang  | cang  | sang  | zhang  | chang  | shang  | rang  |
+|    **ao**    |  ao   |  bao  |  pao  |  mao  |       |  dao  |  tao  |  nao  |  lao  |  gao  |  kao  |  hao  |       |       |       |  zao  |  cao  |  sao  |  zhao  |  chao  |  shao  |  rao  |
+|    **e**     |   e   |       |       |  me   |       |  de   |  te   |  ne   |  le   |  ge   |  ke   |  he   |       |       |       |  ze   |  ce   |  se   |  zhe   |  che   |  she   |  re   |
+|    **ei**    |  ei   |  bei  |  pei  |  mei  |  fei  |  dei  |       |  nei  |  lei  |  gei  |       |  hei  |       |       |       |  zei  |       |       |  zhei  |        |  shei  |       |
+|    **en**    |  en   |  ben  |  pen  |  men  |  fen  |       |       |  nen  |       |  gen  |  ken  |  hen  |       |       |       |  zen  |  cen  |  sen  |  zhen  |  chen  |  shen  |  ren  |
+|   **eng**    |  eng  | beng  | peng  | meng  | feng  | deng  | teng  | neng  | leng  | geng  | keng  | heng  |       |       |       | zeng  | ceng  | seng  | zheng  | cheng  | sheng  | reng  |
+|    **er**    |  er   |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
+|    **i**     |  yi   |  bi   |  pi   |  mi   |       |  di   |  ti   |  ni   |  li   |       |       |       |  ji   |  qi   |  xi   |       |       |       |        |        |        |       |
+|    **ia**    |  ya   |       |       |       |       |  dia  |       |       |  lia  |       |       |       |  jia  |  qia  |  xia  |       |       |       |        |        |        |       |
+|   **ian**    |  yan  | bian  | pian  | mian  |       | dian  | tian  | nian  | lian  |       |       |       | jian  | qian  | xian  |       |       |       |        |        |        |       |
+|   **iang**   | yang  |       |       |       |       |       |       | niang | liang |       |       |       | jiang | qiang | xiang |       |       |       |        |        |        |       |
+|   **iao**    |  yao  | biao  | piao  | miao  |       | diao  | tiao  | niao  | liao  |       |       |       | jiao  | qiao  | xiao  |       |       |       |        |        |        |       |
+|    **ie**    |  ye   |  bie  |  pie  |  mie  |       |  die  |  tie  |  nie  |  lie  |       |       |       |  jie  |  qie  |  xie  |       |       |       |        |        |        |       |
+|    **in**    |  yin  |  bin  |  pin  |  min  |       |       |       |  nin  |  lin  |       |       |       |  jin  |  qin  |  xin  |       |       |       |        |        |        |       |
+|   **ing**    | ying  | bing  | ping  | ming  |       | ding  | ting  | ning  | ling  |       |       |       | jing  | qing  | xing  |       |       |       |        |        |        |       |
+|   **iong**   | yong  |       |       |       |       |       |       |       |       |       |       |       | jiong | qiong | xiong |       |       |       |        |        |        |       |
+|   **iou**    |  you  |       |       |  miu  |       |  diu  |       |  niu  |  liu  |       |       |       |  jiu  |  qiu  |  xiu  |       |       |       |        |        |        |       |
+|    **o**     |   o   |  bo   |  po   |  mo   |  fo   |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
+|   **ong**    |       |       |       |       |       | dong  | tong  | nong  | long  | gong  | kong  | hong  |       |       |       | zong  | cong  | song  | zhong  | chong  |        | rong  |
+|    **ou**    |  ou   |       |  pou  |  mou  |  fou  |  dou  |  tou  |       |  lou  |  gou  |  kou  |  hou  |       |       |       |  zou  |  cou  |  sou  |  zhou  |  chou  |  shou  |  rou  |
+|    **u**     |  wu   |  bu   |  pu   |  mu   |  fu   |  du   |  tu   |  nu   |  lu   |  gu   |  ku   |  hu   |       |       |       |  zu   |  cu   |  su   |  zhu   |  chu   |  shu   |  ru   |
+|    **ua**    |  wa   |       |       |       |       |       |       |       |       |  gua  |  kua  |  hua  |       |       |       |       |       |       |  zhua  |        |  shua  |       |
+|   **uai**    |  wai  |       |       |       |       |       |       |       |       | guai  | kuai  | huai  |       |       |       |       |       |       | zhuai  | chuai  | shuai  |       |
+|   **uan**    |  wan  |       |       |       |       | duan  | tuan  | nuan  | luan  | guan  | kuan  | huan  |       |       |       | zuan  | cuan  | suan  | zhuan  | chuan  | shuan  | ruan  |
+|   **uang**   | wang  |       |       |       |       |       |       |       |       | guang | kuang | huang |       |       |       |       |       |       | zhuang | chuang | shuang |       |
+|   **uei**    |  wei  |       |       |       |       |  dui  |  tui  |       |       |  gui  |  kui  |  hui  |       |       |       |  zui  |  cui  |  sui  |  zhui  |  chui  |  shui  |  rui  |
+|   **uen**    |  wen  |       |       |       |       |  dun  |  tun  |       |  lun  |  gun  |  kun  |  hun  |       |       |       |  zun  |  cun  |  sun  |  zhun  |  chun  |  shun  |  run  |
+|   **ueng**   | weng  |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |        |        |        |       |
+|    **uo**    |  wo   |       |       |       |       |  duo  |  tuo  |  nuo  |  luo  |  guo  |  kuo  |  huo  |       |       |       |  zuo  |  cuo  |  suo  |  zhuo  |  chuo  |  shuo  |  ruo  |
+|    **ü**     |  yu   |       |       |       |       |       |       |  nü   |  lü   |       |       |       |  ju   |  qu   |  xu   |       |       |       |        |        |        |       |
+|   **üan**    | yuan  |       |       |       |       |       |       |       |       |       |       |       | juan  | quan  | xuan  |       |       |       |        |        |        |       |
+|    **üe**    |  yue  |       |       |       |       |       |       |  nüe  |  lüe  |       |       |       |  jue  |  que  |  xue  |       |       |       |        |        |        |       |
+|    **ün**    |  yun  |       |       |       |       |       |       |       |       |       |       |       |  jun  |  qun  |  xun  |       |       |       |        |        |        |       |
+
+### Pinyin syllable structure
+
+Pinyin combines an optional initial with a final. The table above shows the standard Mandarin syllable combinations. The spelling **i** in _zi, ci, si, zhi, chi, shi, ri_ represents a syllabic vowel whose actual phonetic realization differs from the vowel in _mi_ or _xi_.
+
+After **j, q, x, and y**, the umlaut is normally omitted in Pinyin: _ju, qu, xu, yu_ represent /tɕy, tɕʰy, ɕy, y/ rather than /u/. In forms such as _nü_ and _lü_, the diaeresis is retained because it distinguishes **ü** from **u**.
 
 ![](misc/media/chinese_sounds.png)
 
 ### Tones
 
 ![](misc/media/beijing_tones.png)
+
+Mandarin is normally described with four lexical tones plus a neutral tone. Tone can change in connected speech, and tone sandhi can be lexically or contextually conditioned.
 
 ## Taiwanese Mandarin
 
@@ -95,47 +105,48 @@ apparently characters are pronounced differently in taiwanese mandarin than in s
 
 here are some common ones (Guóyǔ/Pǔtōnghuà):
 
-- 息 xí/xī
-- 識 (识) shì/shí
-- 擊 (击) jí/jī
-- 擁 (拥) yǒng/yōng
-- 惜 xí/xī
-- 微 wéi/wēi
-- 期 qí/qī
-- 跌 dié/diē
-- 跡 (迹) jī/jì
-- 究 jiù/jiū
-- 突 tú/tū
-- 崖 yái/yá
-- 暫 (暂) zhàn/zàn
-- 血 xiě/xuè
-- 熟 shóu/shú
-- 垃圾 lèsè/lājī
+- 息 xí / xī
+- 識 (识) shì / shí
+- 擊 (击) jí / jī
+- 擁 (拥) yǒng / yōng
+- 惜 xí / xī
+- 微 wéi / wēi
+- 期 qí / qī
+- 跌 dié / diē
+- 跡 (迹) jī / jì
+- 究 jiù / jiū
+- 突 tú / tū
+- 崖 yái / yá
+- 暫 (暂) zhàn / zàn
+- 血 xiě / xuè
+- 熟 shóu / shú
+- 垃圾 lèsè / lājī
 
 ### Reduction
 
-#### phonetic reduction
+#### Phonetic reduction
 
-depending on accent many taiwanese people may have the following mergers:
+Depending on region, speaker, and style, some Taiwan Mandarin speakers may show mergers or reductions in connected speech. These are not universal features of Taiwan Mandarin:
 
 - sh -> s for example: 山 shān might sound like sān
 - zh -> z for example: 中 zhōng might sound like zōng
 - ch -> c for example: 茶 chá might sound like cá
 - r -> ɹ/ɻ for example: 日 rì might sound like ɹì (similar to the English "r")
-  ( similar phonetic reduction occurs in singaporean/malaysian mandarin:
-- x -> s for example: 小 xǐao might sound like sǐao)
-  despite this, when written out in zhuyin or pinyin no change occurs from standard mandarin
+  Similar reductions are also reported in some Singaporean/Malaysian Mandarin varieties:
+- x → s for example: 小 _xiǎo_ may be realized closer to _siǎo_ in some speech varieties
+  Despite these phonetic differences, standard Zhuyin and Pinyin orthography normally remains unchanged.
 
-need verification:
+### Notes requiring verification
 
-- eng after b-, f-, m-, p- and w- is pronounced ong: 風 _fēng_ may be pronounced as _fōng_
-- initial f- becomes closer to a light h in standard English for example: 反 fǎn → 緩 huǎn
-- -uo, -ou, and -e (as in 喝 hē) may shift to a mid central vowel [ə] or merge into -o [o̞]
-- nasal finals -n and -ng tend to merge: 爭 zhēng and 真 zhēn may become homophones
-- initial n- and l- are interchangeable before nasal finals: 男 nán may be pronounced lán
-- the diphthong -ei [ei] and triphthong -ui [uei] are often simplified to [e]
-- the close front rounded vowel (as in 雨 yǔ) becomes unrounded, transforming into yǐ
-- the semivowel /w/ may change to [ʋ]: 翁 Wēng may sound like [ʋəŋ] instead of [wəŋ]
+The following are useful hypotheses about regional pronunciation, but I would not treat them as general rules without checking a specific phonological source or speaker sample:
+
+- eng after b-, f-, m-, p-, and w- may be realized closer to _ong_ in some Taiwan varieties: 風 _fēng_ → something closer to _fōng_
+- -uo, -ou, and -e may be centralized or otherwise reduced in casual speech
+- some speakers show partial or variable merger of -n and -ng
+- some speakers show n/l variation in particular environments
+- -ei and -ui may be simplified in fast speech
+- the front rounded vowel /y/ may be variably unrounded in some regional speech
+- /w/ can have a more labial or approximant-like realization
 
 #### dropping initials in compound words
 
@@ -146,7 +157,7 @@ for example: \
 
 ## Hokkien
 
-https://en.m.wikipedia.org/wiki/Hokkien#Computing
+[Hokkien – Computing](https://en.m.wikipedia.org/wiki/Hokkien#Computing)
 
 ## Grammar
 
@@ -159,9 +170,9 @@ X不X is a common question structure in Chinese, for example:
 - 喜歡不喜歡 xǐhuān bù xǐhuān
 - 會不會 huì bù huì
 
-if X is actually two characters it can be shortened as such:
+If X is actually a two-character expression, the yes-no question can often be shortened by placing 不 after the first character:
 
-XY不XY -> X不XY
+**XY 不 XY → X 不 XY**
 
 - 知不知道 zhī bù zhīdào
 - 喜不喜歡 xǐ bù xǐhuān
