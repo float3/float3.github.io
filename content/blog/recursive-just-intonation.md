@@ -425,15 +425,10 @@ projects:
   inspired by python's music21, which the tuning playground and this post are
   built on ([github](https://github.com/float3/music21-rs),
   [crates.io](https://crates.io/crates/music21-rs))
-- [my pull requests to music21](https://github.com/cuthbertLab/music21/pulls?q=author%3Afloat3)
 - [AudioLink](https://audiolink.dev): I'm a maintainer on the core team of
   AudioLink, an audio-visualization library for Unity
   ([github](https://github.com/llealloo/audiolink),
   [demo](https://traeumerei.dev))
-- [an audio reactive screen-space shader using AudioLink](https://github.com/float3/ShaderArchive/blob/master/Misc/AudioLinkScreenSpaceNaNMarching.shader)
-- [Music21TS](https://github.com/float3/Music21TS) and
-  [Music21.NET](https://github.com/float3/Music21.NET): my earlier, archived
-  attempts at porting music21 to TypeScript and C#
 
 ### Visualize and listen to Polyrhythms in a Shader
 
