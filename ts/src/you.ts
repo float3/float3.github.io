@@ -915,11 +915,11 @@ async function buildReport(): Promise<void> {
     fonts: getFonts(),
   }
 
-  addSummary("Generated at", state.generatedAt)
-  addSummary("Locale", locale.locale ?? nav.language ?? "Unknown")
-  addSummary("Time zone", locale.timeZone ?? "Unknown")
-  addSummary("Screen", `${screenInfo.screenWidth} × ${screenInfo.screenHeight}`)
-  addSummary("Touch", nav.maxTouchPoints > 0 ? `Yes (${nav.maxTouchPoints})` : "No")
+  addSummary("generated at", state.generatedAt)
+  addSummary("locale", locale.locale ?? nav.language ?? "Unknown")
+  addSummary("time zone", locale.timeZone ?? "Unknown")
+  addSummary("screen", `${screenInfo.screenWidth} × ${screenInfo.screenHeight}`)
+  addSummary("touch", nav.maxTouchPoints > 0 ? `Yes (${nav.maxTouchPoints})` : "No")
 
   const publicIPRecord =
     publicIP && typeof publicIP === "object" ? (publicIP as Record<string, unknown>) : {}
@@ -929,29 +929,29 @@ async function buildReport(): Promise<void> {
     publicIPRecord.ip ?? publicIPRecord.responseText ?? publicIPRecord.error ?? "Unknown",
   )
 
-  addSection("Navigator", state.data.navigator)
-  addSection("Client Hints", state.data.clientHints)
-  addSection("Screen", state.data.screen)
-  addSection("Locale and Time", state.data.locale)
-  addSection("Window and Location", state.data.window)
-  addSection("CSS and Feature Detection", state.data.cssFeatures)
-  addSection("Capabilities", state.data.capabilities)
-  addSection("Performance", state.data.performance)
-  addSection("Public IP", state.data.publicIP)
-  addSection("Battery", state.data.battery)
-  addSection("Storage", state.data.storage)
-  addSection("Permissions", state.data.permissions)
-  addSection("Media Devices", state.data.mediaDevices)
+  addSection("navigator", state.data.navigator)
+  addSection("client hints", state.data.clientHints)
+  addSection("screen", state.data.screen)
+  addSection("locale and time", state.data.locale)
+  addSection("window and location", state.data.window)
+  addSection("CSS and feature detection", state.data.cssFeatures)
+  addSection("capabilities", state.data.capabilities)
+  addSection("performance", state.data.performance)
+  addSection("public IP", state.data.publicIP)
+  addSection("battery", state.data.battery)
+  addSection("storage", state.data.storage)
+  addSection("permissions", state.data.permissions)
+  addSection("media devices", state.data.mediaDevices)
   addSection("MIDI", state.data.midi)
-  addSection("Gamepads", state.data.gamepads)
+  addSection("gamepads", state.data.gamepads)
   addSection("WebGPU", state.data.webgpu)
-  addSection("Speech Voices", state.data.voices)
+  addSection("speech voices", state.data.voices)
   addSection("WebGL", state.data.webgl)
-  addSection("Canvas Fingerprint", state.data.canvasFingerprint)
-  addSection("Audio Fingerprint", state.data.audioFingerprint)
-  addSection("Plugins", state.data.plugins)
-  addSection("MIME Types", state.data.mimeTypes)
-  addSection("Loaded Fonts", state.data.fonts)
+  addSection("canvas fingerprint", state.data.canvasFingerprint)
+  addSection("audio fingerprint", state.data.audioFingerprint)
+  addSection("plugins", state.data.plugins)
+  addSection("MIME types", state.data.mimeTypes)
+  addSection("loaded fonts", state.data.fonts)
 }
 
 function expandAll(): void {
@@ -970,10 +970,10 @@ async function copyJSON(): Promise<void> {
   try {
     await nav.clipboard.writeText(JSON.stringify(state.data, null, 2))
 
-    copyBtn.textContent = "Copied"
+    copyBtn.textContent = "copied"
 
     window.setTimeout(() => {
-      copyBtn.textContent = "Copy JSON"
+      copyBtn.textContent = "copy JSON"
     }, 1200)
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error)
