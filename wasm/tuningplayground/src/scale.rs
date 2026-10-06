@@ -381,9 +381,7 @@ pub fn realize(id: &str, root_hz: f64) -> Result<Scale, String> {
             root_hz,
         );
     }
-    let tuning: TuningSystem = id
-        .parse()
-        .map_err(|_| format!("no tuning is named {id}"))?;
+    let tuning: TuningSystem = id.parse().map_err(|_| format!("no tuning is named {id}"))?;
     Ok(built_in(tuning, root_hz))
 }
 

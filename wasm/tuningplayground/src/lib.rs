@@ -7,6 +7,7 @@
 //! keyboard layout, and the name of the last chord engraved -- because the
 //! page has one of each.
 
+#[cfg(feature = "wasm")]
 use std::sync::LazyLock;
 use std::sync::Mutex;
 #[cfg(feature = "wasm")]
@@ -18,12 +19,16 @@ pub mod scale;
 
 use music21_rs::Pitch;
 use music21_rs::chord::Chord;
+#[cfg(any(feature = "wasm", test))]
 use scale::Scale;
 
+#[cfg(feature = "wasm")]
 static CURRENT: LazyLock<Mutex<Scale>> = LazyLock::new(|| Mutex::new(Scale::default_scale()));
+#[cfg(feature = "wasm")]
 static KEYMAP: Mutex<KeyMap> = Mutex::new(KeyMap::Us);
 static CHORD_NAME: Mutex<String> = Mutex::new(String::new());
 
+#[cfg(feature = "wasm")]
 fn current() -> std::sync::MutexGuard<'static, Scale> {
     CURRENT.lock().expect("couldn't lock the scale")
 }
@@ -133,6 +138,7 @@ pub const KEY_ROWS: [&[&str]; 4] = [
     ],
 ];
 
+#[cfg(feature = "wasm")]
 fn to_json<T: serde::Serialize>(value: &T) -> String {
     serde_json::to_string(value).expect("the playground's types serialise")
 }
@@ -361,6 +367,7 @@ pub fn chord_details_core(input: &str) -> Result<String, String> {
     ))
 }
 
+#[cfg(any(feature = "wasm", test))]
 fn tuning_marked_hash_core(keys: &str) -> String {
     let mut keys = keys
         .split(',')

@@ -22,8 +22,7 @@ const JUST_INTONATION: TuningSystem = TuningSystem::FiveLimit;
 const MAJOR_INTERVALS: &[i32] = &[0, 4, 7];
 const DOMINANT_INTERVALS: &[i32] = &[0, 4, 7, 10];
 
-const TWELVE_TET: AnyTuningSystem =
-    AnyTuningSystem::Fixed(TuningSystem::EQUAL_TEMPERAMENT);
+const TWELVE_TET: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::EQUAL_TEMPERAMENT);
 
 const FIXED_C_JUST: AnyTuningSystem = AnyTuningSystem::Fixed(TuningSystem::FiveLimit);
 

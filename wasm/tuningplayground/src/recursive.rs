@@ -177,7 +177,8 @@ impl Pair {
         global.root_hz * ratio_at(global, nearest_step(global, cents))
     }
 
-    fn from_fixed(&self, root: i64, step: i64) -> f64 {
+    /// How far the recursive tuning moves a note from what the global scale plays for it, in cents.
+    fn shift_from_fixed(&self, root: i64, step: i64) -> f64 {
         cents_of(self.frequency(root, step) / self.fixed_frequency(root, step))
     }
 
@@ -233,7 +234,7 @@ impl Pair {
                 let cells = (0..=columns_drawn)
                     .map(|step| {
                         let frequency = self.frequency(root, step);
-                        let from_fixed = self.from_fixed(root, step);
+                        let from_fixed = self.shift_from_fixed(root, step);
                         largest_shift = largest_shift.max(from_fixed.abs());
                         Cell {
                             step,
@@ -387,8 +388,8 @@ mod tests {
                 );
             }
         }
-        assert!((just.from_fixed(4, 4) + 41.059).abs() < 1e-3);
-        assert!((just.from_fixed(2, 7) - 21.506).abs() < 1e-3);
+        assert!((just.shift_from_fixed(4, 4) + 41.059).abs() < 1e-3);
+        assert!((just.shift_from_fixed(2, 7) - 21.506).abs() < 1e-3);
     }
 
     /// A step of an equal division over a step is the step of their sum, so
