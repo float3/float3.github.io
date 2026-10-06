@@ -20,7 +20,7 @@ exclude = ["programs"]
 
 [workspace.dependencies]
 music21-rs = { git = "https://github.com/float3/music21-rs.git" }
-wasm-bindgen = { version = "0.2.127" }
+wasm-bindgen = { version = "0.2.129" }
 console_error_panic_hook = { version = "0.1.7" }
 mini-alloc = { version = "1.0.0" }
 engrave = { path = "./crates/engrave" }
