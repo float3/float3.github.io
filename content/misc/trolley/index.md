@@ -89,4 +89,5 @@ tags:
 [82.jpg](/misc/trolley/82.jpg) \
 [83.jpg](/misc/trolley/83.jpg) \
 [84.jpg](/misc/trolley/84.jpg) \
-[85.jpg](/misc/trolley/85.jpg)
+[85.jpg](/misc/trolley/85.jpg) \
+[86.jpg](/misc/trolley/86.jpg)
