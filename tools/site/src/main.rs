@@ -1,5 +1,6 @@
 mod aoc;
 mod build;
+mod comment_index;
 mod comments;
 mod content;
 mod duplicates;
@@ -133,6 +134,7 @@ fn run_main() -> Result<()> {
         "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
+        "comments-index" => site.comments_index(),
         "gallery-from-issue" => submissions::from_issue(&site),
         "check" => site.check(),
         "check-links" | "links-check" => site.check_links(&args[1..]),
@@ -198,6 +200,8 @@ Commands:
   process-photos [INPUT] [OUTPUT]
                              classify and publish source photos
   parse-cargo-toml           list path dependencies declared by more than one crate
+  comments-index             write every comment's metadata for the Quartz plugin
+                             (part of build)
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment

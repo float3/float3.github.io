@@ -17,7 +17,7 @@ import type { Root as HastRoot } from "hast"
  * Written into the file by the workflow, from the account that opened the
  * issue, and corroborated by the commit the workflow makes in that account's
  * name. Files that predate the workflow carry no author and fall back to the
- * commit that added them — see `authors.ts`.
+ * commit that added them — see `tools/site/src/comment_index.rs`.
  */
 export interface CommentAuthor {
   /** GitHub login, for a comment that came through GitHub. */
@@ -26,7 +26,7 @@ export interface CommentAuthor {
    * Email address, for one that arrived as mail.
    *
    * Kept so an edit can be matched against it, and deliberately not rendered —
-   * see `authorFromIdentity`.
+   * see `Author::from_identity` in `tools/site/src/comment_index.rs`.
    */
   email?: string
   /** Display name: the login, the local part of the address, or what git said. */

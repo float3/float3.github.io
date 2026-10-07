@@ -101,6 +101,7 @@ impl Site {
         }
 
         self.wasm(mode)?;
+        self.comments_index()?;
         self.bun_install(&self.root, InstallMode::Locked)?;
 
         let mut args = os_args(&["quartz/bootstrap-cli.mts", "build"]);

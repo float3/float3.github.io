@@ -2,9 +2,9 @@
  * Attaches each page's comment thread, and the address of the repository the
  * compose box should open its pull request against.
  *
- * The scan is a single walk of the content directory plus a single `git log`,
- * cached per process, for the same reason GitHistory caches its own: Quartz
- * parses in worker threads, and re-reading every comment file once per page
+ * The threads come from the index `site comments-index` writes, rendered once
+ * and cached per process, for the same reason GitHistory caches its own:
+ * Quartz parses in worker threads, and rendering every comment once per page
  * would turn a linear cost into a quadratic one.
  */
 
@@ -14,7 +14,7 @@ import type { VFile } from "vfile"
 import type { QuartzTransformerPlugin } from "../../quartz/plugins/types"
 import { defaultBranch, originRemote, ownerRepo, repoRoot } from "../shared/git"
 import { warn } from "../shared/warn"
-import { scanComments } from "./parse"
+import { COMMENTS_INDEX, loadComments } from "./parse"
 import type { CommentRecord } from "./types"
 
 export type { CommentAuthor, CommentRecord, CommentTarget } from "./types"
@@ -80,7 +80,8 @@ export const Comments: QuartzTransformerPlugin<Partial<Options>> = (userOptions)
 
       let threads = cachedThreads.get(contentDir)
       if (threads === undefined) {
-        threads = scanComments(contentDir, repo?.root ?? contentDir)
+        const root = repo?.root ?? path.dirname(contentDir)
+        threads = loadComments(path.join(root, COMMENTS_INDEX), contentDir)
         cachedThreads.set(contentDir, threads)
       }
 

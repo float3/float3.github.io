@@ -1,13 +1,14 @@
 /**
- * Reading the comment files off disk.
+ * Rendering the comments `site comments-index` found.
  *
- * One walk of the content directory per process, paired with one `git log` for
- * the authorship — see `authors.ts` for why none of that is in the files.
+ * Finding them, reading their frontmatter and settling who wrote each one is
+ * done in Rust (`tools/site/src/comment_index.rs`), which writes the result to
+ * `.quartz/comments.json`; `site build` runs it before Quartz. What is left
+ * here is the part that needs unified: turning each body into sanitised HTML.
  */
 
 import fs from "fs"
 import path from "path"
-import YAML from "yaml"
 import { unified } from "unified"
 import remarkParse from "remark-parse"
 import remarkRehype from "remark-rehype"
@@ -16,11 +17,7 @@ import { fromHtml } from "hast-util-from-html"
 import { hasExecutable, sanitize } from "./sanitize"
 import { serialize, serializeRaw, withoutRaw } from "./serialize"
 import { runnableFromFences, runnableFromHtml } from "./runnable"
-import { authorFromIdentity, readCommentAuthors, type CommentCommit } from "./authors"
-import type { CommentRecord, CommentRevision } from "./types"
-
-const COMMENT_FILE = /^(.*)\.comment\.([A-Za-z0-9_-]{1,32})\.md$/
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/
+import type { CommentRecord } from "./types"
 
 // `allowDangerousHtml` is the whole point: a comment may contain HTML, and a
 // comment may contain a script. What it may *not* do is put either of those
@@ -57,152 +54,33 @@ function renderBody(source: string): RenderedBody {
   return { body: sanitize(prose), runnable: runnableFromHtml(serializeRaw(mixed)) }
 }
 
-function optionalString(value: unknown): string | undefined {
-  return typeof value === "string" && value.trim() !== "" ? value.trim() : undefined
-}
+/** A comment as the index records it: everything but the rendered body. */
+type IndexedComment = Omit<CommentRecord, "body" | "runnable">
 
-function optionalNumber(value: unknown): number | undefined {
-  return typeof value === "number" && Number.isFinite(value) ? value : undefined
-}
+/** Where `site comments-index` writes, relative to the repository root. */
+export const COMMENTS_INDEX = ".quartz/comments.json"
 
 /**
- * The revision list, as the workflow appends it.
+ * Every comment in the index, rendered, keyed by the absolute path of its page.
  *
- * A file written by hand has none, and gets a single implied revision from its
- * own date so the page has something coherent to show either way.
+ * A missing index is an error rather than an empty thread on every page: the
+ * build that forgot to write it would otherwise publish the site with every
+ * comment gone.
  */
-function readHistory(value: unknown, fallbackDate: string): CommentRevision[] {
-  if (!Array.isArray(value)) return [{ date: fallbackDate, edited: false }]
-
-  const revisions: CommentRevision[] = []
-  for (const entry of value) {
-    if (typeof entry !== "object" || entry === null) continue
-    const fields = entry as Record<string, unknown>
-    const date = optionalString(fields.date)
-    if (date === undefined || Number.isNaN(Date.parse(date))) continue
-    revisions.push({
-      date,
-      issue: optionalNumber(fields.issue),
-      // The first submission is not an edit however the file spells it.
-      edited: revisions.length > 0 && fields.edited !== false,
-    })
+export function loadComments(indexPath: string, contentDir: string): Map<string, CommentRecord[]> {
+  if (!fs.existsSync(indexPath)) {
+    throw new Error(
+      `${indexPath} is missing; run \`site comments-index\` (part of \`site build\`) first`,
+    )
   }
+  const index = JSON.parse(fs.readFileSync(indexPath, "utf8")) as Record<string, IndexedComment[]>
 
-  return revisions.length > 0 ? revisions : [{ date: fallbackDate, edited: false }]
-}
-
-const toPosix = (file: string) => file.split(path.sep).join("/")
-
-function readComment(
-  file: string,
-  contentDir: string,
-  commits: Map<string, CommentCommit>,
-  repoRoot: string,
-): { record: CommentRecord; parentPath: string } | undefined {
-  const match = COMMENT_FILE.exec(path.basename(file))
-  if (match === null) return undefined
-  const [, stem, id] = match
-
-  const parentPath = path.resolve(path.dirname(file), `${stem}.md`)
-  // A comment on a page that has since been deleted or renamed has nothing to
-  // attach to. Dropping it silently is right: the file is still in the repo and
-  // still in history, it just has no page left to appear on.
-  if (!fs.existsSync(parentPath)) return undefined
-
-  const parsed = FRONTMATTER.exec(fs.readFileSync(file, "utf8"))
-  if (parsed === null) return undefined
-  const [, header, source] = parsed
-
-  let frontmatter: unknown
-  try {
-    frontmatter = YAML.parse(header)
-  } catch {
-    return undefined
-  }
-  if (typeof frontmatter !== "object" || frontmatter === null) return undefined
-  const fields = frontmatter as Record<string, unknown>
-
-  const body = source.trim()
-  if (body === "") return undefined
-
-  const commit = commits.get(toPosix(path.relative(repoRoot, file)))
-
-  // The file's own date is authoritative once the workflow is writing it, since
-  // an edit moves the commit but must not move the date the comment was made.
-  // A file with neither falls back to the commit, then gives up.
-  const date = optionalString(fields.date) ?? commit?.date
-  if (date === undefined || Number.isNaN(Date.parse(date))) return undefined
-
-  const history = readHistory(fields.history, date)
-  const lastEdit = [...history].reverse().find((revision) => revision.edited)
-
-  // The identity the file records — a GitHub login, or an email address for a
-  // comment that arrived as mail. Only when the file claims nothing at all does
-  // the commit become the source.
-  const identity = optionalString(fields.author)
-  const author =
-    identity !== undefined
-      ? authorFromIdentity(identity, optionalNumber(fields.authorId))
-      : commit?.author
-
-  return {
-    parentPath,
-    record: {
-      id,
-      file: toPosix(path.relative(repoRoot, file)),
-      parent: toPosix(path.relative(contentDir, parentPath)),
-      date: history[0]?.date ?? date,
-      edited: lastEdit?.date,
-      author,
-      history,
-      replyTo: optionalString(fields.replyTo),
-      quote: optionalString(fields.quote),
-      quoteHeading: optionalString(fields.quoteHeading),
-      source: body,
-      ...renderBody(body),
-    },
-  }
-}
-
-function walk(dir: string, found: string[]): void {
-  let entries: fs.Dirent[]
-  try {
-    entries = fs.readdirSync(dir, { withFileTypes: true })
-  } catch {
-    return
-  }
-  for (const entry of entries) {
-    const full = path.join(dir, entry.name)
-    if (entry.isDirectory()) {
-      if (entry.name === "node_modules" || entry.name.startsWith(".")) continue
-      walk(full, found)
-    } else if (COMMENT_FILE.test(entry.name)) {
-      found.push(full)
-    }
-  }
-}
-
-/** Every comment in the content tree, keyed by the absolute path of its page. */
-export function scanComments(contentDir: string, repoRoot: string): Map<string, CommentRecord[]> {
-  const files: string[] = []
-  walk(contentDir, files)
-
-  const commits = readCommentAuthors(repoRoot)
   const byParent = new Map<string, CommentRecord[]>()
-
-  for (const file of files) {
-    const read = readComment(file, contentDir, commits, repoRoot)
-    if (read === undefined) continue
-
-    const existing = byParent.get(read.parentPath)
-    if (existing) existing.push(read.record)
-    else byParent.set(read.parentPath, [read.record])
+  for (const [parent, thread] of Object.entries(index)) {
+    byParent.set(
+      path.resolve(contentDir, parent),
+      thread.map((comment) => ({ ...comment, ...renderBody(comment.source) })),
+    )
   }
-
-  // Oldest first, the way a thread reads.
-  for (const thread of byParent.values()) {
-    thread.sort((a, b) => Date.parse(a.date) - Date.parse(b.date))
-  }
-
   return byParent
 }

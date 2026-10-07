@@ -29,7 +29,7 @@ const ISSUE_MARKER: &str = "hilll.dev:comment";
 // ---------------------------------------------------------------------------
 // Shared shapes
 
-fn is_comment_file(name: &str) -> bool {
+pub(crate) fn is_comment_file(name: &str) -> bool {
     let Some((stem, rest)) = name.split_once(".comment.") else {
         return false;
     };
@@ -64,7 +64,7 @@ fn is_page_path(path: &str) -> bool {
 /// Deliberately not a YAML parse. This reads single fields out of frontmatter
 /// that may have been written by the person being checked, and the less of
 /// their input that gets interpreted, the smaller the surface.
-fn frontmatter_field(source: &str, field: &str) -> Option<String> {
+pub(crate) fn frontmatter_field(source: &str, field: &str) -> Option<String> {
     let body = source
         .strip_prefix("---\n")
         .or(source.strip_prefix("---\r\n"))?;
@@ -292,15 +292,23 @@ fn new_id(parent_path: &Path) -> Result<String> {
 
 /// Reads back a comment this module wrote, for the edit path.
 fn read_comment(file: &Path) -> Comment {
-    let source = fs::read_to_string(file).unwrap_or_default();
+    parse_comment(&fs::read_to_string(file).unwrap_or_default())
+}
+
+/// A comment file's frontmatter. The body is left empty; it follows the
+/// closing `---`.
+///
+/// A revision after the first is an edit unless it says `edited: false`, and
+/// the first never is, however the file spells it.
+pub(crate) fn parse_comment(source: &str) -> Comment {
     let mut comment = Comment {
-        parent: frontmatter_field(&source, "parent").unwrap_or_default(),
-        date: frontmatter_field(&source, "date").unwrap_or_default(),
-        author: frontmatter_field(&source, "author"),
-        author_id: frontmatter_field(&source, "authorId").and_then(|id| id.parse().ok()),
-        reply_to: frontmatter_field(&source, "replyTo"),
-        quote: frontmatter_field(&source, "quote"),
-        quote_heading: frontmatter_field(&source, "quoteHeading"),
+        parent: frontmatter_field(source, "parent").unwrap_or_default(),
+        date: frontmatter_field(source, "date").unwrap_or_default(),
+        author: frontmatter_field(source, "author"),
+        author_id: frontmatter_field(source, "authorId").and_then(|id| id.parse().ok()),
+        reply_to: frontmatter_field(source, "replyTo"),
+        quote: frontmatter_field(source, "quote"),
+        quote_heading: frontmatter_field(source, "quoteHeading"),
         history: Vec::new(),
         body: String::new(),
     };
@@ -311,10 +319,11 @@ fn read_comment(file: &Path) -> Comment {
     for line in source.lines() {
         if let Some(rest) = line.strip_prefix("  - date:") {
             if in_history && let Ok(date) = serde_json::from_str::<String>(rest.trim()) {
+                let edited = !comment.history.is_empty();
                 comment.history.push(Revision {
                     date,
                     issue: None,
-                    edited: false,
+                    edited,
                 });
             }
             continue;
@@ -325,9 +334,10 @@ fn read_comment(file: &Path) -> Comment {
             }
             continue;
         }
-        if line.starts_with("    edited:") {
+        if let Some(rest) = line.strip_prefix("    edited:") {
+            let first = comment.history.len() == 1;
             if let Some(last) = comment.history.last_mut() {
-                last.edited = true;
+                last.edited = !first && rest.trim() != "false";
             }
             continue;
         }
@@ -652,7 +662,7 @@ pub(crate) fn check_changes(
     refusals
 }
 
-fn git(site: &Site, args: &[&str]) -> Option<String> {
+pub(crate) fn git(site: &Site, args: &[&str]) -> Option<String> {
     let output = Command::new("git")
         .args(args)
         .current_dir(&site.root)

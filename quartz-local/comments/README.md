@@ -34,8 +34,10 @@ content/blog/freewill.comment.bbbb2222.md
 The id is 8 hex characters and only needs to be unique within one page — the
 filename already carries the page. `quartz.config.yaml` lists
 `**/*.comment.*.md` under `ignorePatterns`, so these never become pages of their
-own, never enter search, the graph, or the feed. The transformer reads them off
-disk directly instead.
+own, never enter search, the graph, or the feed. Instead `site comments-index`
+(`tools/site/src/comment_index.rs`, run by `site build` before Quartz) reads
+them off disk and writes their metadata to `.quartz/comments.json`, and the
+transformer renders each body from there.
 
 ## The file
 
@@ -102,8 +104,8 @@ or reused, an id cannot.
 
 A file with no `author` — one submitted through the pull-request route, or
 written before the workflow existed — falls back to the commit that added it,
-via `git log --diff-filter=A`. A file with neither renders as _uncommitted_,
-which locally is the whole time one is being tested.
+via `git log --diff-filter=A` in `site comments-index`. A file with neither
+renders as _uncommitted_, which locally is the whole time one is being tested.
 
 ### A comment belongs to its author, at both doors
 
