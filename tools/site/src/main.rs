@@ -6,6 +6,7 @@ mod content;
 mod duplicates;
 mod fsutil;
 mod gallery;
+mod git_history;
 mod html;
 mod linkcheck;
 mod maintenance;
@@ -135,6 +136,7 @@ fn run_main() -> Result<()> {
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
         "comments-index" => site.comments_index(),
+        "git-history" => site.git_history(),
         "gallery-from-issue" => submissions::from_issue(&site),
         "check" => site.check(),
         "check-links" | "links-check" => site.check_links(&args[1..]),
@@ -202,6 +204,8 @@ Commands:
   parse-cargo-toml           list path dependencies declared by more than one crate
   comments-index             write every comment's metadata for the Quartz plugin
                              (part of build)
+  git-history                write each page's version count and dates from git
+                             for the Quartz plugin (part of build)
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment

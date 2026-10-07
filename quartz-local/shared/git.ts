@@ -46,19 +46,3 @@ export function ownerRepo(remote: string): string | undefined {
   const match = /github\.com[:/]+([^/]+)\/(.+?)(?:\.git)?\/?$/.exec(remote.trim())
   return match ? `${match[1]}/${match[2]}` : undefined
 }
-
-/**
- * A browsable `https://host/owner/repo`, out of `git@host:owner/repo.git` or
- * `https://host/owner/repo.git`.
- */
-export function webUrl(remote: string): string | undefined {
-  // Checked before the scp-like form below, whose `host:path` shape would
-  // otherwise swallow the `https:` scheme as a hostname.
-  const url = /^(?:https?|ssh|git):\/\/(?:[^@/]+@)?(.+?)(?:\.git)?\/?$/.exec(remote)
-  if (url) return `https://${url[1]}`
-
-  const scp = /^(?:[^@/]+@)?([^:/]+):(.+?)(?:\.git)?$/.exec(remote)
-  if (scp) return `https://${scp[1]}/${scp[2]}`
-
-  return undefined
-}
