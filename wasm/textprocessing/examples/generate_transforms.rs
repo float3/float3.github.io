@@ -53,7 +53,7 @@ fn main() {
             ("package", string(rendered.package.name())),
             ("keywords", format!("[{keywords}]")),
         ] {
-            writeln!(out, "    {key}: {value},").unwrap();
+            property(&mut out, key, &value);
         }
         out.push_str("  },\n");
     }
@@ -63,6 +63,54 @@ fn main() {
         PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../ts/src/textprocessing/transforms.ts");
     fs::write(&path, out).expect("write transforms.ts");
     println!("wrote {} ({} cards)", path.display(), rendered.len());
+}
+
+/// The printed width prettier gives a line: two columns for each East Asian
+/// wide character, one for anything else.
+fn width(line: &str) -> usize {
+    line.chars()
+        .map(|ch| match u32::from(ch) {
+            0x1100..=0x115F
+            | 0x2E80..=0x303E
+            | 0x3041..=0x33FF
+            | 0x3400..=0x4DBF
+            | 0x4E00..=0x9FFF
+            | 0xA000..=0xA4CF
+            | 0xAC00..=0xD7A3
+            | 0xF900..=0xFAFF
+            | 0xFE30..=0xFE4F
+            | 0xFF00..=0xFF60
+            | 0xFFE0..=0xFFE6
+            | 0x1F300..=0x1F64F
+            | 0x1F900..=0x1F9FF
+            | 0x20000..=0x3FFFD => 2,
+            _ => 1,
+        })
+        .sum()
+}
+
+/// One `key: value,` line of a card, broken the way prettier breaks one that
+/// passes its 100-column limit: a string moves to a line of its own, and an
+/// array puts each element on one.
+fn property(out: &mut String, key: &str, value: &str) {
+    let line = format!("    {key}: {value},");
+    if width(&line) <= 100 {
+        writeln!(out, "{line}").unwrap();
+        return;
+    }
+    match value
+        .strip_prefix('[')
+        .and_then(|rest| rest.strip_suffix(']'))
+    {
+        Some(elements) => {
+            writeln!(out, "    {key}: [").unwrap();
+            for element in elements.split(", ") {
+                writeln!(out, "      {element},").unwrap();
+            }
+            writeln!(out, "    ],").unwrap();
+        }
+        None => writeln!(out, "    {key}:\n      {value},").unwrap(),
+    }
 }
 
 /// A TypeScript string literal quoted the way prettier would quote it: double

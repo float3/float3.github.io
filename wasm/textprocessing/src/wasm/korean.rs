@@ -32,6 +32,8 @@ pub fn hanja_to_hangeul(input: &str) -> String {
 }
 
 #[wasm_bindgen]
+/// Every reading of each hanja, `/` between one character's readings and a
+/// space between characters: `樂` reads `낙/락/악/요`.
 pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
     let mut readings: Vec<String> = Vec::new();
 
@@ -52,7 +54,13 @@ pub fn hanja_to_hangeul_all_variants(input: &str) -> String {
         } else {
             let mut candidate_list: Vec<char> = hangeul_candidates.into_iter().collect();
             candidate_list.sort();
-            readings.push(candidate_list.into_iter().collect());
+            readings.push(
+                candidate_list
+                    .into_iter()
+                    .map(String::from)
+                    .collect::<Vec<_>>()
+                    .join("/"),
+            );
         }
     }
 
@@ -120,5 +128,11 @@ mod tests {
         assert_eq!(hanja_to_hangeul("?"), "?");
         assert_eq!(hangeul_to_hanja("?"), "?");
         assert_eq!(hanja_to_hangeul_all_variants("?"), "?");
+    }
+
+    #[test]
+    fn separates_one_characters_readings_from_the_next_character() {
+        assert_eq!(hanja_to_hangeul_all_variants("樂"), "낙/락/악/요");
+        assert_eq!(hanja_to_hangeul_all_variants("行金"), "항/행 금/김");
     }
 }
