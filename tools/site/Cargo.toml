@@ -22,6 +22,12 @@ serde = { version = "1.0.229", features = ["derive"], optional = true }
 serde_json = "1.0.151"
 toml = "1.1.6"
 
+# Only the shader test uses it: glslang, Khronos's reference GLSL compiler,
+# built from its vendored C++ source, checks the background shaders as WebGL2
+# would compile them.
+[dev-dependencies]
+glslang = "0.8.1"
+
 [[bin]]
 name = "site"
 path = "src/main.rs"

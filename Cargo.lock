@@ -279,6 +279,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "54413ede23c2daf518f35156dfde027feb2374004d63bd497f983c8db9c0e313"
 dependencies = [
  "find-msvc-tools",
+ "jobserver",
+ "libc",
  "shlex",
 ]
 
@@ -823,6 +825,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "glob"
+version = "0.3.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e4eba85ea1d0a966a983acd07deee566e67395d2d96b6fb39e62b5a833f1eb0b"
+
+[[package]]
 name = "glsl"
 version = "7.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -840,6 +848,29 @@ dependencies = [
  "md5",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "glslang"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0db73ac0e8bd6f9c253b70205f2bb1c63845b6e263665ac8063316ce16f408c8"
+dependencies = [
+ "bitflags 2.13.2",
+ "glslang-sys",
+ "rustc-hash",
+ "smartstring",
+ "thiserror",
+]
+
+[[package]]
+name = "glslang-sys"
+version = "0.8.1+275822a"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ec80baca8831e8414db40c562fd76ca6a32a792c1db990451d4e7d3cb246e1ed"
+dependencies = [
+ "cc",
+ "glob",
 ]
 
 [[package]]
@@ -1084,6 +1115,16 @@ dependencies = [
 name = "japanese_number_converter"
 version = "0.1.0"
 source = "git+https://github.com/float3/Japanese-number-converter#1544f01c9b4e5f862bd020f340059911145b3a5c"
+
+[[package]]
+name = "jobserver"
+version = "0.1.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1c00acbd29eabad4a2392fa0e921c874934dbbf4194312ad20f04a0ed67a3cb3"
+dependencies = [
+ "getrandom 0.4.3",
+ "libc",
+]
 
 [[package]]
 name = "js-sys"
@@ -2714,6 +2755,7 @@ checksum = "8ee5873ec9cce0195efcb7a4e9507a04cd49aec9c83d0389df45b1ef7ba2e649"
 name = "site"
 version = "0.1.0"
 dependencies = [
+ "glslang",
  "image",
  "music21-rs",
  "recursive-ji-core",
@@ -2733,6 +2775,17 @@ name = "smallvec"
 version = "1.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba467056f1b547ed52077911161fc86985becbc60e8e1857c8a144dab0def891"
+
+[[package]]
+name = "smartstring"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3fb72c633efbaa2dd666986505016c32c3044395ceaf881518399d2f4127ee29"
+dependencies = [
+ "autocfg 1.5.1",
+ "static_assertions",
+ "version_check",
+]
 
 [[package]]
 name = "smawk"
