@@ -722,7 +722,71 @@ pub(crate) fn check_pull_request(site: &Site) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashMap;
+    use std::collections::{BTreeSet, HashMap};
+
+    /// The fields between the braces of `interface <name> {` in `source`.
+    fn interface_fields(source: &str, name: &str) -> BTreeSet<String> {
+        let start = source
+            .find(&format!("interface {name} {{"))
+            .unwrap_or_else(|| panic!("no interface {name}"));
+        let body = &source[start..];
+        let body = &body[body.find('{').unwrap() + 1..body.find("\n}").unwrap()];
+        body.lines()
+            .map(str::trim)
+            .filter(|line| !line.starts_with('/') && !line.starts_with('*'))
+            .filter_map(|line| line.split_once(':'))
+            .map(|(field, _)| field.trim_end_matches('?').to_string())
+            .collect()
+    }
+
+    /// The compose box writes the issue and the pull-request file, and this
+    /// module and the workflow read them, in languages that cannot see each
+    /// other. A drift does not fail anything: the issue is quietly an ordinary
+    /// one nobody answers, or a field arrives and is never read. So what they
+    /// share is checked here rather than trusted.
+    #[test]
+    fn the_compose_box_and_the_workflow_agree() {
+        let root = crate::find_repo_root().unwrap();
+        let typescript = fs::read_to_string(root.join("ts/src/comments/file.ts")).unwrap();
+        let rust = include_str!("comments.rs");
+
+        assert!(
+            typescript.contains(&format!("ISSUE_MARKER = \"{ISSUE_MARKER}\"")),
+            "ts/src/comments/file.ts does not write the {ISSUE_MARKER} marker"
+        );
+        let workflow = fs::read_to_string(root.join(".github/workflows/submission.yaml")).unwrap();
+        assert!(
+            workflow.contains(&format!("\"{ISSUE_MARKER}\"")),
+            "submission.yaml does not route on the {ISSUE_MARKER} marker"
+        );
+
+        let sent = interface_fields(&typescript, "IssuePayload");
+        let read: BTreeSet<String> = ["parent", "replyTo", "editing", "quote", "quoteHeading"]
+            .into_iter()
+            .map(String::from)
+            .collect();
+        assert_eq!(
+            sent, read,
+            "IssuePayload and resolve() disagree on the payload"
+        );
+        for field in &read {
+            assert!(
+                rust.contains(&format!("payload_string(payload, \"{field}\")")),
+                "resolve() no longer reads `{field}`"
+            );
+        }
+
+        for field in ["parent", "date", "replyTo", "quote", "quoteHeading"] {
+            assert!(
+                typescript.contains(&format!("`{field}: ${{scalar(")),
+                "buildCommentFile no longer writes `{field}`"
+            );
+            assert!(
+                rust.contains(&format!("frontmatter_field(source, \"{field}\")")),
+                "parse_comment does not read `{field}`, which buildCommentFile writes"
+            );
+        }
+    }
 
     fn issue_body(payload: &str, body: &str) -> String {
         crate::workflow::marked_issue(ISSUE_MARKER, payload, body)
