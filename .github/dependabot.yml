@@ -1,7 +1,10 @@
 version: 2
 updates:
+  # Not ts/: its wasm-* dependencies are file: links to packages a wasm build
+  # writes, and Dependabot never builds them, so every run there failed.
+  # `site update` keeps ts/ current instead.
   - package-ecosystem: "bun"
-    directories: ["/", "/ts"]
+    directories: ["/"]
     schedule:
       interval: "weekly"
     groups:
