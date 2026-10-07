@@ -1,53 +1,14 @@
 /** The shapes the wasm hands over as JSON, named as their Rust types are. */
 
-export interface SystemEntry {
-  id: string
-  name: string
-  family: string
-  description: string
-  count: number
-}
-
-export interface EqualPreset {
-  id: string
-  label: string
-  divisions: number
-  numerator: number
-  denominator: number
-  note: string
-}
-
-export interface Generator {
-  ratio: string
-  cents: number
-}
-
-export interface TemperamentFacts {
-  name: string
-  page: string
-  subgroup: string
-  rank: number
-  periods_per_equave: number
-  generators: Generator[]
-  optimization: string
-  commas: string[]
-  published_moments: string[]
-  moments: number[]
-}
-
-export interface ScalaEntry {
-  id: string
-  file: string
-  description: string
-  count: number
-}
-
-export interface Library {
-  systems: SystemEntry[]
-  temperaments: TemperamentFacts[]
-  equal: EqualPreset[]
-  scala_count: number
-}
+export type {
+  EqualPreset,
+  Generator,
+  Library,
+  Moment,
+  ScalaEntry,
+  SystemEntry,
+  TemperamentFacts,
+} from "../tuningplayground/types.js"
 
 /** Either scale of a pair. */
 export interface Side {
@@ -57,6 +18,8 @@ export interface Side {
   description: string
   count: number
   period_cents: number
+  /** `octave`, `tritave`, or the period in cents. */
+  period_name: string
 }
 
 export interface Column {

@@ -7,6 +7,8 @@
  * of the local scale, so picking another root moves it to that root's row.
  */
 
+import { DEFAULT_ROOT_HZ } from "../tuningplayground/config.js"
+import { clamp, hz, signed } from "../tuningplayground/format.js"
 import * as sound from "./audio.js"
 import { picker, type Picker } from "./picker.js"
 import type { Chord, Library, Matrix, ScalaEntry, Voice } from "./types.js"
@@ -14,7 +16,6 @@ import type { Chord, Library, Matrix, ScalaEntry, Voice } from "./types.js"
 type Wasm = typeof import("wasm-tuningplayground")
 type Rendering = keyof Pick<Voice, "recursive" | "fixed" | "equal">
 
-const DEFAULT_ROOT_HZ = 261.6255653005986
 const DEFAULT_ID = "FiveLimit"
 const CHORD_SECONDS = 1.8
 const SCALA_LIMIT = 60
@@ -33,67 +34,6 @@ const NOTE_CLASSES = [
   "note-a-sharp",
   "note-b",
 ]
-
-/** Every physical key the page listens to; the wasm says what each one does. */
-const CODES = [
-  "Digit1",
-  "Digit2",
-  "Digit3",
-  "Digit4",
-  "Digit5",
-  "Digit6",
-  "Digit7",
-  "Digit8",
-  "Digit9",
-  "Digit0",
-  "Minus",
-  "Equal",
-  "KeyZ",
-  "KeyX",
-  "KeyC",
-  "KeyV",
-  "KeyB",
-  "KeyN",
-  "KeyM",
-  "Comma",
-  "Period",
-  "Slash",
-  "KeyA",
-  "KeyS",
-  "KeyD",
-  "KeyF",
-  "KeyG",
-  "KeyH",
-  "KeyJ",
-  "KeyK",
-  "KeyL",
-  "Semicolon",
-  "Quote",
-  "KeyQ",
-  "KeyW",
-  "KeyE",
-  "KeyR",
-  "KeyT",
-  "KeyY",
-  "KeyU",
-  "KeyI",
-  "KeyO",
-  "KeyP",
-  "BracketLeft",
-  "BracketRight",
-]
-
-const PRINTED: Record<string, string> = {
-  Comma: ",",
-  Period: ".",
-  Slash: "/",
-  Semicolon: ";",
-  Quote: "'",
-  BracketLeft: "[",
-  BracketRight: "]",
-  Minus: "-",
-  Equal: "=",
-}
 
 function byId<T extends HTMLElement>(id: string): T {
   const node = document.getElementById(id)
@@ -116,27 +56,6 @@ function button(text: string, className?: string): HTMLButtonElement {
   const node = element("button", className, text)
   node.type = "button"
   return node
-}
-
-function caption(code: string): string {
-  if (code.startsWith("Key")) return code.slice(3).toLowerCase()
-  if (code.startsWith("Digit")) return code.slice(5)
-  return PRINTED[code] ?? code
-}
-
-function hz(value: number): string {
-  return value.toFixed(value >= 1000 ? 1 : value >= 100 ? 2 : 3)
-}
-
-function signed(value: number, digits = 1): string {
-  const rounded = Number(value.toFixed(digits))
-  if (rounded === 0) return (0).toFixed(digits)
-  return rounded > 0 ? `+${rounded.toFixed(digits)}` : `−${Math.abs(rounded).toFixed(digits)}`
-}
-
-function clamp(text: string, min: number, max: number, fallback: number): number {
-  const value = Number.parseFloat(text)
-  return Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : fallback
 }
 
 const status = byId<HTMLElement>("recursiveTuningStatus")
@@ -191,7 +110,7 @@ function readUrl(): void {
   const params = new URLSearchParams(window.location.search)
   globalId = params.get("global") ?? DEFAULT_ID
   localId = params.get("local") ?? globalId
-  rootHz = clamp(params.get("root") ?? "", 20, 2000, DEFAULT_ROOT_HZ)
+  rootHz = clamp(params.get("root"), 20, 2000, DEFAULT_ROOT_HZ)
 }
 
 function shareUrl(): string {
@@ -260,17 +179,13 @@ function renderSummary(): void {
   summaryEl.textContent = text
 }
 
-function captions(keyOf: (code: string) => number): Map<number, string> {
-  const map = new Map<number, string>()
-  for (const code of CODES) {
-    const index = keyOf(code)
-    if (index >= 0 && !map.has(index)) map.set(index, caption(code))
-  }
-  return map
+/** Which key plays each degree or step, from the `[index, caption]` pairs the wasm hands over. */
+function captions(json: string): Map<number, string> {
+  return new Map(JSON.parse(json) as [number, string][])
 }
 
 function renderRoots(): void {
-  const hints = captions((code) => wasm.recursive_root_key(code))
+  const hints = captions(wasm.recursive_root_captions_json())
   rootsEl.replaceChildren(
     ...matrix.rows.map((row) => {
       const node = button("", `rt-root${row.root === currentRoot ? " is-active" : ""}`)
@@ -297,7 +212,7 @@ function stepLabel(step: number): string {
 function renderNotes(): void {
   const count = matrix.local.count
   const last = Math.max(count, Math.min(2 * count, 32))
-  const hints = captions((code) => wasm.recursive_note_key(code))
+  const hints = captions(wasm.recursive_note_captions_json())
   const steps = new Set(held.values())
   const keys: HTMLElement[] = []
   for (let step = 0; step <= last; step++) {

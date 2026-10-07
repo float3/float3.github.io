@@ -138,6 +138,96 @@ pub const KEY_ROWS: [&[&str]; 4] = [
     ],
 ];
 
+/// Every physical key a layout uses, bottom row to top. A step two keys play
+/// is captioned with the first of them.
+pub const KEY_CODES: [&str; 47] = [
+    "KeyZ",
+    "KeyX",
+    "KeyC",
+    "KeyV",
+    "KeyB",
+    "KeyN",
+    "KeyM",
+    "Comma",
+    "Period",
+    "Slash",
+    "IntlBackslash",
+    "KeyA",
+    "KeyS",
+    "KeyD",
+    "KeyF",
+    "KeyG",
+    "KeyH",
+    "KeyJ",
+    "KeyK",
+    "KeyL",
+    "Semicolon",
+    "Quote",
+    "Backslash",
+    "KeyQ",
+    "KeyW",
+    "KeyE",
+    "KeyR",
+    "KeyT",
+    "KeyY",
+    "KeyU",
+    "KeyI",
+    "KeyO",
+    "KeyP",
+    "BracketLeft",
+    "BracketRight",
+    "Digit1",
+    "Digit2",
+    "Digit3",
+    "Digit4",
+    "Digit5",
+    "Digit6",
+    "Digit7",
+    "Digit8",
+    "Digit9",
+    "Digit0",
+    "Minus",
+    "Equal",
+];
+
+/// What a US keyboard prints on a physical key.
+pub fn caption(code: &str) -> String {
+    let printed = match code {
+        "Comma" => ",",
+        "Period" => ".",
+        "Slash" => "/",
+        "Semicolon" => ";",
+        "Quote" => "'",
+        "BracketLeft" => "[",
+        "BracketRight" => "]",
+        "Minus" => "-",
+        "Equal" => "=",
+        "Backslash" => "\\",
+        "IntlBackslash" => "<",
+        _ => {
+            return code
+                .strip_prefix("Key")
+                .map(str::to_lowercase)
+                .or_else(|| code.strip_prefix("Digit").map(str::to_string))
+                .unwrap_or_else(|| code.to_string());
+        }
+    };
+    printed.to_string()
+}
+
+/// The caption of the key that plays each step `step_of` gives one to.
+pub fn captions(step_of: impl Fn(&str) -> Option<i64>) -> Vec<(i64, String)> {
+    let mut captions: Vec<(i64, String)> = Vec::new();
+    for code in KEY_CODES {
+        if let Some(step) = step_of(code)
+            && !captions.iter().any(|(taken, _)| *taken == step)
+        {
+            captions.push((step, caption(code)));
+        }
+    }
+    captions
+}
+
 #[cfg(feature = "wasm")]
 fn to_json<T: serde::Serialize>(value: &T) -> String {
     serde_json::to_string(value).expect("the playground's types serialise")
@@ -222,6 +312,14 @@ pub fn step_name(step: i32) -> String {
     current().note_name(i64::from(step))
 }
 
+/// A step's name as a reader wants it: `C#4` in a twelve-tone scale, the
+/// degree number otherwise.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn step_label(step: i32) -> String {
+    current().key_label(i64::from(step))
+}
+
 // ---------------------------------------------------------------------------
 // Recursive tuning
 
@@ -303,6 +401,20 @@ pub fn recursive_progression_json() -> String {
     to_json(&with_pair(recursive::Pair::progression, Vec::new()))
 }
 
+/// Which key picks each global degree, as `[degree, caption]` pairs in JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_root_captions_json() -> String {
+    to_json(&captions(recursive::root_key))
+}
+
+/// Which key plays each local step, as `[step, caption]` pairs in JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn recursive_note_captions_json() -> String {
+    to_json(&captions(recursive::note_key))
+}
+
 /// The global degree a physical key picks, or -1.
 #[cfg(feature = "wasm")]
 #[wasm_bindgen]
@@ -329,6 +441,16 @@ pub fn from_keymap(key: &str) -> i32 {
         .expect("couldn't lock")
         .step(key, count)
         .map_or(-1, |step| step as i32)
+}
+
+/// Which key plays each step under the layout in force, as `[step, caption]`
+/// pairs in JSON.
+#[cfg(feature = "wasm")]
+#[wasm_bindgen]
+pub fn keymap_captions_json() -> String {
+    let count = current().count;
+    let keymap = *KEYMAP.lock().expect("couldn't lock");
+    to_json(&captions(|code| keymap.step(code, count)))
 }
 
 #[cfg(feature = "wasm")]
@@ -549,6 +671,40 @@ pub fn tuning_marked_hash(keys: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn every_key_a_layout_uses_has_a_caption() {
+        use keymapping::{
+            AZERTY_KEYMAP, GERMAN_KEYMAP, QWERTZ_KEYMAP, US_EXTENDED_KEYMAP, US_KEYMAP,
+        };
+        let piano = [
+            &*US_KEYMAP,
+            &*US_EXTENDED_KEYMAP,
+            &*QWERTZ_KEYMAP,
+            &*GERMAN_KEYMAP,
+            &*AZERTY_KEYMAP,
+        ];
+        let used = KEY_ROWS
+            .iter()
+            .flat_map(|row| row.iter().copied())
+            .chain(piano.iter().flat_map(|map| map.keys().copied()));
+        for code in used {
+            assert!(KEY_CODES.contains(&code), "{code} is not in KEY_CODES");
+        }
+    }
+
+    #[test]
+    fn captions_name_the_first_key_for_each_step() {
+        assert_eq!(caption("KeyQ"), "q");
+        assert_eq!(caption("Digit7"), "7");
+        assert_eq!(caption("Semicolon"), ";");
+        let roots = captions(recursive::root_key);
+        assert_eq!(roots[0], (0, "1".to_string()));
+        assert_eq!(roots.len(), 12);
+        let notes = captions(recursive::note_key);
+        assert_eq!(notes[0], (0, "z".to_string()));
+        assert_eq!(notes[10], (10, "a".to_string()));
+    }
 
     #[test]
     fn names_common_chords_from_generated_lookup() {

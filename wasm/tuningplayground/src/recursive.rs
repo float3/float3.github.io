@@ -64,6 +64,7 @@ pub struct Side {
     pub description: String,
     pub count: usize,
     pub period_cents: f64,
+    pub period_name: String,
 }
 
 #[derive(Serialize, Clone, Debug)]
@@ -334,6 +335,7 @@ fn side(scale: &Scale) -> Side {
         description: scale.description.clone(),
         count: scale.count,
         period_cents: scale.period_cents,
+        period_name: scale.period_name.clone(),
     }
 }
 

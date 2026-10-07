@@ -8,8 +8,6 @@ import {
   Key,
   Library,
   ScalaEntry,
-  Scale,
-  TemperamentFacts,
   _noteOn,
   audio,
   formatError,
@@ -32,6 +30,7 @@ import {
 } from "./index.js"
 import { connectMidi, playMIDIFile, stopMIDIFile } from "./MIDI.js"
 import { DEFAULT_ROOT_HZ } from "./config.js"
+import { clamp, hz, signed } from "./format.js"
 
 // ---------------------------------------------------------------------------
 // Elements
@@ -107,21 +106,6 @@ function button(text: string, className?: string): HTMLButtonElement {
   const node = element("button", className, text)
   node.type = "button"
   return node
-}
-
-function hz(value: number): string {
-  return value.toFixed(value >= 100 ? 2 : 3)
-}
-
-function signed(value: number, digits = 1): string {
-  const text = value.toFixed(digits)
-  return value > 0 ? `+${text}` : text
-}
-
-function clamp(value: string | null, min: number, max: number, fallback: number): number {
-  const parsed = Number.parseFloat(value ?? "")
-  if (!Number.isFinite(parsed)) return fallback
-  return Math.min(max, Math.max(min, parsed))
 }
 
 // ---------------------------------------------------------------------------
@@ -231,11 +215,6 @@ function group(name: string, count: number | string): HTMLElement {
   return node
 }
 
-function preferredSize(entry: TemperamentFacts): number | null {
-  if (entry.moments.length === 0) return null
-  return entry.moments.find((size) => size >= 5 && size <= 12) ?? entry.moments[0]
-}
-
 function renderLibrary(): void {
   const query = search.value.trim().toLowerCase()
   const fragment = document.createDocumentFragment()
@@ -272,20 +251,23 @@ function renderLibrary(): void {
         .join(", ")
       const aside =
         entry.moments.length > 0
-          ? `${entry.moments.slice(0, 6).join(" ")}${entry.moments.length > 6 ? " …" : ""}`
+          ? `${entry.moments
+              .slice(0, 6)
+              .map((moment) => moment.size)
+              .join(" ")}${entry.moments.length > 6 ? " …" : ""}`
           : `rank ${entry.rank}`
       const active = scale.temperament?.name === entry.name
       rows.push(
         item(entry.page, aside, `${entry.subgroup} · generator ${generators}`, active, () => {
-          const size = preferredSize(entry)
-          if (size === null) {
+          const preferred = entry.preferred
+          if (!preferred) {
             setStatus(
               `${entry.page} is rank ${entry.rank}: it stacks two generators, so it has no single moment-of-symmetry scale to play.`,
               "error",
             )
             return
           }
-          choose(`temperament:${entry.name}:${size}`)
+          choose(preferred.id)
         }),
       )
     }
@@ -416,12 +398,6 @@ function loadPasted(name: string, contents: string): void {
 // ---------------------------------------------------------------------------
 // What the page says about the scale
 
-function periodText(system: Scale): string {
-  if (Math.abs(system.period_ratio - 2) < 1e-9) return "octave"
-  if (Math.abs(system.period_ratio - 3) < 1e-9) return "tritave"
-  return `period of ${system.period_cents.toFixed(1)}¢`
-}
-
 function renderHead(): void {
   title.textContent = scale.name
 
@@ -440,7 +416,7 @@ function renderHead(): void {
   rootFact.append("root ", root, " Hz")
   facts.replaceChildren(
     element("span", "tp-fact", scale.family),
-    element("span", "tp-fact", `${scale.count} steps per ${periodText(scale)}`),
+    element("span", "tp-fact", `${scale.count} steps per ${scale.period_name}`),
     rootFact,
   )
 
@@ -448,10 +424,9 @@ function renderHead(): void {
   const entry = scale.temperament
   if (entry) {
     sizes.append(element("span", "tool-hint", "notes per equave"))
-    for (const size of entry.moments) {
-      const id = `temperament:${entry.name}:${size}`
-      const chip = button(String(size), id === scale.id ? "is-active" : undefined)
-      chip.addEventListener("click", () => choose(id))
+    for (const moment of entry.moments) {
+      const chip = button(String(moment.size), moment.id === scale.id ? "is-active" : undefined)
+      chip.addEventListener("click", () => choose(moment.id))
       sizes.appendChild(chip)
     }
   }
@@ -486,85 +461,11 @@ const pointers = new Map<number, number>()
 const WHITE_WIDTH = 34
 const BLACK_WIDTH = 20
 
-/** Every physical key a layout might use, so the keys can show which plays them. */
-const CODES = [
-  "KeyZ",
-  "KeyX",
-  "KeyC",
-  "KeyV",
-  "KeyB",
-  "KeyN",
-  "KeyM",
-  "Comma",
-  "Period",
-  "Slash",
-  "IntlBackslash",
-  "KeyA",
-  "KeyS",
-  "KeyD",
-  "KeyF",
-  "KeyG",
-  "KeyH",
-  "KeyJ",
-  "KeyK",
-  "KeyL",
-  "Semicolon",
-  "Quote",
-  "Backslash",
-  "KeyQ",
-  "KeyW",
-  "KeyE",
-  "KeyR",
-  "KeyT",
-  "KeyY",
-  "KeyU",
-  "KeyI",
-  "KeyO",
-  "KeyP",
-  "BracketLeft",
-  "BracketRight",
-  "Digit1",
-  "Digit2",
-  "Digit3",
-  "Digit4",
-  "Digit5",
-  "Digit6",
-  "Digit7",
-  "Digit8",
-  "Digit9",
-  "Digit0",
-  "Minus",
-  "Equal",
-]
-const CAPTIONS: Record<string, string> = {
-  Comma: ",",
-  Period: ".",
-  Slash: "/",
-  Semicolon: ";",
-  Quote: "'",
-  BracketLeft: "[",
-  BracketRight: "]",
-  Minus: "-",
-  Equal: "=",
-  Backslash: "\\",
-  IntlBackslash: "<",
-}
-
-function caption(code: string): string {
-  if (CAPTIONS[code]) return CAPTIONS[code]
-  if (code.startsWith("Key")) return code.slice(3).toLowerCase()
-  if (code.startsWith("Digit")) return code.slice(5)
-  return code
-}
-
 /** Which physical key plays each step under the layout in force. */
 function hints(): Map<number, string> {
   const map = new Map<number, string>()
-  for (const code of CODES) {
-    const step = wasm.from_keymap(code)
-    if (step === -1) continue
-    const shifted = step + shift()
-    if (!map.has(shifted)) map.set(shifted, caption(code))
+  for (const [step, caption] of JSON.parse(wasm.keymap_captions_json()) as [number, string][]) {
+    map.set(step + shift(), caption)
   }
   return map
 }
@@ -734,16 +635,11 @@ export function playingTonesChanged(): void {
     lastLogged = ""
     return
   }
-  const label = steps.map((step) => prettyName(playingTones.get(step)!.name)).join(" ")
+  const label = steps.map((step) => wasm.step_label(step)).join(" ")
   if (label !== lastLogged) {
     lastLogged = label
     log(label, steps)
   }
-}
-
-/** music21 writes a natural note as `CN4`; a reader wants `C4`. */
-function prettyName(name: string): string {
-  return name.replace(/N(-?\d+)$/, "$1")
 }
 
 function log(label: string, steps: number[]): void {
@@ -774,7 +670,7 @@ function renderDegrees(): void {
     row.dataset.degree = String(index % scale.count)
     const step = root + index
     const name = scale.twelve_tone
-      ? prettyName(wasm.step_name(step))
+      ? wasm.step_label(step)
       : index === scale.count
         ? `1+1`
         : String(index + 1)

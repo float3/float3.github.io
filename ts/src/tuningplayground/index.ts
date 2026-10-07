@@ -10,90 +10,23 @@
 import { connectMidi, midiWanted } from "./MIDI.js"
 import { DEFAULT_ROOT_HZ } from "./config.js"
 import { keydown, keyup, readMarkedFromHash, visibilityChange } from "./events.js"
+import type { Library, Scale } from "./types.js"
 import * as ui from "./UI.js"
 
+export type {
+  Degree,
+  Generator,
+  TemperamentFacts,
+  Moment,
+  Scale,
+  SystemEntry,
+  EqualPreset,
+  ScalaEntry,
+  Library,
+  Key,
+} from "./types.js"
+
 export let wasm: typeof import("wasm-tuningplayground")
-
-export interface Degree {
-  ratio_label: string
-  ratio: number
-  cents: number
-  from_equal: number
-  frequency: number
-}
-
-export interface Generator {
-  ratio: string
-  cents: number
-}
-
-export interface TemperamentFacts {
-  name: string
-  page: string
-  subgroup: string
-  rank: number
-  periods_per_equave: number
-  generators: Generator[]
-  optimization: string
-  commas: string[]
-  published_moments: string[]
-  moments: number[]
-}
-
-export interface Scale {
-  id: string
-  name: string
-  family: string
-  description: string
-  count: number
-  period_ratio: number
-  period_cents: number
-  root_hz: number
-  adaptive: boolean
-  twelve_tone: boolean
-  degrees: Degree[]
-  temperament: TemperamentFacts | null
-}
-
-export interface SystemEntry {
-  id: string
-  name: string
-  family: string
-  description: string
-  count: number
-}
-
-export interface EqualPreset {
-  id: string
-  label: string
-  divisions: number
-  numerator: number
-  denominator: number
-  note: string
-}
-
-export interface ScalaEntry {
-  id: string
-  file: string
-  description: string
-  count: number
-}
-
-export interface Library {
-  systems: SystemEntry[]
-  temperaments: TemperamentFacts[]
-  equal: EqualPreset[]
-  scala_count: number
-}
-
-export interface Key {
-  step: number
-  degree: number
-  label: string
-  cents: number
-  frequency: number
-  black: boolean
-}
 
 /** A note being held: its step and what the wasm said about it when it began. */
 export interface Tone {

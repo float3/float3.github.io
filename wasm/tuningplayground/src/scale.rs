@@ -53,8 +53,29 @@ pub struct TemperamentFacts {
     pub optimization: String,
     pub commas: Vec<String>,
     pub published_moments: Vec<String>,
-    /// Note counts to the equave that make a moment of symmetry, up to seventy-two.
-    pub moments: Vec<u32>,
+    /// The sizes that make a moment of symmetry, up to seventy-two notes to the equave.
+    pub moments: Vec<Moment>,
+    /// The size the pickers offer: the first moment of five to twelve notes,
+    /// or failing that the first moment at all. `None` for a temperament of
+    /// rank two or more, which has no single moment-of-symmetry scale.
+    pub preferred: Option<Moment>,
+}
+
+/// A temperament's moment-of-symmetry scale of one size.
+#[derive(Serialize, Clone, Debug, PartialEq)]
+pub struct Moment {
+    pub size: u32,
+    /// The id [`realize`] reads it back from.
+    pub id: String,
+}
+
+impl Moment {
+    fn new(temperament: &str, size: u32) -> Self {
+        Self {
+            size,
+            id: format!("temperament:{temperament}:{size}"),
+        }
+    }
 }
 
 #[derive(Serialize, Clone, Debug, PartialEq)]
@@ -74,6 +95,8 @@ pub struct Scale {
     pub count: usize,
     pub period_ratio: f64,
     pub period_cents: f64,
+    /// `octave`, `tritave`, or the period in cents.
+    pub period_name: String,
     pub root_hz: f64,
     /// Whether a key's pitch depends on the lowest key held.
     pub adaptive: bool,
@@ -270,12 +293,31 @@ fn adaptive_description() -> &'static str {
      the rest retune to it."
 }
 
+/// What a scale repeats at, as the page names it.
+fn period_name(ratio: f64, cents: f64) -> String {
+    if (ratio - 2.0).abs() < 1e-9 {
+        "octave".to_string()
+    } else if (ratio - 3.0).abs() < 1e-9 {
+        "tritave".to_string()
+    } else {
+        format!("period of {cents:.1}¢")
+    }
+}
+
 fn temperament_facts(named: &music21_rs::tuningsystem::NamedTemperament) -> TemperamentFacts {
     let temperament = named.temperament().ok();
-    let moments = temperament
+    let moments: Vec<Moment> = temperament
         .as_ref()
         .and_then(|temperament| temperament.moments(72).ok())
-        .unwrap_or_default();
+        .unwrap_or_default()
+        .into_iter()
+        .map(|size| Moment::new(named.name, size))
+        .collect();
+    let preferred = moments
+        .iter()
+        .find(|moment| (5..=12).contains(&moment.size))
+        .or(moments.first())
+        .cloned();
     TemperamentFacts {
         name: named.name.to_string(),
         page: named.page.to_string(),
@@ -308,6 +350,7 @@ fn temperament_facts(named: &music21_rs::tuningsystem::NamedTemperament) -> Temp
             .map(|moment| (*moment).to_string())
             .collect(),
         moments,
+        preferred,
     }
 }
 
@@ -430,6 +473,7 @@ fn built_in(tuning: TuningSystem, root_hz: f64) -> Scale {
         count,
         period_ratio: 2f64.powf(period_cents / 1200.0),
         period_cents,
+        period_name: period_name(2f64.powf(period_cents / 1200.0), period_cents),
         root_hz,
         adaptive: false,
         twelve_tone: count == 12 && tuning.repeats_at_the_octave(),
@@ -485,6 +529,7 @@ fn from_scala(id: &str, name: &str, family: &str, scale: &ScalaScale, root_hz: f
         count: scale.len(),
         period_ratio: scale.period().ratio(),
         period_cents,
+        period_name: period_name(scale.period().ratio(), period_cents),
         root_hz,
         adaptive: false,
         twelve_tone: scale.len() == 12 && (scale.period().ratio() - 2.0).abs() < 1e-9,
@@ -522,7 +567,7 @@ fn temperament_scale(name: &str, notes: u32, root_hz: f64) -> Result<Scale, Stri
         .collect::<Vec<_>>()
         .join(", ");
     Ok(Scale {
-        id: format!("temperament:{name}:{notes}"),
+        id: Moment::new(name, notes).id,
         name: format!("{}, {notes} notes", named.page),
         family: "Regular temperament".to_string(),
         description: format!(
@@ -533,6 +578,7 @@ fn temperament_scale(name: &str, notes: u32, root_hz: f64) -> Result<Scale, Stri
         count: cents.len() - 1,
         period_ratio: 2f64.powf(equave_cents / 1200.0),
         period_cents: equave_cents,
+        period_name: period_name(2f64.powf(equave_cents / 1200.0), equave_cents),
         root_hz,
         adaptive: false,
         twelve_tone: false,
@@ -568,6 +614,10 @@ fn equal_division(
         count: divisions as usize,
         period_ratio: f64::from(numerator) / f64::from(denominator),
         period_cents: division.period_cents(),
+        period_name: period_name(
+            f64::from(numerator) / f64::from(denominator),
+            division.period_cents(),
+        ),
         root_hz,
         adaptive: false,
         twelve_tone: octave && divisions == 12,
@@ -691,17 +741,13 @@ mod tests {
             assert_eq!(scale.count, preset.divisions as usize);
         }
         for temperament in &library.temperaments {
-            let Some(size) = temperament
-                .moments
-                .iter()
-                .find(|size| (5..=12).contains(*size))
-                .or(temperament.moments.last())
-            else {
+            let Some(preferred) = &temperament.preferred else {
+                assert!(temperament.moments.is_empty(), "{}", temperament.name);
                 continue;
             };
-            let id = format!("temperament:{}:{size}", temperament.name);
-            let scale = realize(&id, C4).expect(&id);
-            assert_eq!(scale.count, *size as usize, "{id}");
+            let scale = realize(&preferred.id, C4).expect(&preferred.id);
+            assert_eq!(scale.id, preferred.id);
+            assert_eq!(scale.count, preferred.size as usize, "{}", preferred.id);
             assert!(scale.temperament.is_some());
         }
         assert!(library.scala_count > 3000);

@@ -5,7 +5,7 @@
  * the Scala archive.
  */
 
-import type { Library, ScalaEntry, Side, TemperamentFacts } from "./types.js"
+import type { Library, ScalaEntry, Side } from "./types.js"
 
 /** The playground's adaptive scale, which is a pair already and so no side of one. */
 const ADAPTIVE_ID = "adaptive:recursive"
@@ -36,18 +36,6 @@ function element<K extends keyof HTMLElementTagNameMap>(
   if (className) node.className = className
   if (text !== undefined) node.textContent = text
   return node
-}
-
-/** The size a temperament is offered at: its first moment of symmetry of five to twelve notes. */
-function preferredSize(entry: TemperamentFacts): number | null {
-  if (entry.moments.length === 0) return null
-  return entry.moments.find((size) => size >= 5 && size <= 12) ?? entry.moments[0]
-}
-
-function periodName(cents: number): string {
-  if (Math.abs(cents - 1200) < 1e-6) return "the octave"
-  if (Math.abs(cents - 1901.955) < 0.01) return "the tritave"
-  return `${cents.toFixed(1)}¢`
 }
 
 export function picker({ root, library, search, onPick }: PickerOptions): Picker {
@@ -111,11 +99,9 @@ export function picker({ root, library, search, onPick }: PickerOptions): Picker
     add(
       "Regular temperaments",
       library.temperaments.flatMap((entry) => {
-        const size = preferredSize(entry)
-        if (size === null || !matches(`${entry.name} ${entry.page} ${entry.subgroup}`)) return []
-        return [
-          item(entry.page, `${size} notes`, entry.subgroup, `temperament:${entry.name}:${size}`),
-        ]
+        const preferred = entry.preferred
+        if (!preferred || !matches(`${entry.name} ${entry.page} ${entry.subgroup}`)) return []
+        return [item(entry.page, `${preferred.size} notes`, entry.subgroup, preferred.id)]
       }),
     )
     if (query) {
@@ -171,7 +157,7 @@ export function picker({ root, library, search, onPick }: PickerOptions): Picker
       chosen.replaceChildren(
         element("strong", undefined, side.name),
         document.createTextNode(
-          ` · ${side.count} notes to ${periodName(side.period_cents)}. ${side.description}`,
+          ` · ${side.count} notes to the ${side.period_name}. ${side.description}`,
         ),
       )
     },
