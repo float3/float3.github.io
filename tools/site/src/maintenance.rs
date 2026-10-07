@@ -5,6 +5,15 @@ use std::process::Command;
 use std::{env, fs};
 use toml::{Table, Value};
 
+/// Advisories the root `bun audit` is told to pass over, each with no fixed
+/// release to move to. Anything else it reports still stops `site update`.
+///
+/// GHSA-vfj7-8cjw-p6xm: `braces` up to 3.0.3, its latest release, can exhaust
+/// the stack on deeply nested patterns. It reaches us through globby, fast-glob
+/// and micromatch in Quartz's build, which only expands patterns from this
+/// repository's own config. Drop it once braces publishes a fix.
+const IGNORED_ADVISORIES: &[&str] = &["GHSA-vfj7-8cjw-p6xm"];
+
 impl Site {
     pub(crate) fn update(&self) -> Result<()> {
         self.run_with_env(
@@ -20,7 +29,16 @@ impl Site {
         )?;
 
         self.run_bun(&self.root, &os_args(&["update"]))?;
-        self.run_bun(&self.root, &os_args(&["audit"]))?;
+        let mut audit = vec!["audit".to_string()];
+        audit.extend(
+            IGNORED_ADVISORIES
+                .iter()
+                .map(|advisory| format!("--ignore={advisory}")),
+        );
+        self.run_bun(
+            &self.root,
+            &audit.iter().map(Into::into).collect::<Vec<_>>(),
+        )?;
         self.bun_install(&self.root, InstallMode::Unlocked)?;
 
         self.node_update(&self.root.join("ts"), "src")?;
