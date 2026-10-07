@@ -8,6 +8,7 @@
  * time and webpack validates the shape.
  */
 
+import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import TerserPlugin from "terser-webpack-plugin"
@@ -15,6 +16,25 @@ import type { Configuration } from "webpack"
 
 const tsDir = fileURLToPath(new URL(".", import.meta.url))
 const contentJsDir = fileURLToPath(new URL("../content/js", import.meta.url))
+const srcDir = fileURLToPath(new URL("./src", import.meta.url))
+
+/**
+ * Every module directly under `src` is a page script, bundled as
+ * `/js/<its name>.js`; everything a page script imports lives in a
+ * subdirectory. There is no list to keep in step: `cargo test -p site` checks
+ * that every bundle is loaded by some page and every page's bundle exists,
+ * reading the directory by the same rule.
+ */
+function pageScripts(): Record<string, string> {
+  return Object.fromEntries(
+    fs
+      .readdirSync(srcDir)
+      .filter((name) => name.endsWith(".ts") && !name.endsWith(".d.ts"))
+      .map((name) => name.slice(0, -".ts".length))
+      .sort()
+      .map((name) => [name, `./dist/${name}.js`]),
+  )
+}
 
 const config: Configuration = {
   context: tsDir,
@@ -26,27 +46,7 @@ const config: Configuration = {
       },
     ],
   },
-  entry: {
-    glsl2hlsl: "./dist/glsl.js",
-    adventofcode: "./dist/aoc.js",
-    tuningplayground: "./dist/tuningplayground.js",
-    recursivetuning: "./dist/recursivetuning.js",
-    textprocessing: "./dist/textprocessing.js",
-    polyrhythm: "./dist/polyrhythm.js",
-    therenderingequation: "./dist/therenderingequation.js",
-    movies: "./dist/movies.js",
-    gallery: "./dist/gallery.js",
-    chars: "./dist/chars.js",
-    bayestheorem: "./dist/bayestheorem.js",
-    photography: "./dist/photography.js",
-    audiooscilloscope: "./dist/audiooscilloscope.js",
-    background: "./dist/background.js",
-    you: "./dist/you.js",
-    audiolink: "./dist/audiolink.js",
-    insurance: "./dist/insurance.js",
-    comments: "./dist/comments.js",
-    pascal: "./dist/pascal.js",
-  },
+  entry: pageScripts(),
   output: {
     path: path.resolve(contentJsDir),
     filename: "[name].js",

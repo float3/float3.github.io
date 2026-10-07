@@ -13,7 +13,7 @@
  * review step is a diff rather than a moderation queue.
  */
 
-import { markerLines, newIssueUrl } from "../github.js"
+import { markerLines, newIssueUrl } from "../shared/github.js"
 
 /** The marker the workflow looks for, carried the way `markerLines` describes. */
 export const ISSUE_MARKER = "hilll.dev:gallery"

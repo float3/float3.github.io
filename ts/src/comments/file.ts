@@ -11,7 +11,7 @@
  * without a GitHub account at all.
  */
 
-import { markerLines, newIssueUrl } from "../github.js"
+import { markerLines, newIssueUrl } from "../shared/github.js"
 
 export interface CommentTarget {
   repo: string

@@ -11,7 +11,7 @@
  * directory, a line in `Site::INDICES` and a page.
  */
 
-import { renderMediaGallery, type GalleryItem } from "./media-gallery.js"
+import { renderMediaGallery, type GalleryItem } from "./shared/media-gallery.js"
 import { renderSubmitButton } from "./gallery/submit.js"
 
 /** Written next to the media by `site indices`. */

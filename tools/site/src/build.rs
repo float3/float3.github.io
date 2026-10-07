@@ -453,27 +453,23 @@ fn reachable_sources(ts_dir: &Path) -> Result<BTreeSet<PathBuf>> {
     Ok(seen)
 }
 
-/// Where the bundle starts. webpack names `./dist/<name>.js`, which is what `tsc`
-/// emits for `src/<name>.ts`.
+/// Where the bundle starts: every module directly under `ts/src`, each the page
+/// script webpack writes to `/js/<name>.js`. `ts/webpack.config.ts` reads the
+/// directory by the same rule; anything a page script imports lives in a
+/// subdirectory.
 fn webpack_entry_sources(ts_dir: &Path) -> Result<Vec<PathBuf>> {
-    let config = fs::read_to_string(ts_dir.join("webpack.config.ts"))?;
-    let src = ts_dir.join("src");
-
-    let entries: Vec<PathBuf> = string_literals(&config)
-        .iter()
-        .filter_map(|literal| literal.strip_prefix("./dist/")?.strip_suffix(".js"))
-        .map(|stem| src.join(format!("{stem}.ts")))
-        .collect();
+    let mut entries = Vec::new();
+    for entry in fs::read_dir(ts_dir.join("src"))? {
+        let path = entry?.path();
+        let name = path.file_name().unwrap_or_default().to_string_lossy();
+        if path.is_file() && name.ends_with(".ts") && !name.ends_with(".d.ts") {
+            entries.push(path);
+        }
+    }
+    entries.sort();
 
     if entries.is_empty() {
-        return fail("ts/webpack.config.ts declares no ./dist/*.js entry points");
-    }
-
-    if let Some(missing) = entries.iter().find(|entry| !entry.is_file()) {
-        return fail(format!(
-            "ts/webpack.config.ts names an entry with no source: {}",
-            missing.display()
-        ));
+        return fail("ts/src has no page scripts");
     }
 
     Ok(entries)
@@ -588,6 +584,75 @@ mod tests {
                 "
   "
             )
+        );
+    }
+
+    /// Every `/js/<name>.js` the pages and Quartz's own components load.
+    fn scripts_pages_load(root: &Path) -> BTreeSet<String> {
+        fn walk(dir: &Path, found: &mut BTreeSet<String>) {
+            let Ok(entries) = fs::read_dir(dir) else {
+                return;
+            };
+            for entry in entries.flatten() {
+                let path = entry.path();
+                let name = entry.file_name().to_string_lossy().into_owned();
+                if path.is_dir() {
+                    if !name.starts_with('.') && name != "node_modules" && name != "js" {
+                        walk(&path, found);
+                    }
+                    continue;
+                }
+                if !matches!(
+                    path.extension().and_then(|e| e.to_str()),
+                    Some("md" | "html" | "ts" | "tsx")
+                ) {
+                    continue;
+                }
+                let Ok(text) = fs::read_to_string(&path) else {
+                    continue;
+                };
+                for (index, _) in text.match_indices("/js/") {
+                    let rest = &text[index + "/js/".len()..];
+                    let end = rest
+                        .find(|ch: char| !(ch.is_ascii_alphanumeric() || ch == '_' || ch == '-'))
+                        .unwrap_or(rest.len());
+                    if end > 0 && rest[end..].starts_with(".js") {
+                        found.insert(rest[..end].to_string());
+                    }
+                }
+            }
+        }
+
+        let mut found = BTreeSet::new();
+        for dir in ["content", "quartz/components", "quartz-local"] {
+            walk(&root.join(dir), &mut found);
+        }
+        found
+    }
+
+    /// A page script no page loads is built, shipped and never run, and a page
+    /// that loads a script with no source gets a 404 in place of its tool. The
+    /// bundle has no list of entries to drift from the pages; this is the check
+    /// that the directory and the pages agree.
+    #[test]
+    fn every_page_script_is_loaded_and_every_loaded_script_exists() {
+        let root = site().root;
+        let bundled: BTreeSet<String> = webpack_entry_sources(&root.join("ts"))
+            .unwrap()
+            .iter()
+            .map(|path| path.file_stem().unwrap().to_string_lossy().into_owned())
+            .collect();
+        let loaded = scripts_pages_load(&root);
+
+        let unused: Vec<&String> = bundled.difference(&loaded).collect();
+        assert!(
+            unused.is_empty(),
+            "no page loads /js/<name>.js for: {unused:?}"
+        );
+        let missing: Vec<&String> = loaded.difference(&bundled).collect();
+        assert!(
+            missing.is_empty(),
+            "pages load /js/<name>.js with no ts/src/<name>.ts for: {missing:?}"
         );
     }
 
