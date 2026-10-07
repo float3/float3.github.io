@@ -39,6 +39,15 @@ impl Site {
         self.run_bun(dir, &os_args(&["run", "eslint", lint_target, "--fix"]))
     }
 
+    /// Upgrades the crates, then lints, fixes, checks and tests the workspace
+    /// once per feature (`--each-feature`: no features, the defaults, and each
+    /// feature on its own) and lints it once more with every feature on.
+    ///
+    /// Not `--feature-powerset`: that builds every combination of features, and
+    /// `wasm/wasm` has fifteen, which is 61,458 builds of one crate. It filled a
+    /// terabyte disk with 142 GB of target directory long before finishing.
+    /// What it alone would catch is a lint that needs two particular features
+    /// together, and the all-features run catches nearly all of those.
     fn cargo_update(&self, dir: &Path) -> Result<()> {
         self.run(dir, "cargo", &os_args(&["upgrade"]))?;
         self.run(dir, "cargo", &os_args(&["update", "--workspace"]))?;
@@ -46,9 +55,25 @@ impl Site {
             dir,
             "cargo",
             &os_args(&[
+                "clippy",
+                "--fix",
+                "--allow-dirty",
+                "--allow-staged",
+                "--all-targets",
+                "--workspace",
+                "--all-features",
+                "--",
+                "-D",
+                "warnings",
+            ]),
+        )?;
+        self.run(
+            dir,
+            "cargo",
+            &os_args(&[
                 "hack",
                 "clippy",
-                "--feature-powerset",
+                "--each-feature",
                 "--fix",
                 "--allow-dirty",
                 "--allow-staged",
@@ -65,7 +90,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "fix",
-                "--feature-powerset",
+                "--each-feature",
                 "--allow-dirty",
                 "--allow-staged",
                 "--all-targets",
@@ -78,7 +103,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "check",
-                "--feature-powerset",
+                "--each-feature",
                 "--all-targets",
                 "--workspace",
             ]),
@@ -89,7 +114,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "test",
-                "--feature-powerset",
+                "--each-feature",
                 "--release",
                 "--verbose",
                 "--all-targets",
