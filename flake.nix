@@ -63,7 +63,10 @@
             # add libraries here (e.g. pkgs.libvmi)
           ];
 
-          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (buildInputs ++ nativeBuildInputs);
+          # stdenv.cc.cc.lib is libstdc++.so.6, which the `gcc` above wraps but
+          # does not put here. `cargo test -p site` links glslang's C++ and
+          # cannot start without it.
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (buildInputs ++ nativeBuildInputs ++ [pkgs.stdenv.cc.cc.lib]);
 
           # Add glibc, clang, glib, and other headers to bindgen search path
           BINDGEN_EXTRA_CLANG_ARGS =
