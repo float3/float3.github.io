@@ -29,8 +29,6 @@
     "wasm-bayes": "file:../wasm/wasm/pkg/bayes",
     "wasm-chars": "file:../wasm/wasm/pkg/chars",
     "wasm-glsl": "file:../wasm/wasm/pkg/glsl",
-    "wasm-movies": "file:../wasm/wasm/pkg/movies",
-    "wasm-photography": "file:../wasm/wasm/pkg/photography",
     "wasm-polyrhythm": "file:../wasm/wasm/pkg/polyrhythm",
     "wasm-textprocessing": "file:../wasm/wasm/pkg/textprocessing",
     "wasm-textprocessing_chinese": "file:../wasm/wasm/pkg/textprocessing_chinese",

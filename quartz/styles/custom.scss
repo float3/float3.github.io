@@ -194,6 +194,15 @@ pre.poetry {
   margin: 0 0 1rem;
 }
 
+// An inline-block, because a line-through on a watched film's list item is
+// drawn across every inline thing inside it, and a struck-out link reads as a
+// dead one.
+.movie-links {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 0.9em;
+}
+
 .wave-figure {
   margin: 1.25rem 0 2rem;
 

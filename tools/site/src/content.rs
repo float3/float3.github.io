@@ -7,6 +7,7 @@ impl Site {
         self.textprocessing_transforms()?;
         self.links()?;
         self.indices()?;
+        self.movies()?;
         self.generate_chords()
     }
 

@@ -10,6 +10,7 @@ mod git_history;
 mod html;
 mod linkcheck;
 mod maintenance;
+mod movies;
 #[cfg(feature = "photos")]
 mod photos;
 #[cfg(not(feature = "photos"))]
@@ -137,6 +138,7 @@ fn run_main() -> Result<()> {
         "check-comment-changes" => comments::check_pull_request(&site),
         "comments-index" => site.comments_index(),
         "git-history" => site.git_history(),
+        "movies" => site.movies(),
         "gallery-from-issue" => submissions::from_issue(&site),
         "check" => site.check(),
         "check-links" | "links-check" => site.check_links(&args[1..]),
@@ -206,6 +208,8 @@ Commands:
                              (part of build)
   git-history                write each page's version count and dates from git
                              for the Quartz plugin (part of build)
+  movies                     write the movie lists, with search links, for the
+                             movies page (part of build and generate)
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment

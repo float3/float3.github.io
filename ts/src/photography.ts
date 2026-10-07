@@ -1,8 +1,6 @@
-import { photo_caption, photo_count_label, photo_manifest_entry_is_valid } from "wasm-photography"
 import { renderMediaGallery, type GalleryItem } from "./shared/media-gallery.js"
 
 interface Photo extends GalleryItem {
-  description?: string
   tags?: string[]
 }
 
@@ -36,6 +34,10 @@ function photoTags(value: unknown): string[] | undefined {
   return tags.length > 0 ? tags : undefined
 }
 
+/**
+ * One entry of `gallery.json`, as `site process-photos` writes it: the path,
+ * and the original filename the caption shows.
+ */
 function toPhoto(value: unknown): Photo | null {
   if (!value || typeof value !== "object") {
     return null
@@ -47,21 +49,14 @@ function toPhoto(value: unknown): Photo | null {
     return null
   }
 
-  const description = nonEmptyString(candidate.description)
-  const meta = nonEmptyString(candidate.meta)
-  const title = nonEmptyString(candidate.title) ?? ""
+  const meta = nonEmptyString(candidate.meta) ?? ""
   const tags = photoTags(candidate.tags)
-
-  if (!photo_manifest_entry_is_valid(src, title)) {
-    return null
-  }
 
   return {
     src,
     kind: "image",
-    title,
-    ...(description ? { description } : {}),
-    ...(meta ? { meta } : {}),
+    title: meta,
+    meta,
     ...(tags ? { tags } : {}),
   }
 }
@@ -92,11 +87,8 @@ function renderGallery(): void {
     gallery,
     count,
     dialog,
-    countLabel: photo_count_label,
-    caption: (photo) => {
-      const description = "description" in photo ? (photo as Photo).description : undefined
-      return photo_caption(photo.title, description ?? photo.meta ?? "")
-    },
+    countLabel: (total) => `${total} ${total === 1 ? "photo" : "photos"}`,
+    caption: (photo) => photo.title,
   })
 }
 
