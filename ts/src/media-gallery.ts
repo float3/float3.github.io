@@ -2,7 +2,7 @@ export interface GalleryItem {
   src: string
   title: string
   meta?: string
-  kind?: "image" | "video"
+  kind: "image" | "video"
 }
 
 interface GalleryOptions {
@@ -12,14 +12,6 @@ interface GalleryOptions {
   dialog?: HTMLDialogElement | null
   countLabel: (count: number) => string
   caption: (item: GalleryItem) => string
-}
-
-function mediaKind(item: GalleryItem): "image" | "video" {
-  if (item.kind) {
-    return item.kind
-  }
-
-  return /\.(mp4|webm|mov)$/i.test(item.src) ? "video" : "image"
 }
 
 function mediaLabel(item: GalleryItem): string {
@@ -32,7 +24,7 @@ function createMediaElement(
   item: GalleryItem,
   preview: boolean,
 ): HTMLImageElement | HTMLVideoElement {
-  if (mediaKind(item) === "video") {
+  if (item.kind === "video") {
     const video = document.createElement("video")
     if (preview) {
       video.dataset.src = item.src

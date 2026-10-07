@@ -170,7 +170,8 @@ impl Site {
 /// The galleries read this rather than the markdown beside it: they want the
 /// filenames, and recovering those from rendered links would mean parsing a
 /// format built for people to read in order to get at something never meant to
-/// be hidden in the first place.
+/// be hidden in the first place. Each entry also says whether it plays in a
+/// `<video>` and what its caption calls it, so the page decides neither.
 const MANIFEST: &str = "index.json";
 
 /// Whether a filename in a gallery directory is one of the gallery's items.
@@ -184,9 +185,26 @@ pub(crate) fn is_gallery_item(name: &str) -> bool {
     !name.starts_with('.') && name != "index.md" && name != MANIFEST
 }
 
-/// A JSON array of filenames.
+/// A JSON array of `{ name, kind, label }`: the filename, `video` or `image`
+/// by [`crate::gallery::is_video`], and the name without its extension, which
+/// is what a numbered gallery captions an item with.
 fn manifest(entries: &[String]) -> Result<String> {
-    let mut out = serde_json::to_string(entries)?;
+    let entries: Vec<serde_json::Value> = entries
+        .iter()
+        .map(|name| {
+            let (stem, extension) = match name.rsplit_once('.') {
+                Some((stem, extension)) if !stem.is_empty() => (stem, extension),
+                _ => (name.as_str(), ""),
+            };
+            let kind = if crate::gallery::is_video(&extension.to_ascii_lowercase()) {
+                "video"
+            } else {
+                "image"
+            };
+            serde_json::json!({ "name": name, "kind": kind, "label": stem })
+        })
+        .collect();
+    let mut out = serde_json::to_string(&entries)?;
     out.push('\n');
     Ok(out)
 }
@@ -260,18 +278,30 @@ mod tests {
     }
 
     #[test]
-    fn quotes_filenames_into_the_manifest() {
-        let entries = vec!["00.jpg".to_string(), "63.mp4".to_string()];
-        assert_eq!(manifest(&entries).unwrap(), "[\"00.jpg\",\"63.mp4\"]\n");
+    fn describes_each_file_in_the_manifest() {
+        let entries = vec![
+            "00.jpg".to_string(),
+            "63.MP4".to_string(),
+            "README".to_string(),
+        ];
+        assert_eq!(
+            manifest(&entries).unwrap(),
+            concat!(
+                r#"[{"kind":"image","label":"00","name":"00.jpg"},"#,
+                r#"{"kind":"video","label":"63","name":"63.MP4"},"#,
+                r#"{"kind":"image","label":"README","name":"README"}]"#,
+                "\n"
+            )
+        );
     }
 
     #[test]
     fn escapes_filenames_that_would_break_the_json() {
         let entries = vec!["a\"b.jpg".to_string(), "c\\d.png".to_string()];
-        assert_eq!(
-            manifest(&entries).unwrap(),
-            "[\"a\\\"b.jpg\",\"c\\\\d.png\"]\n"
-        );
+        let parsed: serde_json::Value = serde_json::from_str(&manifest(&entries).unwrap()).unwrap();
+        assert_eq!(parsed[0]["name"], "a\"b.jpg");
+        assert_eq!(parsed[0]["label"], "a\"b");
+        assert_eq!(parsed[1]["name"], "c\\d.png");
     }
 
     #[test]

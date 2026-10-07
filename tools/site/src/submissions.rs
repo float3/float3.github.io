@@ -1165,8 +1165,15 @@ and the same file twice: https://github.com/user-attachments/assets/1111-2222";
             gallery::names_in(&dir).unwrap(),
             vec!["00.jpg".to_string(), "01.jpg".into(), "02.jpg".into()]
         );
-        let manifest = fs::read_to_string(dir.join("index.json")).unwrap();
-        assert_eq!(manifest.trim(), r#"["00.jpg","01.jpg","02.jpg"]"#);
+        let manifest: serde_json::Value =
+            serde_json::from_str(&fs::read_to_string(dir.join("index.json")).unwrap()).unwrap();
+        let names: Vec<&str> = manifest
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|entry| entry["name"].as_str().unwrap())
+            .collect();
+        assert_eq!(names, ["00.jpg", "01.jpg", "02.jpg"]);
 
         let _ = fs::remove_dir_all(&site.root);
     }

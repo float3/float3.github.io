@@ -58,6 +58,7 @@ function toPhoto(value: unknown): Photo | null {
 
   return {
     src,
+    kind: "image",
     title,
     ...(description ? { description } : {}),
     ...(meta ? { meta } : {}),
