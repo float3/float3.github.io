@@ -41,9 +41,9 @@ hangeul_conversion = { path = "hangeul_conversion", optional = true }
 
 # The generator renders the whole table in one pass, so it needs both
 # dictionaries; without this it is still built by `cargo test --workspace
-# --no-default-features`, where `textprocessing::examples` is compiled out and
-# the example cannot resolve it. CI builds the workspace exactly that way, so
-# the failure lands there and nowhere else.
+# --no-default-features`, where `textprocessing::transforms::rendered` is
+# compiled out and the example cannot resolve it. CI builds the workspace
+# exactly that way, so the failure lands there and nowhere else.
 [[example]]
-name = "generate_examples"
+name = "generate_transforms"
 required-features = ["chinese", "korean"]

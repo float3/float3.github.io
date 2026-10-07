@@ -113,7 +113,7 @@ fn run_main() -> Result<()> {
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
-        "textprocessing-examples" => site.textprocessing_examples(),
+        "textprocessing-transforms" => site.textprocessing_transforms(),
         "normalize-gallery" | "normalize" => gallery::normalize(&site, &args[1..]),
         "report" => {
             let build_time = match args.get(1) {
@@ -184,7 +184,7 @@ Commands:
   generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
-  textprocessing-examples    regenerate the worked examples on the transform cards
+  textprocessing-transforms  regenerate the transform cards and their worked examples
   normalize-gallery COLLECTION...
                              renumber a misc gallery, re-encode its stills as
                              JPEG, and strip their metadata
