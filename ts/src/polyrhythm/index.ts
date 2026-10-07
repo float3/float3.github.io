@@ -1,11 +1,10 @@
-import { main, start_with_settings, stop } from "wasm-polyrhythm"
-
-type PolyrhythmSettings = {
-  base: number
-  tempo: number
-  subdivisions: string
-  pitch: number
-}
+import {
+  main,
+  polyrhythm_settings,
+  start_with_settings,
+  stop,
+  type PolyrhythmSettings,
+} from "wasm-polyrhythm"
 
 main()
 
@@ -89,12 +88,12 @@ function requiredButton(id: string) {
 }
 
 function readSettingsFromControls(): PolyrhythmSettings {
-  return {
-    base: readInteger(baseInput.value, 4, 1, 16),
-    tempo: readInteger(tempoInput.value, 120, 20, 280),
-    subdivisions: normalizeSubdivisions(subdivisionsInput.value),
-    pitch: readInteger(pitchInput.value, 440, 80, 1400),
-  }
+  return polyrhythm_settings(
+    baseInput.value,
+    tempoInput.value,
+    subdivisionsInput.value,
+    pitchInput.value,
+  )
 }
 
 function readSettingsFromHash(): PolyrhythmSettings | null {
@@ -104,12 +103,12 @@ function readSettingsFromHash(): PolyrhythmSettings | null {
   }
 
   const params = new URLSearchParams(hash)
-  return {
-    base: readInteger(params.get("base"), 4, 1, 16),
-    tempo: readInteger(params.get("tempo"), 120, 20, 280),
-    subdivisions: normalizeSubdivisions(params.get("subdivisions") ?? "3:4"),
-    pitch: readInteger(params.get("pitch"), 440, 80, 1400),
-  }
+  return polyrhythm_settings(
+    params.get("base") ?? "",
+    params.get("tempo") ?? "",
+    params.get("subdivisions") ?? "",
+    params.get("pitch") ?? "",
+  )
 }
 
 function applySettings(settings: PolyrhythmSettings) {
@@ -127,23 +126,6 @@ function updateHash(settings: PolyrhythmSettings) {
     pitch: String(settings.pitch),
   })
   history.replaceState(null, "", `#${params}`)
-}
-
-function readInteger(value: string | null, fallback: number, min: number, max: number) {
-  const parsed = Number.parseInt(value ?? "", 10)
-  if (!Number.isFinite(parsed)) {
-    return fallback
-  }
-  return Math.min(max, Math.max(min, parsed))
-}
-
-function normalizeSubdivisions(value: string) {
-  const parts = value
-    .split(/[,: ]+/)
-    .map((part) => readInteger(part, 0, 0, 32))
-    .filter((part) => part > 0)
-
-  return parts.length > 0 ? parts.join(":") : "3:4"
 }
 
 function setRunning(isRunning: boolean) {

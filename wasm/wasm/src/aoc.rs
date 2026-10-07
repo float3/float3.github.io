@@ -1,17 +1,23 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
-pub fn aoc_day_count_for_year(year: u32, default_days: u32) -> u32 {
-    if year == 2025 { 12 } else { default_days }
+pub fn aoc_first_year() -> u32 {
+    adventofcode::FIRST_YEAR
 }
 
 #[wasm_bindgen]
-pub fn aoc_problem_count_for_day(year: u32, day: u32, default_problems: u32) -> u32 {
-    if year == 2025 || day == 25 {
-        1
-    } else {
-        default_problems
-    }
+pub fn aoc_last_year() -> u32 {
+    adventofcode::LAST_YEAR
+}
+
+#[wasm_bindgen]
+pub fn aoc_day_count_for_year(year: u32) -> u32 {
+    adventofcode::day_count(year)
+}
+
+#[wasm_bindgen]
+pub fn aoc_problem_count_for_day(year: u32, day: u32) -> u8 {
+    adventofcode::problem_count(year, day)
 }
 
 #[wasm_bindgen]
@@ -76,10 +82,11 @@ mod tests {
 
     #[test]
     fn handles_partial_2025_calendar() {
-        assert_eq!(aoc_day_count_for_year(2025, 25), 12);
-        assert_eq!(aoc_day_count_for_year(2024, 25), 25);
-        assert_eq!(aoc_problem_count_for_day(2025, 3, 2), 1);
-        assert_eq!(aoc_problem_count_for_day(2024, 25, 2), 1);
+        assert_eq!(aoc_day_count_for_year(2025), 12);
+        assert_eq!(aoc_day_count_for_year(2024), 25);
+        assert_eq!(aoc_problem_count_for_day(2025, 3), 1);
+        assert_eq!(aoc_problem_count_for_day(2024, 25), 1);
+        assert_eq!(aoc_problem_count_for_day(2024, 24), 2);
     }
 
     #[test]

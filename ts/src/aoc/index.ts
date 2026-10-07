@@ -9,7 +9,7 @@ function initAdventOfCode() {
   if (!container || container.dataset.aocInitialized === "true") return
 
   container.dataset.aocInitialized = "true"
-  createTabs(container, { years: 11, days: 25, problems: 2 })
+  createTabs(container)
 }
 
 if (document.readyState === "loading") {

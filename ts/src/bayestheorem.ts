@@ -14,6 +14,8 @@ type BayesFormulaValues = {
   likelihood: number
   evidence: number
   numerator: number
+  /** Numerator over evidence before it is held to a probability. */
+  ratio: number
 }
 
 const bayesColors = {
@@ -286,6 +288,13 @@ function renderBayesSolver() {
     const posteriorValue = result.posterior
     const oddsValue = result.odds
     const errorCode = result.error_code
+    const formulaValues = {
+      prior: result.prior,
+      likelihood: result.likelihood,
+      evidence: evidenceValue,
+      numerator: numeratorValue,
+      ratio: result.ratio,
+    }
     result.free()
 
     falsePositive.input.disabled = mode !== "computed-evidence"
@@ -297,13 +306,6 @@ function renderBayesSolver() {
 
     setResult(numerator.value, numeratorValue)
     setResult(evidenceOutput.value, evidenceValue)
-
-    const formulaValues = {
-      prior: clampProbability(Number.parseFloat(prior.input.value) / 100),
-      likelihood: clampProbability(Number.parseFloat(likelihood.input.value) / 100),
-      evidence: evidenceValue,
-      numerator: numeratorValue,
-    }
 
     updateCopy(labels, formulaValues)
     updateSolution(solution, formulaValues)
@@ -344,11 +346,6 @@ function eventName(value: string, fallback: string) {
   return trimmed.length > 0 ? trimmed : fallback
 }
 
-function clampProbability(value: number) {
-  if (!Number.isFinite(value)) return 0
-  return Math.min(1, Math.max(0, value))
-}
-
 function formatProbabilityPercent(value: number) {
   return Number.isFinite(value) ? `${probabilityToPercent(value)}%` : "an unknown percentage"
 }
@@ -365,7 +362,7 @@ function formatPosteriorPercent(values: BayesFormulaValues) {
     return "-"
   }
 
-  return `${probabilityToPercent(values.numerator / values.evidence)}%`
+  return `${probabilityToPercent(values.ratio)}%`
 }
 
 function createBayesEquation(values: BayesFormulaValues) {

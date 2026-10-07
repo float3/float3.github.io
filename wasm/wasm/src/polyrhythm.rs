@@ -65,6 +65,79 @@ fn voice_frequency(base_pitch: u32, index: usize) -> f32 {
     frequency.min(4_000.0)
 }
 
+/// The page's settings, each read from text and held within its bounds, the
+/// way both the controls and the URL are read.
+#[wasm_bindgen(getter_with_clone)]
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct PolyrhythmSettings {
+    pub base: u32,
+    pub tempo: u32,
+    /// Each voice's count, joined with `:`.
+    pub subdivisions: String,
+    pub pitch: u32,
+}
+
+/// Reads settings typed into the page or carried in its URL: a number out of
+/// range is held at the nearest bound, and one that is not a number at all
+/// falls back to the default.
+#[wasm_bindgen]
+pub fn polyrhythm_settings(
+    base: &str,
+    tempo: &str,
+    subdivisions: &str,
+    pitch: &str,
+) -> PolyrhythmSettings {
+    PolyrhythmSettings {
+        base: read_integer(base, 4, 1, 16),
+        tempo: read_integer(tempo, 120, 20, 280),
+        subdivisions: parse_subdivisions(subdivisions)
+            .iter()
+            .map(u32::to_string)
+            .collect::<Vec<_>>()
+            .join(":"),
+        pitch: read_integer(pitch, 440, 80, 1400),
+    }
+}
+
+/// The leading integer of `text`, as `parseInt` reads one, held within
+/// `min..=max`, or `fallback` when there is none.
+fn read_integer(text: &str, fallback: u32, min: u32, max: u32) -> u32 {
+    let text = text.trim_start();
+    let (negative, digits) = match text.strip_prefix('-') {
+        Some(rest) => (true, rest),
+        None => (false, text.strip_prefix('+').unwrap_or(text)),
+    };
+    let end = digits
+        .find(|ch: char| !ch.is_ascii_digit())
+        .unwrap_or(digits.len());
+    if end == 0 {
+        return fallback;
+    }
+    if negative {
+        return min;
+    }
+    digits[..end].parse::<u64>().map_or(max, |value| {
+        value.clamp(u64::from(min), u64::from(max)) as u32
+    })
+}
+
+/// Voice counts separated by commas, colons or spaces, each held to at most
+/// thirty-two, dropping any that come to nothing. With none left, three
+/// against four.
+fn parse_subdivisions(text: &str) -> Vec<u32> {
+    let counts: Vec<u32> = text
+        .split([',', ':', ' '])
+        .filter(|part| !part.is_empty())
+        .map(|part| read_integer(part, 0, 0, 32))
+        .filter(|count| *count > 0)
+        .collect();
+    if counts.is_empty() {
+        vec![3, 4]
+    } else {
+        counts
+    }
+}
+
 type MyType = Rc<RefCell<Option<Closure<dyn FnMut()>>>>;
 
 /// Starts the animation with user settings.
@@ -86,14 +159,7 @@ pub fn start_with_settings(
         }
     });
 
-    // Parse subdivisions string; supports comma or colon separated values.
-    let subs: Vec<u32> = subdivisions
-        .split([',', ':'])
-        .filter_map(|s| s.trim().parse::<u32>().ok())
-        .collect();
-    if subs.is_empty() {
-        return Err(JsValue::from_str("Invalid subdivisions"));
-    }
+    let subs = parse_subdivisions(subdivisions);
 
     // Obtain canvas and context.
     let document = window.document().unwrap();
@@ -298,6 +364,23 @@ mod tests {
         assert!((voice_frequency(440, 0) - 440.0).abs() < 0.001);
         assert!((voice_frequency(440, 1) - 659.255).abs() < 0.01);
         assert!(voice_frequency(440, 3) > voice_frequency(440, 2));
+    }
+
+    #[test]
+    fn settings_are_held_within_bounds() {
+        let settings = polyrhythm_settings("99", "abc", "3, 4 :5 0 40", "-2");
+        assert_eq!(
+            settings,
+            PolyrhythmSettings {
+                base: 16,
+                tempo: 120,
+                subdivisions: "3:4:5:32".to_string(),
+                pitch: 80,
+            }
+        );
+        assert_eq!(polyrhythm_settings("", "", "", "").subdivisions, "3:4");
+        assert_eq!(read_integer(" 7bpm", 0, 1, 10), 7);
+        assert_eq!(read_integer("99999999999999999999", 0, 1, 10), 10);
     }
 
     #[test]
