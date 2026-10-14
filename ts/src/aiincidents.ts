@@ -34,15 +34,17 @@ interface Tally {
 
 const TALLIES: readonly Tally[] = [
   { key: "events", label: "events so far", each: 1 },
+  { key: "intrusions", label: "third parties an agent got into" },
+  { key: "campaigns", label: "campaigns by people using one" },
   { key: "legal", label: "suits, inquiries, filings" },
-  { key: "blocks", label: "government blocks" },
-  { key: "intrusions", label: "systems an agent got into" },
   { key: "deaths", label: "deaths named in filings" },
 ]
 
 interface Figure {
   value: number
   label: string
+  /** As many decimals as the markup wrote, so 29.2% does not become 29. */
+  decimals: number
 }
 
 interface Entry {
@@ -61,6 +63,7 @@ interface Counter {
   element: HTMLElement
   from: number
   to: number
+  decimals: number
   /** Timestamp the current travel started, or undefined when it is at rest. */
   started?: number
   frame?: number
@@ -98,7 +101,13 @@ function figureOf(element: HTMLElement): Figure | undefined {
 
   const value = Number(written)
   if (!Number.isFinite(value)) return undefined
-  return { value, label: element.dataset.figureLabel ?? "" }
+
+  const point = written.indexOf(".")
+  return {
+    value,
+    label: element.dataset.figureLabel ?? "",
+    decimals: point === -1 ? 0 : written.length - point - 1,
+  }
 }
 
 /** The entries in document order, each carrying the totals as of itself. */
@@ -121,8 +130,9 @@ function readEntries(track: HTMLElement): Entry[] {
 }
 
 function counter(element: HTMLElement, value: number): Counter {
-  element.textContent = value.toLocaleString()
-  return { element, from: value, to: value }
+  const count: Counter = { element, from: value, to: value, decimals: 0 }
+  paint(count, value)
+  return count
 }
 
 /** Fills the panel's list of totals, one row per tally. */
@@ -185,12 +195,20 @@ function easeOut(fraction: number): number {
 }
 
 function paint(count: Counter, value: number): void {
-  count.element.textContent = Math.round(value).toLocaleString()
+  count.element.textContent = value.toLocaleString(undefined, {
+    minimumFractionDigits: count.decimals,
+    maximumFractionDigits: count.decimals,
+  })
 }
 
 /** Sends a counter to a new value, picking up from wherever it currently is. */
 function retarget(count: Counter, to: number): void {
-  if (count.to === to) return
+  if (count.to === to) {
+    // Already there, but the figure it shares its slot with may have had a
+    // different number of decimals.
+    if (count.frame === undefined) paint(count, to)
+    return
+  }
 
   if (count.frame !== undefined) cancelAnimationFrame(count.frame)
 
@@ -236,6 +254,7 @@ function show(dash: Dash, entries: readonly Entry[], index: number): void {
 
   dash.figure.hidden = entry.figure === undefined
   if (entry.figure !== undefined) {
+    dash.figureValue.decimals = entry.figure.decimals
     retarget(dash.figureValue, entry.figure.value)
     dash.figureLabel.textContent = entry.figure.label
   }
@@ -273,6 +292,7 @@ function start(timeline: HTMLElement): void {
   if (first !== undefined) {
     dash.figureValue.from = first.value
     dash.figureValue.to = first.value
+    dash.figureValue.decimals = first.decimals
     paint(dash.figureValue, first.value)
   }
 
