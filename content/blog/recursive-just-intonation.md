@@ -143,7 +143,7 @@ so here's the idea:
 > root its own just intonated keyboard.
 
 i think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
-and so on. the root of each piano is taken from the C just intonation scale
+&c. the root of each piano is taken from the C just intonation scale
 above. once a chord chooses a root, all of its notes come from the piano rooted
 on that note. it's recursive because the same ratio table is used twice, once
 to pick the root and once again inside that root:

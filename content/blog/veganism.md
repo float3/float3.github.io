@@ -163,7 +163,7 @@ let's address each claim:
   - many animals cannot cope with the rapid growth that their diet causes, resulting in heart failures, leg deformities and other issues https://awionline.org/content/inhumane-practices-factory-farms
 - they get good treatment:
   - workers do not attempt to treat ill chickens – they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
-  - hundreds of thousands of animals (pigs, cows, sheep, etc.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
+  - hundreds of thousands of animals (pigs, cows, sheep, &c.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
 - they are free of diseases:
   - factory farms are "breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health
   - the practice of administering sub-therapeutic antibiotics has fostered drug-resistant pathogens that can spread to humans. this 2023 study links 1 Million human deaths per year to antibiotic resistance stemming from factory farm antibiotic abuse https://www.aspca.org/protecting-farm-animals/factory-farming-hurts-people-and-communities ---------- https://www.prnewswire.com/news-releases/one-million-human-deaths-linked-to-factory-farming-set-to-double-by-2050-301792539.html

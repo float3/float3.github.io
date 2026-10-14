@@ -40,4 +40,4 @@ if you had deep, contra‑causal free will, you should be able to reconfigure yo
 
 these tests fail. higher‑order desires ("i wish i wanted X") do not translate to lower‑order desires ("i actually want X").
 
-yes, you _can_ sometimes reshape tastes and motives-but via conditioning, repeated exposure, social incentives, dopaminergic updates, etc.
+yes, you _can_ sometimes reshape tastes and motives-but via conditioning, repeated exposure, social incentives, dopaminergic updates, &c.
