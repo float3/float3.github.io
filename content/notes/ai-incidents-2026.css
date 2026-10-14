@@ -95,23 +95,26 @@
   border-top: 1px solid var(--ait-border);
 }
 
+/* The number on top of its label. A `dd` may not precede its `dt` in the
+   markup, so the column is reversed rather than the list. */
 .ait-tally {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.4rem;
+  flex-direction: column-reverse;
+  gap: 0.05rem;
 }
 
 .ait-tally dt {
   color: var(--ait-muted);
-  font-size: 0.7rem;
-  line-height: 1.25;
+  font-size: 0.66rem;
+  line-height: 1.2;
 }
 
 .ait-tally dd {
   margin: 0;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
+  line-height: 1.2;
 }
 
 .ait-progress {
@@ -214,6 +217,29 @@
   font-size: 0.65rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* When it happened, when somebody noticed, when it was published. The gap
+   between the first and the last is appended by the page script, so it cannot
+   drift from the two dates it is the distance between. */
+.ait-entry .ait-when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.5rem;
+  margin: 0.45rem 0 0.35rem;
+  color: var(--ait-muted);
+  font-size: 0.72rem;
+}
+
+.ait-entry .ait-when > span + span::before {
+  content: "\00b7";
+  margin-right: 0.45rem;
+  opacity: 0.6;
+}
+
+.ait-entry .ait-gap {
+  color: var(--ait-accent);
+  font-variant-numeric: tabular-nums;
 }
 
 .ait-source {

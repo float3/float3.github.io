@@ -30,12 +30,15 @@ interface Tally {
   label: string
   /** What every entry adds, for a count that is only the entries themselves. */
   each?: number
+  /** For a count the markup never states because it follows from the dates. */
+  derive?: (element: HTMLElement) => number
 }
 
 const TALLIES: readonly Tally[] = [
   { key: "events", label: "events so far", each: 1 },
   { key: "intrusions", label: "third parties an agent got into" },
   { key: "campaigns", label: "campaigns by people using one" },
+  { key: "quiet", label: "days nobody knew, added up", derive: gapDays },
   { key: "legal", label: "suits, inquiries, filings" },
   { key: "deaths", label: "deaths named in filings" },
 ]
@@ -86,9 +89,44 @@ function text(root: ParentNode, selector: string): string {
   return root.querySelector(selector)?.textContent?.trim() ?? ""
 }
 
+/** A `<time datetime>` as a whole day number, or nothing if it is not there. */
+function day(element: Element | null): number | undefined {
+  const written = element?.getAttribute("datetime")
+  if (written === null || written === undefined) return undefined
+
+  const parsed = Date.parse(written)
+  return Number.isNaN(parsed) ? undefined : parsed / 86_400_000
+}
+
+/**
+ * How long the thing went unknown: the days from when it happened to when it
+ * was made public. An entry reported as it happened contributes nothing, and
+ * so does one dated to a report rather than to the event, which is why this is
+ * derived from the dates in the markup instead of being typed in beside them.
+ */
+function gapDays(element: HTMLElement): number {
+  const happened = day(element.querySelector(".ait-at"))
+  const disclosed = day(element.querySelector(".ait-disclosed time"))
+  if (happened === undefined || disclosed === undefined) return 0
+
+  return Math.max(Math.round(disclosed - happened), 0)
+}
+
+/** Puts the gap in the entry too, beside the two dates it comes from. */
+function showGap(element: HTMLElement, days: number): void {
+  const when = element.querySelector(".ait-when")
+  if (when === null || days === 0) return
+
+  const span = document.createElement("span")
+  span.className = "ait-gap"
+  span.textContent = `${days.toLocaleString()} days unknown`
+  when.append(span)
+}
+
 /** What this entry adds to one tally, which for most entries is nothing. */
 function contribution(element: HTMLElement, tally: Tally): number {
   if (tally.each !== undefined) return tally.each
+  if (tally.derive !== undefined) return tally.derive(element)
 
   const written = element.dataset[`tally${tally.key[0].toUpperCase()}${tally.key.slice(1)}`]
   const value = Number(written ?? 0)
@@ -118,10 +156,11 @@ function readEntries(track: HTMLElement): Entry[] {
     for (const tally of TALLIES) {
       running.set(tally.key, (running.get(tally.key) ?? 0) + contribution(element, tally))
     }
+    showGap(element, gapDays(element))
 
     return {
       element,
-      date: text(element, "time"),
+      date: text(element, ".ait-at"),
       kind: text(element, ".ait-kind"),
       figure: figureOf(element),
       totals: new Map(running),
