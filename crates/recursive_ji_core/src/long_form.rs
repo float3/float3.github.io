@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use std::f64::consts::TAU;
 use std::io::Write;
 
-use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
+use crate::TWELVE_TONE_NAMES;
 use music21_rs::{Pitch, TuningSystem};
 
 use crate::{GeneratedBinary, GeneratedText, Result, SAMPLE_RATE};
@@ -1038,7 +1038,7 @@ fn build_mozart_dies_irae_events() -> Result<Vec<LongEvent>> {
 
 fn midi_to_pitch(midi_note: i32) -> Option<Pitch> {
     // Convert MIDI note number to a simple sharp-based name (e.g., C#4)
-    let names = music21_rs::tuningsystem::TWELVE_TONE_NAMES_SHARP;
+    let names = crate::TWELVE_TONE_NAMES_SHARP;
     let pc = midi_note.rem_euclid(12) as usize;
     let octave = midi_note.div_euclid(12) - 1; // MIDI 60 -> C4
     let name = format!("{}{}", names[pc], octave);

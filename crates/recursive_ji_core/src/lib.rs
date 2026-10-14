@@ -2,9 +2,23 @@ use std::error::Error;
 use std::f64::consts::TAU;
 use std::io::Write;
 
+use music21_rs::tuningsystem::AnyTuningSystem;
 use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
-use music21_rs::tuningsystem::{AnyTuningSystem, TWELVE_TONE_NAMES};
 use music21_rs::{Pitch, TuningSystem};
+
+/// How this site spells the twelve pitch classes: both readings of every
+/// black key, because a chord's root can be either and the post names them
+/// that way. music21-rs used to carry these as `TWELVE_TONE_NAMES`, but they
+/// are a presentation choice rather than theory, and it now offers only
+/// `CHROMATIC_PITCH_CLASS_NAMES`, which picks one spelling per class.
+pub const TWELVE_TONE_NAMES: [&str; 12] = [
+    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B",
+];
+
+/// The same twelve, spelled with sharps alone, for MIDI note names.
+pub const TWELVE_TONE_NAMES_SHARP: [&str; 12] = [
+    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+];
 
 pub mod figures;
 mod long_form;
