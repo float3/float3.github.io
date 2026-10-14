@@ -26,7 +26,7 @@ toml = "1.1.6"
 # built from its vendored C++ source, checks the background shaders as WebGL2
 # would compile them.
 [dev-dependencies]
-glslang = "0.8.1"
+glslang = "0.9.0"
 
 [[bin]]
 name = "site"
