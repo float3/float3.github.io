@@ -83,7 +83,9 @@ pub fn staff_note(pitch: &Pitch) -> Result<StaffNote> {
     let accidental = match characters.next() {
         None => None,
         Some('#') => Some(&SHARP),
-        Some('-') => Some(&FLAT),
+        // music21 writes a flat as `-`, as in `B-4`, and music21-rs spells one
+        // `b`. Both reach here, so both are read.
+        Some('-' | 'b' | '\u{266d}') => Some(&FLAT),
         Some(other) => return Err(format!("cannot engrave accidental {other:?}").into()),
     };
 

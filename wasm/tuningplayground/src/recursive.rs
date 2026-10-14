@@ -17,7 +17,13 @@
 use serde::Serialize;
 
 use crate::scale::{self, ADAPTIVE_ID, Scale};
-use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
+/// How this repository spells the twelve pitch classes: both readings of
+/// every black key, the way the post names a chord's root. music21-rs used to
+/// carry this as `TWELVE_TONE_NAMES` and now offers only
+/// `CHROMATIC_PITCH_CLASS_NAMES`, which picks one spelling per class.
+const TWELVE_TONE_NAMES: [&str; 12] = [
+    "C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B",
+];
 
 /// Rows and columns past this many are left out of the matrix the page draws,
 /// though every one of them can still be played. The Scala archive has scales

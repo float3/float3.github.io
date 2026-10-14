@@ -14,10 +14,17 @@
 use music21_rs::tuningsystem::adaptive::{AdaptiveTuningSystem, RECURSIVE_JI};
 use music21_rs::tuningsystem::{
     ALL_TUNING_SYSTEMS, C4, CN1, COMMON_EQUAL_TEMPERAMENTS, EqualDivision, HISTORICAL_TEMPERAMENTS,
-    TWELVE_TONE_NAMES_SHARP, TuningSystem, WIKI_TEMPERAMENTS,
+    TuningSystem, WIKI_TEMPERAMENTS,
 };
 use music21_rs::{ScalaArchive, ScalaScale};
 use serde::Serialize;
+
+/// The twelve keys spelled with sharps, for the staff and the key caps.
+/// music21-rs used to carry this as `TWELVE_TONE_NAMES_SHARP`; it is a
+/// presentation choice rather than theory, so it lives here now.
+const TWELVE_TONE_NAMES_SHARP: [&str; 12] = [
+    "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
+];
 use std::sync::OnceLock;
 
 /// The period the root sits in, counted from step zero.
@@ -454,8 +461,13 @@ fn built_in(tuning: TuningSystem, root_hz: f64) -> Scale {
             let ratio = tuning.ratio(degree);
             let cents = cents_of(ratio);
             Degree {
-                ratio_label: match tuning.fraction(degree) {
-                    Some(fraction) if fraction.base() == 0 => fraction.label(),
+                // A plain rational degree is named by its fraction, a root of an
+                // equal division by its step. This read `fraction(degree)` and
+                // tested `base() == 0` before music21-rs replaced it with
+                // `exact_ratio`, whose rational degrees are the ones
+                // `to_fraction` answers for.
+                ratio_label: match tuning.exact_ratio(degree) {
+                    Some(ratio) if ratio.to_fraction().is_some() => ratio.to_string(),
                     _ => format!("{degree}\\{count}"),
                 },
                 ratio,
@@ -510,7 +522,7 @@ fn from_scala(id: &str, name: &str, family: &str, scale: &ScalaScale, root_hz: f
         .chain(std::iter::once(&scale.period()))
         .enumerate()
         .map(|(degree, entry)| Degree {
-            ratio_label: if entry.as_fraction().is_some() {
+            ratio_label: if entry.as_ratio().is_some() {
                 entry.to_string()
             } else {
                 format!("{:.3}¢", entry.cents())
