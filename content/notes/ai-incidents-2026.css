@@ -8,14 +8,25 @@
   --ait-border: color-mix(in srgb, var(--gray) 32%, transparent);
   --ait-muted: var(--gray);
   --ait-accent: var(--secondary);
+  /* How far down the panel sticks. Below 800px the site's own header is
+     sticky at the top of the viewport and transparent, so a panel pinned at
+     zero sits underneath it; the page script measures that header and writes
+     its height here. This is the fallback for when the script has not run. */
+  --ait-stick: 0px;
   margin: 1.5rem 0 2.5rem;
+}
+
+@media (max-width: 800px) {
+  .ait {
+    --ait-stick: 5.5rem;
+  }
 }
 
 /* The panel */
 
 .ait-dash {
   position: sticky;
-  top: 0;
+  top: var(--ait-stick);
   z-index: 2;
   display: grid;
   grid-template-columns: 1fr auto;
@@ -275,6 +286,46 @@
 .ait.is-live .ait-entry.is-past::before {
   border-color: color-mix(in srgb, var(--ait-accent) 50%, var(--ait-border));
   background: color-mix(in srgb, var(--ait-accent) 45%, var(--light));
+}
+
+/* A phone gives the panel a third of the screen if it is let. Tighter tiles,
+   smaller type, and the track loses most of its indent. */
+@media (max-width: 800px) {
+  .ait-dash {
+    gap: 0.25rem 0.6rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .ait-figure-value {
+    font-size: 1.5rem;
+  }
+
+  .ait-figure-label {
+    max-width: 7rem;
+  }
+
+  .ait-tallies {
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: 0.2rem 0.6rem;
+    margin-top: 0.3rem;
+    padding-top: 0.4rem;
+  }
+
+  .ait-tally dd {
+    font-size: 0.9rem;
+  }
+
+  .ait-tally dt {
+    font-size: 0.62rem;
+  }
+
+  .ait-track {
+    --ait-inset: 1.1rem;
+  }
+
+  .ait-entry {
+    padding-bottom: 1.9rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
