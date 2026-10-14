@@ -8,25 +8,14 @@
   --ait-border: color-mix(in srgb, var(--gray) 32%, transparent);
   --ait-muted: var(--gray);
   --ait-accent: var(--secondary);
-  /* How far down the panel sticks. Below 800px the site's own header is
-     sticky at the top of the viewport and transparent, so a panel pinned at
-     zero sits underneath it; the page script measures that header and writes
-     its height here. This is the fallback for when the script has not run. */
-  --ait-stick: 0px;
   margin: 1.5rem 0 2.5rem;
-}
-
-@media (max-width: 800px) {
-  .ait {
-    --ait-stick: 5.5rem;
-  }
 }
 
 /* The panel */
 
 .ait-dash {
   position: sticky;
-  top: var(--ait-stick);
+  top: var(--sticky-top);
   z-index: 2;
   display: grid;
   grid-template-columns: 1fr auto;

@@ -1,5 +1,24 @@
 @use "./variables.scss" as *;
 
+// How far down the viewport a page may stick something.
+//
+// Below $mobile the left sidebar stops being a column beside the page and
+// becomes a row above it, and the explorer plugin makes it `position: sticky`
+// while `custom.scss` leaves it transparent and gives it `z-index: 200`. So a
+// page element pinned at `top: 0` parks underneath the site's own header and
+// the two read through each other. Anything a page sticks to the top of the
+// viewport uses `top: var(--sticky-top)` instead of a number, and
+// `ts/src/shared/sticky.ts` replaces the guess below with the header's
+// measured height. `cargo test -p site` refuses a page stylesheet that pins
+// itself to the top any other way.
+:root {
+  --sticky-top: 0px;
+
+  @media all and ($mobile) {
+    --sticky-top: 5.5rem;
+  }
+}
+
 *,
 *::before,
 *::after {

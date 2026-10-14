@@ -25,6 +25,7 @@ mod process;
 mod recursive_ji;
 mod report;
 mod shaders;
+mod styles;
 mod submissions;
 mod tables;
 mod workflow;

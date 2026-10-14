@@ -8,9 +8,11 @@
  *
  * The running sums are computed here rather than written into the markup
  * because they depend on where the reader is, and because a tally typed by hand
- * into twenty-three entries would be wrong by the second edit. Each entry
+ * into every entry would be wrong by the second edit. Each entry
  * carries only its own contribution, as `data-tally-<key>`.
  */
+
+import { followHeader } from "./shared/sticky.js"
 
 const TIMELINE = "ai-incidents-2026"
 
@@ -313,32 +315,6 @@ function show(dash: Dash, entries: readonly Entry[], index: number): void {
 }
 
 /**
- * Below 800px the site's own header is sticky at the top of the viewport, and
- * transparent, so the panel pinned at zero reads straight through it. The
- * stylesheet carries a guess for the height; this replaces it with the
- * measurement, because the header holds a search box and a title in a webfont
- * and is not a fixed number of pixels tall.
- *
- * 800px is Quartz's own `$mobile` breakpoint, which is what decides whether
- * that header is a row above the page or a column beside it.
- */
-function followHeader(timeline: HTMLElement): void {
-  const header = document.querySelector<HTMLElement>(".sidebar.left")
-  if (header === null) return
-
-  const narrow = window.matchMedia("(max-width: 800px)")
-  const measure = (): void => {
-    const height = narrow.matches ? header.getBoundingClientRect().height : 0
-    timeline.style.setProperty("--ait-stick", `${Math.round(height)}px`)
-  }
-
-  measure()
-  void document.fonts.ready.then(measure)
-  window.addEventListener("resize", measure)
-  narrow.addEventListener("change", measure)
-}
-
-/**
  * The figure slot holds the only number that does not grow monotonically, so
  * it starts at the first entry's rather than counting up to it from zero.
  */
@@ -361,7 +337,7 @@ function start(timeline: HTMLElement): void {
     paint(dash.figureValue, first.value)
   }
 
-  followHeader(timeline)
+  followHeader()
   timeline.classList.add("is-live")
   show(dash, entries, 0)
 
