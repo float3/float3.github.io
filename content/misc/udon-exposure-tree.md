@@ -9,7 +9,7 @@ tags:
 
 which parts of the .NET and Unity APIs [Udon](https://udonsharp.docs.vrchat.com/)
 lets a VRChat world touch, dumped out of the VRChat SDK's class exposure window.
-Base members are included, and a percentage is the exposed members of a type
+base members are included, and a percentage is the exposed members of a type
 over all of them, exactly as the window counts it.
 
 **56,411 members across 1,498 types, 45,341 of them exposed** — 80%. `[x]` is exposed and `[ ]` is not.

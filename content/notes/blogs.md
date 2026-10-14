@@ -10,7 +10,7 @@ tags:
 
 you can also find all these links [here](/misc/plaintext/blogs.txt)
 
-blogs I like
+blogs i like
 
 https://ciechanow.ski/archives/
 

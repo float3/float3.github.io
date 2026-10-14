@@ -138,7 +138,7 @@ depending on region, speaker, and style, some Taiwan Mandarin speakers may show 
 
 ### notes requiring verification
 
-the following are useful hypotheses about regional pronunciation, but I would not treat them as general rules without checking a specific phonological source or speaker sample:
+the following are useful hypotheses about regional pronunciation, but i would not treat them as general rules without checking a specific phonological source or speaker sample:
 
 - eng after b-, f-, m-, p-, and w- may be realized closer to _ong_ in some Taiwan varieties: 風 _fēng_ → something closer to _fōng_
 - -uo, -ou, and -e may be centralized or otherwise reduced in casual speech

@@ -4,7 +4,7 @@ tags:
   - writing
   - ai
 ---
-I recently had the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list, so i decided to write a list myself this is a non-exhaustive list about people worried for the future of humanity. request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
+i recently had the misfortune of stumbling on [Drew DeVault's](https://drewdevault.com/weird-guys/) list, so i decided to write a list myself this is a non-exhaustive list about people worried for the future of humanity. request additions, removals, or changes [via email](mailto:contact@hilll.dev); patches welcome.
 
 
 ---
@@ -218,7 +218,7 @@ Holden Karnofsky ([@HoldenKarnofsky](https://x.com/HoldenKarnofsky)) co-founded 
 
 **unresolved forecasts**: extinction possible within a short time frame; no year given
 
-Joep Meindertsma ([@joepmeindertsma](https://x.com/joepmeindertsma)) is a Dutch software entrepreneur who read _Superintelligence_ and in May 2023 [founded PauseAI](https://en.wikipedia.org/wiki/PauseAI), putting his company on hold to do it. PauseAI asks for an international agency modelled on the IAEA and a halt to training the largest models until safety can be shown; it has protested at Microsoft in Brussels, at Bletchley Park during the first safety summit, at OpenAI, and in thirteen countries at once before the Seoul summit. his probability of doom is [40%](https://pauseai.info/pdoom). he has said there is a chance of extinction within a short time frame but has not published a timeline for it that I can find.
+Joep Meindertsma ([@joepmeindertsma](https://x.com/joepmeindertsma)) is a Dutch software entrepreneur who read _Superintelligence_ and in May 2023 [founded PauseAI](https://en.wikipedia.org/wiki/PauseAI), putting his company on hold to do it. PauseAI asks for an international agency modelled on the IAEA and a halt to training the largest models until safety can be shown; it has protested at Microsoft in Brussels, at Bletchley Park during the first safety summit, at OpenAI, and in thirteen countries at once before the Seoul summit. his probability of doom is [40%](https://pauseai.info/pdoom). he has said there is a chance of extinction within a short time frame but has not published a timeline for it that i can find.
 
 ---
 

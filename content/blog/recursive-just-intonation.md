@@ -7,16 +7,16 @@ tags:
 
 ## what is this about?
 
-recursive just intonation is a toy tuning system I came up with during my
+recursive just intonation is a toy tuning system i came up with during my
 highschool physics classes, while trying to find a solution to the dissonance of
-12TET. I was frustrated with 12TET and watched a video on just intonation, I
-immediately realized the impracticality of it, so I decided to make my own even
+12TET. i was frustrated with 12TET and watched a video on just intonation, i
+immediately realized the impracticality of it, so i decided to make my own even
 less practical version.
 
-it's very easy to predict why it won't become popular. that said I find it
-interesting and both mathematically and musically beautiful, so I decided to
+it's very easy to predict why it won't become popular. that said i find it
+interesting and both mathematically and musically beautiful, so i decided to
 write this blogpost ([listening examples further below](#listening-examples)).
-Before I explain what it is I'll give a little background on tuning systems in
+before i explain what it is i'll give a little background on tuning systems in
 general.
 
 ## what makes one interval nice and another unpleasant
@@ -118,7 +118,7 @@ now while just intonated intervals are nicer, all of these intervals are in
 relation to C, our root. while a major third (`4:5`) and a perfect fifth (`2:3`)
 on their own sound good, if we keep going up the steps one by one (`16/15`), we
 don't end up at the same place that we would end up if we skipped a step
-(`9/8`). I.e. just intonation doesn't have the property mentioned earlier.
+(`9/8`). i.e. just intonation doesn't have the property mentioned earlier.
 
 you hear this as soon as you play a chord that isn't built on C. C major is
 exact, but E major on the same keyboard is:
@@ -142,7 +142,7 @@ so here's the idea:
 > Keep the roots on a C-based just intonation keyboard, but give every chord
 > root its own just intonated keyboard.
 
-I think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
+i think of it as 12 pianos: one just piano rooted on C, one on C#/Db, one on D,
 and so on. the root of each piano is taken from the C just intonation scale
 above. once a chord chooses a root, all of its notes come from the piano rooted
 on that note. it's recursive because the same ratio table is used twice, once
@@ -203,7 +203,7 @@ depends on which chord it's in.
 
 <script type="module" src="/js/audiooscilloscope.js"></script>
 
-I picked a progression that goes to chords that fixed C just intonation gets
+i picked a progression that goes to chords that fixed C just intonation gets
 wrong. the first four chords, C, E, Ab and back to C, go up in major thirds,
 which is exactly where E major's G# and the C piano's Ab clash.
 
@@ -354,7 +354,7 @@ more audio examples:
 
 <figure class="audio-figure" data-oscilloscope>
   <audio controls src="/misc/media/recursive-just-intonation-composition.wav"></audio>
-  <figcaption>some composition I came up with for this blog post.</figcaption>
+  <figcaption>some composition i came up with for this blog post.</figcaption>
 </figure>
 
 ## why recursive just intonation is good
@@ -362,7 +362,7 @@ more audio examples:
 every major chord is an exact `4:5:6`, whatever its root. E major doesn't take
 C's Ab, it gets its own G#. D major doesn't take C's A, it gets its own.
 
-that's also how I hear harmony: when a chord arrives, its root becomes the
+that's also how i hear harmony: when a chord arrives, its root becomes the
 local center, and recursive just intonation tunes to that center instead of to
 one keyboard for the whole piece.
 
@@ -394,14 +394,14 @@ key share one instrument.
 
 ## practical uses
 
-one day I will make a keyboard on which with your left hand you can determine
+one day i will make a keyboard on which with your left hand you can determine
 the current key/context and with your right hand you play notes that are
 dynamically retuned according to the table, until then the practical
 applications remain few.
 
 in the meantime, the [tuning playground](/tools/tuningplayground.md) has
-recursive just intonation as one of its scales, and I later realized this is
-just one instance of a more general idea, which I wrote about in
+recursive just intonation as one of its scales, and i later realized this is
+just one instance of a more general idea, which i wrote about in
 [Recursive Tuning](/blog/recursive-tuning.md).
 
 ## my other music related work
@@ -425,7 +425,7 @@ projects:
   inspired by python's music21, which the tuning playground and this post are
   built on ([github](https://github.com/float3/music21-rs),
   [crates.io](https://crates.io/crates/music21-rs))
-- [AudioLink](https://audiolink.dev): I'm a maintainer on the core team of
+- [AudioLink](https://audiolink.dev): i'm a maintainer on the core team of
   AudioLink, an audio-visualization library for Unity
   ([github](https://github.com/llealloo/audiolink),
   [demo](https://traeumerei.dev))

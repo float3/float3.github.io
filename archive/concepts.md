@@ -3,7 +3,7 @@ title: "concepts"
 updated: 1970-01-02
 ---
 
-whenever I learn something new I write it down here
+whenever i learn something new i write it down here
 
 ## programming
 

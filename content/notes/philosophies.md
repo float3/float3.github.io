@@ -4,7 +4,7 @@ tags:
   - writing
 ---
 
-here I put things that I wanna write down but that are too small to have their own blog post
+here i put things that i wanna write down but that are too small to have their own blog post
 
 ## making choices
 
@@ -15,7 +15,7 @@ a) **Allocating resources** to a specific brand, relationship, skill, or activit
 
 B) **Punishing and rewarding** certain behaviors or traits that influenced your decision.
 
-for instance, if I choose to spend time with person A rather than person B because I find A's company more enjoyable, it implicitly suggests a comparison against B. the reasons for not choosing B might include not finding B as amusing, lacking sufficient interest, having recently engaged in conversation with B, their living too far away, among other considerations.
+for instance, if i choose to spend time with person A rather than person B because i find A's company more enjoyable, it implicitly suggests a comparison against B. the reasons for not choosing B might include not finding B as amusing, lacking sufficient interest, having recently engaged in conversation with B, their living too far away, among other considerations.
 
 the complex web of factors that guides our decisions essentially acts as a form of reward or punishment for the current person, brand, or object we're deciding about.
 
@@ -24,10 +24,10 @@ it's important to note that the impact of these rewards and punishments, whether
 now because humans do not have free-will, through genetics, brain chemicals, environment and billions of tiny processes that started millions of years ago
 the concept of rewarding or punishing assumes agency, that we simply do not have, and is fundamentally paradoxical.
 
-## I do want to live forever
+## i do want to live forever
 
-I don't want to die today, I don't want to die tomorrow, therefore I will never want to die.
-¬(I don't want to die today) ∧ ¬(I don't want to die tomorrow) → (I want to live forever (as long as p))
+i don't want to die today, i don't want to die tomorrow, therefore i will never want to die.
+¬(i don't want to die today) ∧ ¬(i don't want to die tomorrow) → (i want to live forever (as long as p))
 
 <!-- ## the middle path
 

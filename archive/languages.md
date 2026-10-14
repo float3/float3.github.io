@@ -3,9 +3,9 @@ title: "languages"
 updated: 1970-01-02
 ---
 
-### languages I'm interested in:
+### languages i'm interested in:
 
-sadly, more often than not these are not the languages I use
+sadly, more often than not these are not the languages i use
 
 - [ ] OCaml
 - [x] Rust

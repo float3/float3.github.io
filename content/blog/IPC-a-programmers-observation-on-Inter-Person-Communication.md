@@ -35,7 +35,7 @@ a: "in my opinion, the existence of a deity or deities is not supported by scien
 </pre>
 
 this is a type mismatch, the Asker was seeking a statement of fact.
-Thankfully our interpreter can do context dependent implicit conversion.
+thankfully our interpreter can do context dependent implicit conversion.
 
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
 
@@ -61,11 +61,11 @@ where examining either the `Boolean` or the `String` will result in different co
 a common example would be:
 
 Q: "you don't want desert right?"
-A: "no, I don't."
+A: "no, i don't."
 
-"no I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.
-The boolean `False` could initially suggest agreement with the statement (implying they do want dessert),
-but the string "I don't" actually affirms the initial question's negative phrasing,
+"no i don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.
+the boolean `False` could initially suggest agreement with the statement (implying they do want dessert),
+but the string "i don't" actually affirms the initial question's negative phrasing,
 indicating they do not want dessert. this creates a situation where the `Boolean` and `String`
 components of the answer seem to contradict each other if taken at face value without considering
 the context of double negatives. in cases like this the `String` usually overwrites the `Boolean`
@@ -92,7 +92,7 @@ definitions.
 </pre>
 
 sometimes it's acceptable to fail silently when encountering conflicting definitions in a conversation, like in cases where:
-(A) the definition in question is not central to the information being communicated.
+(a) the definition in question is not central to the information being communicated.
 (B) the definitions are close enough that they still allow for effective communication. <!--(C) Contextual understanding is sufficient for the purposes of the conversation. (D) The discussion is non-critical, and precise definitions are not crucial. (E) The conversation involves conceptual brainstorming, where flexibility in definitions can be beneficial. (F) Cultural or idiomatic expressions are being used, where meaning is derived from context.-->
 
 however, in all other scenarios, it may be necessary to engage in evidence sharing to resolve these conflicts.

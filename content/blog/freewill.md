@@ -4,7 +4,7 @@ tags:
   - philosophy
 ---
 
-people who stray from the norms often claim to be using their free will. this is strange. why is the philosophical idea that we **have** free will taken for granted by most of society? I find it incomprehensible and incompatible with reality.
+people who stray from the norms often claim to be using their free will. this is strange. why is the philosophical idea that we **have** free will taken for granted by most of society? i find it incomprehensible and incompatible with reality.
 
 ## where do our choices come from?
 
@@ -20,7 +20,7 @@ Zoom in on a single decision: you reach for tea. neurons fire; muscles move. whe
 
 there's no "you" in this stack, there's no soul.
 
-some argue that quantum indeterminacy rescues freedom. but randomness ≠ authorship. if a you are randomly influenced by the laws of physics I would find it a difficult claim to say that that is you.
+some argue that quantum indeterminacy rescues freedom. but randomness ≠ authorship. if a you are randomly influenced by the laws of physics i would find it a difficult claim to say that that is you.
 
 ## a quick test
 
@@ -38,6 +38,6 @@ if you had deep, contra‑causal free will, you should be able to reconfigure yo
 2. Try-pure willpower-to become the kind of person who wants to run that marathon.
 3. Recheck the motivation. still not there? same problem.
 
-these tests fail. higher‑order desires ("I wish I wanted X") do not translate to lower‑order desires ("I actually want X").
+these tests fail. higher‑order desires ("i wish i wanted X") do not translate to lower‑order desires ("i actually want X").
 
 yes, you _can_ sometimes reshape tastes and motives-but via conditioning, repeated exposure, social incentives, dopaminergic updates, etc.

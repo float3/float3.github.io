@@ -60,7 +60,7 @@ then just follow the windows instructions but with wine
 ### issues
 
 this procedure changes the runtime firmware but not the bootloader.
-If you enter the bootloader mode (e.g., through a firmware update),
+if you enter the bootloader mode (e.g., through a firmware update),
 the device will revert to a Steam controller dongle state,
 necessitating a repeat of the process.
 

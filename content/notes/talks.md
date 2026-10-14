@@ -7,7 +7,7 @@ tags:
   - list
 ---
 
-talks I like
+talks i like
 
 - [Winning the War on Error Solving the Halting Problem and Curing Cancer - Matt Might](https://www.youtube.com/watch?v=MdmQUlD7P40)
 - [Stop Treading Water: Learning to Learn - Edward Kmett](https://www.youtube.com/watch?v=j0XmixCsWjs)

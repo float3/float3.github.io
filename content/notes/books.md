@@ -5,9 +5,9 @@ tags:
   - reading
 ---
 
-books I'm currently reading
+books i'm currently reading
 
-books I'm currently reading
+books i'm currently reading
 
 ### misc:
 
