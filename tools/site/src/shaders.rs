@@ -114,7 +114,10 @@ mod tests {
         };
         let input = ShaderInput::new(&source, stage, &options, None, None)
             .map_err(|error| error.to_string())?;
+        // glslang 0.9 turned Shader::new into a builder; parse() is what
+        // compiles it and answers with the Result this used to get directly.
         Shader::new(compiler, input)
+            .parse()
             .map(|_| ())
             .map_err(|error| error.to_string())
     }
