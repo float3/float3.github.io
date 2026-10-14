@@ -70,17 +70,17 @@ tags:
 
 ### Pinyin syllable structure
 
-Pinyin combines an optional initial with a final. The table above shows the standard Mandarin syllable combinations. The spelling **i** in _zi, ci, si, zhi, chi, shi, ri_ represents a syllabic vowel whose actual phonetic realization differs from the vowel in _mi_ or _xi_.
+Pinyin combines an optional initial with a final. the table above shows the standard Mandarin syllable combinations. the spelling **i** in _zi, ci, si, zhi, chi, shi, ri_ represents a syllabic vowel whose actual phonetic realization differs from the vowel in _mi_ or _xi_.
 
-After **j, q, x, and y**, the umlaut is normally omitted in Pinyin: _ju, qu, xu, yu_ represent /tɕy, tɕʰy, ɕy, y/ rather than /u/. In forms such as _nü_ and _lü_, the diaeresis is retained because it distinguishes **ü** from **u**.
+after **j, q, x, and y**, the umlaut is normally omitted in Pinyin: _ju, qu, xu, yu_ represent /tɕy, tɕʰy, ɕy, y/ rather than /u/. in forms such as _nü_ and _lü_, the diaeresis is retained because it distinguishes **ü** from **u**.
 
 ![](misc/media/chinese_sounds.png)
 
-### Tones
+### tones
 
 ![](misc/media/beijing_tones.png)
 
-Mandarin is normally described with four lexical tones plus a neutral tone. Tone can change in connected speech, and tone sandhi can be lexically or contextually conditioned.
+Mandarin is normally described with four lexical tones plus a neutral tone. tone can change in connected speech, and tone sandhi can be lexically or contextually conditioned.
 
 ## Taiwanese Mandarin
 
@@ -96,7 +96,7 @@ Mandarin is normally described with four lexical tones plus a neutral tone. Tone
 
 #### Zhuyin origin
 
-### Tones
+### tones
 
 ![](misc/media/taipei_tones.png)
 
@@ -122,11 +122,11 @@ here are some common ones (Guóyǔ/Pǔtōnghuà):
 - 熟 shóu / shú
 - 垃圾 lèsè / lājī
 
-### Reduction
+### reduction
 
-#### Phonetic reduction
+#### phonetic reduction
 
-Depending on region, speaker, and style, some Taiwan Mandarin speakers may show mergers or reductions in connected speech. These are not universal features of Taiwan Mandarin:
+depending on region, speaker, and style, some Taiwan Mandarin speakers may show mergers or reductions in connected speech. these are not universal features of Taiwan Mandarin:
 
 - sh -> s for example: 山 shān might sound like sān
 - zh -> z for example: 中 zhōng might sound like zōng
@@ -136,9 +136,9 @@ Depending on region, speaker, and style, some Taiwan Mandarin speakers may show 
 - x → s for example: 小 _xiǎo_ may be realized closer to _siǎo_ in some speech varieties
   Despite these phonetic differences, standard Zhuyin and Pinyin orthography normally remains unchanged.
 
-### Notes requiring verification
+### notes requiring verification
 
-The following are useful hypotheses about regional pronunciation, but I would not treat them as general rules without checking a specific phonological source or speaker sample:
+the following are useful hypotheses about regional pronunciation, but I would not treat them as general rules without checking a specific phonological source or speaker sample:
 
 - eng after b-, f-, m-, p-, and w- may be realized closer to _ong_ in some Taiwan varieties: 風 _fēng_ → something closer to _fōng_
 - -uo, -ou, and -e may be centralized or otherwise reduced in casual speech
@@ -159,7 +159,7 @@ for example: \
 
 [Hokkien – Computing](https://en.m.wikipedia.org/wiki/Hokkien#Computing)
 
-## Grammar
+## grammar
 
 ### X不X/X不XY
 
@@ -170,7 +170,7 @@ X不X is a common question structure in Chinese, for example:
 - 喜歡不喜歡 xǐhuān bù xǐhuān
 - 會不會 huì bù huì
 
-If X is actually a two-character expression, the yes-no question can often be shortened by placing 不 after the first character:
+if X is actually a two-character expression, the yes-no question can often be shortened by placing 不 after the first character:
 
 **XY 不 XY → X 不 XY**
 

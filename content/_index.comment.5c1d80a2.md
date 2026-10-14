@@ -7,7 +7,7 @@ history:
   - date: "2026-08-24T13:10:00.000Z"
 ---
 
-Comments here can carry a `<script>`, so here is DOOM in my comment section.
+comments here can carry a `<script>`, so here is DOOM in my comment section.
 
 <div id="doom"></div>
 
@@ -160,7 +160,7 @@ Comments here can carry a `<script>`, so here is DOOM in my comment section.
 </script>
 
 <style>
-  /* No margin: the frame sizes itself to what is in here, so a margin on the
+  /* no margin: the frame sizes itself to what is in here, so a margin on the
      only child is just a gap inside the box. */
   #doom { line-height: 0; }
   .doom-start { font: inherit; line-height: normal; padding: 0.4rem 0.9rem; }

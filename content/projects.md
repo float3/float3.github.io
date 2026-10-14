@@ -5,7 +5,7 @@ tags:
   - programming
 ---
 
-- [Real World Projects](#real-world-projects)
+- [real world projects](#real-world-projects)
   - [AudioLink](#audiolink)
   - [Poiyomi](#poiyomi)
   - [vkfetch-rs](#vkfetch-rs)
@@ -14,13 +14,13 @@ tags:
   - [GoogleTranslate](#googletranslate)
   - [VRCLauncher](#vrclauncher)
   - [other](#other)
-- [Toys](#toys)
+- [toys](#toys)
   - [wasm tools](#wasm-tools)
   - [tuning playground](#tuning-playground)
   - [pathtracer](#pathtracer)
   - [3lang](#3lang)
 
-# Real World Projects
+# real world projects
 
 some real world projects with real world users and real world usecases
 
@@ -76,7 +76,7 @@ plus documentation of all known launch options
 I also frequently contribute to other peoples projects, for a (non-exhaustive) list you can check this: \
 [github-resume](https://hilll.dev/resume.github.com/?float3#contributions)
 
-# Toys
+# toys
 
 some toy programs for fun, learning and experimentation
 

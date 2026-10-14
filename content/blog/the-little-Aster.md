@@ -3,10 +3,10 @@ title: the little Aster
 tags:
   - poetry
 ---
-A kind of edgy poem I like is ["Die Kleine Aster"](https://anja-sieger.de/wp-content/uploads/2018/07/Kleine-Aster.pdf) by Gottfriend Benn. Here's my edgy version of the poem in English and potentially in other languages in the future.
+A kind of edgy poem I like is ["Die Kleine Aster"](https://anja-sieger.de/wp-content/uploads/2018/07/Kleine-Aster.pdf) by Gottfriend Benn. here's my edgy version of the poem in English and potentially in other languages in the future.
 ## English
 
-A rotten pile of flesh and bones was heaved up onto the slab.  
+a rotten pile of flesh and bones was heaved up onto the slab.  
 Something had wedged a dark-pale-lilac aster  
 between some teeth.  
 As I, from the top,  

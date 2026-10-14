@@ -14,7 +14,7 @@ blogs I like
 
 https://ciechanow.ski/archives/
 
-## Friends
+## friends
 
 - <https://pema.dev/>
 - <https://las.rs/>
@@ -25,7 +25,7 @@ https://ciechanow.ski/archives/
 - <https://oimo.io/>
 - <https://www.scd31.com/>
 
-## Graphics
+## graphics
 
 - <https://bgolus.medium.com/>
 - <https://iquilezles.org/articles/>

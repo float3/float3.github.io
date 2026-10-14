@@ -1,5 +1,5 @@
 ---
-title: "IPC - a programmers observations on Inter Person Communication"
+title: "IPC - a programmers observations on inter person communication"
 tags:
   - programming
 ---
@@ -16,12 +16,12 @@ this blogpost was partially inspired by <https://lajili.com/posts/post-1/>
 
 ## IPC
 
-### Type mismatches
+### type mismatches
 
 consider the following conversation
 
-Q: "Does god exist?" \
-A: "In my opinion, the existence of a deity or deities is not supported by scientific evidence or reasoning, which guides my understanding of the universe and our place in it."
+Q: "does god exist?" \
+a: "in my opinion, the existence of a deity or deities is not supported by scientific evidence or reasoning, which guides my understanding of the universe and our place in it."
 
 <pre class="compact-pre">
 <span class="grey">   | </span>
@@ -34,7 +34,7 @@ A: "In my opinion, the existence of a deity or deities is not supported by scien
 <span class="grey">              <!---->found enum </span>`Opinion&lt;String>`
 </pre>
 
-This is a type mismatch, the Asker was seeking a statement of fact.
+this is a type mismatch, the Asker was seeking a statement of fact.
 Thankfully our interpreter can do context dependent implicit conversion.
 
 <!-- add answering in binary/boolean to an answer that expects an enumerator, "you would think the order of the enum members is determined by the order they are said in so when binary is casted to the enum false would stand for 0 and true for 1"-->
@@ -51,29 +51,29 @@ here are a couple of other examples and what types they would expect,
 | ---------------------------------------------- | -------------------------   | ----------------------- |
 </code></pre>
 
-### Value/Sign mismatch
+### value/sign mismatch
 
-Another source of misunderstanding is the use of double negatives.
+another source of misunderstanding is the use of double negatives.
 
-Sometimes when we ask a question we get an answer in the form of a `Tuple<Boolean,String>`
+sometimes when we ask a question we get an answer in the form of a `Tuple<Boolean,String>`
 where examining either the `Boolean` or the `String` will result in different conclusions
 
 a common example would be:
 
-Q: "You don't want desert right?"
-A: "No, I don't."
+Q: "you don't want desert right?"
+A: "no, I don't."
 
-"No I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.
+"no I don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.
 The boolean `False` could initially suggest agreement with the statement (implying they do want dessert),
 but the string "I don't" actually affirms the initial question's negative phrasing,
-indicating they do not want dessert. This creates a situation where the `Boolean` and `String`
+indicating they do not want dessert. this creates a situation where the `Boolean` and `String`
 components of the answer seem to contradict each other if taken at face value without considering
-the context of double negatives. In cases like this the `String` usually overwrites the `Boolean`
+the context of double negatives. in cases like this the `String` usually overwrites the `Boolean`
 
-### Type aliasing and Conflicting Definitions
+### type aliasing and conflicting definitions
 
-When having a conversation, two parties might have conflicting definitions
-of concepts, similar to a "dependency conflict" in software development. This
+when having a conversation, two parties might have conflicting definitions
+of concepts, similar to a "dependency conflict" in software development. this
 issue is akin to a linker error that arises when your project's dependencies
 require two different versions of a library, each containing conflicting
 definitions.
@@ -91,11 +91,11 @@ definitions.
 <span class="grey">   = note:</span> consider calling "<span class="evidence">evidence_sharing()</span>" or "<span class="evidence">agree_to_disagree()</span>" or explicitly specifying which version you are referencing to resolve the conflict
 </pre>
 
-Sometimes it's acceptable to fail silently when encountering conflicting definitions in a conversation, like in cases where:
+sometimes it's acceptable to fail silently when encountering conflicting definitions in a conversation, like in cases where:
 (A) the definition in question is not central to the information being communicated.
 (B) the definitions are close enough that they still allow for effective communication. <!--(C) Contextual understanding is sufficient for the purposes of the conversation. (D) The discussion is non-critical, and precise definitions are not crucial. (E) The conversation involves conceptual brainstorming, where flexibility in definitions can be beneficial. (F) Cultural or idiomatic expressions are being used, where meaning is derived from context.-->
 
-However, in all other scenarios, it may be necessary to engage in evidence sharing to resolve these conflicts.
+however, in all other scenarios, it may be necessary to engage in evidence sharing to resolve these conflicts.
 
 <!--Rational action if you're using the word correctly means the best action
 

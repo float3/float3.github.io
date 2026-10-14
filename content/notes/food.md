@@ -134,7 +134,7 @@ good imitation shark fin soup
 ### Veggie Kingdom 緻素坊
 
 22°17'57.7"N 114°10'06.7"E \
-7 樓, V.i.p. Commercial Centre, 120 號 Canton Rd, Tsim Sha Tsui, Hong Kong
+7 樓, V.i.p. commercial centre, 120 號 Canton Rd, Tsim Sha Tsui, Hong Kong
 
 good food, too expensive
 
@@ -211,7 +211,7 @@ Lapinlahdenkatu 9, 00180 Helsinki, Finland
 48°08'59.4"N 11°34'37.9"E \
 Schellingstraße 15, 80799 München, Germany
 
-Vegan Pizza
+vegan pizza
 
 ### Soy Vegan
 

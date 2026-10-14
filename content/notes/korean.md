@@ -17,34 +17,34 @@ tags:
 - [Accents](#accents)
 - [Jeju](#jeju-2)
 
-Some of my notes may not apply to North Korean (DPRK) usage.
+some of my notes may not apply to North Korean (DPRK) usage.
 
 ## hangeul
 
-### Pronunciation
+### pronunciation
 
-The shape of the tongue when pronouncing [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") (g,k): \
+the shape of the tongue when pronouncing [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") (g,k): \
 ![](/misc/media/ㄱ.png)
 
-The shape of the tongue when pronouncing [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") (n): \
+the shape of the tongue when pronouncing [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") (n): \
 ![](/misc/media/ㄴ.png)
 
-The shape of the teeth and tongue when pronouncing [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") (s) \
+the shape of the teeth and tongue when pronouncing [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") (s) \
 ![](/misc/media/ㅅ.png)
 
-[ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") is **silent in the initial position** and represents _ng_ in the final position. Its shape is traditionally associated with the throat. \
+[ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") is **silent in the initial position** and represents _ng_ in the final position. its shape is traditionally associated with the throat. \
 ![](/misc/media/ㅇ.png)
 
 [ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") (m) is similar to a closed mouth. \
 ![](/misc/media/ㅁ.png)
 
-### Letter placement within a block
+### letter placement within a block
 
-The placement or stacking of letters in the block follows set patterns based on the shape of the medial.
+the placement or stacking of letters in the block follows set patterns based on the shape of the medial.
 
-Compound vowels such as ㅝ (wo) are arranged according to the shape of the medial vowel. Compound final consonants such as ㅄ are arranged left to right at the bottom of the block. Historical jamo such as ㅵ and ㆋ are outside the modern standard Korean syllable inventory.
+compound vowels such as ㅝ (wo) are arranged according to the shape of the medial vowel. compound final consonants such as ㅄ are arranged left to right at the bottom of the block. historical jamo such as ㅵ and ㆋ are outside the modern standard Korean syllable inventory.
 
-Vowels (medials) are placed under the initial consonant, to its right, or in a compound arrangement determined by the vowel letters. Roughly: If the vowel has a horizontal axis like ㅡ (eu), then it is written under the initial; if it has a vertical axis like ㅣ (i), then it is written to the right of the initial; and if it combines both orientations, like ㅢ (ui), then it wraps around the initial from the bottom to the right:
+vowels (medials) are placed under the initial consonant, to its right, or in a compound arrangement determined by the vowel letters. roughly: if the vowel has a horizontal axis like ㅡ (eu), then it is written under the initial; if it has a vertical axis like ㅣ (i), then it is written to the right of the initial; and if it combines both orientations, like ㅢ (ui), then it wraps around the initial from the bottom to the right:
 
 <div style="display:flex; gap:1em; flex-wrap:wrap;">
 
@@ -76,7 +76,7 @@ Vowels (medials) are placed under the initial consonant, to its right, or in a c
 
 </div>
 
-A final consonant, if present, is always written at the bottom, under the vowel. This is called 받침 (batchim) "supporting floor":
+a final consonant, if present, is always written at the bottom, under the vowel. this is called 받침 (batchim) "supporting floor":
 
 <div style="display:flex; gap:1em; flex-wrap:wrap;">
 
@@ -117,7 +117,7 @@ A final consonant, if present, is always written at the bottom, under the vowel.
 
 </div>
 
-A complex final is written left to right:
+a complex final is written left to right:
 
 <div style="display:flex; gap:1em; flex-wrap:wrap;">
 
@@ -161,33 +161,33 @@ A complex final is written left to right:
 
 </div>
 
-Hangul syllable blocks represent the sequence initial–medial–final, although the visual arrangement depends on the medial vowel and any final consonants. Therefore:
+Hangul syllable blocks represent the sequence initial–medial–final, although the visual arrangement depends on the medial vowel and any final consonants. therefore:
 
 - Syllables with a horizontal medial are arranged vertically: 읍 (eup)
 - Syllables with a vertical medial are arranged with the medial to the right of the initial: 쌍 (ssang)
 - Compound medials use the arrangement required by their component vowels: 된 (doen)
 - A complex final consonant cluster is arranged left to right at the bottom: 밟 (balp). The actual pronunciation of a complex final is context-dependent.
 
-There are 399 possible modern Hangul syllable blocks with an initial and medial (19 × 21), and 10,773 with an initial, medial, and one of the 27 possible final consonants. Including the no-final option gives 11,172 possible modern Hangul syllable blocks (19 × 21 × 28). These figures describe the modern Unicode Hangul syllable set; not all combinations are equally common in actual Korean text.
+there are 399 possible modern Hangul syllable blocks with an initial and medial (19 × 21), and 10,773 with an initial, medial, and one of the 27 possible final consonants. including the no-final option gives 11,172 possible modern Hangul syllable blocks (19 × 21 × 28). these figures describe the modern Unicode Hangul syllable set; not all combinations are equally common in actual Korean text.
 
-Not every mathematically possible jamo sequence is a word or a commonly used syllable in modern Korean. The Unicode Hangul syllable block, however, contains the full 19 × 21 × 28 combination set.
+not every mathematically possible jamo sequence is a word or a commonly used syllable in modern Korean. the Unicode Hangul syllable block, however, contains the full 19 × 21 × 28 combination set.
 
-Valid 초성 (choseong, initial): ㄱ ㄲ ㄴ ㄷ ㄸ ㄹ ㅁ ㅂ ㅃ ㅅ ㅆ ㅇ ㅈ ㅉ ㅊ ㅋ ㅌ ㅍ ㅎ (19)
+valid 초성 (choseong, initial): ㄱ ㄲ ㄴ ㄷ ㄸ ㄹ ㅁ ㅂ ㅃ ㅅ ㅆ ㅇ ㅈ ㅉ ㅊ ㅋ ㅌ ㅍ ㅎ (19)
 Valid 중성 (jungseong, medial): ㅏ ㅐ ㅑ ㅒ ㅓ ㅔ ㅕ ㅖ ㅗ ㅘ ㅙ ㅚ ㅛ ㅜ ㅝ ㅞ ㅟ ㅠ ㅡ ㅢ ㅣ (21)
 Valid 종성 (jongseong, final) (optional): [none] ㄱ ㄲ ㄳ ㄴ ㄵ ㄶ ㄷ ㄹ ㄺ ㄻ ㄼ ㄽ ㄾ ㄿ ㅀ ㅁ ㅂ ㅄ ㅅ ㅆ ㅇ ㅈ ㅊ ㅋ ㅌ ㅍ ㅎ (28)
 
-More unusual Hangul jamo
+more unusual Hangul jamo
 
-### Vowels
+### vowels
 
 |   hangeul    |  ㅏ   |  ㅐ   |  ㅑ   |  ㅒ   |  ㅓ   |  ㅔ   |  ㅕ   |  ㅖ   |  ㅗ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅛ   |  ㅜ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅠ   |  ㅡ   |  ㅢ   |  ㅣ   |
 | :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | Romanization |  _a_  | _ae_  | _ya_  | _yae_ | _eo_  |  _e_  | _yeo_ | _ye_  |  _o_  | _wa_  | _wae_ | _oe_  | _yo_  |  _u_  | _wo_  | _we_  | _wi_  | _yu_  | _eu_  | _ui_  |  _i_  |
 |     IPA      |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |       |
 
-Vowel letter names are based on their conventional pronunciations.
+vowel letter names are based on their conventional pronunciations.
 
-#### Compound Vowels
+#### compound vowels
 
 |   hangeul    |  ㅐ   |  ㅒ   |  ㅔ   |  ㅖ   |  ㅘ   |  ㅙ   |  ㅚ   |  ㅝ   |  ㅞ   |  ㅟ   |  ㅢ   |
 | :----------: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -196,7 +196,7 @@ Vowel letter names are based on their conventional pronunciations.
 
 #### Jeju
 
-The Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters. Vowels
+the Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters. vowels
 
 |   hangeul    |   ㆍ   |       |
 | :----------: | :----: | :---: |
@@ -204,7 +204,7 @@ The Jeju language has phonological and lexical features that differ substantiall
 |     Name     | area-a |       |
 |     IPA      |   ɒ    |       |
 
-### Consonants
+### consonants
 
 | **hangeul** |                          | [ㄱ](https://en.wikipedia.org/wiki/%E3%84%B1 "ㄱ") |  ㄲ   | [ㄴ](https://en.wikipedia.org/wiki/%E3%84%B4 "ㄴ") | [ㄷ](https://en.wikipedia.org/wiki/%E3%84%B7 "ㄷ") |  ㄸ   | [ㄹ](https://en.wikipedia.org/wiki/%E3%84%B9 "ㄹ") | [ㅁ](https://en.wikipedia.org/wiki/%E3%85%81 "ㅁ") | [ㅂ](https://en.wikipedia.org/wiki/%E3%85%82 "ㅂ") |  ㅃ   | [ㅅ](https://en.wikipedia.org/wiki/%E3%85%85 "ㅅ") |  ㅆ   | [ㅇ](https://en.wikipedia.org/wiki/%E3%85%87 "ㅇ") | [ㅈ](https://en.wikipedia.org/wiki/%E3%85%88 "ㅈ") |  ㅉ   | [ㅊ](https://en.wikipedia.org/wiki/%E3%85%8A "ㅊ") | [ㅋ](https://en.wikipedia.org/wiki/%E3%85%8B "ㅋ") | [ㅌ](https://en.wikipedia.org/wiki/%E3%85%8C "ㅌ") | [ㅍ](https://en.wikipedia.org/wiki/%E3%85%8D "ㅍ") | [ㅎ](https://en.wikipedia.org/wiki/%E3%85%8E "ㅎ") |
 | :---------: | :----------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :---: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: | :------------------------------------------------: |
@@ -221,9 +221,9 @@ The Jeju language has phonological and lexical features that differ substantiall
 |    Names     |         | 기역 (gi-yeok) | 쌍기역 (ssang-gi-yeok) | 니은 (ni-eun) | 디귿 (di-geut) | 쌍디귿 (ssang-di-geut) | 리을 (ri-eul) | 미음 (mi-eum) | 비읍 (bi-eup) | 쌍비읍 (ssang-bi-eup) | 시옷 (si-ot) | 쌍시옷 (ssang-si-ot) | 이응 (i-eung) | 지읒 (ji-eut) | 쌍지읒 (ssang-ji-eut) | 치읓 (chi-eut) | 키읔 (ki-eut) | 티읕 (ti-eut) | 피읖 (pi-eut) | 히읗 (hi-eut) |
 |     IPA      |         |                |                        |               |                |                        |               |               |               |                       |              |                      |               |               |                       |                |               |               |               |               |
 
-#### Special cases
+#### special cases
 
-In syllable-final position, several written consonants are neutralized to a small set of final sounds:
+in syllable-final position, several written consonants are neutralized to a small set of final sounds:
 
 - ㄱ, ㄲ, ㅋ → [k̚]
 - ㄴ → [n]
@@ -233,11 +233,11 @@ In syllable-final position, several written consonants are neutralized to a smal
 - ㅂ, ㅍ → [p̚]
 - ㅇ → [ŋ]
 
-The exact realization can change through resyllabification and other sound changes when another syllable follows.
+the exact realization can change through resyllabification and other sound changes when another syllable follows.
 
 #### Jeju
 
-The Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters. Consonants
+the Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters. consonants
 
 |   hangeul    |        ㅿ        |           ㆆ            |
 | :----------: | :--------------: | :---------------------: |
@@ -245,11 +245,11 @@ The Jeju language has phonological and lexical features that differ substantiall
 |     Name     | 반시옷 (bansiot) | 여린히읗 (yeorin hieut) |
 |     IPA      |                  |            ʔ            |
 
-## Accents
+## accents
 
-In some regional Korean accents, the polite ending "yo" (요) can be pronounced as "ye" (예). For example: \
+in some regional Korean accents, the polite ending "yo" (요) can be pronounced as "ye" (예). for example: \
 안녕하세요 → 안녕하세예
 
 ## Jeju
 
-The Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters.
+the Jeju language has phonological and lexical features that differ substantially from Standard Korean; older descriptions often use additional historical Hangul letters.

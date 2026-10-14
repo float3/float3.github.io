@@ -26,7 +26,7 @@ $$
 
 </div>
 
-To find
+to find
 <span style="color:#0466e7">the probability of event \(A\) occurring given event \(B\) has occurred</span>, we multiply
 <span style="color:#ffbc3f">the likelihood of event \(B\) given event \(A\)</span> by
 <span style="color:#fe7fb3">the prior probability of event \(A\)</span> and divide by

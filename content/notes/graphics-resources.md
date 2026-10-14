@@ -282,7 +282,7 @@ you can also find all these links [here](/misc/plaintext/graphics-resources.txt)
 
 ==============================================================================================================
 
-# Other
+# other
 
 - <https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@10.0/manual/Lit-Shader.html>
 - <https://www.fxguide.com/fxfeatured/pixar-deep-dive-on-sss-siggraph-preview/>

@@ -24,7 +24,7 @@ talks I like
 - [The Future of Programming - Bret Victor](https://www.youtube.com/watch?v=8pTEmbeENF4)
 - [For A Free Digital Society - Richard M. Stallman](https://www.youtube.com/watch?v=7ZSPf7YnGfE)
 
-## Functional Paradigm
+## functional paradigm
 
 - [Outperforming Imperative with Pure Functional Languages - Richard Feldman](https://www.youtube.com/watch?v=vzfy4EKwG_Y)
 - [Why Isn't Functional Programming the Norm? – Richard Feldman](https://www.youtube.com/watch?v=QyJZzq0v7Z4)

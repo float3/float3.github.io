@@ -18,7 +18,7 @@ as you may or may not have guessed from the text above i am a big fan of [ration
 
 if you aren't familiar with either of those communities maybe you should read https://intelligence.org/the-problem/ or https://www.readthesequences.com/. I think this is actually very important. inspiration for the text above was taken from https://thetetra.space/ and to avoid repeating her, maybe you should just read what she has to say on her front page.
 
-Content
+content
 
 - [me](/me.md)
 - [blog](/blog/)
@@ -31,7 +31,7 @@ Content
 - [you](/you.md)
 
 
-Misc
+misc
 
 - [rss feed](/index.xml)
 - [pgp](/misc/plaintext/public-key.txt)
@@ -39,7 +39,7 @@ Misc
 - [old-site](https://hilll.dev/float3.github.io.old/)
 - [old-old-site](https://hilll.dev/float3.github.io.old.old/)
 
-Contact
+contact
 
 - [github://float3](https://github.com/float3)
 - [gitlab://float3](https://gitlab.com/float3)

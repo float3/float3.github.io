@@ -7,15 +7,15 @@ tags:
 
 <link href="./udon-exposure-tree.css" rel="stylesheet" type="text/css">
 
-Which parts of the .NET and Unity APIs [Udon](https://udonsharp.docs.vrchat.com/)
+which parts of the .NET and Unity APIs [Udon](https://udonsharp.docs.vrchat.com/)
 lets a VRChat world touch, dumped out of the VRChat SDK's class exposure window.
 Base members are included, and a percentage is the exposed members of a type
 over all of them, exactly as the window counts it.
 
 **56,411 members across 1,498 types, 45,341 of them exposed** — 80%. `[x]` is exposed and `[ ]` is not.
 
-A generic type appears once per instantiation the SDK generated, so a handful of
-names show up several times with different members. Every array is listed too,
+a generic type appears once per instantiation the SDK generated, so a handful of
+names show up several times with different members. every array is listed too,
 which is why there are 750 of them, each carrying the same forty members of
 `System.Array` with its own element type in `Get` and `Set`.
 

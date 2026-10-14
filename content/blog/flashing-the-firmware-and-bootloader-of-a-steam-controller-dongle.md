@@ -1,36 +1,36 @@
 ---
-title: "Flashing the Firmware and Bootloader of a Steam Controller Dongle"
+title: "flashing the firmware and bootloader of a Steam Controller Dongle"
 tags:
   - steamvr
   - vr
   - programming
 ---
 
-This post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara
+this post is based on this [guide](https://github.com/ykeara/SteamVR-Dongle-Flash) by ykeara
 and Instructions on how to flash the bootloader provided by [Ben Jackson](https://ben.com)
 
-# Flashing the Firmware and Bootloader of a Steam Controller Dongle
+# flashing the firmware and bootloader of a Steam Controller Dongle
 
-## Requirements
+## requirements
 
-- A SteamVR controller dongle. Although the original dongles are no longer available directly from Steam,
-  alternative options are available. These include dongles from [Virtual Builds](https://www.virtualbuilds.com/product-page/usb-wireless-receiver-dongle)
+- a SteamVR controller dongle. although the original dongles are no longer available directly from Steam,
+  alternative options are available. these include dongles from [Virtual Builds](https://www.virtualbuilds.com/product-page/usb-wireless-receiver-dongle)
   and [Tundra Labs](https://tundra-labs.com/shop/vive-dongle), which should serve the purpose well.
 - SteamVR installed on your computer.
 
-## Warning
+## warning
 
-It's important to approach this process with caution:
+it's important to approach this process with caution:
 
-- Assume that this change is permanent, at least if you decide to flash the bootloader as well.
-- This procedure will flash ALL connected dongles. Be sure to remove any dongles that you do not wish to flash.
+- assume that this change is permanent, at least if you decide to flash the bootloader as well.
+- this procedure will flash ALL connected dongles. be sure to remove any dongles that you do not wish to flash.
 
-## Flashing the Firmware
+## flashing the firmware
 
-1. Remove ALL SteamVR dongles as well as the Head-Mounted Display (HMD).
+1. remove ALL SteamVR dongles as well as the Head-Mounted Display (HMD).
 2. Exit Steam.
-3. Connect your Steam Controller Dongle to a USB port.
-4. Run the commands below. (you will have to adjust these paths for non-standard installation paths for steam and steamvr)
+3. connect your Steam Controller Dongle to a USB port.
+4. run the commands below. (you will have to adjust these paths for non-standard installation paths for steam and steamvr)
 
 ### Windows
 
@@ -41,7 +41,7 @@ It's important to approach this process with caution:
 
 ### Linux
 
-Looks like flashing it on Linux doesn't work natively, the executable just prints `Can't convert dongle on non-Windows platform:  Can't tell if conflicting Steam is running.`
+looks like flashing it on Linux doesn't work natively, the executable just prints `Can't convert dongle on non-Windows platform:  Can't tell if conflicting Steam is running.`
 This is stupid. so let's use wine.
 
 you need these dlls
@@ -57,20 +57,20 @@ or in a steamvr windows installation at `C:\Program Files (x86)\Steam\steamapps\
 
 then just follow the windows instructions but with wine
 
-### Issues
+### issues
 
-This procedure changes the runtime firmware but not the bootloader.
+this procedure changes the runtime firmware but not the bootloader.
 If you enter the bootloader mode (e.g., through a firmware update),
 the device will revert to a Steam controller dongle state,
 necessitating a repeat of the process.
 
-For a permanent change, we need to flash the bootloader as well.
+for a permanent change, we need to flash the bootloader as well.
 
-## Flashing the Bootloader
+## flashing the bootloader
 
-1. Follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
-2. Follow the [Flashing the Firmware Guide](#flashing-the-firmware) but use the commands below in the last step (again you may have to adjust the paths if you isntalled the HDK in a differnt directory)
-3. Or download the [watchman_dongle_combined.bin](/misc/blobs/watchman_dongle_combined.bin) here
+1. follow https://partner.steamgames.com/vrlicensing (it's a clickthrough sign-up don't worry about not being accepted)
+2. follow the [Flashing the Firmware Guide](#flashing-the-firmware) but use the commands below in the last step (again you may have to adjust the paths if you isntalled the HDK in a differnt directory)
+3. or download the [watchman_dongle_combined.bin](/misc/blobs/watchman_dongle_combined.bin) here
 
 ### Windows
 
@@ -79,29 +79,29 @@ For a permanent change, we need to flash the bootloader as well.
 <span style="color: cyan;">SteamVR\tools\lighthouse\bin\win32\lighthouse_watchman_update.exe</span> <span style="color: green;">-D</span> <span style="color: red;">SteamVR\ Tracking\ HDK/firmware/dongle/watchman_dongle_combined.bin</span>
 </code></pre>
 
-## Notes
+## notes
 
-- While it's possible to flash multiple dongles simultaneously, it might be safer to do them one at a time.
+- while it's possible to flash multiple dongles simultaneously, it might be safer to do them one at a time.
 
-## What to Expect
+## what to expect
 
-Upon running the command
+upon running the command
 
-### Firmware Flash
+### firmware flash
 
 <pre style="background-color: black; color: white; padding: 10px;">
 <code>
 Attempting to update Watchman Dongles to version 1461100729...
 
-Converting steam controller dongle to watchman dongle. Switching to bootloader
+converting steam controller dongle to watchman dongle. switching to bootloader
 
-Sending reset into bootloader command
+sending reset into bootloader command
 
-Looking for 1 bootloaders.
+looking for 1 bootloaders.
 
 HID opened: VID 28de PID 1042 serial (null) seq 1 if 0
 
-Attempting to convert Steam Controller dongle into Watchman Dongle...
+attempting to convert Steam Controller dongle into Watchman Dongle...
 
 Walve Nordic bootloader version 19.0
 
@@ -113,11 +113,11 @@ wvP16X........vvvvvvvvP17X........vvvvvvvvP18X........vvvvvvvvP19X........vvvvvv
 
 wvvvP0X........VVVVVVVV
 
-Successfully converted firmware.
+successfully converted firmware.
 
-Found all expected bootloaders
+found all expected bootloaders
 </code></pre>
 
-### Bootloader Flash
+### bootloader flash
 
 TODO

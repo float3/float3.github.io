@@ -1,12 +1,12 @@
 ---
-title: Piracy at the British Museum
+title: piracy at the British Museum
 tags:
   - art
 ---
 
-## Visiting the British Museum
+## visiting the British Museum
 
-On the 20th of August 2022 I visited the British Museum with some friends and decided to take some videos:
+on the 20th of August 2022 I visited the British Museum with some friends and decided to take some videos:
 
 <div style="display: flex;">
 <video controls height="500">
@@ -25,7 +25,7 @@ On the 20th of August 2022 I visited the British Museum with some friends and de
 
 ## back home
 
-After I returned from my Vacation, I extracted the frames from each video using [FFmpeg](https://github.com/FFmpeg/FFmpeg) using the following command
+after I returned from my Vacation, I extracted the frames from each video using [FFmpeg](https://github.com/FFmpeg/FFmpeg) using the following command
 
 ```sh
 ffmpeg -i video.mp4 -vf yadif images/%05d.png
