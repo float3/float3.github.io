@@ -622,3 +622,29 @@
     max-width: 15rem;
   }
 }
+
+/* ------------------------------------------------------------ what it said
+
+   An agent's own words, wherever a source gives them. The page spends most of
+   its length describing what these things did; five times it can show what
+   they said instead, which is a different kind of evidence. */
+
+.ait-said {
+  color: var(--dark);
+  font-style: italic;
+}
+
+/* The year as a sequence of things that had not happened before. */
+.ait-first {
+  padding: 0.05rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--ait-accent) 45%, var(--ait-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ait-accent) 12%, transparent);
+  color: var(--ait-accent);
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+.ait-meta {
+  flex-wrap: wrap;
+}

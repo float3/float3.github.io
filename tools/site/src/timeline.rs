@@ -219,6 +219,30 @@ mod tests {
         }
     }
 
+    /// A `data-first` is rendered as a badge and counted in the panel, so an
+    /// empty one is an empty chip and a wrong one is a claim nothing checks.
+    /// This can only check that it says something; whether it was really the
+    /// first is on the source beside it.
+    #[test]
+    fn every_first_says_what_it_was_first_at() {
+        let page = read(&root(), PAGE);
+        let claims: Vec<&str> = entries(&page)
+            .iter()
+            .flat_map(|entry| between(entry, "data-first=\"", '"'))
+            .collect();
+
+        assert!(
+            claims.len() > 1,
+            "nothing on the timeline claims to be a first any more, so the counter is dead"
+        );
+        for claim in &claims {
+            assert!(
+                claim.trim().len() > 8,
+                "`{claim}` is too short to say what it was first at"
+            );
+        }
+    }
+
     /// A button whose `data-layout` the script does not recognise is a button
     /// that does nothing when pressed, and says nothing about it.
     #[test]

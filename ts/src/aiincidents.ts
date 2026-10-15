@@ -67,7 +67,12 @@ interface Tally {
 }
 
 const TALLIES: readonly Tally[] = [
-  { key: "events", label: "events so far", each: 1 },
+  // How many entries there have been is already on the panel, as `n / 40`.
+  {
+    key: "firsts",
+    label: "firsts of their kind",
+    derive: (element) => (element.dataset.first === undefined ? 0 : 1),
+  },
   { key: "intrusions", label: "third parties an agent got into" },
   { key: "campaigns", label: "campaigns by people using one" },
   { key: "quiet", label: "days nobody knew, added up", derive: gapDays },
@@ -139,6 +144,21 @@ function gapDays(element: HTMLElement): number {
   return Math.max(Math.round(disclosed - happened), 0)
 }
 
+/**
+ * The year keeps producing things that had not happened before, so an entry
+ * that was one says which beside its date.
+ */
+function showFirst(element: HTMLElement): void {
+  const claim = element.dataset.first
+  const meta = element.querySelector(".ait-meta")
+  if (claim === undefined || meta === null) return
+
+  const badge = document.createElement("span")
+  badge.className = "ait-first"
+  badge.textContent = claim
+  meta.append(badge)
+}
+
 /** Puts the gap in the entry too, beside the two dates it comes from. */
 function showGap(element: HTMLElement, days: number): void {
   const when = element.querySelector(".ait-when")
@@ -184,6 +204,7 @@ function readEntries(track: HTMLElement): Entry[] {
       running.set(tally.key, (running.get(tally.key) ?? 0) + contribution(element, tally))
     }
     showGap(element, gapDays(element))
+    showFirst(element)
 
     return {
       element,

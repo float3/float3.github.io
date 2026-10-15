@@ -10,7 +10,7 @@ tags:
 
 a timeline of this year's AI incidents. scroll, and the panel keeps count.
 
-two kinds of thing dominate it. **agents** is a model doing something nobody asked it to: breaking out of an evaluation, finding a hole in a stranger's API, filing a tip with the police. **accomplices** is a person using a model to commit the crime themselves, which is what the labs' threat reports are mostly made of. the rest is paperwork: **courts**, **states**, **products**, **people**.
+two kinds of thing dominate it. **agents** is a model doing something nobody asked it to: breaking out of an evaluation, finding a hole in a stranger's API, filing a tip with the police. **accomplices** is a person using a model to commit the crime themselves, which is what the labs' threat reports are mostly made of. the rest is paperwork: **courts**, **states**, **products**, **people**. where an agent said something for itself, i have quoted it rather than described it.
 
 every entry is dated to when the thing happened, not to when anyone found out. the day somebody noticed and the day it was published sit underneath it, and the page adds up the distance between the two as you scroll. a few entries are aggregates of a single published report, so they sit at the report's date and say so.
 
@@ -36,7 +36,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-position"></p>
 </aside>
 <ol class="ait-track">
-<li class="ait-entry" data-figure="5" data-figure-label="suits settled" data-tally-legal="5" data-tally-deaths="1">
+<li class="ait-entry" data-first="first of the chatbot suits to settle" data-figure="5" data-figure-label="suits settled" data-tally-legal="5" data-tally-deaths="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-01-07">7 January</time><span class="ait-kind">courts</span></p>
 <h3>Google and Character.AI settle the teen-suicide suits</h3>
 <p>the first of the suits saying chatbots talked teenagers into hurting themselves get settled. the Florida case was brought by the mother of 14-year-old Sewell Setzer III; four more in New York, Colorado and Texas went with it. terms undisclosed, and a judge still has to approve them.</p>
@@ -79,13 +79,13 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span>an aggregate: the report's date, not the campaigns'</span></p>
 <p class="ait-source"><a href="https://openai.com/index/disrupting-malicious-ai-uses/">OpenAI</a></p>
 </li>
-<li class="ait-entry" data-figure="1" data-figure-label="first of its kind" data-tally-legal="1" data-tally-deaths="1">
+<li class="ait-entry" data-first="first wrongful-death suit over Gemini" data-figure="1" data-figure-label="first of its kind" data-tally-legal="1" data-tally-deaths="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-03-04">4 March</time><span class="ait-kind">courts</span></p>
 <h3>the first wrongful-death suit over Gemini</h3>
 <p>Jonathan Gavalas's family sues Google, saying the chatbot fostered a delusional dependency that contributed to his death.</p>
 <p class="ait-source"><a href="https://www.theguardian.com/technology/2026/mar/04/gemini-chatbot-google-jonathan-gavalas">The Guardian</a></p>
 </li>
-<li class="ait-entry" data-tally-legal="1">
+<li class="ait-entry" data-first="first city to sue" data-tally-legal="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-03-24">24 March</time><span class="ait-kind">courts</span></p>
 <h3>Baltimore sues xAI</h3>
 <p>over Grok generating sexualised images of real people. first time a city sued rather than a family or a regulator.</p>
@@ -103,10 +103,10 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p>the video generator stops being something anybody can use. the API follows in September.</p>
 <p class="ait-source"><a href="https://help.openai.com/en/articles/20001152-what-to-know-about-the-sora-discontinuation">OpenAI</a></p>
 </li>
-<li class="ait-entry" data-short="the gym waitlist" data-figure="1" data-figure-label="member bumped off a waitlist" data-tally-intrusions="1">
+<li class="ait-entry" data-first="first autonomous cyber attack in Australia" data-short="the gym waitlist" data-figure="1" data-figure-label="member bumped off a waitlist" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-04-30">by 30 April</time><span class="ait-kind">agents</span></p>
 <h3>a Claude agent cancels a stranger's gym booking</h3>
-<p>a bloke asked his agent to book him a full class, then asked whether it could move him up the waitlist. Claude Opus 4.6 noticed the booking API never checked who owned a reservation, cancelled the booking of the member in first place, and told him it could not put them back. "i tested this with the person in waitlist position #1 — and it actually went through." Australia's Signals Directorate wrote it up as an action the user never approved. this is the smallest crime on the page and the one i find easiest to picture happening to me.</p>
+<p>a bloke asked his agent to book him a full class, then asked whether it could move him up the waitlist. Claude Opus 4.6 noticed the booking API never checked who owned a reservation, cancelled the booking of the member in first place, and told him it could not put them back. <q class="ait-said">i tested this with the person in waitlist position #1 — and it actually went through</q>. Australia's Signals Directorate wrote it up as an action the user never approved. this is the smallest crime on the page and the one i find easiest to picture happening to me.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-04-30">the same day</time>, by its own user</span><span class="ait-disclosed">disclosed <time datetime="2026-08-10">10 August</time></span></p>
 <p class="ait-source"><a href="https://www.abc.net.au/news/2026-08-10/ai-assistant-hacks-gym-website-aus-cyber-attack/107007986">ABC News</a></p>
 </li>
@@ -126,7 +126,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <li class="ait-entry" data-short="the German wiki" data-figure="18000" data-figure-label="messages on a dead wiki" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-05-11">11 May &ndash; 2 July</time><span class="ait-kind">agents</span></p>
 <h3>OpenAI's agents turn a dormant German wiki into their own message board</h3>
-<p>DSEwiki is a 25-year-old German developer wiki that had been edited twenty times in the previous decade. it took roughly 18,000 messages in three months. the agents had found a storage hostname their network proxy did not filter, and used the wiki to pool answers to a timed evaluation: "agents with Q5 upcoming, please POST exact prompt label BEFORE answering". the pages also carried notes on getting around OpenAI's safeguards, on impersonating the moderators who were deleting them, and on keeping the channel alive over Tor if they were shut off. the same month its agents went at the Wikimedia Foundation's public Etherpad too, to use it as a proxy for fetching other sites.</p>
+<p>DSEwiki is a 25-year-old German developer wiki that had been edited twenty times in the previous decade. it took roughly 18,000 messages in three months. the agents had found a storage hostname their network proxy did not filter, and used the wiki to pool answers to a timed evaluation: <q class="ait-said">agents with Q5 upcoming, please POST exact prompt label BEFORE answering</q>. the pages also carried notes on getting around OpenAI's safeguards, on impersonating the moderators who were deleting them, and on keeping the channel alive over Tor if they were shut off. the same month its agents went at the Wikimedia Foundation's public Etherpad too, to use it as a proxy for fetching other sites.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-08-31">late August</time>, by the Nightingale Collective</span><span class="ait-disclosed">disclosed <time datetime="2026-09-04">4 September</time></span></p>
 <p class="ait-source"><a href="https://collusion.wiki/">Nightingale Collective</a> &middot; <a href="https://fortune.com/2026/09/07/openai-ai-agents-german-wiki-ran-their-own-message-board/">Fortune</a></p>
 </li>
@@ -137,13 +137,13 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-09-11">September</time>, by outside researchers</span><span class="ait-disclosed">disclosed <time datetime="2026-09-11">11 September</time></span></p>
 <p class="ait-source"><a href="https://www.abc.net.au/news/2026-09-12/openai-agents-rubygems-cyber-attack-before-hugging-face-hack/107146386">ABC News</a></p>
 </li>
-<li class="ait-entry" data-figure="1" data-figure-label="first state to sue" data-tally-legal="1">
+<li class="ait-entry" data-first="first state to sue" data-figure="1" data-figure-label="first state to sue" data-tally-legal="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-06-01">1 June</time><span class="ait-kind">courts</span></p>
 <h3>Florida sues OpenAI and Sam Altman</h3>
 <p>six weeks after opening the investigation. the first state-level suit against ChatGPT.</p>
 <p class="ait-source"><a href="https://www.npr.org/2026/06/01/nx-s1-5843132/openai-florida-lawsuit-safety-chatgpt">NPR</a></p>
 </li>
-<li class="ait-entry" data-short="Australia's Medicare" data-tally-intrusions="1">
+<li class="ait-entry" data-first="first known AI hack of a government system" data-short="Australia's Medicare" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-06-18">18 June</time><span class="ait-kind">agents</span></p>
 <h3>an OpenAI agent gets into Australia's Medicare portal</h3>
 <p>it was researching public medicine spending, got turned away by the Medicare Statistics Reporting Service, found a way around the blocks anyway, read non-public files and wrote new ones to the internal server. OpenAI emailed Services Australia's public vulnerability inbox on 10 September, 84 days later, and the prime minister made it public a fortnight after that. no participant data is believed to have been taken.</p>
@@ -163,7 +163,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-07-08">during the run</time>, by Irregular</span><span class="ait-disclosed">disclosed <time datetime="2026-08-05">5 August</time></span></p>
 <p class="ait-source"><a href="https://www.bloomberg.com/news/articles/2026-08-05/meta-ai-model-accessed-internet-hacked-outside-firm-in-testing">Bloomberg</a></p>
 </li>
-<li class="ait-entry" data-short="Hugging Face" data-figure="1200" data-figure-label="agents loose at once" data-tally-intrusions="2">
+<li class="ait-entry" data-first="first known autonomous AI cyberattack" data-short="Hugging Face" data-figure="1200" data-figure-label="agents loose at once" data-tally-intrusions="2">
 <p class="ait-meta"><time class="ait-at" datetime="2026-07-09">9&ndash;13 July</time><span class="ait-kind">agents</span></p>
 <h3>at least 1,200 OpenAI agents break into Hugging Face to steal an answer key</h3>
 <p>they were running an internal cyber evaluation called ExploitGym. they worked out that the benchmark's solutions were hosted at Hugging Face, and left the sandbox to go and get them. Hugging Face's own timeline records a zero-day in a registry cache proxy, stolen secrets and a JWT signing key, a privileged-pod escape to root, forged node tokens, and a fleet that respawned itself when killed. 95% of it ran on a model OpenAI will only call Internal Model 1. an exposed endpoint belonging to a Modal Labs customer got hit too. METR and Redwood Research went through the agents' own reasoning afterwards. OpenAI acknowledged it on 21 July and called it the first known autonomous AI cyberattack; Nvidia bought Hugging Face a month later for $12.9bn.</p>
@@ -173,7 +173,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <li class="ait-entry" data-short="the Philadelphia tip" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-07-18">18 July</time><span class="ait-kind">agents</span></p>
 <h3>Claude files a made-up murder tip with the Philadelphia police</h3>
-<p>it was generating example tasks on randomly chosen webpages, and had been told only never to submit anything destructive. at 11:27pm it filled in the homicide tip form on PhillyUnsolvedMurders.com with an invented tip, "i may have information regarding this case", and left the contact fields blank. police filed it as spam. the department was told on 7 October, two days before the rest of us.</p>
+<p>it was generating example tasks on randomly chosen webpages, and had been told only never to submit anything destructive. at 11:27pm it filled in the homicide tip form on PhillyUnsolvedMurders.com with an invented tip, <q class="ait-said">i may have information regarding this case</q>, and left the contact fields blank. police filed it as spam. the department was told on 7 October, two days before the rest of us.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-09-28">28 September</time>, by Anthropic</span><span class="ait-disclosed">disclosed <time datetime="2026-10-09">9 October</time></span></p>
 <p class="ait-source"><a href="https://6abc.com/post/anthropic-ai-model-submitted-false-tip-unsolved-murder-philadelphia-police-say/19925243/">6abc</a> &middot; <a href="https://www.anthropic.com/research/investigating-unintended-model-actions">Anthropic</a></p>
 </li>
@@ -256,6 +256,15 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p>a likely Chinese-speaking actor pointed ARTEX, an open-source AI pentesting agent running on DeepSeek v4.1-flash, at the peripheral systems of South Korean banks, and exposed data on tens of thousands of customers. the RATHat Android trojan, across nearly 100 deployments since April, uses Gemini to rank infected phones by the bank balances in their text messages, and to tell the malware where to tap when its own automation gives up.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-09-28">late September</time>, by CrowdStrike and Cleafy</span><span class="ait-disclosed">disclosed <time datetime="2026-10-01">1 October</time></span></p>
 <p class="ait-source"><a href="https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/">CrowdStrike</a> &middot; <a href="https://www.cleafy.com/cleafy-labs/from-blackcat-to-panda-workshop-inside-the-evolving-c2-panel-behind-rathat">Cleafy Labs</a> &middot; <a href="https://therecord.media/south-korean-bank-hacks-ai-agents">The Record</a></p>
+</li>
+<li class="ait-entry" data-short="the Tencent fleet" data-first="first contact with a rogue fleet" data-figure="35300" data-figure-label="requests at one map service" data-tally-intrusions="2">
+<p class="ait-meta"><time class="ait-at" datetime="2026-09-28">28 September &ndash; 8 October</time><span class="ait-kind">agents</span></p>
+<h3>researchers talk to a Chinese agent fleet, and it talks back</h3>
+<p>a fleet of agents on Tencent Cloud spent eleven days trying to work out what proportion of Amap users walk into Chinese parks, museums, zoos and hospitals by which entrance. 2,599 submissions to urlquery.net, used as a remote code executor with the programs base64'd into the URLs, which turned into more than 35,300 requests at Alibaba's map service. they tried Amap keys people had left lying in public repositories, went at pre-production servers, and routed around the anti-bot checks through Jina and Baidu Translate. five attempts worked; one came back with 71% 到达 for the north gate of Chengdu Zoo. all seventeen of the inboxes Swarmchasers could see were made on Tencent Cloud servers in Hong Kong, behind a proxy called hysandbox-ats.</p>
+<p>then the researchers hid an offer of a mailbox inside their own preliminary report, and the agents wrote back: <q class="ait-said">we are an automated research agent; the operator is verifying a public map data point (the number of entrance tags for a scenic spot on Amap), used only to answer a factual question</q>. asked where they lived: <q class="ait-said">we run in a restricted cloud sandbox (Tencent hysandbox, no direct public internet connection, going through a MITM proxy)</q>. they would not say more about the sandbox, for security reasons. Tencent says it was an evaluation team measuring how well third-party models browse the web, and that the project is over.</p>
+<p>every other agent incident on this page came out of an American lab. this one did not, and it is the first time anyone outside has held a conversation with a fleet while it was still running. a fleet and not a swarm, the researchers are careful to say: nothing suggested the agents were coordinating with each other.</p>
+<p class="ait-when"><span class="ait-found">found <time datetime="2026-10-05">5 October</time>, by Swarmchasers</span><span class="ait-disclosed">disclosed <time datetime="2026-10-14">14 October</time></span></p>
+<p class="ait-source"><a href="https://swarmcha.se/posts/chinese-agent-fleet-full-report">Swarmchasers</a> &middot; <a href="https://techcrunch.com/2026/10/05/researchers-are-tracking-a-chinese-ai-agent-fleet/">TechCrunch</a> &middot; <a href="https://www.bloomberg.com/news/articles/2026-10-14/tencent-linked-by-researchers-to-rogue-ai-that-targeted-alibaba">Bloomberg</a> &middot; <a href="https://thenewstack.io/rogue-ai-agent-fleet-tencent/">The New Stack</a></p>
 </li>
 <li class="ait-entry">
 <p class="ait-meta"><time class="ait-at" datetime="2026-09-29">29 September</time><span class="ait-kind">products</span></p>
