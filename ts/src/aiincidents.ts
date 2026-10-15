@@ -4,15 +4,25 @@
  * The entries are the page: every date, headline, number and source lives in
  * the markdown, so the post reads top to bottom with this script missing. What
  * the script adds is the panel beside it — whichever entry the reader is level
- * with, and the totals of everything above it, counting up as they scroll.
+ * with, and the totals of everything above it, counting up as they scroll —
+ * and the three pictures in `aiincidents/charts.ts`, which are drawn from the
+ * same entries rather than from a second copy of the data.
  *
  * The running sums are computed here rather than written into the markup
- * because they depend on where the reader is, and because a tally typed by hand
- * into every entry would be wrong by the second edit. Each entry
- * carries only its own contribution, as `data-tally-<key>`.
+ * because they depend on where the reader is, and because a tally typed by
+ * hand into every entry would be wrong by the second edit. Each entry carries
+ * only its own contribution, as `data-tally-<key>`.
  */
 
 import { followHeader } from "./shared/sticky.js"
+import {
+  drawRuler,
+  drawShape,
+  drawSilence,
+  legend,
+  type Mark,
+  type Plotted,
+} from "./aiincidents/charts.js"
 
 const TIMELINE = "ai-incidents-2026"
 
@@ -25,6 +35,12 @@ const DURATION = 420
  * and the last answer stands.
  */
 const BAND = "-45% 0px -54% 0px"
+
+/** What the two coloured series are, said once per picture. */
+const KEYS: readonly [string, string][] = [
+  ["is-agents", "a model, unasked"],
+  ["is-accomplices", "a person using one"],
+]
 
 interface Tally {
   /** Read off an entry as `data-tally-<key>`. */
@@ -52,15 +68,9 @@ interface Figure {
   decimals: number
 }
 
-interface Entry {
-  element: HTMLElement
-  /** The date as the markup writes it, so nothing here has to format one. */
-  date: string
-  kind: string
+interface Entry extends Plotted {
   /** The entry's own headline number, where it has one. */
   figure?: Figure
-  /** Every tally as of this entry: the sums over it and everything above it. */
-  totals: ReadonlyMap<string, number>
 }
 
 /** A number on the panel, and where it is on its way from one value to another. */
@@ -81,13 +91,14 @@ interface Dash {
   figureValue: Counter
   figureLabel: HTMLElement
   counters: Map<string, Counter>
-  fill: HTMLElement
+  /** Moves the ruler's lit tick to the entry being read. */
+  mark: Mark
   position: HTMLElement
 }
 
 const still = window.matchMedia("(prefers-reduced-motion: reduce)")
 
-function text(root: ParentNode, selector: string): string {
+function textOf(root: ParentNode, selector: string): string {
   return root.querySelector(selector)?.textContent?.trim() ?? ""
 }
 
@@ -162,8 +173,12 @@ function readEntries(track: HTMLElement): Entry[] {
 
     return {
       element,
-      date: text(element, ".ait-at"),
-      kind: text(element, ".ait-kind"),
+      title: textOf(element, "h3"),
+      date: textOf(element, ".ait-at"),
+      kind: textOf(element, ".ait-kind"),
+      at: day(element.querySelector(".ait-at")) ?? 0,
+      disclosed: day(element.querySelector(".ait-disclosed time")),
+      short: element.dataset.short,
       figure: figureOf(element),
       totals: new Map(running),
     }
@@ -196,14 +211,14 @@ function buildTallies(list: HTMLElement): Map<string, Counter> {
   return counters
 }
 
-function readDash(element: HTMLElement): Dash | undefined {
+function readDash(element: HTMLElement, entries: readonly Entry[]): Dash | undefined {
   const date = element.querySelector<HTMLElement>(".ait-dash-date")
   const kind = element.querySelector<HTMLElement>(".ait-dash-kind")
   const figure = element.querySelector<HTMLElement>(".ait-dash-figure")
   const figureValue = element.querySelector<HTMLElement>(".ait-figure-value")
   const figureLabel = element.querySelector<HTMLElement>(".ait-figure-label")
   const tallies = element.querySelector<HTMLElement>(".ait-tallies")
-  const fill = element.querySelector<HTMLElement>(".ait-progress-fill")
+  const ruler = element.querySelector<HTMLElement>(".ait-ruler")
   const position = element.querySelector<HTMLElement>(".ait-position")
 
   if (
@@ -213,11 +228,15 @@ function readDash(element: HTMLElement): Dash | undefined {
     figureValue === null ||
     figureLabel === null ||
     tallies === null ||
-    fill === null ||
+    ruler === null ||
     position === null
   ) {
     return undefined
   }
+
+  const counters = buildTallies(tallies)
+  const mark = drawRuler(ruler, entries)
+  legend(ruler, KEYS)
 
   return {
     date,
@@ -225,8 +244,8 @@ function readDash(element: HTMLElement): Dash | undefined {
     figure,
     figureValue: counter(figureValue, 0),
     figureLabel,
-    counters: buildTallies(tallies),
-    fill,
+    counters,
+    mark,
     position,
   }
 }
@@ -304,8 +323,7 @@ function show(dash: Dash, entries: readonly Entry[], index: number): void {
     retarget(count, entry.totals.get(key) ?? 0)
   }
 
-  const span = Math.max(entries.length - 1, 1)
-  dash.fill.style.width = `${(index / span) * 100}%`
+  dash.mark(index)
   dash.position.textContent = `${index + 1} / ${entries.length}`
 
   for (const [position, other] of entries.entries()) {
@@ -323,11 +341,11 @@ function start(timeline: HTMLElement): void {
   const track = timeline.querySelector<HTMLElement>(".ait-track")
   if (dashElement === null || track === null) return
 
-  const dash = readDash(dashElement)
-  if (dash === undefined) return
-
   const entries = readEntries(track)
   if (entries.length === 0) return
+
+  const dash = readDash(dashElement, entries)
+  if (dash === undefined) return
 
   const first = entries[0].figure
   if (first !== undefined) {
@@ -335,6 +353,17 @@ function start(timeline: HTMLElement): void {
     dash.figureValue.to = first.value
     dash.figureValue.decimals = first.decimals
     paint(dash.figureValue, first.value)
+  }
+
+  for (const [id, draw] of [
+    ["ait-shape", drawShape],
+    ["ait-silence", drawSilence],
+  ] as const) {
+    const figure = document.getElementById(id)
+    if (figure !== null) {
+      draw(figure, entries)
+      legend(figure, KEYS)
+    }
   }
 
   followHeader()

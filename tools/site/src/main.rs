@@ -28,6 +28,7 @@ mod shaders;
 mod styles;
 mod submissions;
 mod tables;
+mod timeline;
 mod workflow;
 mod zipf;
 

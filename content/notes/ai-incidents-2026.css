@@ -4,10 +4,27 @@
    nothing here is required for the post to be legible. Colours are the ones
    the interactive tools use, from custom.scss. */
 
-.ait {
+.ait,
+.ait-figure {
   --ait-border: color-mix(in srgb, var(--gray) 32%, transparent);
   --ait-muted: var(--gray);
   --ait-accent: var(--secondary);
+  /* Two categorical hues, and nothing else on the page carries colour. These
+     are the reference blue and orange, stepped per theme and checked against
+     both of this site's surfaces with the palette validator: the site's own
+     --secondary and --tertiary fail it outright in the dark theme, where they
+     sit 9.6 apart to normal vision. */
+  --ait-agents: #2a78d6;
+  --ait-accomplices: #eb6834;
+}
+
+[saved-theme="dark"] .ait,
+[saved-theme="dark"] .ait-figure {
+  --ait-agents: #3987e5;
+  --ait-accomplices: #d95926;
+}
+
+.ait {
   margin: 1.5rem 0 2.5rem;
 }
 
@@ -23,7 +40,8 @@
     "when figure"
     "kind figure"
     "tallies tallies"
-    "bar position";
+    "bar bar"
+    "position position";
   align-items: center;
   gap: 0.3rem 0.9rem;
   padding: 0.7rem 0.9rem;
@@ -73,7 +91,6 @@
 .ait-figure-value {
   color: var(--ait-accent);
   font-size: 1.9rem;
-  font-variant-numeric: tabular-nums;
   font-weight: 600;
   line-height: 1.1;
 }
@@ -117,25 +134,16 @@
   line-height: 1.2;
 }
 
-.ait-progress {
+.ait-ruler {
   grid-area: bar;
-  height: 3px;
-  margin-top: 0.4rem;
-  border-radius: 2px;
-  background: var(--ait-border);
-  overflow: hidden;
-}
-
-.ait-progress-fill {
-  display: block;
-  width: 0;
-  height: 100%;
-  background: var(--ait-accent);
-  transition: width 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  position: relative;
+  margin-top: 0.3rem;
+  min-width: 0;
 }
 
 .ait-position {
   grid-area: position;
+  align-self: center;
   margin-top: 0.4rem;
   color: var(--ait-muted);
   font-size: 0.7rem;
@@ -323,4 +331,196 @@
   .ait-entry::before {
     transition: none;
   }
+}
+
+/* ---------------------------------------------------------------- pictures
+
+   Three SVGs, drawn by ts/src/aiincidents/charts.ts from the entries. Colour
+   says one thing and only one thing: whether a model did it on its own, or a
+   person used one. Everything else is the page's own muted ink. */
+
+.ait-figure {
+  margin: 1.8rem 0;
+}
+
+.ait-figure[hidden] {
+  display: none;
+}
+
+.ait-figure figcaption {
+  margin-bottom: 0.5rem;
+  color: var(--ait-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.ait-plot {
+  position: relative;
+  min-width: 0;
+}
+
+.ait-chart {
+  display: block;
+  overflow: visible;
+}
+
+/* Recessive chrome: hairlines, one step off the surface, never dashed. */
+.ait-axis,
+.ait-grid {
+  stroke: var(--ait-border);
+  stroke-width: 1;
+}
+
+.ait-guide {
+  stroke: var(--ait-muted);
+  stroke-width: 1;
+}
+
+.ait-tick,
+.ait-row,
+.ait-label {
+  fill: var(--ait-muted);
+  font-family: inherit;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ait-tick-mid {
+  text-anchor: middle;
+}
+
+.ait-tick-end {
+  text-anchor: end;
+}
+
+.ait-row {
+  fill: var(--dark);
+  font-variant-numeric: normal;
+  text-anchor: end;
+}
+
+.ait-label {
+  font-weight: 600;
+}
+
+/* The two series, and the ink for everything that is neither. */
+.ait-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ait-dot,
+.ait-bar {
+  stroke: var(--light);
+  stroke-width: 2;
+}
+
+.ait-mark {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.is-agents {
+  fill: var(--ait-agents);
+  stroke: var(--ait-agents);
+}
+
+.is-accomplices {
+  fill: var(--ait-accomplices);
+  stroke: var(--ait-accomplices);
+}
+
+.is-other {
+  fill: var(--ait-muted);
+  stroke: var(--ait-muted);
+}
+
+.ait-line.is-agents,
+.ait-line.is-accomplices {
+  fill: none;
+}
+
+.ait-dot.is-agents,
+.ait-dot.is-accomplices,
+.ait-bar.is-agents,
+.ait-bar.is-accomplices,
+.ait-bar.is-other {
+  stroke: var(--light);
+}
+
+.ait-label.is-agents {
+  fill: var(--ait-agents);
+}
+
+.ait-label.is-accomplices {
+  fill: var(--ait-accomplices);
+}
+
+/* Ahead of the reader the ruler is faint; the entry being read is lit. */
+.ait-mark.is-ahead {
+  opacity: 0.3;
+}
+
+.ait-mark.is-here {
+  stroke-width: 3;
+}
+
+.ait-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  color: var(--ait-muted);
+  font-size: 0.66rem;
+  list-style: none;
+}
+
+.ait-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ait-swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+.ait-swatch.is-agents {
+  background: var(--ait-agents);
+}
+
+.ait-swatch.is-accomplices {
+  background: var(--ait-accomplices);
+}
+
+.ait-tip {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  gap: 0.1rem;
+  max-width: 17rem;
+  padding: 0.3rem 0.45rem;
+  transform: translateY(-120%);
+  border: 1px solid var(--ait-border);
+  border-radius: 4px;
+  background: var(--light);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--dark) 12%, transparent);
+  color: var(--ait-muted);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.ait-tip[hidden] {
+  display: none;
+}
+
+.ait-tip-head {
+  color: var(--dark);
+  font-weight: 600;
 }
