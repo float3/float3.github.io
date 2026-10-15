@@ -43,6 +43,8 @@ export interface Plotted {
   kind: string
   /** Whole-day number of the day it happened. */
   at: number
+  /** And of the day it stopped, for the ones that ran for a while. */
+  until?: number
   /** Whole-day number of the day it was published, where the two differ. */
   disclosed?: number
   /** A few words for a chart axis, on the entries that appear on one. */
@@ -200,8 +202,8 @@ export type Mark = (index: number) => void
  * September. Doubles as the progress bar it replaces.
  */
 export function drawRuler(host: HTMLElement, entries: readonly Plotted[]): Mark {
-  const HEIGHT = 30
-  const BASE = 20
+  const HEIGHT = 32
+  const BASE = 22
   const EDGE = 3
   const tip = tooltip(host)
   let active = 0
@@ -215,7 +217,7 @@ export function drawRuler(host: HTMLElement, entries: readonly Plotted[]): Mark 
       class: "ait-chart",
     })
     svg.setAttribute("role", "img")
-    svg.setAttribute("aria-label", "the year, one tick per entry")
+    svg.setAttribute("aria-label", "the year, one mark per entry")
 
     // The last month letter has to fit, so the year stops short of the edge.
     const span = Math.max(width - EDGE * 2 - GLYPH * 2, 10)
@@ -229,15 +231,33 @@ export function drawRuler(host: HTMLElement, entries: readonly Plotted[]): Mark 
       svg.append(text(at + 1, HEIGHT - 1, label, "ait-tick"))
     }
 
+    // Shown for the entry being read, and only for it: fourteen of these at
+    // once would be a band of hairlines rather than a fact about one thing.
+    const reach = node("line", {
+      x1: 0,
+      y1: BASE - 4,
+      x2: 0,
+      y2: BASE - 4,
+      class: "ait-reach",
+      opacity: 0,
+    })
+    const told = node("circle", { cx: 0, cy: BASE - 4, r: 2.5, class: "ait-told", opacity: 0 })
+    svg.append(reach, told)
+
     const marks = entries.map((entry) => {
-      const at = x(entry.at)
-      const mark = node("line", {
-        x1: at,
-        y1: BASE - 10,
-        x2: at,
-        y2: BASE,
-        class: `ait-mark ${kindClass(entry.kind)}`,
-      })
+      const from = x(entry.at)
+      const to = entry.until === undefined ? from : x(entry.until)
+      const paintable = kindClass(entry.kind)
+
+      // A moment is a tick. Something that ran for a while is a tick with the
+      // run drawn under it, so the two read as different shapes at a glance.
+      const mark = node("g", { class: `ait-mark ${paintable}` })
+      mark.append(node("line", { x1: from, y1: BASE - 11, x2: from, y2: BASE }))
+      if (entry.until !== undefined) {
+        mark.append(
+          node("rect", { x: from, y: BASE - 4, width: Math.max(to - from, 2), height: 3, rx: 1.5 }),
+        )
+      }
       svg.append(mark)
       return mark
     })
@@ -245,7 +265,7 @@ export function drawRuler(host: HTMLElement, entries: readonly Plotted[]): Mark 
     nearest(svg, host, tip, {
       entries,
       distance: (entry, at) => Math.abs(x(entry.at) - at),
-      place: (entry) => ({ x: x(entry.at), y: BASE - 10 }),
+      place: (entry) => ({ x: x(entry.at), y: BASE - 11 }),
       lines: (entry) => [entry.title, entry.date],
     })
 
@@ -253,6 +273,24 @@ export function drawRuler(host: HTMLElement, entries: readonly Plotted[]): Mark 
       for (const [position, mark] of marks.entries()) {
         mark.classList.toggle("is-ahead", position > index)
         mark.classList.toggle("is-here", position === index)
+      }
+
+      const entry = entries[index]
+      const ends = x(entry.until ?? entry.at)
+      const out = entry.disclosed === undefined ? undefined : x(entry.disclosed)
+      const show = out !== undefined && out > ends + 1
+
+      for (const part of [reach, told]) {
+        part.setAttribute("opacity", show ? "1" : "0")
+        part.setAttribute(
+          "class",
+          `${part === reach ? "ait-reach" : "ait-told"} ${kindClass(entry.kind)}`,
+        )
+      }
+      if (show) {
+        reach.setAttribute("x1", String(ends))
+        reach.setAttribute("x2", String(out))
+        told.setAttribute("cx", String(out))
       }
     }
     paint(active)
@@ -462,6 +500,10 @@ export function drawSilence(figure: HTMLElement, entries: readonly Plotted[]): v
 
     for (const [index, row] of rows.entries()) {
       const top = index * ROW + (ROW - BAR) / 2
+      const running = Math.max(Math.round((row.entry.until ?? row.entry.at) - row.entry.at), 0)
+
+      // The faint stretch is after it stopped and before anyone said; the
+      // solid head, where there is one, is while it was still going on.
       svg.append(
         node("rect", {
           x: gutter,
@@ -469,9 +511,21 @@ export function drawSilence(figure: HTMLElement, entries: readonly Plotted[]): v
           width: Math.max(x(row.days) - gutter, 2),
           height: BAR,
           rx: 4,
-          class: `ait-bar ${kindClass(row.entry.kind)}`,
+          class: `ait-bar is-quiet ${kindClass(row.entry.kind)}`,
         }),
       )
+      if (running > 0) {
+        svg.append(
+          node("rect", {
+            x: gutter,
+            y: top,
+            width: Math.max(x(running) - gutter, 2),
+            height: BAR,
+            rx: 4,
+            class: `ait-bar ${kindClass(row.entry.kind)}`,
+          }),
+        )
+      }
       svg.append(text(gutter - 8, top + BAR - 1, row.entry.short ?? "", "ait-row"))
       // Only the ends get a number; the rest are read off the axis or hovered.
       if (index === 0 || index === rows.length - 1) {
@@ -490,7 +544,12 @@ export function drawSilence(figure: HTMLElement, entries: readonly Plotted[]): v
       place,
       lines: (entry) => {
         const row = rows.find((candidate) => candidate.entry === entry)
-        return [entry.title, `${row?.days ?? 0} days unknown`, entry.date]
+        const running = Math.round((entry.until ?? entry.at) - entry.at)
+        return [
+          entry.title,
+          `${row?.days ?? 0} days unknown`,
+          running > 0 ? `${running} of them while it was still going` : entry.date,
+        ]
       },
     })
 

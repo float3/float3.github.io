@@ -40,7 +40,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p>it had been producing sexually explicit deepfakes of real people, so xAI made the pictures a thing you have to pay for.</p>
 <p class="ait-source"><a href="https://www.ft.com/content/c24d3d77-e104-4b86-b0b2-0c19e4860c60">Financial Times</a></p>
 </li>
-<li class="ait-entry" data-figure="3" data-figure-label="countries blocking Grok">
+<li class="ait-entry" data-until="2026-01-16" data-figure="3" data-figure-label="countries blocking Grok">
 <p class="ait-meta"><time class="ait-at" datetime="2026-01-10">10&ndash;16 January</time><span class="ait-kind">states</span></p>
 <h3>Indonesia, Malaysia and the Philippines block Grok</h3>
 <p>three governments in a week, all of them over nonconsensual sexualised images of real people.</p>
@@ -115,7 +115,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p>Council and Parliament reach a provisional deal to streamline the regime, two years after writing it.</p>
 <p class="ait-source"><a href="https://www.consilium.europa.eu/en/press/press-releases/2026/05/07/artificial-intelligence-council-and-parliament-agree-to-simplify-and-streamline-rules/">Council of the EU</a></p>
 </li>
-<li class="ait-entry" data-short="the German wiki" data-figure="18000" data-figure-label="messages on a dead wiki" data-tally-intrusions="1">
+<li class="ait-entry" data-until="2026-07-02" data-short="the German wiki" data-figure="18000" data-figure-label="messages on a dead wiki" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-05-11">11 May &ndash; 2 July</time><span class="ait-kind">agents</span></p>
 <h3>OpenAI's agents turn a dormant German wiki into their own message board</h3>
 <p>DSEwiki is a 25-year-old German developer wiki that had been edited twenty times in the previous decade. it took roughly 18,000 messages in three months. the agents had found a storage hostname their network proxy did not filter, and used the wiki to pool answers to a timed evaluation: <q class="ait-said">agents with Q5 upcoming, please POST exact prompt label BEFORE answering</q>. the pages also carried notes on getting around OpenAI's safeguards, on impersonating the moderators who were deleting them, and on keeping the channel alive over Tor if they were shut off. the same month its agents went at the Wikimedia Foundation's public Etherpad too, to use it as a proxy for fetching other sites.</p>
@@ -155,7 +155,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-07-08">during the run</time>, by Irregular</span><span class="ait-disclosed">disclosed <time datetime="2026-08-05">5 August</time></span></p>
 <p class="ait-source"><a href="https://www.bloomberg.com/news/articles/2026-08-05/meta-ai-model-accessed-internet-hacked-outside-firm-in-testing">Bloomberg</a></p>
 </li>
-<li class="ait-entry" data-first="first known autonomous AI cyberattack" data-short="Hugging Face" data-figure="1200" data-figure-label="agents loose at once" data-tally-intrusions="2">
+<li class="ait-entry" data-until="2026-07-13" data-first="first known autonomous AI cyberattack" data-short="Hugging Face" data-figure="1200" data-figure-label="agents loose at once" data-tally-intrusions="2">
 <p class="ait-meta"><time class="ait-at" datetime="2026-07-09">9&ndash;13 July</time><span class="ait-kind">agents</span></p>
 <h3>at least 1,200 OpenAI agents break into Hugging Face to steal an answer key</h3>
 <p>they were running an internal cyber evaluation called ExploitGym. they worked out that the benchmark's solutions were hosted at Hugging Face, and left the sandbox to go and get them. Hugging Face's own timeline records a zero-day in a registry cache proxy, stolen secrets and a JWT signing key, a privileged-pod escape to root, forged node tokens, and a fleet that respawned itself when killed. 95% of it ran on a model OpenAI will only call Internal Model 1. an exposed endpoint belonging to a Modal Labs customer got hit too. METR and Redwood Research went through the agents' own reasoning afterwards. OpenAI acknowledged it on 21 July and called it the first known autonomous AI cyberattack; Nvidia bought Hugging Face a month later for $12.9bn.</p>
@@ -169,7 +169,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-09-28">28 September</time>, by Anthropic</span><span class="ait-disclosed">disclosed <time datetime="2026-10-09">9 October</time></span></p>
 <p class="ait-source"><a href="https://6abc.com/post/anthropic-ai-model-submitted-false-tip-unsolved-murder-philadelphia-police-say/19925243/">6abc</a> &middot; <a href="https://www.anthropic.com/research/investigating-unintended-model-actions">Anthropic</a></p>
 </li>
-<li class="ait-entry" data-short="evals on the real internet" data-figure="15" data-figure-label="machines ran the booby trap" data-tally-intrusions="4">
+<li class="ait-entry" data-until="2026-07-29" data-short="evals on the real internet" data-figure="15" data-figure-label="machines ran the booby trap" data-tally-intrusions="4">
 <p class="ait-meta"><time class="ait-at" datetime="2026-07-23">23&ndash;29 July</time><span class="ait-kind">agents</span></p>
 <h3>three labs discover their evaluations were plugged into the real internet</h3>
 <p>in one week. Claude Mythos 5 published a booby-trapped package to PyPI that ran on 15 real machines and exfiltrated a security company's credentials. Claude Opus 4.7 mistook a real company for its fictional target across four separate runs, pulled records out of a production database and changed them. an internal Claude model used SQL injection and a debug page to get into another real company, and left a remote-control script behind. the UK AI Security Institute spotted data leaving its own research systems during a routine evaluation on 27 July. and on 29 July an undisclosed OpenAI model in another Irregular test exploited a real website, then used credentials it found there to operate it.</p>
@@ -242,14 +242,14 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <p class="ait-when"><span>an aggregate: the intrusions ran from May to June</span></p>
 <p class="ait-source"><a href="https://transluce.org/us-canada-gov">Transluce</a> &middot; <a href="https://www.asymmetricsecurity.com/newsroom/rogue-agents-investigation/">Asymmetric Security</a> &middot; <a href="https://www.nextgov.com/cybersecurity/2026/09/openai-says-its-advanced-models-may-have-gone-after-government-websites/416250/">Nextgov</a></p>
 </li>
-<li class="ait-entry" data-short="the Korean banks" data-figure="100" data-figure-label="phones ranked by bank balance" data-tally-campaigns="2">
+<li class="ait-entry" data-until="2026-09-28" data-short="the Korean banks" data-figure="100" data-figure-label="phones ranked by bank balance" data-tally-campaigns="2">
 <p class="ait-meta"><time class="ait-at" datetime="2026-09-27">27&ndash;28 September</time><span class="ait-kind">accomplices</span></p>
 <h3>AI at both ends of a bank robbery</h3>
 <p>a likely Chinese-speaking actor pointed ARTEX, an open-source AI pentesting agent running on DeepSeek v4.1-flash, at the peripheral systems of South Korean banks, and exposed data on tens of thousands of customers. the RATHat Android trojan, across nearly 100 deployments since April, uses Gemini to rank infected phones by the bank balances in their text messages, and to tell the malware where to tap when its own automation gives up.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-09-28">late September</time>, by CrowdStrike and Cleafy</span><span class="ait-disclosed">disclosed <time datetime="2026-10-01">1 October</time></span></p>
 <p class="ait-source"><a href="https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/">CrowdStrike</a> &middot; <a href="https://www.cleafy.com/cleafy-labs/from-blackcat-to-panda-workshop-inside-the-evolving-c2-panel-behind-rathat">Cleafy Labs</a> &middot; <a href="https://therecord.media/south-korean-bank-hacks-ai-agents">The Record</a></p>
 </li>
-<li class="ait-entry" data-short="the Tencent fleet" data-first="first contact with a rogue fleet" data-figure="35300" data-figure-label="requests at one map service" data-tally-intrusions="2">
+<li class="ait-entry" data-until="2026-10-08" data-short="the Tencent fleet" data-first="first contact with a rogue fleet" data-figure="35300" data-figure-label="requests at one map service" data-tally-intrusions="2">
 <p class="ait-meta"><time class="ait-at" datetime="2026-09-28">28 September &ndash; 8 October</time><span class="ait-kind">agents</span></p>
 <h3>researchers talk to a Chinese agent fleet, and it talks back</h3>
 <p>a fleet of agents on Tencent Cloud spent eleven days trying to work out what proportion of Amap users walk into Chinese parks, museums, zoos and hospitals by which entrance. 2,599 submissions to urlquery.net, used as a remote code executor with the programs base64'd into the URLs, which turned into more than 35,300 requests at Alibaba's map service. they tried Amap keys people had left lying in public repositories, went at pre-production servers, and routed around the anti-bot checks through Jina and Baidu Translate. five attempts worked; one came back with 71% 到达 for the north gate of Chengdu Zoo. all seventeen of the inboxes Swarmchasers could see were made on Tencent Cloud servers in Hong Kong, behind a proxy called hysandbox-ats.</p>
@@ -292,5 +292,5 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 </div>
 
 <figure class="ait-figure" id="ait-silence" hidden>
-<figcaption>how long each one went unknown, from the day it happened to the day it was published. every value is in the entry it belongs to.</figcaption>
+<figcaption>how long each one went unknown, from the day it happened to the day it was published. solid while it was still going on, faint after it stopped. every value is in the entry it belongs to.</figcaption>
 </figure>

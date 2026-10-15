@@ -648,3 +648,41 @@
 .ait-meta {
   flex-wrap: wrap;
 }
+
+/* ------------------------------------------------- periods and disclosures
+
+   A moment on the ruler is a tick. Something that ran for a while is a tick
+   with the run drawn under it. For the entry being read, and only for it, a
+   hairline reaches from the end of the thing to the day it was published,
+   where a hollow ring sits: fourteen of those at once would read as a band of
+   lines rather than a fact about one entry. */
+
+.ait-mark line {
+  fill: none;
+}
+
+.ait-mark rect {
+  stroke: none;
+}
+
+.ait-reach {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.ait-told {
+  fill: var(--light);
+  stroke-width: 1.5;
+}
+
+/* On the silence chart the same split is static: solid while it was still
+   going on, faint after it stopped and before anybody said. */
+.ait-bar.is-quiet {
+  opacity: 0.45;
+}
+
+.ait-swatch.is-told {
+  border: 1.5px solid var(--ait-muted);
+  background: none;
+}

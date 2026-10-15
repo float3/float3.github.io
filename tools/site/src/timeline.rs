@@ -219,6 +219,39 @@ mod tests {
         }
     }
 
+    /// An entry that ran for a while carries the day it stopped, and the
+    /// ruler draws the run under the tick. A `data-until` before the date it
+    /// starts at draws a bar of negative width, which is invisible rather
+    /// than wrong-looking.
+    #[test]
+    fn a_run_ends_after_it_starts_and_within_the_year() {
+        let page = read(&root(), PAGE);
+        let mut runs = 0;
+
+        for entry in entries(&page) {
+            let Some(until) = between(entry, "data-until=\"", '"').first().copied() else {
+                continue;
+            };
+            let at = attribute(entry, "class=\"ait-at\" datetime")[0];
+
+            assert!(
+                until.starts_with("2026-") && until.len() == 10,
+                "`{until}` is not a 2026 date"
+            );
+            assert!(
+                until > at,
+                "{} ends on {until}, before it starts on {at}",
+                heading(entry)
+            );
+            runs += 1;
+        }
+
+        assert!(
+            runs > 1,
+            "nothing on the timeline runs for a while any more"
+        );
+    }
+
     /// A `data-first` is rendered as a badge and counted in the panel, so an
     /// empty one is an empty chip and a wrong one is a claim nothing checks.
     /// This can only check that it says something; whether it was really the

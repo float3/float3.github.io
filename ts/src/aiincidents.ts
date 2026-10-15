@@ -56,6 +56,9 @@ const KEYS: readonly [string, string][] = [
   ["is-accomplices", "a person using one"],
 ]
 
+/** The ruler has a third mark the charts do not. */
+const RULER_KEYS: readonly [string, string][] = [...KEYS, ["is-told", "when it came out"]]
+
 interface Tally {
   /** Read off an entry as `data-tally-<key>`. */
   key: string
@@ -121,13 +124,17 @@ function textOf(root: ParentNode, selector: string): string {
   return root.querySelector(selector)?.textContent?.trim() ?? ""
 }
 
-/** A `<time datetime>` as a whole day number, or nothing if it is not there. */
-function day(element: Element | null): number | undefined {
-  const written = element?.getAttribute("datetime")
-  if (written === null || written === undefined) return undefined
+/** A written date as a whole day number, or nothing if it is not one. */
+function dayOf(written: string | undefined): number | undefined {
+  if (written === undefined) return undefined
 
   const parsed = Date.parse(written)
   return Number.isNaN(parsed) ? undefined : parsed / 86_400_000
+}
+
+/** The same, for a `<time datetime>` that may not be there at all. */
+function day(element: Element | null): number | undefined {
+  return dayOf(element?.getAttribute("datetime") ?? undefined)
 }
 
 /**
@@ -212,6 +219,7 @@ function readEntries(track: HTMLElement): Entry[] {
       date: textOf(element, ".ait-at"),
       kind: textOf(element, ".ait-kind"),
       at: day(element.querySelector(".ait-at")) ?? 0,
+      until: dayOf(element.dataset.until),
       disclosed: day(element.querySelector(".ait-disclosed time")),
       short: element.dataset.short,
       figure: figureOf(element),
@@ -271,7 +279,7 @@ function readDash(element: HTMLElement, entries: readonly Entry[]): Dash | undef
 
   const counters = buildTallies(tallies)
   const mark = drawRuler(ruler, entries)
-  legend(ruler, KEYS)
+  legend(ruler, RULER_KEYS)
 
   return {
     date,
