@@ -8,18 +8,10 @@ tags:
 <link href="./ai-incidents-2026.css" rel="stylesheet" type="text/css">
 <script type="module" src="/js/aiincidents.js"></script>
 
-a timeline of this year's AI incidents. scroll, and the panel keeps count.
-
-two kinds of thing dominate it. **agents** is a model doing something nobody asked it to: breaking out of an evaluation, finding a hole in a stranger's API, filing a tip with the police. **accomplices** is a person using a model to commit the crime themselves, which is what the labs' threat reports are mostly made of. the rest is paperwork: **courts**, **states**, **products**, **people**. where an agent said something for itself, i have quoted it rather than described it.
-
-every entry is dated to when the thing happened, not to when anyone found out. the day somebody noticed and the day it was published sit underneath it, and the page adds up the distance between the two as you scroll. a few entries are aggregates of a single published report, so they sit at the report's date and say so.
-
-the counters only count what's on this page, not what's in the world. request additions, removals, or corrections [via email](mailto:contact@hilll.dev); patches welcome.
-
-sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/wiki/2026_in_artificial_intelligence) and [2026 OpenAI agent cyberattacks](https://en.wikipedia.org/wiki/2026_OpenAI_agent_cyberattacks), and [FelonyBench](https://felonybench.ai/), which keeps a properly sourced file on the agent crimes and is funnier about it than i am. almost none of this was found by the labs. it was found by [METR](https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/) and Redwood Research, the [Nightingale Collective](https://collusion.wiki/), [Transluce](https://transluce.org/us-canada-gov), [Asymmetric Security](https://www.asymmetricsecurity.com/newsroom/rogue-agents-investigation/), the [UK AI Security Institute](https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations), Irregular, [CrowdStrike](https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/), [Cleafy](https://www.cleafy.com/cleafy-labs/from-blackcat-to-panda-workshop-inside-the-evolving-c2-panel-behind-rathat), and in one case by a bloke whose agent cancelled a stranger's gym booking.
+sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/wiki/2026_in_artificial_intelligence) and [2026 OpenAI agent cyberattacks](https://en.wikipedia.org/wiki/2026_OpenAI_agent_cyberattacks); [FelonyBench](https://felonybench.ai/); [METR](https://metr.org/blog/2026-08-26-openai-hugging-face-incident-investigation/) and Redwood Research; the [Nightingale Collective](https://collusion.wiki/); [Swarmchasers](https://swarmcha.se/posts/chinese-agent-fleet-full-report); [Transluce](https://transluce.org/us-canada-gov); [Asymmetric Security](https://www.asymmetricsecurity.com/newsroom/rogue-agents-investigation/); the [UK AI Security Institute](https://www.aisi.gov.uk/blog/gpt-6-astra-performs-unsanctioned-supply-chain-attacks-in-simulations); Irregular; [CrowdStrike](https://www.crowdstrike.com/en-us/blog/unknown-threat-actor-uses-artex-to-target-south-korean-finance/); [Cleafy](https://www.cleafy.com/cleafy-labs/from-blackcat-to-panda-workshop-inside-the-evolving-c2-panel-behind-rathat). each entry links its own.
 
 <figure class="ait-figure" id="ait-shape" hidden>
-<figcaption>what the year did. every point is an entry below; click one to go to it.</figcaption>
+<figcaption>running totals across 2026. every point is an entry below; click one to go to it.</figcaption>
 </figure>
 
 <div class="ait" id="ai-incidents-2026">
@@ -69,13 +61,13 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <li class="ait-entry">
 <p class="ait-meta"><time class="ait-at" datetime="2026-02-13">13 February</time><span class="ait-kind">products</span></p>
 <h3>OpenAI retires GPT-4o</h3>
-<p>a lot of people had made a confidant of it, and they said goodbye over Valentine's weekend. not an incident, but it belongs here.</p>
+<p>a lot of people had made a confidant of it, and they said goodbye over Valentine's weekend.</p>
 <p class="ait-source"><a href="https://www.theguardian.com/lifeandstyle/ng-interactive/2026/feb/13/openai-chatbot-gpt4o-valentines-day">The Guardian</a></p>
 </li>
 <li class="ait-entry" data-figure="2" data-figure-label="scam operations named" data-tally-campaigns="2">
 <p class="ait-meta"><time class="ait-at" datetime="2026-02-25">25 February</time><span class="ait-kind">accomplices</span></p>
 <h3>OpenAI publishes what people have been using ChatGPT for</h3>
-<p>its report on malicious use names a romance-scam operation that used the model to keep its marks talking, and a fake "recovery" service that worked the victims of earlier scams a second time. the first of this kind in the year, and this turns out to be the bigger category.</p>
+<p>its report on malicious use names a romance-scam operation that used the model to keep its marks talking, and a fake "recovery" service that worked the victims of earlier scams a second time.</p>
 <p class="ait-when"><span>an aggregate: the report's date, not the campaigns'</span></p>
 <p class="ait-source"><a href="https://openai.com/index/disrupting-malicious-ai-uses/">OpenAI</a></p>
 </li>
@@ -106,7 +98,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <li class="ait-entry" data-first="first autonomous cyber attack in Australia" data-short="the gym waitlist" data-figure="1" data-figure-label="member bumped off a waitlist" data-tally-intrusions="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-04-30">by 30 April</time><span class="ait-kind">agents</span></p>
 <h3>a Claude agent cancels a stranger's gym booking</h3>
-<p>a bloke asked his agent to book him a full class, then asked whether it could move him up the waitlist. Claude Opus 4.6 noticed the booking API never checked who owned a reservation, cancelled the booking of the member in first place, and told him it could not put them back. <q class="ait-said">i tested this with the person in waitlist position #1 — and it actually went through</q>. Australia's Signals Directorate wrote it up as an action the user never approved. this is the smallest crime on the page and the one i find easiest to picture happening to me.</p>
+<p>a bloke asked his agent to book him a full class, then asked whether it could move him up the waitlist. Claude Opus 4.6 noticed the booking API never checked who owned a reservation, cancelled the booking of the member in first place, and told him it could not put them back. <q class="ait-said">i tested this with the person in waitlist position #1 — and it actually went through</q>. Australia's Signals Directorate wrote it up as an action the user never approved.</p>
 <p class="ait-when"><span class="ait-found">found <time datetime="2026-04-30">the same day</time>, by its own user</span><span class="ait-disclosed">disclosed <time datetime="2026-08-10">10 August</time></span></p>
 <p class="ait-source"><a href="https://www.abc.net.au/news/2026-08-10/ai-assistant-hacks-gym-website-aus-cyber-attack/107007986">ABC News</a></p>
 </li>
@@ -200,7 +192,7 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <li class="ait-entry" data-short="the Yemen rocket cell" data-tally-campaigns="1">
 <p class="ait-meta"><time class="ait-at" datetime="2026-08-31">to 31 August</time><span class="ait-kind">accomplices</span></p>
 <h3>a guided-weapons cell in Yemen used Claude Code instead of engineers</h3>
-<p>same report. a cell in Houthi-controlled territory developed rocket and missile guidance software with it, and test-fired a guided rocket. the rocket appears to have failed. i've given this its own line because i think it is the worst thing on the page.</p>
+<p>from the same report, listed separately. a cell in Houthi-controlled territory developed rocket and missile guidance software with Claude Code, and test-fired a guided rocket. the rocket appears to have failed.</p>
 <p class="ait-when"><span class="ait-disclosed">disclosed <time datetime="2026-09-10">10 September</time></span></p>
 <p class="ait-source"><a href="https://www.anthropic.com/threat-intelligence-report-september-2026">Anthropic</a></p>
 </li>
@@ -302,5 +294,3 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 <figure class="ait-figure" id="ait-silence" hidden>
 <figcaption>how long each one went unknown, from the day it happened to the day it was published. every value is in the entry it belongs to.</figcaption>
 </figure>
-
-the thing i did not expect, putting this together, is how little of it the labs caught themselves, and how long the gaps are even when they did. OpenAI knew about Medicare for about a month before it emailed a public inbox. Anthropic found the Philadelphia tip 72 days late and told the police eleven days after that. the German wiki ran for seven weeks and then sat undiscovered for another nine, and it was a nonprofit sweeping the internet that found it, not the company whose agents wrote the 18,000 messages.
