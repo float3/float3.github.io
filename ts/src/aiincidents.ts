@@ -30,11 +30,25 @@ const TIMELINE = "ai-incidents-2026"
 const DURATION = 420
 
 /**
- * A one percent band across the middle of the viewport. The entry crossing it
- * is the one the reader is looking at; between two entries nothing crosses it
- * and the last answer stands.
+ * A one percent band across the middle of whatever the entries scroll inside.
+ * The entry crossing it is the one the reader is looking at; between two
+ * entries nothing crosses it and the last answer stands. Laid down the page
+ * the band is a line across the viewport; laid across the track it is a line
+ * down the track, so the same idea needs the margins in a different order.
  */
-const BAND = "-45% 0px -54% 0px"
+const BANDS: Record<Layout, string> = {
+  vertical: "-45% 0px -54% 0px",
+  horizontal: "0px -54% 0px -45%",
+}
+
+/** Where the reader's choice of layout is kept between visits. */
+const STORED = "ai-incidents-2026:layout"
+
+type Layout = "vertical" | "horizontal"
+
+function isLayout(value: string | undefined): value is Layout {
+  return value === "vertical" || value === "horizontal"
+}
 
 /** What the two coloured series are, said once per picture. */
 const KEYS: readonly [string, string][] = [
@@ -333,6 +347,84 @@ function show(dash: Dash, entries: readonly Entry[], index: number): void {
 }
 
 /**
+ * Watches for the entry crossing the band and says so. Returns the way to
+ * stop, because changing the layout changes both the thing the entries scroll
+ * inside and which way the band lies, and an observer cannot be told either
+ * after the fact.
+ */
+function watch(
+  track: HTMLElement,
+  entries: readonly Entry[],
+  how: Layout,
+  onActive: (index: number) => void,
+): () => void {
+  const observer = new IntersectionObserver(
+    (records) => {
+      for (const record of records) {
+        if (!record.isIntersecting) continue
+
+        const index = entries.findIndex((entry) => entry.element === record.target)
+        if (index !== -1) onActive(index)
+      }
+    },
+    {
+      root: how === "horizontal" ? track : null,
+      rootMargin: BANDS[how],
+      threshold: 0,
+    },
+  )
+
+  for (const entry of entries) observer.observe(entry.element)
+  return () => observer.disconnect()
+}
+
+function remembered(): Layout {
+  try {
+    const kept = localStorage.getItem(STORED) ?? undefined
+    return isLayout(kept) ? kept : "vertical"
+  } catch {
+    // Storage can be denied outright, and a layout is not worth failing over.
+    return "vertical"
+  }
+}
+
+function remember(how: Layout): void {
+  try {
+    localStorage.setItem(STORED, how)
+  } catch {
+    /* as above */
+  }
+}
+
+/**
+ * The two layouts, and the buttons that choose between them. The buttons are
+ * in the markup but hidden until `is-live`, because without this script they
+ * would be a pair of controls that do nothing.
+ */
+function layouts(timeline: HTMLElement, onPick: (how: Layout, byHand: boolean) => void): void {
+  const buttons = [...timeline.querySelectorAll<HTMLButtonElement>(".ait-mode")]
+
+  const settle = (how: Layout, byHand: boolean): void => {
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button.dataset.layout === how))
+    }
+    onPick(how, byHand)
+  }
+
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const how = button.dataset.layout
+      if (!isLayout(how)) return
+
+      remember(how)
+      settle(how, true)
+    })
+  }
+
+  settle(remembered(), false)
+}
+
+/**
  * The figure slot holds the only number that does not grow monotonically, so
  * it starts at the first entry's rather than counting up to it from zero.
  */
@@ -371,22 +463,22 @@ function start(timeline: HTMLElement): void {
   show(dash, entries, 0)
 
   let active = 0
-  const observer = new IntersectionObserver(
-    (records) => {
-      for (const record of records) {
-        if (!record.isIntersecting) continue
+  let stop = (): void => {}
 
-        const index = entries.findIndex((entry) => entry.element === record.target)
-        if (index !== -1 && index !== active) {
-          active = index
-          show(dash, entries, index)
-        }
-      }
-    },
-    { rootMargin: BAND, threshold: 0 },
-  )
+  layouts(timeline, (how, byHand) => {
+    timeline.classList.toggle("is-horizontal", how === "horizontal")
+    stop()
+    stop = watch(track, entries, how, (index) => {
+      if (index === active) return
+      active = index
+      show(dash, entries, index)
+    })
 
-  for (const entry of entries) observer.observe(entry.element)
+    // Changing the layout should not also lose the reader's place.
+    if (byHand) {
+      entries[active].element.scrollIntoView({ block: "center", inline: "center" })
+    }
+  })
 }
 
 const timeline = document.getElementById(TIMELINE)

@@ -524,3 +524,101 @@
   color: var(--dark);
   font-weight: 600;
 }
+
+/* -------------------------------------------------------------- the modes
+
+   The same entries, laid out the other way. Only the track changes: the rail
+   turns, the dot moves inside the card so nothing has to clip, and the entries
+   become a row you scroll sideways. The panel, the charts and the dimming are
+   the same in both, which is the point of being able to switch. */
+
+.ait-modes {
+  display: none;
+}
+
+.ait.is-live .ait-modes {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.ait-mode {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--ait-border);
+  border-radius: 999px;
+  background: none;
+  color: var(--ait-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.ait-mode:hover {
+  border-color: var(--ait-accent);
+  color: var(--ait-accent);
+}
+
+.ait-mode[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--ait-accent) 55%, var(--ait-border));
+  background: color-mix(in srgb, var(--ait-accent) 14%, transparent);
+  color: var(--dark);
+}
+
+.ait.is-horizontal .ait-track {
+  --ait-lane: 1.6rem;
+  display: flex;
+  align-items: start;
+  gap: 1.3rem;
+  margin-top: 1rem;
+  padding: var(--ait-lane) 0 0.6rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+
+/* The rail is a segment per card rather than one line down the track: a line
+   absolutely positioned in a scroll container is laid out against the visible
+   box, so it would sit still while the cards scrolled out from under it. */
+.ait.is-horizontal .ait-track::before {
+  display: none;
+}
+
+.ait.is-horizontal .ait-entry::after {
+  content: "";
+  position: absolute;
+  top: calc(0.2rem + var(--ait-dot) / 2);
+  left: 0;
+  width: calc(100% + 1.3rem);
+  height: 1px;
+  background: var(--ait-border);
+}
+
+.ait.is-horizontal .ait-entry:last-child::after {
+  width: 100%;
+}
+
+.ait.is-horizontal .ait-entry {
+  flex: 0 0 19rem;
+  max-width: 19rem;
+  padding: 1.1rem 0 0;
+  scroll-snap-align: center;
+}
+
+/* Inside the card, not above it: a dot hung outside would be clipped by the
+   track's own horizontal scrolling at either end of the row. */
+.ait.is-horizontal .ait-entry::before {
+  z-index: 1;
+  top: 0.2rem;
+  left: 0;
+}
+
+.ait.is-horizontal .ait-entry h3 {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 800px) {
+  .ait.is-horizontal .ait-entry {
+    flex-basis: 15rem;
+    max-width: 15rem;
+  }
+}

@@ -219,6 +219,39 @@ mod tests {
         }
     }
 
+    /// A button whose `data-layout` the script does not recognise is a button
+    /// that does nothing when pressed, and says nothing about it.
+    #[test]
+    fn every_layout_button_names_a_layout_the_script_has() {
+        let root = root();
+        let page = read(&root, PAGE);
+        let script = read(&root, SCRIPT);
+
+        let declared = script
+            .lines()
+            .find(|line| line.starts_with("type Layout ="))
+            .expect("the page script no longer declares a Layout");
+        let known: BTreeSet<String> = between(declared, "\"", '"')
+            .iter()
+            .step_by(2)
+            .map(|name| (*name).to_string())
+            .collect();
+        assert!(
+            known.len() > 1,
+            "there is only one layout, so the buttons are pointless"
+        );
+
+        let offered: BTreeSet<String> = between(&page, "data-layout=\"", '"')
+            .iter()
+            .map(|name| (*name).to_string())
+            .collect();
+
+        assert_eq!(
+            offered, known,
+            "the buttons and the script disagree about what the layouts are"
+        );
+    }
+
     /// The silence chart draws one labelled row per entry that was kept quiet,
     /// and skips anything missing either half. Both halves are easy to forget.
     #[test]

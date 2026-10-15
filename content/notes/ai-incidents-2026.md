@@ -23,6 +23,10 @@ sources: Wikipedia's [2026 in artificial intelligence](https://en.wikipedia.org/
 </figure>
 
 <div class="ait" id="ai-incidents-2026">
+<div class="ait-modes" role="group" aria-label="how to lay the timeline out">
+<button type="button" class="ait-mode" data-layout="vertical" aria-pressed="true">down the page</button>
+<button type="button" class="ait-mode" data-layout="horizontal" aria-pressed="false">across it</button>
+</div>
 <aside class="ait-dash" aria-label="running totals">
 <p class="ait-dash-when"><span class="ait-dash-date">7 January</span><span class="ait-dash-year">2026</span></p>
 <p class="ait-dash-kind">courts</p>

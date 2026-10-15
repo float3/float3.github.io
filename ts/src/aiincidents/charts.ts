@@ -184,7 +184,7 @@ function nearest(svg: SVGSVGElement, host: HTMLElement, tip: Tip, spec: Pointed)
     spec.onPick?.(undefined)
   })
   svg.addEventListener("click", (event) => {
-    find(event)?.element.scrollIntoView({ behavior: "smooth", block: "center" })
+    find(event)?.element.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" })
   })
   host.style.cursor = "pointer"
 }
