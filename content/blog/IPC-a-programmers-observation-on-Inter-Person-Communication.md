@@ -60,7 +60,7 @@ where examining either the `Boolean` or the `String` will result in different co
 
 a common example would be:
 
-Q: "you don't want desert right?"
+Q: "you don't want dessert right?"
 A: "no, i don't."
 
 "no i don't." is of type `Tuple<Boolean,String>` specifically `Tuple<False, "I don't">`.

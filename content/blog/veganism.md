@@ -17,7 +17,7 @@ in this blog post, i talk about bestiality, not because i've practised it or hav
 
 shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being; recognizing that decapod crustaceans possess nociceptors and can experience distress. each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). in recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
 
-to quantify the scale of suffering: if we conservatively assume each shrimp experiences 1/100,000th the suffering of a human, then 440 billion shrimp × 0.00001 human-suffering units per shrimp yields 4.4 million human-equivalent suffering units every year. (the 1/100,000th is a number i made up) ([PRB][2]).
+to quantify the scale of suffering: if we conservatively assume each shrimp experiences 1/100,000th the suffering of a human, then 440 billion shrimp × 0.00001 human-suffering units per shrimp yields 4.4 million human-equivalent suffering units every year. (the 1/100,000th is a number i made up).
 
 [1]: https://en.wikipedia.org/wiki/Shrimp_farming "Shrimp farming"
 [2]: https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth "How Many People Have Ever Lived on Earth? - PRB"
@@ -36,7 +36,7 @@ probably not but i lean toward at least some inter-subjectively stable moral cla
 
 ## what being vegan means to me
 
-i don't contribute to the animal product industry, but that doesn't mean i can't consume animal products. for example, i'll eat animal products to avoid food waste, finishing someone else's meal, for instance, or use bones from a butcher if they're given to me for free. Roadkill would also be acceptable in theory.
+i don't contribute to the animal product industry, but that doesn't mean i can't consume animal products. for example, i'll eat animal products to avoid food waste, finishing someone else's meal, for instance, or use bones from a butcher if they're given to me for free. roadkill would also be acceptable in theory.
 i can wear second-hand leather. i don't go to the zoo. if supply and demand of animal products is not affected by my actions and i don't make those companies more profitable, then the action is probably not vegan.
 
 ## why i'm vegan
@@ -48,7 +48,7 @@ i can wear second-hand leather. i don't go to the zoo. if supply and demand of a
 - most people think raping an animal is immoral, but eating one is fine. that's also inconsistent. you can argue that one correlates with sociopathy while the other doesn't, but i'm not interested in reasons for why we should allow one but not the other, but instead in their moral value.
   - if you think both are acceptable, i respect your consistency even though we disagree.
   - if you think one is okay and the other isn't, i think you're being hypocritical.
-- also Health and Environment reasons, but i want to explore moral reasoning here
+- also health and environment reasons, but i want to explore moral reasoning here
 
 ## the "animals eat animals, so why can't i?" argument
 
@@ -74,14 +74,14 @@ one person who read this blog post said the following:
 > 2. "i am vegetarian, but i accept that others are not" is a local maximum of coolness and virtue-signalling in today's society, so anyone proselytizing me about it is (maybe unconsciously) simultaneously earning cool points, which disincentivizes truth-seeking.
 >    Similarly, anyone proselytizing me about "Eating meat is an atrocity, no excuses" is losing social points in doing so, so they are incentivized to find refutations for their arguments.
 
-i agree with this. i have to spend social points and likeability by repeatedly talking about veganism and add friction to behaviour that i believe is Immoral anything else would be incoherent.
+i agree with this. i have to spend social points and likeability by repeatedly talking about veganism and add friction to behaviour that i believe is immoral anything else would be incoherent.
 i don't like meat-eating but i also don't like vegetarianism or naive veganism.
 
 ## i agree with you but i'm not vegan because
 
 ### moral duties do not require unlimited sacrifice
 
-most moral theories acknowledge that duties have boundaries; agents are not required to sacrifice their well-being or personal resources without limit. in utilitarianism, for example, the principle of diminishing marginal utility implies that beyond a point, additional sacrifice yields negligible overall benefit. Deontological ethics recognizes agent-relative permissions: obligations must be balanced against other duties, including self-preservation and commitments to family or community.
+most moral theories acknowledge that duties have boundaries; agents are not required to sacrifice their well-being or personal resources without limit. in utilitarianism, for example, the principle of diminishing marginal utility implies that beyond a point, additional sacrifice yields negligible overall benefit. deontological ethics recognizes agent-relative permissions: obligations must be balanced against other duties, including self-preservation and commitments to family or community.
 
 in practice, we accept that extraordinary heroism, risking one's life to save another, is laudable but not morally obligatory for everyone. we recognize that our capacity for empathy and action is finite: time, health, emotional energy, and social bonds constrain how much we can give. thus, choosing to reduce meat consumption can be seen as a reasonable calibration of moral concern rather than an all-or-nothing demand that would erode one's ability to function and fulfill other responsibilities.
 

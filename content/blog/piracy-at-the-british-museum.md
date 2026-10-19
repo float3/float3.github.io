@@ -25,7 +25,7 @@ on the 20th of August 2022 i visited the British Museum with some friends and de
 
 ## back home
 
-after i returned from my Vacation, i extracted the frames from each video using [FFmpeg](https://github.com/FFmpeg/FFmpeg) using the following command
+after i returned from my vacation, i extracted the frames from each video using [FFmpeg](https://github.com/FFmpeg/FFmpeg) using the following command
 
 ```sh
 ffmpeg -i video.mp4 -vf yadif images/%05d.png
