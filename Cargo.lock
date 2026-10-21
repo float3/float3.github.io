@@ -528,7 +528,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d045de693cb712d0b22c6a64be5b953f67b3ce00ab5ad3dd5d8b441886ab8e1a"
 dependencies = [
  "quote",
- "syn 3.0.6",
+ "syn 2.0.119",
 ]
 
 [[package]]
@@ -1394,8 +1394,8 @@ dependencies = [
 
 [[package]]
 name = "music21-rs"
-version = "0.9.0"
-source = "git+https://github.com/float3/music21-rs.git#6d60556c1cc6582e6cc46b5fe3f3b748a1a358bb"
+version = "0.10.0"
+source = "git+https://github.com/float3/music21-rs.git#83a99c8a0e4c96765cadfdb4eed3492f8255ff04"
 dependencies = [
  "fraction",
  "itertools 0.15.0",
