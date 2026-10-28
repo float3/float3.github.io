@@ -528,7 +528,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d045de693cb712d0b22c6a64be5b953f67b3ce00ab5ad3dd5d8b441886ab8e1a"
 dependencies = [
  "quote",
- "syn 2.0.119",
+ "syn 3.0.6",
 ]
 
 [[package]]
@@ -852,14 +852,13 @@ dependencies = [
 
 [[package]]
 name = "glslang"
-version = "0.9.0"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00f0dbf18f06ee5ed97aae40933c8fd9bcfe551140407305bfd95f106f734a9c"
+checksum = "e8fccba569493100739248dd04ec4b320967a5703237496b66bacfd4dff610ee"
 dependencies = [
  "bitflags 2.13.2",
  "glslang-sys",
  "rustc-hash",
- "smartstring",
  "thiserror",
 ]
 
@@ -1395,7 +1394,7 @@ dependencies = [
 [[package]]
 name = "music21-rs"
 version = "0.10.0"
-source = "git+https://github.com/float3/music21-rs.git#83a99c8a0e4c96765cadfdb4eed3492f8255ff04"
+source = "git+https://github.com/float3/music21-rs.git#29362684647fb97d085c60268f7f6920be2a22a9"
 dependencies = [
  "fraction",
  "itertools 0.15.0",
@@ -2775,17 +2774,6 @@ name = "smallvec"
 version = "1.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ba467056f1b547ed52077911161fc86985becbc60e8e1857c8a144dab0def891"
-
-[[package]]
-name = "smartstring"
-version = "1.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3fb72c633efbaa2dd666986505016c32c3044395ceaf881518399d2f4127ee29"
-dependencies = [
- "autocfg 1.5.1",
- "static_assertions",
- "version_check",
-]
 
 [[package]]
 name = "smawk"
