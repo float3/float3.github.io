@@ -1,5 +1,5 @@
 ---
-title: Recursive Tuning
+title: recursive tuning
 tags:
   - music
   - programming
@@ -10,13 +10,13 @@ tags:
 
 <link href="./recursive-tuning.css" rel="stylesheet" type="text/css">
 
-I talked about [recursive just intonation](https://hilll.dev/blog/recursive-just-intonation/) in the past, but I now realize that that's just a specific instance of a more general type of adaptive tuningsystem I've discovered which I call "Recursive Tuning Systems" or just "Recursive Tuning".
+i talked about [recursive just intonation](https://hilll.dev/blog/recursive-just-intonation/) in the past, but i now realize that that's just a specific instance of a more general type of adaptive tuningsystem i've discovered which i call "Recursive Tuning Systems" or just "Recursive Tuning".
 
 in this post you'll be able to make a matrix of any two tuningsystems that are supported by my music21-rs library and see how they interact with each other and how they sound.
 
-## From One Table To Two
+## from one table to two
 
-Recursive just intonation uses one table twice. The five-limit table picks the
+recursive just intonation uses one table twice. the five-limit table picks the
 root of a chord, and the same table tunes every note above that root:
 
 ```text
@@ -24,7 +24,7 @@ recursive_frequency(root, degree) =
     C_frequency * J[root] * J[degree]
 ```
 
-Nothing in that formula needs the two lookups to use the same table, or needs
+nothing in that formula needs the two lookups to use the same table, or needs
 either table to be just intonation:
 
 ```text
@@ -32,39 +32,39 @@ frequency(root, degree) =
     root_frequency * G[root] * L[degree]
 ```
 
-`G` is the **global** table. It places the roots, the way the C-based just
-keyboard did. `L` is the **local** table. It tunes every note above a root. The
+`G` is the **global** table. it places the roots, the way the C-based just
+keyboard did. `L` is the **local** table. it tunes every note above a root. the
 matrix below has one row per degree of `G` and one column per degree of `L`, so
 it is the "12 pianos" table from the other post with any number of pianos of
 any size.
 
-Three pairs are already familiar:
+three pairs are already familiar:
 
 - `G` and `L` both five-limit is recursive just intonation.
 - `G` 12-TET and `L` five-limit is the hybrid at the end of the other post:
   piano roots with just chords built on them.
-- `G` and `L` both 12-TET is plain 12-TET. A step of an equal division above
+- `G` and `L` both 12-TET is plain 12-TET. a step of an equal division above
   another step is the step of their sum, `2^(a/12) * 2^(b/12) = 2^((a+b)/12)`,
   so recursing it moves nothing.
 
-That last property belongs to equal divisions and to nothing else. If
+that last property belongs to equal divisions and to nothing else. if
 `T[a] * T[b] = T[a+b]` for every pair of degrees, then `T[n] = T[1]^n`, which is
-an equal division. So recursion changes every tuning except the equal ones.
+an equal division. so recursion changes every tuning except the equal ones.
 
-## Scales Of Different Sizes
+## scales of different sizes
 
-The global and the local scale do not need the same number of notes or the
-same period. Every row is as long as the local scale and repeats at the local
-scale's period, and there is one row for each degree of the global scale. A
+the global and the local scale do not need the same number of notes or the
+same period. every row is as long as the local scale and repeats at the local
+scale's period, and there is one row for each degree of the global scale. a
 7-note diatonic scale on 12-TET roots is 12 pianos with 7 keys each.
 Bohlen-Pierce on five-limit roots is 12 pianos that repeat at `3/1` instead of
 the octave.
 
-When the sizes differ, a column is no longer the same note name in every row.
-The matrix then compares each note with the nearest note of the global scale,
+when the sizes differ, a column is no longer the same note name in every row.
+the matrix then compares each note with the nearest note of the global scale,
 and the colours show the nearest 12-TET note.
 
-## Try It
+## try it
 
 <div id="recursiveTuning" class="tool rt">
 <p class="wasm-credit">made with rust compiled to wasm</p>
@@ -117,22 +117,22 @@ and the colours show the nearest 12-TET note.
 </div>
 <div id="rtProgression" class="rt-progression"></div>
 <h3>The matrix</h3>
-<p class="tool-hint">a row per root of the global scale, a column per step of the local scale. The small number in a cell is how far that note is from the global scale's own pitch for it. Click a cell to hear it.</p>
+<p class="tool-hint">a row per root of the global scale, a column per step of the local scale. the small number in a cell is how far that note is from the global scale's own pitch for it. click a cell to hear it.</p>
 <div id="rtMatrix" class="rt-matrix-wrap"></div>
 </div>
 
 <script src="/js/recursivetuning.js"></script>
 
-How to play it:
+how to play it:
 
-- The digit row, `1` to `=`, picks one of the first twelve roots of the global
-  scale. Clicking a root, or the head of a row in the matrix, picks it too.
-- The three letter rows play the local scale over the chosen root, starting at
+- the digit row, `1` to `=`, picks one of the first twelve roots of the global
+  scale. clicking a root, or the head of a row in the matrix, picks it too.
+- the three letter rows play the local scale over the chosen root, starting at
   `z` and going up one degree per key.
-- Notes you are holding move to the new root when you pick another one. That is
+- notes you are holding move to the new root when you pick another one. that is
   the keyboard from the end of the recursive JI post: one hand picks the
   context, the other plays notes that are retuned to it.
-- The progression is the one from the recursive JI post. Under each chord is
+- the progression is the one from the recursive JI post. under each chord is
   every note that sounds different from the global scale alone, and by how many
-  cents. In a scale that is not 12-tone, each root and chord note is the degree
+  cents. in a scale that is not 12-tone, each root and chord note is the degree
   nearest the 12-TET one.
