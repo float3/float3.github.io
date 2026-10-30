@@ -28,6 +28,8 @@
             cargo-edit
             cargo-hack
             clang
+            elmPackages.elm
+            elmPackages.elm-test
             # `site normalize-gallery` remuxes a video to take the metadata out
             # of it, which is the one thing it cannot do for itself.
             ffmpeg
