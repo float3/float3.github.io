@@ -1,70 +1,33 @@
-* {
-  box-sizing: border-box;
-}
+/* glsl2hlsl: two code panes side by side and the options between them. */
 
-html,
-body {
-  height: 100%;
-}
-
-textarea {
-  width: 50%;
-  float: left;
-  height: 100%;
-  resize: none;
-  padding-bottom: 400px;
-  margin-top: 10px;
-}
-
-textarea {
+.glsl .tool-panes textarea {
   width: 100%;
-  height: 150px;
-  box-sizing: border-box;
+  min-height: 22rem;
+  white-space: pre;
+  overflow: auto;
+  tab-size: 4;
 }
 
-h2,
-h3 {
-  float: left;
-  margin: 0;
-  margin-bottom: 10px;
+.glsl-convert {
+  margin-left: auto;
 }
 
-input {
-  padding: 10;
-  font-size: 26px;
+/* The background preview's note, nearly always a compile error from a shader
+   somebody is still typing, so quiet enough to ignore while doing so. */
+.glsl-preview-status {
+  font-family: var(--codeFont, monospace);
+  font-size: 0.8rem;
+  opacity: 0.75;
 }
 
-.areas {
-  height: 80%;
+.glsl-links:empty {
+  display: none;
 }
-
-table {
-  width: 100%;
-  max-width: 800px;
-  border-spacing: 20px;
-  table-layout: fixed;
+.glsl-links h2 {
+  font-size: 1rem;
+  margin: 0.5rem 0 0.25rem;
 }
-
-th,
-td {
-  width: 50%;
-  padding: 8px;
-  box-sizing: border-box;
-  vertical-align: top;
-}
-
-.label-column {
-  width: 50%;
-}
-
-.output-column {
-  width: 50%;
-}
-
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-input[type="button"] {
-  margin-top: 10px;
+.glsl-links a {
+  display: inline-block;
+  margin-right: 0.75rem;
 }

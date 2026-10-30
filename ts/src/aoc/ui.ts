@@ -1,10 +1,11 @@
-const START_YEAR = 2015
 const STAR = "\u2B50"
 
 import {
   aoc_completion_percentage,
   aoc_day_count_for_year,
   aoc_day_status,
+  aoc_first_year,
+  aoc_last_year,
   aoc_problem_count_for_day,
   aoc_solved,
   highlight_css,
@@ -14,8 +15,7 @@ import {
 } from "wasm-aoc"
 
 // The solutions are highlighted once and coloured by class, so the palette is
-// one stylesheet installed once. It used to be two coloured copies of every
-// solution in the wasm, re-rendered into all 205 panels on a theme change.
+// one stylesheet installed once.
 function installHighlightStyles(): void {
   const id = "aoc-highlight-styles"
   if (document.getElementById(id)) return
@@ -26,12 +26,6 @@ function installHighlightStyles(): void {
   document.head.appendChild(style)
 }
 
-export interface TabConfig {
-  years: number
-  days: number
-  problems: number
-}
-
 type Progress = {
   completeCount: number
   totalProblems: number
@@ -39,16 +33,28 @@ type Progress = {
 
 type DayStatus = "complete" | "partial" | "todo"
 
-export function createTabs(container: HTMLElement, config: TabConfig) {
-  const { years, days, problems } = config
+/** The calendar comes from the wasm, which knows which years it has solutions for. */
+export function createTabs(container: HTMLElement) {
+  const START_YEAR = aoc_first_year()
+  const years = aoc_last_year() - START_YEAR + 1
 
   function dayCountForYear(year: number) {
-    return aoc_day_count_for_year(year, days)
+    return aoc_day_count_for_year(year)
   }
 
   function problemCountForDay(year: number, day: number) {
-    return aoc_problem_count_for_day(year, day, problems)
+    return aoc_problem_count_for_day(year, day)
   }
+
+  const yearList = Array.from({ length: years }, (_, index) => START_YEAR + index)
+  const days = Math.max(...yearList.map(dayCountForYear))
+  const problems = Math.max(
+    ...yearList.flatMap((year) =>
+      Array.from({ length: dayCountForYear(year) }, (_, index) =>
+        problemCountForDay(year, index + 1),
+      ),
+    ),
+  )
 
   let activeYear = START_YEAR + years - 1
   let activeDay = 1
@@ -130,9 +136,8 @@ export function createTabs(container: HTMLElement, config: TabConfig) {
   // happens to exist.
   const puzzleInputs = new Map<string, string>()
 
-  // A panel is built the first time it is looked at. All 205 of them used to be
-  // built at load -- five elements and a parse of the highlighted solution
-  // each -- so that one could be shown and the rest hidden.
+  // A panel is built the first time it is looked at: five elements and a parse
+  // of the highlighted solution each, for 205 of them.
   function fieldsFor(y: number, d: number, p: number): HTMLDivElement {
     const key = `${y}-${d}-${p}`
     const existing = fieldsMap.get(key)

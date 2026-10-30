@@ -15,7 +15,7 @@ tags:
 <h2 id="trolley-heading">problem</h2>
 <p class="gallery-count"></p>
 </div>
-<div class="photo-gallery" aria-live="polite" data-collection="trolley" data-noun="trolley problem" data-plural="trolley problems"></div>
+<div class="photo-gallery" aria-live="polite" data-collection="trolley" data-noun="trolley problem" data-plural="trolley problems" data-submit-repo="float3/float3.github.io"></div>
 </section>
 <dialog class="photo-lightbox" aria-label="trolley problem viewer">
 <button class="photo-lightbox-close" type="button" aria-label="close">x</button>

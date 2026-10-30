@@ -5,12 +5,11 @@ Comments as files in the repository, contributed as pull requests.
 There is no server, no database and no third-party widget. A reader writes a
 comment in the page's compose box and picks one of three ways to send it.
 Whichever they pick, the comment arrives as a pull request, and merging that
-pull request is what publishes it — moderation is the merge button and nothing
-else.
+pull request is what publishes it — moderation is done entirely through the merge button.
 
 | route               | what happens                                                                                                                                                               |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **issue** (default) | Opens a prefilled GitHub issue. `.github/workflows/comment.yaml` writes the file, commits it **in the issue opener's name**, opens the pull request, and closes the issue. |
+| **issue** (default) | Opens a prefilled GitHub issue. `.github/workflows/submission.yaml` writes the file, commits it **in the issue opener's name**, opens the pull request, and closes the issue. |
 | **pull request**    | Opens GitHub's "create a new file" editor with the path and body filled in, forking the repository if the reader cannot push. They commit and propose it themselves.       |
 | **email**           | A `mailto:` link. No GitHub account at all; the comment gets added by hand.                                                                                                |
 
@@ -19,8 +18,8 @@ comment attributed to whoever wrote it without them having to do anything about
 it. The other two are there because the first can fail for reasons the reader
 cannot fix.
 
-The first two need a GitHub account. In exchange they need nothing else: no name
-to type, no picture to upload, no key to keep — the account is the identity.
+The first two need a GitHub account. But they need nothing else: no name
+to type, no picture to upload, no key to keep — the account provides the identity.
 
 ## Where the files live
 
@@ -35,8 +34,10 @@ content/blog/freewill.comment.bbbb2222.md
 The id is 8 hex characters and only needs to be unique within one page — the
 filename already carries the page. `quartz.config.yaml` lists
 `**/*.comment.*.md` under `ignorePatterns`, so these never become pages of their
-own, never enter search, the graph, or the feed. The transformer reads them off
-disk directly instead.
+own, never enter search, the graph, or the feed. Instead `site comments-index`
+(`tools/site/src/comment_index.rs`, run by `site build` before Quartz) reads
+them off disk and writes their metadata to `.quartz/comments.json`, and the
+transformer renders each body from there.
 
 ## The file
 
@@ -103,8 +104,8 @@ or reused, an id cannot.
 
 A file with no `author` — one submitted through the pull-request route, or
 written before the workflow existed — falls back to the commit that added it,
-via `git log --diff-filter=A`. A file with neither renders as _uncommitted_,
-which locally is the whole time one is being tested.
+via `git log --diff-filter=A` in `site comments-index`. A file with neither
+renders as _uncommitted_, which locally is the whole time one is being tested.
 
 ### A comment belongs to its author, at both doors
 
@@ -155,7 +156,7 @@ holds every one of them.
 ## Quoting
 
 The quote is stored as text, not as an offset or a generated anchor, because a
-position-based reference would rot silently the first time the page is edited.
+position-based reference would become invalid without warning the first time the page is edited.
 `ts/src/comments/quotes.ts` flattens the article's text nodes at read time,
 collapses whitespace, finds the passage, and wraps it in `<mark id="quote-<id>">`
 with a `¶` backlink to `#comment-<id>`. The comment's own blockquote links the
@@ -174,7 +175,7 @@ different places.
 **Markup renders inline**, with a wide allowlist: text formatting, lists,
 tables, `details`/`summary`, figures, images, media, and a `style` attribute for
 anything cosmetic. Because the body goes through a real HTML parser before it is
-cleaned, a comment cannot escape its own box by writing unbalanced closing tags:
+cleaned, a comment cannot break out of its container element by writing unbalanced closing tags:
 the parser drops them, and the tree the page renders is well-formed by
 construction. Headings are demoted so a comment cannot compete with the page's
 outline, `style` declarations that leave the box or fetch a URL are dropped, and
@@ -192,11 +193,10 @@ button again throws the frame away — as does navigating to another page.
 that says `lang="ts"` or `type="text/typescript"`, goes through esbuild on the
 way into the frame, so what a reader runs is always JavaScript — a comment
 cannot ask the browser to fetch a compiler, and the sandbox has no network to
-fetch one over. Types are stripped rather than checked: a demo is not a pull
-request, and code `tsc` would have refused still runs, exactly as the JavaScript
-it is. A syntax error is the other kind of wrong, since there is no page to be
+fetch one over. Types are stripped rather than checked: a demo does not need type checking, and code `tsc` would reject still runs as JavaScript
+regardless. A syntax error is the other kind of wrong, since there is no page to be
 made out of it, and it is printed in the frame where its author will see it —
-a comment with a mistyped fence must not be able to stop the site building.
+a comment with a syntax error must not prevent the site from building.
 
 Without `allow-same-origin` the frame is in an opaque origin. Measured from
 inside one:
@@ -212,23 +212,38 @@ That is the whole reason for the split, and it is not about distrusting the
 commenter: every comment is read before it merges. It is that a merge is a
 judgement made once, by eye, on code that may be minified or clever, while the
 cost of getting it wrong is script running on this origin for every visitor
-afterwards. The sandbox makes a mistaken merge cost a silly iframe instead.
+afterwards. The sandbox limits the damage of a mistaken merge to an isolated iframe.
 
 If a particular comment ever deserves to run on the real origin, the honest way
 to do it is to move its code into the page or into `ts/` — where it goes through
 the same review as everything else here — rather than to widen the sandbox for
 all comments at once. Adding `allow-same-origin` to the list in
 `ts/src/comments/runner.ts` would do exactly that, and is the one line in this
-plugin worth being suspicious of in a diff.
+plugin that should be scrutinized in a diff.
 
 ## The workflow
 
-`.github/workflows/comment.yaml` fires on `issues: opened` and keys off the
+`.github/workflows/submission.yaml` fires on `issues: opened` and keys off the
 `hilll.dev:comment` marker in the body rather than off a label — `?labels=` in a
 prefilled issue URL is silently dropped for anyone without triage permission,
-which is everyone this feature exists for.
+which is everyone this feature exists for. The same file handles gallery
+submissions, which carry a different marker: a `route` job reads the issue once
+and the other job is skipped inside the same run, so a comment does not also
+produce a skipped gallery run. It can be dispatched by hand with an issue number
+too, for an issue whose run failed — re-running a failed run reuses the workflow
+as it was, so a fix never reaches it that way.
 
-It runs `site comment-from-issue`, which is the whole of the validation.
+Writing `/redo` as a comment on a pull request the workflow opened runs the
+same thing again for that pull request's issue, from the current `master`, and
+force-pushes the rebuilt branch under the same pull request. That is for a
+pull request that has come to conflict — two gallery submissions branched from
+the same `master` number their files the same way, and whichever merges second
+collides with the first. Only an owner, member or collaborator is heard; the
+issue is found from the branch name, `gallery/N` or `comment/N`, not from the
+body. Every comment on every issue and pull request starts a run that is then
+skipped; that is the cost of the command.
+
+The comment job runs `site comment-from-issue`, which is the whole of the validation.
 Everything that script reads was written by a stranger, so nothing is trusted
 further than it has been checked:
 
@@ -267,8 +282,8 @@ things constrain that, and they are checked in three different ways:
    workflow independently checks the working tree afterwards, refusing unless
    exactly one file changed and it is that comment.
 
-The third one is deliberate belt and braces: the first two are arguments about
-code, and the last is a fact about the tree, checked after the fact.
+The third check is deliberately redundant: the first two are constraints in the code,
+and the third is a postcondition verified on the resulting tree.
 
 Two things worth setting on the repository itself, which no workflow can do for
 you: **branch protection on the default branch**, so that even a compromised run

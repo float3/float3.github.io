@@ -4,7 +4,7 @@ tags:
   - list
 ---
 
-restaurants I like \
+restaurants i like \
 in descending order of quality per place \
 
 - [Singapore](#singapore)
@@ -66,7 +66,7 @@ very good food, open: 5:30-18:00
 
 # Taiwan
 
-in taiwan you can find 素食自助餐 (vegetarian buffet) in many places, they have consistent quality, high variety and are cheap, I highly recommend them
+in taiwan you can find 素食自助餐 (vegetarian buffet) in many places, they have consistent quality, high variety and are cheap, i highly recommend them
 you can also search for: 卍, a buddhist symbol and often used in the names of vegetarian restaurants
 
 ## Taipei
@@ -134,7 +134,7 @@ good imitation shark fin soup
 ### Veggie Kingdom 緻素坊
 
 22°17'57.7"N 114°10'06.7"E \
-7 樓, V.i.p. Commercial Centre, 120 號 Canton Rd, Tsim Sha Tsui, Hong Kong
+7 樓, V.i.p. commercial centre, 120 號 Canton Rd, Tsim Sha Tsui, Hong Kong
 
 good food, too expensive
 
@@ -144,8 +144,8 @@ good food, too expensive
 地下層, 香港公園, The K.s.lo Gallery, Admiralty, Hong Kong
 
 good vegan dim sum, much too expensive, not worth \
-I didn't wanna include the last 2; I wouldn't go there again,
-because there are better options with lower prices but I decided to Document them anyways.
+i didn't wanna include the last 2; i wouldn't go there again,
+because there are better options with lower prices but i decided to Document them anyways.
 
 # Japan
 
@@ -183,7 +183,7 @@ vegan izakaya
 55°40'43.2"N 12°34'10.1"E \
 Studiestræde 18, 1455 København, Denmark
 
-the menu is different time everytime I visit, good kimchi, good ramen
+the menu is different time everytime i visit, good kimchi, good ramen
 ask the owner about the story of how the kimchi started over 8 years ago (2023)
 
 # Finland
@@ -211,7 +211,7 @@ Lapinlahdenkatu 9, 00180 Helsinki, Finland
 48°08'59.4"N 11°34'37.9"E \
 Schellingstraße 15, 80799 München, Germany
 
-Vegan Pizza
+vegan pizza
 
 ### Soy Vegan
 

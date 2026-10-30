@@ -5,11 +5,11 @@ tags:
   - reading
 ---
 
-Books I'm currently reading
+books i'm currently reading
 
-Books I'm currently reading
+books i'm currently reading
 
-### Misc:
+### misc:
 
 - [-] How to Win Friends & Influence People
 - [x] [Riichi 1](https://github.com/dainachiba/RiichiBooks)
@@ -57,7 +57,7 @@ Books I'm currently reading
 - [ ] Antifragile (Nassim Nicholas Taleb)
 - [ ] Skin in the Game (Nassim Nicholas Taleb)
 
-### (Computer) Science:
+### (computer) science:
 
 - [x] Goedel Escher Bach
 - [ ] Algorithms Data Structures Programs
@@ -73,24 +73,24 @@ Books I'm currently reading
 - [ ] hackers delight
 - [ ] coders at work
 
-### Physics:
+### physics:
 
 - [x] Six Easy Pieces
 - [x] Six Not-So-Easy Pieces
 - [ ] defining wind
 - [ ] Surely You're Joking, Mr. Feynman!
 
-### Music:
+### music:
 
 - [x] New Musical Resources
 
-### Philosophy:
+### philosophy:
 
 - [ ] What Is Existentialism?
 - [ ] Leviathan
 - [ ] Animal Liberation
 
-### Fiction:
+### fiction:
 
 - [x] Harry Potter and the Methods of Rationality
 - [x] Three Worlds Collide

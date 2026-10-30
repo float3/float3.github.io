@@ -5,30 +5,31 @@
  * which means the three big files are gzip on disk and the loader expects the
  * server to say so. It wants `Content-Encoding: gzip`, so that the browser has
  * already unpacked the bytes by the time they reach it; given anything else it
- * refuses with "Unable to parse build.framework.js.gz".
+ * refuses with "Unable to parse audiolink.framework.js.gz".
  *
- * GitHub Pages will not say it. It serves `build.wasm.gz` as
+ * GitHub Pages will not say it. It serves `audiolink.wasm.gz` as
  * `application/gzip` with no encoding header at all, and it has no
  * configuration to change that. The usual answer is to rebuild in Unity with
  * the fallback turned on, which needs Unity; the other is to store the files
- * unpacked, which doubles what a reader downloads -- 19 MB to 38 MB -- because
- * Pages does not compress `application/wasm` or `application/octet-stream` on
- * the way out either.
+ * unpacked, which is 14 MB becoming 32 MB for every reader, because Pages does
+ * not compress `application/wasm` or `application/octet-stream` on the way out
+ * either.
  *
  * So the page unpacks them itself. `DecompressionStream` is the same gzip the
- * browser would have used for the header, and it takes 85 ms over the 22 MB of
- * wasm; the loader is handed blob URLs and never learns the difference.
+ * browser would have used for the header, and it takes under a tenth of a
+ * second over the 21 MB of wasm; the loader is handed blob URLs and never
+ * learns the difference.
  */
 
 const BUILD = "/audiolink/build"
 
 /** The parts, with the type each one has to be handed back as. */
 const PARTS = [
-  { key: "dataUrl", file: "build.data.gz", type: "application/octet-stream" },
-  { key: "frameworkUrl", file: "build.framework.js.gz", type: "application/javascript" },
+  { key: "dataUrl", file: "audiolink.data.gz", type: "application/octet-stream" },
+  { key: "frameworkUrl", file: "audiolink.framework.js.gz", type: "application/javascript" },
   // Anything else and the framework's streaming compile falls back to a slower
   // path and says so in the console.
-  { key: "codeUrl", file: "build.wasm.gz", type: "application/wasm" },
+  { key: "codeUrl", file: "audiolink.wasm.gz", type: "application/wasm" },
 ] as const
 
 interface UnityConfig {
@@ -75,7 +76,7 @@ async function unpack(
   }
 
   // Read by hand rather than through a counting transform: this is where the
-  // waiting happens -- 12 MB of it for the data file -- and the reader should
+  // waiting happens -- 7 MB of it for the data file -- and the reader should
   // be told how it is going.
   const reader = response.body.getReader()
   const packed: BlobPart[] = []
@@ -98,12 +99,12 @@ async function unpack(
 function loader(): Promise<void> {
   return new Promise((resolve, reject) => {
     const script = document.createElement("script")
-    script.src = `${BUILD}/build.loader.js`
+    script.src = `${BUILD}/audiolink.loader.js`
     script.onload = () => {
       resolve()
     }
     script.onerror = () => {
-      reject(new Error("build.loader.js did not load"))
+      reject(new Error("audiolink.loader.js did not load"))
     }
     document.head.append(script)
   })
@@ -117,7 +118,7 @@ async function start(canvas: HTMLCanvasElement): Promise<void> {
 
   // What the three files weigh compressed, so that the reader sees a bar that
   // means something before Unity has anything of its own to report.
-  const total = 18_700_000
+  const total = 13_700_000
   let read = 0
 
   let parts: (readonly [string, string])[] = []
@@ -138,19 +139,21 @@ async function start(canvas: HTMLCanvasElement): Promise<void> {
     await loader()
 
     const createUnityInstance = window.createUnityInstance
-    if (createUnityInstance === undefined) throw new Error("build.loader.js defined nothing")
+    if (createUnityInstance === undefined) throw new Error("audiolink.loader.js defined nothing")
 
     await createUnityInstance(
       canvas,
       {
         ...(Object.fromEntries(parts) as Pick<UnityConfig, "dataUrl" | "frameworkUrl" | "codeUrl">),
         streamingAssetsUrl: `${BUILD}/StreamingAssets`,
-        companyName: "com.llealloo.audiolink",
-        productName: "AudioLinkWebProject",
-        productVersion: "1.4.0",
+        // What the export calls itself, which Unity only uses for the key its
+        // IndexedDB cache would live under -- and that is turned off below.
+        companyName: "DefaultCompany",
+        productName: "AudioLink Controller",
+        productVersion: "0.1",
         // Unity keeps downloads in IndexedDB against their URL. A blob URL is
         // new every time this page is opened, so that cache could only ever
-        // grow: the same 38 MB again under a name that will never be asked for
+        // grow: the same 32 MB again under a name that will never be asked for
         // twice. The browser's own cache still holds the gzip files, which is
         // the copy worth keeping.
         cacheControl: () => "no-store",
@@ -163,7 +166,7 @@ async function start(canvas: HTMLCanvasElement): Promise<void> {
     say("")
 
     // The framework has been evaluated and the wasm compiled, so those two are
-    // finished with -- 22 MB of the 38 handed back. The data file is Unity's
+    // finished with -- 22 MB of the 32 handed back. The data file is Unity's
     // filesystem image, and whether it reads that again is its business, so it
     // is left alone until the page is.
     for (const [key, url] of parts) {

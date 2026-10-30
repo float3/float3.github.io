@@ -80,6 +80,53 @@ pub fn unescape_html(text: String) -> String {
     output
 }
 
+/// Percent-encodes the way `encodeURIComponent` does: every UTF-8 byte except
+/// ASCII letters, digits and `-_.!~*'()`.
+pub fn url_encode(text: String) -> String {
+    text.bytes()
+        .map(|byte| {
+            if byte.is_ascii_alphanumeric() || b"-_.!~*'()".contains(&byte) {
+                char::from(byte).to_string()
+            } else {
+                format!("%{byte:02X}")
+            }
+        })
+        .collect()
+}
+
+/// Turns every `%XX` escape back into its byte and reads the result as UTF-8.
+/// A `%` that does not begin an escape is kept as it is, where
+/// `decodeURIComponent` would throw.
+pub fn url_decode(text: String) -> String {
+    let bytes = text.as_bytes();
+    let mut output = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+
+    while index < bytes.len() {
+        let escaped = match bytes.get(index..index + 3) {
+            Some([b'%', high, low]) if high.is_ascii_hexdigit() && low.is_ascii_hexdigit() => {
+                std::str::from_utf8(&[*high, *low])
+                    .ok()
+                    .and_then(|hex| u8::from_str_radix(hex, 16).ok())
+            }
+            _ => None,
+        };
+
+        match escaped {
+            Some(byte) => {
+                output.push(byte);
+                index += 3;
+            }
+            None => {
+                output.push(bytes[index]);
+                index += 1;
+            }
+        }
+    }
+
+    String::from_utf8_lossy(&output).into_owned()
+}
+
 pub fn text_to_code_points(text: String) -> String {
     text.chars()
         .map(|char| format!("U+{:04X}", char as u32))
@@ -258,6 +305,22 @@ mod tests {
             bytes_to_integer("78 56 34 12".to_string(), true),
             "305419896"
         );
+    }
+
+    #[test]
+    fn url_encoding_matches_encode_uri_component() {
+        let encoded = url_encode("hello world? a=1&b=世界 -_.!~*'()".to_string());
+        assert_eq!(
+            encoded,
+            "hello%20world%3F%20a%3D1%26b%3D%E4%B8%96%E7%95%8C%20-_.!~*'()"
+        );
+        assert_eq!(url_decode(encoded), "hello world? a=1&b=世界 -_.!~*'()");
+    }
+
+    #[test]
+    fn url_decoding_keeps_a_percent_that_is_not_an_escape() {
+        assert_eq!(url_decode("100% %zz %4".to_string()), "100% %zz %4");
+        assert_eq!(url_decode("a+b".to_string()), "a+b");
     }
 
     #[test]

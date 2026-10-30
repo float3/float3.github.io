@@ -1,0 +1,272 @@
+.pascal-wager {
+  --pascal-heaven: #8fb4f5;
+  --pascal-hell: #f09484;
+  --pascal-neutral: color-mix(in srgb, var(--light) 92%, var(--dark));
+  --pascal-border: color-mix(in srgb, var(--lightgray) 74%, var(--darkgray));
+
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+[saved-theme="dark"] .pascal-wager {
+  --pascal-heaven: #2f5cb8;
+  --pascal-hell: #b0402f;
+}
+
+.pascal-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pascal-controls button {
+  background: var(--light);
+  border: 1px solid var(--pascal-border);
+  border-radius: 4px;
+  color: var(--dark);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.6rem;
+}
+
+.pascal-controls button:hover {
+  border-color: var(--secondary);
+}
+
+.pascal-scroll {
+  border: 1px solid var(--pascal-border);
+  max-height: 80vh;
+  overflow: auto;
+}
+
+.pascal-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.75rem;
+  margin: 0;
+  table-layout: fixed;
+}
+
+.pascal-table th,
+.pascal-table td {
+  border-bottom: 1px solid var(--pascal-border);
+  border-right: 1px solid var(--pascal-border);
+  box-sizing: border-box;
+  padding: 0.2rem 0.3rem;
+  white-space: nowrap;
+}
+
+.pascal-table thead th,
+.pascal-table thead td {
+  background: var(--light);
+  position: sticky;
+  z-index: 2;
+}
+
+.pascal-names th {
+  height: 11rem;
+  top: 0;
+  vertical-align: bottom;
+}
+
+.pascal-column {
+  min-width: 4.4rem;
+  width: 4.4rem;
+}
+
+.pascal-column span {
+  display: inline-block;
+  max-height: 10.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transform: rotate(180deg);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+}
+
+.pascal-costs th,
+.pascal-costs td {
+  top: 11rem;
+}
+
+.pascal-expected th,
+.pascal-expected td {
+  top: calc(11rem + 2.2rem);
+}
+
+.pascal-costs td,
+.pascal-expected td {
+  text-align: center;
+}
+
+.pascal-table tbody th,
+.pascal-corner,
+.pascal-label {
+  background: var(--light);
+  left: 0;
+  position: sticky;
+  text-align: left;
+  z-index: 1;
+}
+
+.pascal-corner {
+  z-index: 3;
+}
+
+.pascal-costs .pascal-label,
+.pascal-expected .pascal-label {
+  z-index: 3;
+}
+
+.pascal-corner span {
+  color: var(--darkgray);
+  display: block;
+  font-weight: normal;
+  white-space: normal;
+  width: 14rem;
+}
+
+.pascal-label {
+  font-weight: normal;
+  white-space: normal;
+  width: 15rem;
+}
+
+.pascal-row {
+  font-weight: normal;
+  width: 15rem;
+}
+
+.pascal-table input {
+  background: var(--light);
+  border: 1px solid var(--pascal-border);
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: var(--dark);
+  font: inherit;
+  padding: 0.1rem 0.2rem;
+  width: 3.6rem;
+}
+
+.pascal-costs input {
+  width: 3.8rem;
+}
+
+.pascal-unit {
+  color: var(--gray);
+  margin: 0 0.4rem 0 0.1rem;
+}
+
+.pascal-row-name {
+  display: inline-block;
+  max-width: 9.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.pascal-cell {
+  color: var(--dark);
+  cursor: help;
+  text-align: center;
+}
+
+.pascal-cell.heaven {
+  background: color-mix(in oklab, var(--pascal-heaven) var(--mix), var(--pascal-neutral));
+}
+
+.pascal-cell.hell {
+  background: color-mix(in oklab, var(--pascal-hell) var(--mix), var(--pascal-neutral));
+}
+
+.pascal-cell.mortal {
+  background: var(--pascal-neutral);
+}
+
+.pascal-value {
+  font-weight: bold;
+}
+
+.pascal-table .best {
+  box-shadow: inset 2px 0 0 var(--secondary), inset -2px 0 0 var(--secondary);
+}
+
+.pascal-table th.best,
+.pascal-table td.pascal-value.best {
+  color: var(--secondary);
+}
+
+.pascal-reading {
+  border-left: 3px solid var(--pascal-border);
+  color: var(--darkgray);
+  margin: 0;
+  min-height: 3.2rem;
+  padding-left: 0.75rem;
+}
+
+.pascal-verdict {
+  margin: 0;
+}
+
+.pascal-ranking {
+  columns: 2;
+  column-gap: 2rem;
+  font-size: 0.9rem;
+  margin: 0;
+  padding-left: 2rem;
+}
+
+.pascal-ranking li {
+  break-inside: avoid;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.pascal-rank-value {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 40rem) {
+  .pascal-ranking {
+    columns: 1;
+  }
+
+  .pascal-corner span,
+  .pascal-label,
+  .pascal-row {
+    width: 11rem;
+  }
+
+  .pascal-row-name {
+    max-width: 5.5rem;
+  }
+}
+
+.pascal-references {
+  font-size: 0.85rem;
+}
+
+.pascal-references summary {
+  cursor: pointer;
+}
+
+.pascal-references ul {
+  margin: 0.5rem 0 0;
+}
+
+.pascal-references li {
+  margin-bottom: 0.2rem;
+}
+
+.pascal-cited {
+  color: var(--gray);
+}
+
+.pascal-cited a {
+  color: inherit;
+}

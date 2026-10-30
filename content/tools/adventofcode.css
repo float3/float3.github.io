@@ -1,7 +1,7 @@
 #adventofcode {
-  --aoc-border: color-mix(in srgb, var(--lightgray) 78%, var(--darkgray));
-  --aoc-panel: color-mix(in srgb, var(--light) 92%, var(--dark) 8%);
-  --aoc-panel-strong: color-mix(in srgb, var(--light) 84%, var(--dark) 16%);
+  --aoc-border: var(--tool-border);
+  --aoc-panel: var(--tool-surface);
+  --aoc-panel-strong: var(--tool-surface-strong);
   --aoc-complete: #4f9f63;
   --aoc-partial: #c08835;
   --aoc-accent: #b83a38;

@@ -4,22 +4,22 @@ tags:
   - list
 ---
 
-[Decision Theory](#decision-theory) \
-[Internal](#internal) \
-[Looking](#looking) \
+[decision theory](#decision-theory) \
+[internal](#internal) \
+[looking](#looking) \
 [Memetic](#memetic) \
 [Meta](#meta) \
 [Multiagent](#multiagent) \
-[Narrative](#narrative) \
-[Productivity](#productivity) \
+[narrative](#narrative) \
+[productivity](#productivity) \
 [Self-care and Wellbeing](#self-care-and-wellbeing) \
-[Social](#social) \
-[Tempo](#tempo) \
+[social](#social) \
+[tempo](#tempo) \
 [TLP](#tlp) \
-[Work](#work) \
-[World](#world)
+[work](#work) \
+[world](#world)
 
-## Decision Theory
+## decision theory
 
 | Read                              | Article                                                                                                                                                              | Rating | Source                       | Author                             | Posted         | Tags                    | Full chars |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------------------------- | ---------------------------------- | -------------- | ----------------------- | ---------: |
@@ -63,7 +63,7 @@ tags:
 | <input type="checkbox" />         | [Cached Thoughts](https://lesswrong.com/posts/2MD3NMLBPCqPfnfre/cached-thoughts)                                                                                     | -      | lesswrong.com                | Eliezer Yudkowsky                  | Oct. 11, 2007  | Unprocessed, 4          |       5310 |
 | <input type="checkbox" />         | [You Only Want the Wanting -](https://ayotheauthor.com/you-only-want-the-wanting)                                                                                    | -      | ayotheauthor.com             | -                                  | -              | Unprocessed, 4          |          - |
 
-## Internal
+## internal
 
 | Read                      | Article                                                                                                                                                                              | Rating | Source                       | Author                             | Posted         | Tags                      | Full chars |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ---------------------------- | ---------------------------------- | -------------- | ------------------------- | ---------: |
@@ -103,7 +103,7 @@ tags:
 | <input type="checkbox" /> | [Use curiosity](https://lesswrong.com/posts/WrSe4aB8sWBy3Nphm/use-curiosity)                                                                                                         | -      | lesswrong.com                | \_AnnaSalamon                      | Feb. 25, 2011  | Unprocessed               |       2272 |
 | <input type="checkbox" /> | [Too busy to think about life](https://lesswrong.com/posts/4psQW7vRwt7PE5Pnj/too-busy-to-think-about-life)                                                                           | -      | lesswrong.com                | \_Academian                        | April 22, 2010 | Unprocessed               |       5184 |
 
-## Looking
+## looking
 
 | Read                      | Article                                                                                                                                                                                             | Rating | Source                  | Author           | Posted         | Tags                    | Full chars |
 | ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ----------------------- | ---------------- | -------------- | ----------------------- | ---------: |
@@ -198,13 +198,13 @@ tags:
 | <input type="checkbox" />         | [Forcing yourself to keep your identity small is self-harm](https://lesswrong.com/posts/7NCcvzF3NqrWTxEFz/forcing-yourself-to-keep-your-identity-small-is-self-harm)                                                               | -      | lesswrong.com                | \_Gordon Seidoh Worley | April 3, 2021  | Unprocessed, comments     |       3677 |
 | <input type="checkbox" />         | [Hivewired \| Niceness Heuristics are Pareto Optimal](https://hivewired.wordpress.com/)                                                                                                                                            | -      | hivewired.wordpress.com      | Octavia Nouzen         | -              | -                         |      32371 |
 
-## Narrative
+## narrative
 
 | Read                      | Article                                                               | Rating | Source        | Author            | Posted       | Tags | Full chars |
 | ------------------------- | --------------------------------------------------------------------- | ------ | ------------- | ----------------- | ------------ | ---- | ---------: |
 | <input type="checkbox" /> | [Three Worlds Collide](https://www.lesswrong.com/s/qWoFR4ytMpQ5vw3FT) | good   | lesswrong.com | Eliezer Yudkowsky | Jul. 6, 2018 | -    |     148956 |
 
-## Productivity
+## productivity
 
 | Read                      | Article                                                                                                                                                                       | Rating | Source              | Author                | Posted         | Tags                         | Full chars |
 | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ------------------- | --------------------- | -------------- | ---------------------------- | ---------: |
@@ -240,7 +240,7 @@ tags:
 | --------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------------- | ------- | ------------- | ---- | ---------: |
 | <input type="checkbox" checked /> | [Half Monkey, Half God- The Key To Replacing Guilt : Summary](https://forum.effectivealtruism.org/posts/inixkyTuC6fzXDp2B/half-monkey-half-god-the-key-to-replacing-guilt-summary) | good   | forum.effectivealtruism.org | Maynk02 | Nov. 24, 2022 | -    |       6526 |
 
-## Social
+## social
 
 | Read                              | Article                                                                                                                                                                                                  | Rating | Source                       | Author                   | Posted         | Tags                     | Full chars |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ | ---------------------------- | ------------------------ | -------------- | ------------------------ | ---------: |
@@ -276,7 +276,7 @@ tags:
 | <input type="checkbox" checked /> | [Illusion of Transparency - Why No One Understands You](https://lesswrong.com/posts/sSqoEw9eRP2kPKLCz/illusion-of-transparency-why-no-one-understands-you)                                               | good   | lesswrong.com                | Eliezer Yudkowsky        | Oct. 20, 2007  | Unprocessed, Effects     |       4894 |
 | <input type="checkbox" />         | [Selfless Dating](https://lesswrong.com/posts/qEqb3LRuEn96K5rvy/selfless-dating)                                                                                                                         | -      | lesswrong.com                | Jacob Falkovich          | Jan. 5, 2022   | Unprocessed              |      11947 |
 
-## Tempo
+## tempo
 
 | Read                      | Article                                                                                                                                      | Rating | Source                | Author        | Posted        | Tags                   | Full chars |
 | ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | ------ | --------------------- | ------------- | ------------- | ---------------------- | ---------: |
@@ -320,7 +320,7 @@ tags:
 | <input type="checkbox" /> | [The Other Ego Epidemic](https://thelastpsychiatrist.com/2010/02/the_other_ego_epidemic.html)                                                   | -      | thelastpsychiatrist.com | TLP    | Feb. 18, 2010  | article-0   |       4040 |
 | <input type="checkbox" /> | [If You're Watching, It's For You](https://thelastpsychiatrist.com/2008/08/if_youre_watching_its_for_you.html)                                  | -      | thelastpsychiatrist.com | TLP    | Aug. 20, 2008  | article-0   |       6230 |
 
-## Work
+## work
 
 | Read                      | Article                                                                     | Rating | Source     | Author          | Posted | Tags                      | Full chars |
 | ------------------------- | --------------------------------------------------------------------------- | ------ | ---------- | --------------- | ------ | ------------------------- | ---------: |
@@ -328,7 +328,7 @@ tags:
 | <input type="checkbox" /> | [How to get promoted](https://spakhm.com/p/how-to-get-promoted)             | -      | spakhm.com | Slava Akhmechet | -      | Unprocessed, Social, 5    |          - |
 | <input type="checkbox" /> | [Parallel tracks](https://spakhm.com/p/parallel-tracks)                     | -      | spakhm.com | Slava Akhmechet | -      | Unprocessed, 4, Social    |          - |
 
-## World
+## world
 
 | Read                              | Article                                                                                                                                    | Rating | Source              | Author             | Posted        | Tags | Full chars |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ------ | ------------------- | ------------------ | ------------- | ---- | ---------: |

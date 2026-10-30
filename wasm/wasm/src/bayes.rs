@@ -2,15 +2,37 @@ use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
 pub struct BayesResult {
+    prior: f64,
+    likelihood: f64,
     evidence: f64,
     numerator: f64,
     posterior: f64,
     odds: f64,
+    /// `numerator / evidence` before it is held to a probability, which is
+    /// what the worked equation comes to; NaN when the evidence is zero.
+    ratio: f64,
     error_code: u8,
 }
 
 #[wasm_bindgen]
 impl BayesResult {
+    /// The prior as a probability, held to `0..=1`.
+    #[wasm_bindgen(getter)]
+    pub fn prior(&self) -> f64 {
+        self.prior
+    }
+
+    /// The likelihood as a probability, held to `0..=1`.
+    #[wasm_bindgen(getter)]
+    pub fn likelihood(&self) -> f64 {
+        self.likelihood
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn ratio(&self) -> f64 {
+        self.ratio
+    }
+
     #[wasm_bindgen(getter)]
     pub fn evidence(&self) -> f64 {
         self.evidence
@@ -58,10 +80,13 @@ pub fn solve_bayes_percent(
 
     if evidence <= 0.0 {
         return BayesResult {
+            prior,
+            likelihood,
             evidence,
             numerator,
             posterior: 0.0,
             odds: 0.0,
+            ratio: f64::NAN,
             error_code: 1,
         };
     }
@@ -75,10 +100,13 @@ pub fn solve_bayes_percent(
     };
 
     BayesResult {
+        prior,
+        likelihood,
         evidence,
         numerator,
         posterior,
         odds,
+        ratio: raw_posterior,
         error_code: if raw_posterior > 1.0 { 2 } else { 0 },
     }
 }
@@ -130,7 +158,21 @@ mod tests {
         assert!((result.evidence - 0.0585).abs() < 0.000001);
         assert!((result.numerator - 0.009).abs() < 0.000001);
         assert!((result.posterior - 0.1538461538).abs() < 0.000001);
+        assert!((result.ratio - result.posterior).abs() < 1e-12);
+        assert!((result.prior - 0.01).abs() < 1e-12);
         assert_eq!(result.error_code, 0);
+    }
+
+    #[test]
+    fn keeps_the_unclamped_ratio_for_inconsistent_inputs() {
+        let result = solve_bayes_percent(50.0, 100.0, 0.0, 25.0, false);
+        assert_eq!(result.error_code, 2);
+        assert_eq!(result.posterior, 1.0);
+        assert!((result.ratio - 2.0).abs() < 1e-12);
+        assert_eq!(
+            solve_bayes_percent(150.0, -5.0, 0.0, 0.0, true).likelihood,
+            0.0
+        );
     }
 
     #[test]

@@ -9,20 +9,15 @@ pub mod aoc;
 pub mod bayes;
 #[cfg(feature = "chars")]
 pub mod chars;
-#[cfg(feature = "gallery")]
-pub mod gallery;
 #[cfg(feature = "glsl")]
 pub mod glsl;
 pub mod graph;
 #[cfg(feature = "pokemon")]
 pub mod krabby;
-#[cfg(feature = "movies")]
-pub mod movies;
-#[cfg(feature = "photography")]
-pub mod photography;
 #[cfg(feature = "polyrhythm")]
 pub mod polyrhythm;
-pub mod random;
+#[cfg(feature = "wager")]
+pub mod wager;
 
 use wasm_bindgen::prelude::*;
 

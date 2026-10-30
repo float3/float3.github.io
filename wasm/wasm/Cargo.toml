@@ -3,7 +3,7 @@ name = "wasm"
 version = "0.1.0"
 authors = ["hill"]
 edition = "2024"
-license = "agpl-3.0"
+license = "AGPL-3.0-only"
 description = "WebAssembly"
 repository = "https://github.com/float3/float3.github.io/tree/master/wasm/wasm"
 
@@ -17,16 +17,14 @@ mini-alloc = ["dep:mini-alloc"]
 aoc = ["dep:adventofcode"]
 bayes = []
 chars = []
-gallery = []
 glsl = ["dep:glsl2hlsl"]
-movies = []
-photography = []
 polyrhythm = ["dep:music21-rs"]
 textprocessing = ["dep:textprocessing"]
 pokemon = ["dep:krabby"]
 textprocessing_chinese = ["textprocessing", "textprocessing/chinese"]
 textprocessing_korean = ["textprocessing", "textprocessing/korean"]
 tuningplayground = ["dep:tuningplayground", "dep:music21-rs"]
+wager = []
 
 [package.metadata.site]
 # Tools kept in the tree but left out of the build. `site` skips these, so the
@@ -39,14 +37,13 @@ parked-tools = ["pokemon"]
 [dependencies]
 tuningplayground = { path = "../tuningplayground/", optional = true }
 music21-rs = { workspace = true, optional = true }
-# [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen = { workspace = true }
 console_error_panic_hook = { workspace = true, optional = true }
 mini-alloc = { workspace = true, optional = true }
 glsl2hlsl = { git = "https://github.com/float3/glsl2hlsl", optional = true }
 adventofcode = { path = "../adventofcode/", optional = true }
 textprocessing = { path = "../textprocessing/", optional = true, default-features = false }
-web-sys = { version = "0.3.104", features = [
+web-sys = { version = "0.3.106", features = [
     "Window",
     "Document",
     "CanvasRenderingContext2d",
@@ -67,11 +64,10 @@ getrandom_03 = { package = "getrandom", version = "0.3.4", features = [
 ] }
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.77"
+wasm-bindgen-test = "0.3.79"
 
 [package.metadata.wasm-pack.profile.release]
 wasm-opt = ['-Os', '--enable-bulk-memory', '--enable-nontrapping-float-to-int']
-# wasm-opt = false
 
 [package.metadata.wasm-pack.profile.release.wasm-bindgen]
 debug-js-glue = false

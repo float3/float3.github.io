@@ -2,7 +2,16 @@
 title: Pascal my friend
 tags:
   - philosophy
+  - religion
+  - tools
+  - wasm
+  - rust
 ---
 
-> _"One day, while doing nothing particularly out of the ordinary, because of natural laws he was completely powerless to understand or intuit, he was instantly killed in a horrifying way by forces entirely beyond his experience, for no reason, to no observable surprise or upset. In this we are more like him than different."_  
-> ~ Elroy Craich, probably, describing a [dead rat](/misc/media/rat.png)
+<link href="./pascal.css" rel="stylesheet" type="text/css">
+<script type="module" src="/js/pascal.js"></script>
+
+<div id="pascal-wager" class="pascal-wager"></div>
+
+<p class="wasm-credit">made with rust compiled to wasm</p>
+

@@ -1,48 +1,85 @@
-import { noteOn, noteOff, wasm } from "./index.js"
+import { noteOff, noteOn, scale, shift, wasm } from "./index.js"
 import { midiMultiplier } from "./config.js"
+import { setMidiStatus } from "./UI.js"
 
-export function requestMIDI(): void {
-  if (!navigator.requestMIDIAccess) {
-    alert("WebMIDI is not supported in this browser.")
+const WANTED = "tuningplayground-midi"
+
+let access: MIDIAccess | null = null
+
+/**
+ * Whether the reader connected a MIDI device on an earlier visit. The browser
+ * asks permission the first time, so it is only asked for on request and
+ * remembered after that.
+ */
+export function midiWanted(): boolean {
+  try {
+    return window.localStorage.getItem(WANTED) === "1"
+  } catch {
+    return false
+  }
+}
+
+function rememberMidi(wanted: boolean): void {
+  try {
+    if (wanted) window.localStorage.setItem(WANTED, "1")
+    else window.localStorage.removeItem(WANTED)
+  } catch {
     return
   }
-
-  navigator.requestMIDIAccess().then(onMIDISuccess).catch(onMIDIFailure)
 }
 
-function onMIDISuccess(midiAccess: MIDIAccess): void {
-  const input = midiAccess.inputs.values().next().value
+/** A MIDI key as a step: middle C is the root, and each key up is one degree. */
+function midiToStep(note: number): number {
+  return scale.twelve_tone ? note : 5 * scale.count + (note - 60)
+}
 
-  if (input) {
-    input.onmidimessage = onMIDIMessage
-  } else {
-    alert("No MIDI input devices found.")
+export async function connectMidi(): Promise<void> {
+  if (!navigator.requestMIDIAccess) {
+    setMidiStatus("This browser has no Web MIDI. Chrome, Edge and Opera do.", false)
+    return
+  }
+  try {
+    access ??= await navigator.requestMIDIAccess({ sysex: false })
+    access.onstatechange = wireInputs
+    rememberMidi(true)
+    wireInputs()
+  } catch (error: unknown) {
+    rememberMidi(false)
+    setMidiStatus(`MIDI: ${error instanceof Error ? error.message : String(error)}`, false)
   }
 }
 
-function onMIDIFailure(error: DOMException): void {
-  console.error("MIDI Access failed:", error)
+function wireInputs(): void {
+  if (!access) return
+  let count = 0
+  for (const input of access.inputs.values()) {
+    input.onmidimessage = onMIDIMessage
+    count += 1
+  }
+  setMidiStatus(
+    count === 0
+      ? "No MIDI device found. Plug one in and it is picked up."
+      : `${count} MIDI input${count === 1 ? "" : "s"} connected. Middle C is the root; each key up is one degree.`,
+    true,
+  )
 }
 
 function onMIDIMessage(event: MIDIMessageEvent): void {
   const data = event.data
   if (!data || data.length < 3) return
 
-  const status = data[0]
-  const tone_index = data[1]
+  const status = data[0] & 0xf0
+  const note = data[1]
   const velocity = data[2]
-  const is_note_on = (status & 240) === 144
-  const is_note_off = (status & 240) === 128
 
-  if (is_note_off) {
-    noteOff(tone_index)
-  }
-  if (is_note_on) {
-    noteOn(tone_index, velocity)
+  if (status === 0x90 && velocity > 0) {
+    noteOn(midiToStep(note) + shift(), velocity)
+  } else if (status === 0x80 || (status === 0x90 && velocity === 0)) {
+    noteOff(midiToStep(note) + shift())
   }
 }
 
-let timeoutIds: NodeJS.Timeout[] = []
+let timeoutIds: ReturnType<typeof setTimeout>[] = []
 
 export function stopMIDIFile(): void {
   timeoutIds.forEach((id) => clearTimeout(id))
@@ -51,18 +88,16 @@ export function stopMIDIFile(): void {
 
 export function playMIDIFile(midiFile: ArrayBuffer): void {
   // The wasm reads the file and hands back the notes flat: key, velocity,
-  // start and end, four numbers at a time. Parsing it in the browser used to
-  // mean @tonejs/midi, a full object model of tracks and controllers built so
-  // that this loop could read four numbers off each note.
+  // start and end, four numbers at a time.
   const notes = wasm.parse_midi(new Uint8Array(midiFile))
 
   for (let at = 0; at < notes.length; at += 4) {
-    const key = notes[at]
+    const step = midiToStep(notes[at]) + shift()
     const velocity = notes[at + 1]
     const start = notes[at + 2] * midiMultiplier
     const end = notes[at + 3] * midiMultiplier
 
-    timeoutIds.push(setTimeout(() => noteOn(key, velocity), start))
-    timeoutIds.push(setTimeout(() => noteOff(key), end))
+    timeoutIds.push(setTimeout(() => noteOn(step, velocity), start))
+    timeoutIds.push(setTimeout(() => noteOff(step), end))
   }
 }

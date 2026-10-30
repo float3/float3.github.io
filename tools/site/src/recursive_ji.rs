@@ -1,9 +1,10 @@
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
-use crate::{Result, Site, SiteError};
-use music21_rs::tuningsystem::TWELVE_TONE_NAMES;
-use recursive_ji_core::{generated_audio_files, generated_media_text_files, generated_text_files};
+use crate::{Result, Site, SiteError, fail};
+use recursive_ji_core::{
+    TWELVE_TONE_NAMES, generated_audio_files, generated_media_text_files, generated_text_files,
+};
 use std::collections::HashMap;
 
 const DEFAULT_AUDIO_OUTPUT_DIR: &str = "content/misc/media";
@@ -16,9 +17,7 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     }
 
     if args.len() > 1 {
-        return Err(Box::new(SiteError::new(
-            "recursive-ji-music accepts at most one output directory",
-        )));
+        return fail("recursive-ji-music accepts at most one output directory");
     }
 
     let override_dir = args.first().map(|path| site.root.join(path));
@@ -33,19 +32,19 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
     for file in generated_audio_files()? {
         let path = audio_output_dir.join(file.name);
         fs::write(&path, file.bytes)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     for file in generated_media_text_files() {
         let path = audio_output_dir.join(file.name);
         fs::write(&path, file.text)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     for file in generated_text_files() {
         let path = text_output_dir.join(file.name);
         fs::write(&path, file.text)?;
-        println!("wrote {}", relative_to_root(site, &path).display());
+        println!("wrote {}", site.relative_path(&path));
     }
 
     // Update the blog post table in-place so site `generate` keeps the HTML in
@@ -61,17 +60,14 @@ pub(crate) fn generate(site: &Site, args: &[String]) -> Result<()> {
 
     if post_path.exists() {
         update_recursive_ji_notation(&post_path)?;
+        update_split_points_table(&post_path)?;
         println!(
             "engraved the notation in {}",
-            relative_to_root(site, &post_path).display()
+            site.relative_path(&post_path)
         );
     }
 
     Ok(())
-}
-
-fn relative_to_root(site: &Site, path: &Path) -> PathBuf {
-    path.strip_prefix(&site.root).unwrap_or(path).to_path_buf()
 }
 
 fn print_help() {
@@ -112,8 +108,8 @@ Text files:
     );
 }
 
-/// Writes the engraved notation into the post, inside the `data-recursive-ji-abc`
-/// containers that used to be filled in by abcjs at read time.
+/// Writes the engraved notation into the post, inside its `data-recursive-ji-abc`
+/// containers.
 ///
 /// Rewriting in place, the way the frequency table above is handled, keeps the
 /// post the one file that holds the post.
@@ -151,7 +147,39 @@ fn update_recursive_ji_notation(post: &Path) -> Result<()> {
     Ok(())
 }
 
-fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
+/// Writes the table of split points into the post, over the table whose header
+/// starts `| chord context`.
+///
+/// It used to be typed by hand, and went on quoting the harmonic-series tuning
+/// for weeks after the audio, the notation and the frequency table beside it had
+/// moved to five-limit.
+fn update_split_points_table(post: &Path) -> Result<()> {
+    let markdown = fs::read_to_string(post)?;
+    let lines: Vec<&str> = markdown.lines().collect();
+    let start = lines
+        .iter()
+        .position(|line| line.starts_with("| chord context"))
+        .ok_or_else(|| {
+            SiteError::new(format!("{} has no table of split points", post.display()))
+        })?;
+    let end = lines[start..]
+        .iter()
+        .position(|line| !line.trim_start().starts_with('|'))
+        .map_or(lines.len(), |offset| start + offset);
+
+    let mut rewritten = lines[..start].join("\n");
+    rewritten.push('\n');
+    rewritten.push_str(&recursive_ji_core::split_points_table());
+    rewritten.push_str(&lines[end..].join("\n"));
+    if markdown.ends_with('\n') {
+        rewritten.push('\n');
+    }
+
+    fs::write(post, rewritten)?;
+    Ok(())
+}
+
+fn update_recursive_ji_table(post: &Path, csv: &Path) -> Result<()> {
     let csv_text = fs::read_to_string(csv)?;
 
     // New CSV schema:
@@ -206,8 +234,9 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
     table.push('\n');
 
     table.push_str("| ---------- |");
+    let rule = format!(" {}: |", "-".repeat(139));
     for _ in TWELVE_TONE_NAMES.iter() {
-        table.push_str(" -------------------------------------------------------------------------------------------------------------------------------------------: |");
+        table.push_str(&rule);
     }
     table.push('\n');
 
@@ -229,7 +258,7 @@ fn update_recursive_ji_table(post: &PathBuf, csv: &PathBuf) -> Result<()> {
                 " ".to_string()
             } else {
                 let class = note_to_class(col);
-                let data_note = html_escape(col);
+                let data_note = crate::html::escape(col);
 
                 format!(
                     "<span class=\"recursive-note-cell {class}\" data-note=\"{data_note}\"><code>{freq} Hz</code><small class=\"tet-cents\">{cents} cents</small></span>"
@@ -279,10 +308,6 @@ fn note_to_class(name: &str) -> &'static str {
     }
 }
 
-fn html_escape(s: &str) -> String {
-    s.replace('"', "'")
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -307,6 +332,7 @@ mod tests {
         let rewrite = || {
             update_recursive_ji_table(&post, &csv).unwrap();
             update_recursive_ji_notation(&post).unwrap();
+            update_split_points_table(&post).unwrap();
             fs::read_to_string(&post).unwrap()
         };
 

@@ -27,16 +27,16 @@ d\textcolor{#0466e7}{L_r(\omega_r)}
 \end{equation}
 $$
 
-To find <span style="color:#fe7fb3">how much light is reflected by a surface</span>, we divide <span style="color:#0466e7">the outgoing radiance</span> by <span style="color:#ffbc3f">the incoming irradiance</span>. Since irradiance is itself equal to <span style="color:#dd6fff">the incoming radiance</span> multiplied by <span style="color:#9dc141">the cosine of the incident angle</span> and <span style="color:#7be9ff">the differential solid angle</span>, the second form is often more useful in rendering. 
-### Legend
+to find <span style="color:#fe7fb3">how much light is reflected by a surface</span>, we divide <span style="color:#0466e7">the outgoing radiance</span> by <span style="color:#ffbc3f">the incoming irradiance</span>. since irradiance is itself equal to <span style="color:#dd6fff">the incoming radiance</span> multiplied by <span style="color:#9dc141">the cosine of the incident angle</span> and <span style="color:#7be9ff">the differential solid angle</span>, the second form is often more useful in rendering. 
+### legend
 - $\textcolor{#fe7fb3}{f_r(\omega_i,\omega_r)}$ - Bidirectional Reflectance Distribution Function. 
-- $\textcolor{#0466e7}{L_r(\omega_r)}$ - Reflected (outgoing) radiance. 
-- $\textcolor{#ffbc3f}{E_i(\omega_i)}$ - Incoming irradiance. 
-- $\textcolor{#dd6fff}{L_i(\omega_i)}$ - Incoming radiance. 
-- $\textcolor{#9dc141}{\cos(\theta_i)}$ - Cosine term. 
-- $\textcolor{#7be9ff}{d\omega_i}$ - Differential solid angle.
+- $\textcolor{#0466e7}{L_r(\omega_r)}$ - reflected (outgoing) radiance. 
+- $\textcolor{#ffbc3f}{E_i(\omega_i)}$ - incoming irradiance. 
+- $\textcolor{#dd6fff}{L_i(\omega_i)}$ - incoming radiance. 
+- $\textcolor{#9dc141}{\cos(\theta_i)}$ - cosine term. 
+- $\textcolor{#7be9ff}{d\omega_i}$ - differential solid angle.
 
-A perfectly diffuse surface has the same BRDF regardless of direction, while glossy or metallic materials produce much larger values around their preferred reflection directions. . For a given incoming ray, the surface may absorb some energy, reflect the ray in some direction or transmit it through the material (transmission is not handled by the BRDF). The rendering equation multiplies the incoming radiance by the BRDF because not every incoming photon contributes equally to what the viewer ultimately sees. 
+a perfectly diffuse surface has the same BRDF regardless of direction, while glossy or metallic materials produce much larger values around their preferred reflection directions. . for a given incoming ray, the surface may absorb some energy, reflect the ray in some direction or transmit it through the material (transmission is not handled by the BRDF). the rendering equation multiplies the incoming radiance by the BRDF because not every incoming photon contributes equally to what the viewer ultimately sees. 
 
 any physically realistic brdf will have these properties:
 
@@ -70,7 +70,7 @@ $$
 )
 $$
 
-Diffuse:
+diffuse:
 ![](/misc/media/diffuse.png)
 Glossy:
 ![](/misc/media/glossy.png)

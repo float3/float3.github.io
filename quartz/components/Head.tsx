@@ -4,6 +4,7 @@ import { CSSResourceToStyleElement, JSResourceToScriptElement } from "../util/re
 import { googleFontHref, googleFontSubsetHref } from "../util/theme"
 import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
 import { unescapeHTML } from "../util/escape"
+import { contentSecurityPolicy } from "./contentSecurityPolicy"
 
 const CustomOgImagesEmitterName = "CustomOgImages"
 
@@ -46,6 +47,7 @@ export default (() => {
       <head>
         <title>{title}</title>
         <meta charSet="utf-8" />
+        <meta httpEquiv="Content-Security-Policy" content={contentSecurityPolicy(ctx.argv)} />
         {cfg.theme.cdnCaching && cfg.theme.fontOrigin === "googleFonts" && (
           <>
             <link rel="preconnect" href="https://fonts.googleapis.com" />

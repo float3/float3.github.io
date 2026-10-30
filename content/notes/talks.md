@@ -7,7 +7,7 @@ tags:
   - list
 ---
 
-talks I like
+talks i like
 
 - [Winning the War on Error Solving the Halting Problem and Curing Cancer - Matt Might](https://www.youtube.com/watch?v=MdmQUlD7P40)
 - [Stop Treading Water: Learning to Learn - Edward Kmett](https://www.youtube.com/watch?v=j0XmixCsWjs)
@@ -24,10 +24,10 @@ talks I like
 - [The Future of Programming - Bret Victor](https://www.youtube.com/watch?v=8pTEmbeENF4)
 - [For A Free Digital Society - Richard M. Stallman](https://www.youtube.com/watch?v=7ZSPf7YnGfE)
 
-## Functional Paradigm
+## functional paradigm
 
 - [Outperforming Imperative with Pure Functional Languages - Richard Feldman](https://www.youtube.com/watch?v=vzfy4EKwG_Y)
 - [Why Isn't Functional Programming the Norm? – Richard Feldman](https://www.youtube.com/watch?v=QyJZzq0v7Z4)
 - [Functional Programming for Pragmatists - Richard Feldman](https://www.youtube.com/watch?v=3n17wHe5wEw)
 
-you can also find all these links [here](/plaintext/talks.txt)
+you can also find all these links [here](/misc/plaintext/talks.txt)

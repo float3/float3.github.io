@@ -1,9 +1,7 @@
 //! Draws the post's two notation figures as SVG.
 //!
-//! They used to be ABC strings handed to abcjs in the browser, which cost every
-//! reader of the post about a megabyte of JavaScript to draw two pictures that
-//! never change. Both come out of fixed data through fixed rules, so they are
-//! drawn here instead, once, at build time.
+//! Both come out of fixed data through fixed rules, so they are drawn once, at
+//! build time, and written into the post.
 //!
 //! The staff, the glyphs and the layout live in the [`engrave`] crate, which
 //! the tuning playground draws its chords with too. What is left here is what
@@ -169,9 +167,7 @@ mod tests {
         }
     }
 
-    /// What the two figures have to say, as opposed to how they are drawn. These
-    /// assertions came off the ABC builders that used to feed abcjs; the SVG is
-    /// what ships now, so they belong here.
+    /// What the two figures have to say, as opposed to how they are drawn.
     #[test]
     fn the_figures_are_labelled_the_way_the_post_reads() {
         let progression = chord_progression_svg().unwrap();
@@ -190,7 +186,7 @@ mod tests {
             "the split is named in full"
         );
         // 25/16 against the five-limit scale's 8/5: the diesis. music21-rs owns
-        // this number, and it moved when its tuning tables were corrected.
+        // this number.
         assert!(splits.contains("-41.059c"), "the recursive offset is shown");
     }
 

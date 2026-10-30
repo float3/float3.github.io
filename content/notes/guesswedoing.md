@@ -15,7 +15,7 @@ tags:
 <h2 id="guesswedoing-heading">guess we doing</h2>
 <p class="gallery-count"></p>
 </div>
-<div class="photo-gallery" aria-live="polite" data-collection="guesswedoing" data-noun="entry" data-plural="entries" data-caption="guess we doing"></div>
+<div class="photo-gallery" aria-live="polite" data-collection="guesswedoing" data-noun="entry" data-plural="entries" data-caption="guess we doing" data-submit-repo="float3/float3.github.io"></div>
 </section>
 <dialog class="photo-lightbox" aria-label="guess we doing viewer">
 <button class="photo-lightbox-close" type="button" aria-label="close">x</button>

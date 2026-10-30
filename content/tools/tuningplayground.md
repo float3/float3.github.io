@@ -8,178 +8,59 @@ tags:
 ---
 
 <link href="./tuningplayground.css" rel="stylesheet" type="text/css">
+
+<div id="tuningPlayground" class="tool tp">
 <p class="wasm-credit">made with rust compiled to wasm</p>
-<noscript> hey this page needs javascript</noscript> use your computer keyboard, a midi device, or provide a midi file for example <a href="https://www.midiworld.com/midis/other/mozart/jm_mozdi.mid" download="mozart_dies_irea.mid"> this one </a> or <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irea.mid"> or this one in case the other site goes down </a>
-<div id="tuningPlaygroundStatus" role="status">Loading tuning playground...</div>
-<div style="display: block">
-  <input type="file" id="fileInput" accept=".midi,.mid" />
-  <button id="playButton">Play</button>
-  <button id="stopButton">Stop</button>
+<noscript>hey this page needs javascript</noscript>
+<div id="tuningPlaygroundStatus" class="tool-status" role="status" data-state="loading">Loading tuning playground…</div>
+<div class="tp-library">
+<div class="tool-bar">
+<label class="tool-field tool-field-wide"><span>Tuning</span><input id="tuningSearch" type="search" placeholder="Search tuning systems, temperaments, equal divisions and the Scala archive" autocomplete="off" spellcheck="false" /></label>
+<button id="browseToggle" type="button" aria-expanded="false" aria-controls="libraryPanel">Browse</button>
 </div>
-<div style="display: block">
-<p>
-  <label for="tuningSelect">Select Tuning System:</label>
-  <select id="tuningSelect" name="tuningSelect">
-    <!-- populated dynamically from wasm available_tuning_systems() -->
-  </select>
-</p>
-<p>
-  <label for="soundMethod">Select Sound Method:</label>
-  <select id="soundMethod" name="soundMethod">
-    <option value="sample">Sample</option>
-    <option value="native">Native</option>
-  </select>
-</p>
-<p>
-  <label for="keymapSelect">Keyboard Map:</label>
-  <select id="keymapSelect" name="keymapSelect">
-    <option value="us">US QWERTY</option>
-    <option value="us-extended">US QWERTY extended</option>
-    <option value="qwertz">QWERTZ</option>
-    <option value="german">German</option>
-    <option value="azerty">AZERTY</option>
-    <option value="linear">Linear chromatic</option>
-  </select>
-</p>
-<div id="chordTools">
-  <label for="chordInput">Chord:</label>
-  <input id="chordInput" placeholder="C E G or C Eb G Bb" />
-  <button id="nameChord">Name</button>
-  <button id="clearChord">Clear</button>
-  <div id="chordNameOutput"></div>
-  <div id="chordDetailsOutput"></div>
+<div id="libraryPanel" class="tp-panel" hidden>
+<div id="libraryChips" class="tp-chips" role="group" aria-label="Kind of tuning">
+<button type="button" class="is-active" data-kind="all">All</button>
+<button type="button" data-kind="system">Systems <small></small></button>
+<button type="button" data-kind="temperament">Temperaments <small></small></button>
+<button type="button" data-kind="equal">Equal <small></small></button>
+<button type="button" data-kind="scala">Scala <small></small></button>
+<button type="button" data-kind="mine">Yours</button>
 </div>
-<p> Volume: <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.25" />
-</p>
-<p>Transpose: <input id="transpose" value="24" />
-</p>
-<div id="stepSizeContainer" style="display: none">
-  <label for="stepSize">Step Size (co-primes with 12):</label>
-  <select id="stepSize">
-    <option value="1">1</option>
-    <option value="5">5</option>
-    <option value="7" selected>7</option>
-    <option value="11">11</option>
-  </select>
+<div id="libraryList" class="tp-list"></div>
 </div>
-<div id="octaveSize_container" style="display: block">
-  <label for="octaveSize">Octave Size:</label>
-  <input id="octaveSize" value="12" />
 </div>
-<div id="markedButtons" style="display: none">
-  <button id="playMarked">Play Marked Notes</button>
-  <button id="shareMarked">Share Marked Notes</button>
+<div class="tp-head">
+<p class="tp-title" id="tuningTitle"></p>
+<p class="tp-facts" id="tuningFacts"></p>
+<div class="tool-actions tp-sizes" id="tuningSizes"></div>
+<p id="tuningDescription" class="tool-description"></p>
 </div>
-<div id="output" class="chord-staff"></div>
-<div class="keyboard dark-mode-invert">
-  <div class="octave">
-    <div class="white-key" data-note="21"></div>
-    <div class="black-key" data-note="22"></div>
-    <div class="white-key" data-note="23"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="24"></div>
-    <div class="black-key" data-note="25"></div>
-    <div class="white-key" data-note="26"></div>
-    <div class="black-key" data-note="27"></div>
-    <div class="white-key" data-note="28"></div>
-    <div class="white-key" data-note="29"></div>
-    <div class="black-key" data-note="30"></div>
-    <div class="white-key" data-note="31"></div>
-    <div class="black-key" data-note="32"></div>
-    <div class="white-key" data-note="33"></div>
-    <div class="black-key" data-note="34"></div>
-    <div class="white-key" data-note="35"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="36"></div>
-    <div class="black-key" data-note="37"></div>
-    <div class="white-key" data-note="38"></div>
-    <div class="black-key" data-note="39"></div>
-    <div class="white-key" data-note="40"></div>
-    <div class="white-key" data-note="41"></div>
-    <div class="black-key" data-note="42"></div>
-    <div class="white-key" data-note="43"></div>
-    <div class="black-key" data-note="44"></div>
-    <div class="white-key" data-note="45"></div>
-    <div class="black-key" data-note="46"></div>
-    <div class="white-key" data-note="47"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="48"></div>
-    <div class="black-key" data-note="49"></div>
-    <div class="white-key" data-note="50"></div>
-    <div class="black-key" data-note="51"></div>
-    <div class="white-key" data-note="52"></div>
-    <div class="white-key" data-note="53"></div>
-    <div class="black-key" data-note="54"></div>
-    <div class="white-key" data-note="55"></div>
-    <div class="black-key" data-note="56"></div>
-    <div class="white-key" data-note="57"></div>
-    <div class="black-key" data-note="58"></div>
-    <div class="white-key" data-note="59"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="60"></div>
-    <div class="black-key" data-note="61"></div>
-    <div class="white-key" data-note="62"></div>
-    <div class="black-key" data-note="63"></div>
-    <div class="white-key" data-note="64"></div>
-    <div class="white-key" data-note="65"></div>
-    <div class="black-key" data-note="66"></div>
-    <div class="white-key" data-note="67"></div>
-    <div class="black-key" data-note="68"></div>
-    <div class="white-key" data-note="69"></div>
-    <div class="black-key" data-note="70"></div>
-    <div class="white-key" data-note="71"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="72"></div>
-    <div class="black-key" data-note="73"></div>
-    <div class="white-key" data-note="74"></div>
-    <div class="black-key" data-note="75"></div>
-    <div class="white-key" data-note="76"></div>
-    <div class="white-key" data-note="77"></div>
-    <div class="black-key" data-note="78"></div>
-    <div class="white-key" data-note="79"></div>
-    <div class="black-key" data-note="80"></div>
-    <div class="white-key" data-note="81"></div>
-    <div class="black-key" data-note="82"></div>
-    <div class="white-key" data-note="83"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="84"></div>
-    <div class="black-key" data-note="85"></div>
-    <div class="white-key" data-note="86"></div>
-    <div class="black-key" data-note="87"></div>
-    <div class="white-key" data-note="88"></div>
-    <div class="white-key" data-note="89"></div>
-    <div class="black-key" data-note="90"></div>
-    <div class="white-key" data-note="91"></div>
-    <div class="black-key" data-note="92"></div>
-    <div class="white-key" data-note="93"></div>
-    <div class="black-key" data-note="94"></div>
-    <div class="white-key" data-note="95"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="96"></div>
-    <div class="black-key" data-note="97"></div>
-    <div class="white-key" data-note="98"></div>
-    <div class="black-key" data-note="99"></div>
-    <div class="white-key" data-note="100"></div>
-    <div class="white-key" data-note="101"></div>
-    <div class="black-key" data-note="102"></div>
-    <div class="white-key" data-note="103"></div>
-    <div class="black-key" data-note="104"></div>
-    <div class="white-key" data-note="105"></div>
-    <div class="black-key" data-note="106"></div>
-    <div class="white-key" data-note="107"></div>
-  </div>
-  <div class="octave">
-    <div class="white-key" data-note="108"></div>
-  </div>
+<div id="output" class="chord-staff" aria-label="notation of the held chord"></div>
+<div id="keyboard" class="tp-keyboard" role="group" aria-label="Playable keyboard"></div>
+<p class="tool-hint">click or tap the keys, or play them from the computer keyboard; shift-click marks a key so a chord can be shared.</p>
+<div class="tool-bar" role="group" aria-label="Sound">
+<label class="tool-field"><span>Engine</span><select id="soundMethod" name="soundMethod"><option value="sample">Sample</option><option value="native">Synth</option></select></label>
+<label class="tool-field"><span>Waveform</span><select id="waveform" name="waveform"><option value="sine">Sine</option><option value="triangle">Triangle</option><option value="square">Square</option><option value="sawtooth">Saw</option></select></label>
+<label class="tool-field"><span>Volume</span><input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="0.4" /></label>
+<label class="tool-field"><span>Octave</span><input type="number" id="octave" value="0" min="-4" max="4" step="1" /></label>
+<div class="tool-actions"><button id="playScale" type="button" class="is-primary">Play scale</button><button id="stopAll" type="button">Stop</button><button id="shareLink" type="button">Copy link</button></div>
 </div>
-<div id="logContainer"></div>
+<details class="tool-more" id="degreesDetails">
+<summary>Degrees</summary>
+<div class="tp-table-wrap"><table class="tp-degrees"><thead><tr><th>Degree</th><th>Name</th><th>Ratio</th><th>Hz</th><th>From equal</th></tr></thead><tbody id="degreesBody"></tbody></table></div>
+</details>
+<details class="tool-more">
+<summary>More controls</summary>
+<div class="tool-more-grid">
+<label class="tool-field"><span>Computer keyboard</span><select id="keymapSelect" name="keymapSelect"><option value="auto">Auto</option><option value="us">Piano, US QWERTY</option><option value="us-extended">Piano, US QWERTY extended</option><option value="qwertz">Piano, QWERTZ</option><option value="azerty">Piano, AZERTY</option><option value="rows">Rows of degrees</option><option value="periods">A period per row</option></select></label>
+<div class="tool-field"><span>MIDI device</span><div class="tool-actions"><button id="midiButton" type="button">Connect a MIDI device</button></div><span id="midiStatus" class="tool-hint">plays through the tuning; the browser asks once.</span></div>
+<div class="tool-field"><span>MIDI file</span><div class="tool-actions"><input type="file" id="fileInput" accept=".midi,.mid" /><button id="playButton" type="button">Play</button><button id="stopButton" type="button">Stop</button></div><span class="tool-hint">example file: <a href="/misc/blobs/jm_mozdi.mid" download="mozart_dies_irae.mid">Mozart, Dies Irae</a>.</span></div>
+<div class="tool-field"><span>Name a chord</span><div class="tool-actions"><input id="chordInput" placeholder="C E G or C Eb G Bb" /><button id="nameChord" type="button">Name</button><button id="clearChord" type="button">Clear</button></div><div id="chordNameOutput" class="tp-chord-name"></div><div id="chordDetailsOutput" class="tool-hint"></div></div>
 </div>
+</details>
+<div id="markedButtons" class="tool-actions" hidden><button id="playMarked" type="button">Play marked notes</button><button id="shareMarked" type="button">Share marked notes</button></div>
+<div id="logContainer" class="tool-log" aria-live="polite"></div>
+</div>
+
 <script src="/js/tuningplayground.js"></script>
-</div>

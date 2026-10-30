@@ -1,34 +1,36 @@
 mod aoc;
 mod build;
+mod comment_index;
 mod comments;
 mod content;
 mod duplicates;
 mod elm;
 mod fsutil;
 mod gallery;
+mod git_history;
+mod html;
+mod linkcheck;
 mod maintenance;
+mod movies;
 #[cfg(feature = "photos")]
 mod photos;
 #[cfg(not(feature = "photos"))]
 mod photos {
-    use crate::{Result, Site, SiteError};
+    use crate::{Result, Site, fail};
 
     pub(crate) fn process(_: &Site, _: &[String]) -> Result<()> {
-        Err(Box::new(SiteError::new(
-            "process-photos requires the `photos` feature; rebuild without --no-default-features",
-        )))
+        fail("process-photos requires the `photos` feature; rebuild without --no-default-features")
     }
-
-    // pub(crate) fn setup_nightshade(_: &Site, _: &[String]) -> Result<()> {
-    //     Err(Box::new(SiteError::new(
-    //         "setup-nightshade requires the `photos` feature; rebuild without --no-default-features",
-    //     )))
-    // }
 }
 mod process;
 mod recursive_ji;
 mod report;
+mod shaders;
+mod styles;
+mod submissions;
 mod tables;
+mod timeline;
+mod workflow;
 mod zipf;
 
 use std::env;
@@ -59,6 +61,10 @@ impl fmt::Display for SiteError {
 }
 
 impl Error for SiteError {}
+
+pub(crate) fn fail<T>(message: impl Into<String>) -> Result<T> {
+    Err(Box::new(SiteError::new(message)))
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum Mode {
@@ -116,7 +122,7 @@ fn run_main() -> Result<()> {
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
-        "textprocessing-examples" => site.textprocessing_examples(),
+        "textprocessing-transforms" => site.textprocessing_transforms(),
         "normalize-gallery" | "normalize" => gallery::normalize(&site, &args[1..]),
         "report" => {
             let build_time = match args.get(1) {
@@ -134,10 +140,14 @@ fn run_main() -> Result<()> {
         "aoc-inputs" | "download-aoc-inputs" => aoc::download_inputs(&site, &args[1..]),
         "process-photos" => photos::process(&site, &args[1..]),
         "parse-cargo-toml" => maintenance::parse_cargo_toml(&site),
-        // "setup-nightshade" => photos::setup_nightshade(&site, &args[1..]),
         "comment-from-issue" => comments::from_issue(&site),
         "check-comment-changes" => comments::check_pull_request(&site),
+        "comments-index" => site.comments_index(),
+        "git-history" => site.git_history(),
+        "movies" => site.movies(),
+        "gallery-from-issue" => submissions::from_issue(&site),
         "check" => site.check(),
+        "check-links" | "links-check" => site.check_links(&args[1..]),
         "update" | "update-and-lint" => site.update(),
         "commit" => {
             let message = (!args[1..].is_empty()).then(|| args[1..].join(" "));
@@ -147,7 +157,7 @@ fn run_main() -> Result<()> {
             print_help();
             Ok(())
         }
-        other => Err(Box::new(SiteError(format!("unknown command: {other}")))),
+        other => fail(format!("unknown command: {other}")),
     }
 }
 
@@ -159,16 +169,12 @@ fn parse_mode(args: &[String], default: Mode) -> Result<Mode> {
             "--dev" | "dev" => Mode::Dev,
             "--prod" | "prod" | "--release" | "release" => Mode::Prod,
             other => {
-                return Err(Box::new(SiteError(format!(
-                    "unknown mode argument: {other}"
-                ))));
+                return fail(format!("unknown mode argument: {other}"));
             }
         };
 
         if mode.replace(parsed).is_some() {
-            return Err(Box::new(SiteError::new(
-                "mode can only be specified once".to_string(),
-            )));
+            return fail("mode can only be specified once");
         }
     }
 
@@ -192,10 +198,12 @@ Commands:
   generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
+  textprocessing-transforms  regenerate the transform cards and their worked examples
   normalize-gallery COLLECTION...
                              renumber a misc gallery, re-encode its stills as
                              JPEG, and strip their metadata
   report [seconds]           write public/report.html build report
+  zipf                       write public/zipf.html, the word frequencies of content/
   align-tables LEFT RIGHT SEP merge matching lines from two files
   recursive-ji-music [OUTPUT]
                              render recursive just-intonation examples
@@ -203,10 +211,21 @@ Commands:
   aoc-inputs [options]       download scaffolded AoC puzzle inputs
   process-photos [INPUT] [OUTPUT]
                              classify and publish source photos
+  parse-cargo-toml           list path dependencies declared by more than one crate
+  comments-index             write every comment's metadata for the Quartz plugin
+                             (part of build)
+  git-history                write each page's version count and dates from git
+                             for the Quartz plugin (part of build)
+  movies                     write the movie lists, with search links, for the
+                             movies page (part of build and generate)
   comment-from-issue         CI-only: turn a comment issue into a comment file
   check-comment-changes      CI-only: refuse a pull request that touches
                              somebody else's comment
+  gallery-from-issue         CI-only: add the files attached to a submission
+                             issue, and the videos it links to, to the gallery
+                             it names
   check                      run Rust, TypeScript, and lint checks
+  check-links [DIR]          check that every local link in public/ resolves
   update                     run dependency updates and linters
   commit [message]           CI-only commit and push for generated files
 "

@@ -1,17 +1,23 @@
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
-pub fn aoc_day_count_for_year(year: u32, default_days: u32) -> u32 {
-    if year == 2025 { 12 } else { default_days }
+pub fn aoc_first_year() -> u32 {
+    adventofcode::FIRST_YEAR
 }
 
 #[wasm_bindgen]
-pub fn aoc_problem_count_for_day(year: u32, day: u32, default_problems: u32) -> u32 {
-    if year == 2025 || day == 25 {
-        1
-    } else {
-        default_problems
-    }
+pub fn aoc_last_year() -> u32 {
+    adventofcode::LAST_YEAR
+}
+
+#[wasm_bindgen]
+pub fn aoc_day_count_for_year(year: u32) -> u32 {
+    adventofcode::day_count(year)
+}
+
+#[wasm_bindgen]
+pub fn aoc_problem_count_for_day(year: u32, day: u32) -> u8 {
+    adventofcode::problem_count(year, day)
 }
 
 #[wasm_bindgen]
@@ -47,10 +53,9 @@ pub fn retrieve_html(year: u32, day: u32, problem: u8) -> String {
 /// Whether a problem has a solution behind it, rather than the `todo!()` a day
 /// starts life as.
 ///
-/// The page needs this for all 205 problems to mark its tabs, and used to get
-/// it by pulling every highlighted solution across into JavaScript and looking
-/// for `todo!` there -- 205 strings copied and converted to answer 205 yes/no
-/// questions. The looking happens on this side now.
+/// The page needs this for all 205 problems to mark its tabs, and asks here
+/// rather than pulling every highlighted solution across into JavaScript to
+/// look for `todo!` itself.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn aoc_solved(year: u32, day: u32, problem: u8) -> bool {
@@ -59,8 +64,7 @@ pub fn aoc_solved(year: u32, day: u32, problem: u8) -> bool {
 
 /// The colours the highlighted solutions refer to by class, in both themes.
 ///
-/// One stylesheet the page installs once, rather than a second coloured copy of
-/// every solution and a re-render of all of them whenever the theme changes.
+/// One stylesheet the page installs once; a theme switch is then a CSS matter.
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn highlight_css() -> String {
@@ -78,10 +82,11 @@ mod tests {
 
     #[test]
     fn handles_partial_2025_calendar() {
-        assert_eq!(aoc_day_count_for_year(2025, 25), 12);
-        assert_eq!(aoc_day_count_for_year(2024, 25), 25);
-        assert_eq!(aoc_problem_count_for_day(2025, 3, 2), 1);
-        assert_eq!(aoc_problem_count_for_day(2024, 25, 2), 1);
+        assert_eq!(aoc_day_count_for_year(2025), 12);
+        assert_eq!(aoc_day_count_for_year(2024), 25);
+        assert_eq!(aoc_problem_count_for_day(2025, 3), 1);
+        assert_eq!(aoc_problem_count_for_day(2024, 25), 1);
+        assert_eq!(aoc_problem_count_for_day(2024, 24), 2);
     }
 
     #[test]

@@ -3,9 +3,9 @@ title: "concepts"
 updated: 1970-01-02
 ---
 
-Whenever I learn something new I write it down here
+whenever i learn something new i write it down here
 
-## Programming
+## programming
 
 - [ ] divide and conquer
 - [ ] dynamic programming
@@ -13,7 +13,7 @@ Whenever I learn something new I write it down here
 - [ ] fibonacci heaps
 - [ ] proofs of correctness, often by induction
 
-### Types
+### types
 
 - [x] dependent types
 - [x] hindley milner type inference
@@ -23,7 +23,7 @@ Whenever I learn something new I write it down here
 - [x] monomorphisation
 - [ ] gradual typing
 
-### Functional
+### functional
 
 - [x] currying
 - [x] partial application
@@ -33,17 +33,17 @@ Whenever I learn something new I write it down here
 - [ ] closures
 - [ ] effect system to track side effects
 
-### Array
+### array
 
-### Logic
+### logic
 
-### Analysis
+### analysis
 
 - [x] complexity analysis
 - [ ] asymptotic analysis
 - [ ] amortized analysís
 
-### Algorithms
+### algorithms
 
 - [ ] sorting algorithms:
   - [x] insertion sort
@@ -67,12 +67,12 @@ Whenever I learn something new I write it down here
   - [ ] red black trees
   - [x] tries
 
-### Security
+### security
 
 - [ ] Rohammer
 - [ ] Virutalization Deduplication Timing Attacks
 
-## Math
+## math
 
 - [ ] Gödels Incompleteness Theorem
 - [x] Betrand's Paradox
@@ -85,9 +85,9 @@ Whenever I learn something new I write it down here
 - [ ] Type Theory
   - [ ]
 
-## Physics
+## physics
 
-## Music
+## music
 
 - [x] harmonic analysis
 - [x] negative harmony

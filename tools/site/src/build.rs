@@ -1,6 +1,6 @@
 use crate::report;
 use crate::{
-    ChildGuard, InstallMode, Mode, Result, Site, SiteError, os_args, remove_dir_if_exists,
+    ChildGuard, InstallMode, Mode, Result, Site, SiteError, fail, os_args, remove_dir_if_exists,
     remove_file_if_exists, remove_license_files,
 };
 use serde_json::Value as JsonValue;
@@ -35,13 +35,10 @@ fn workers(tools: usize) -> usize {
 /// Removes anything in the package directory that is not one of this build's
 /// tools.
 ///
-/// Nothing had ever cleared it, so it still held a whole package from before
-/// the split into one package per tool -- `wasm.js`, `wasm_bg.wasm` and a
-/// LICENSE, a month stale. Being stale is the smaller half: a package left
-/// behind for a tool that is no longer built goes on answering `ts/`'s `file:`
-/// dependency on it, so the bundle can keep resolving a tool the build has
-/// stopped producing, which is the shape of the `pokemon` bug the wiring check
-/// exists to catch.
+/// A package left behind for a tool that is not built goes on answering
+/// `ts/`'s `file:` dependency on it, so the bundle keeps resolving a tool the
+/// build does not produce, which is the shape of bug the wiring check exists
+/// to catch.
 ///
 /// The live packages are left where they are for wasm-pack to write over.
 /// Emptying the directory outright looks tidier and is not: bun installs a
@@ -104,6 +101,9 @@ impl Site {
         }
 
         self.wasm(mode)?;
+        self.comments_index()?;
+        self.git_history()?;
+        self.movies()?;
         self.bun_install(&self.root, InstallMode::Locked)?;
 
         let mut args = os_args(&["quartz/bootstrap-cli.mts", "build"]);
@@ -118,7 +118,21 @@ impl Site {
 
         self.run_bun(&self.root, &args)?;
 
+        // A link that points at nothing is a page that builds, deploys, and
+        // hands the reader the 404 page -- which a browser asked for a video
+        // reports as an unsupported format rather than a missing file. In a
+        // release build that is worth stopping for; in development it is worth
+        // saying, since the page being linked to is often the one being
+        // written next.
+        if let Err(error) = self.check_links(&[]) {
+            match mode {
+                Mode::Prod => return Err(error),
+                Mode::Dev => self.warn(&error.to_string()),
+            }
+        }
+
         let public = self.root.join("public");
+        crate::zipf::write(self, &public)?;
         report::write(self, &public, started.elapsed().as_secs())
     }
 
@@ -127,7 +141,7 @@ impl Site {
         // fills it and `site wasm` runs on its own. webpack writes into the
         // directory without clearing it and names every wasm chunk after its
         // contents, so a directory nobody empties keeps a copy of every chunk
-        // ever built: 110 MB of them had piled up before this moved.
+        // ever built.
         let content_js = self.root.join("content/js");
         remove_dir_if_exists(&content_js)?;
 
@@ -176,12 +190,10 @@ impl Site {
     /// Builds every tool's package, several at a time.
     ///
     /// They are independent -- one package per tool, each into its own output
-    /// directory -- but they were built one after another, and for most of a
-    /// build the machine had nothing to do. Cargo locks the shared target
-    /// directory, so the compiles still take their turn; what now overlaps is
-    /// one tool's wasm-bindgen and wasm-opt with the next tool's compile, and
-    /// wasm-opt over the 10 MB Chinese dictionary is the longest single step
-    /// there is.
+    /// directory. Cargo locks the shared target directory, so the compiles
+    /// still take their turn; what overlaps is one tool's wasm-bindgen and
+    /// wasm-opt with the next tool's compile, and wasm-opt over the 10 MB
+    /// Chinese dictionary is the longest single step there is.
     fn build_wasm_tools(
         &self,
         wasm_dir: &Path,
@@ -236,7 +248,7 @@ impl Site {
             return Ok(());
         }
 
-        Err(Box::new(SiteError::new(failures.join("\n"))))
+        fail(failures.join("\n"))
     }
 
     /// One tool's package, and the log of building it.
@@ -315,18 +327,15 @@ impl Site {
         tools.sort();
 
         if tools.is_empty() {
-            return Err(Box::new(SiteError::new(
-                "wasm/wasm/Cargo.toml declares no tool features",
-            )));
+            return fail("wasm/wasm/Cargo.toml declares no tool features");
         }
 
         Ok(tools)
     }
 
     /// A tool the bundler never depends on builds fine and then silently does nothing.
-    /// Asking only "does some file under ts/src name this package" is not enough: that
-    /// is exactly what kept `pokemon` alive for four months after webpack stopped
-    /// bundling it, because ts/src/pokemon.ts went on naming it into the void. So the
+    /// Asking only "does some file under ts/src name this package" is not enough: a
+    /// file webpack never bundles can go on naming a package into the void. So the
     /// question is whether a file webpack can actually *reach* imports it.
     fn check_wasm_tool_wiring(&self, tools: &[String]) -> Result<()> {
         let ts_dir = self.root.join("ts");
@@ -357,10 +366,10 @@ impl Site {
             return Ok(());
         }
 
-        Err(Box::new(SiteError::new(format!(
+        fail(format!(
             "wasm tools declared in wasm/wasm/Cargo.toml are not wired into ts/:\n  {}",
             problems.join("\n  ")
-        ))))
+        ))
     }
 
     /// wasm-pack names every package after the crate; each per-tool copy needs its own
@@ -382,15 +391,11 @@ impl Site {
     }
 
     pub(crate) fn check(&self) -> Result<()> {
-        // glsl2hlsl, textprocessing and tuningplayground are all members of the root
-        // workspace, so one `--workspace` check covers them and compiles the shared
-        // dependency graph once. Checking them a manifest at a time, each into its own
-        // --target-dir, built that graph three more times over into 489 MB of
-        // duplicate artifacts that CI got to pay for from cold on every run.
+        // Every crate here is a member of the root workspace, so one `--workspace`
+        // check covers them all and compiles the shared dependency graph once.
         //
-        // The tests run over the workspace too. Running them for `site` alone is how
-        // two red tests in recursive-ji-core went unnoticed long enough for the
-        // tuning system underneath them to be renamed out from under the post.
+        // The tests run over the workspace too: a red test in a crate the site is
+        // built from is a broken site, whichever crate it is in.
         let mut check_args = os_args(&["check", "--locked", "--workspace"]);
         let mut test_args = os_args(&["test", "--locked", "--workspace"]);
 
@@ -454,29 +459,23 @@ fn reachable_sources(ts_dir: &Path) -> Result<BTreeSet<PathBuf>> {
     Ok(seen)
 }
 
-/// Where the bundle starts. webpack names `./dist/<name>.js`, which is what `tsc`
-/// emits for `src/<name>.ts`.
+/// Where the bundle starts: every module directly under `ts/src`, each the page
+/// script webpack writes to `/js/<name>.js`. `ts/webpack.config.ts` reads the
+/// directory by the same rule; anything a page script imports lives in a
+/// subdirectory.
 fn webpack_entry_sources(ts_dir: &Path) -> Result<Vec<PathBuf>> {
-    let config = fs::read_to_string(ts_dir.join("webpack.config.ts"))?;
-    let src = ts_dir.join("src");
-
-    let entries: Vec<PathBuf> = string_literals(&config)
-        .iter()
-        .filter_map(|literal| literal.strip_prefix("./dist/")?.strip_suffix(".js"))
-        .map(|stem| src.join(format!("{stem}.ts")))
-        .collect();
+    let mut entries = Vec::new();
+    for entry in fs::read_dir(ts_dir.join("src"))? {
+        let path = entry?.path();
+        let name = path.file_name().unwrap_or_default().to_string_lossy();
+        if path.is_file() && name.ends_with(".ts") && !name.ends_with(".d.ts") {
+            entries.push(path);
+        }
+    }
+    entries.sort();
 
     if entries.is_empty() {
-        return Err(Box::new(SiteError::new(
-            "ts/webpack.config.ts declares no ./dist/*.js entry points",
-        )));
-    }
-
-    if let Some(missing) = entries.iter().find(|entry| !entry.is_file()) {
-        return Err(Box::new(SiteError::new(format!(
-            "ts/webpack.config.ts names an entry with no source: {}",
-            missing.display()
-        ))));
+        return fail("ts/src has no page scripts");
     }
 
     Ok(entries)
@@ -548,59 +547,6 @@ fn all_sources(dir: &Path) -> Result<BTreeSet<PathBuf>> {
     Ok(sources)
 }
 
-/// Which language feature each transform index needs, read out of the `#[cfg]`
-/// attributes on the dispatch arms in `wasm/textprocessing/src/wasm/mod.rs`.
-#[cfg(test)]
-fn transform_features(root: &Path) -> Result<std::collections::BTreeMap<u32, String>> {
-    let source = fs::read_to_string(root.join("wasm/textprocessing/src/wasm/mod.rs"))?;
-    let mut features = std::collections::BTreeMap::new();
-    let mut pending: Option<String> = None;
-
-    for line in source.lines() {
-        let line = line.trim();
-
-        if let Some(rest) = line.strip_prefix("#[cfg(feature = ") {
-            pending = rest
-                .trim_end_matches(")]")
-                .trim_matches('"')
-                .to_string()
-                .into();
-            continue;
-        }
-
-        if let Some(rest) = line.strip_prefix('(')
-            && let Some((index, _)) = rest.split_once(',')
-            && let Ok(index) = index.trim().parse::<u32>()
-        {
-            let feature = pending.take().unwrap_or_else(|| "base".to_string());
-            // An index may appear twice, once per direction; both arms
-            // always carry the same gate.
-            features.entry(index).or_insert(feature);
-            continue;
-        }
-
-        pending = None;
-    }
-
-    Ok(features)
-}
-
-/// The index sets the TypeScript routes on, read back out of the source.
-#[cfg(test)]
-fn routed_indices(root: &Path, name: &str) -> Result<BTreeSet<u32>> {
-    let source = fs::read_to_string(root.join("ts/src/textprocessing/index.ts"))?;
-    let start = source
-        .find(&format!("const {name} = new Set(["))
-        .ok_or_else(|| SiteError::new(format!("ts/src/textprocessing/index.ts has no {name}")))?;
-    let open = source[start..].find('[').unwrap() + start;
-    let close = source[open..].find(']').unwrap() + open;
-
-    Ok(source[open + 1..close]
-        .split(',')
-        .filter_map(|entry| entry.trim().parse::<u32>().ok())
-        .collect())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -647,34 +593,73 @@ mod tests {
         );
     }
 
-    /// The TypeScript decides which of the three wasm packages to fetch for a
-    /// given transform, and Rust decides which package actually answers for it.
-    /// If those drift, the transform does not fail — it hands back the text it
-    /// was given, which looks like a transform that does nothing. Keep them
-    /// honest against each other.
-    #[test]
-    fn typescript_routes_every_transform_to_the_package_that_implements_it() {
-        let root = site().root;
-        let features = transform_features(&root).unwrap();
-
-        for (language, set_name) in [("chinese", "chineseIndices"), ("korean", "koreanIndices")] {
-            let expected: BTreeSet<u32> = features
-                .iter()
-                .filter(|(_, feature)| feature.as_str() == language)
-                .map(|(index, _)| *index)
-                .collect();
-            let routed = routed_indices(&root, set_name).unwrap();
-
-            assert!(
-                !expected.is_empty(),
-                "found no {language} arms at all, so this test is proving nothing"
-            );
-
-            assert_eq!(
-                routed, expected,
-                "{set_name} does not match the #[cfg(feature = \"{language}\")] arms in                  wasm/textprocessing/src/wasm/mod.rs"
-            );
+    /// Every `/js/<name>.js` the pages and Quartz's own components load.
+    fn scripts_pages_load(root: &Path) -> BTreeSet<String> {
+        fn walk(dir: &Path, found: &mut BTreeSet<String>) {
+            let Ok(entries) = fs::read_dir(dir) else {
+                return;
+            };
+            for entry in entries.flatten() {
+                let path = entry.path();
+                let name = entry.file_name().to_string_lossy().into_owned();
+                if path.is_dir() {
+                    if !name.starts_with('.') && name != "node_modules" && name != "js" {
+                        walk(&path, found);
+                    }
+                    continue;
+                }
+                if !matches!(
+                    path.extension().and_then(|e| e.to_str()),
+                    Some("md" | "html" | "ts" | "tsx")
+                ) {
+                    continue;
+                }
+                let Ok(text) = fs::read_to_string(&path) else {
+                    continue;
+                };
+                for (index, _) in text.match_indices("/js/") {
+                    let rest = &text[index + "/js/".len()..];
+                    let end = rest
+                        .find(|ch: char| !(ch.is_ascii_alphanumeric() || ch == '_' || ch == '-'))
+                        .unwrap_or(rest.len());
+                    if end > 0 && rest[end..].starts_with(".js") {
+                        found.insert(rest[..end].to_string());
+                    }
+                }
+            }
         }
+
+        let mut found = BTreeSet::new();
+        for dir in ["content", "quartz/components", "quartz-local"] {
+            walk(&root.join(dir), &mut found);
+        }
+        found
+    }
+
+    /// A page script no page loads is built, shipped and never run, and a page
+    /// that loads a script with no source gets a 404 in place of its tool. The
+    /// bundle has no list of entries to drift from the pages; this is the check
+    /// that the directory and the pages agree.
+    #[test]
+    fn every_page_script_is_loaded_and_every_loaded_script_exists() {
+        let root = site().root;
+        let bundled: BTreeSet<String> = webpack_entry_sources(&root.join("ts"))
+            .unwrap()
+            .iter()
+            .map(|path| path.file_stem().unwrap().to_string_lossy().into_owned())
+            .collect();
+        let loaded = scripts_pages_load(&root);
+
+        let unused: Vec<&String> = bundled.difference(&loaded).collect();
+        assert!(
+            unused.is_empty(),
+            "no page loads /js/<name>.js for: {unused:?}"
+        );
+        let missing: Vec<&String> = loaded.difference(&bundled).collect();
+        assert!(
+            missing.is_empty(),
+            "pages load /js/<name>.js with no ts/src/<name>.ts for: {missing:?}"
+        );
     }
 
     #[test]

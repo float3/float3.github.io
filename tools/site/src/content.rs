@@ -4,16 +4,17 @@ use std::fs;
 impl Site {
     pub(crate) fn generate(&self) -> Result<()> {
         crate::recursive_ji::generate(self, &[])?;
-        self.textprocessing_examples()?;
+        self.textprocessing_transforms()?;
         self.links()?;
         self.indices()?;
+        self.movies()?;
         self.generate_chords()
     }
 
-    /// The worked example on each transform card, rendered here rather than in
-    /// the browser so the page needs no wasm at all to draw itself. Every
+    /// The transform cards, with each worked example rendered here rather than
+    /// in the browser so the page needs no wasm at all to draw itself. Every
     /// language feature has to be on, since it renders the whole table at once.
-    pub(crate) fn textprocessing_examples(&self) -> Result<()> {
+    pub(crate) fn textprocessing_transforms(&self) -> Result<()> {
         self.run(
             &self.root,
             "cargo",
@@ -23,7 +24,7 @@ impl Site {
                 "--package",
                 "textprocessing",
                 "--example",
-                "generate_examples",
+                "generate_transforms",
             ]),
         )
     }
@@ -73,13 +74,31 @@ impl Site {
     /// A gallery is nothing but a directory in this list plus a page that names
     /// it, which is the point of it being a list: another one is two lines and
     /// a folder of pictures.
-    const INDICES: &'static [(&'static str, &'static str)] = &[
+    const INDICES: &[(&str, &str)] = &[
         ("media", "media"),
         ("blobs", "blobs"),
         ("plaintext", "plaintext"),
         ("trolley", "trolley"),
         ("guesswedoing", "guess we doing"),
     ];
+
+    /// The galleries a stranger may add to.
+    ///
+    /// Separate from the list above, and deliberately shorter than it. Being
+    /// listed there is what makes a directory a gallery; being listed here is
+    /// what lets `gallery-from-issue` write into it, and it is the only thing
+    /// that does — the submit button on a page is an offer, and this is the
+    /// answer. `media` and `blobs` are files the site itself uses and are
+    /// nobody's invitation.
+    const SUBMITTABLE: &[&str] = &["trolley", "guesswedoing"];
+
+    pub(crate) fn is_submittable(dir: &str) -> bool {
+        Self::SUBMITTABLE.contains(&dir)
+    }
+
+    pub(crate) fn submittable_names() -> Vec<&'static str> {
+        Self::SUBMITTABLE.to_vec()
+    }
 
     pub(crate) fn indices(&self) -> Result<()> {
         for (dir, title) in Self::INDICES {
@@ -137,7 +156,7 @@ impl Site {
         }
 
         fs::write(base.join("index.md"), body)?;
-        fs::write(base.join(MANIFEST), manifest(&entries))?;
+        fs::write(base.join(MANIFEST), manifest(&entries)?)?;
         Ok(entries.len())
     }
 
@@ -152,7 +171,8 @@ impl Site {
 /// The galleries read this rather than the markdown beside it: they want the
 /// filenames, and recovering those from rendered links would mean parsing a
 /// format built for people to read in order to get at something never meant to
-/// be hidden in the first place.
+/// be hidden in the first place. Each entry also says whether it plays in a
+/// `<video>` and what its caption calls it, so the page decides neither.
 const MANIFEST: &str = "index.json";
 
 /// Whether a filename in a gallery directory is one of the gallery's items.
@@ -166,36 +186,31 @@ pub(crate) fn is_gallery_item(name: &str) -> bool {
     !name.starts_with('.') && name != "index.md" && name != MANIFEST
 }
 
-/// A JSON array of filenames.
-///
-/// Written by hand rather than with a serialiser: quoting a list of strings is
-/// the whole of the job, and the escape rules for a JSON string are shorter
-/// than the argument for taking on a dependency to apply them.
-fn manifest(entries: &[String]) -> String {
-    let mut out = String::from("[");
-
-    for (index, entry) in entries.iter().enumerate() {
-        if index > 0 {
-            out.push(',');
-        }
-        out.push('"');
-        for ch in entry.chars() {
-            match ch {
-                '"' => out.push_str("\\\""),
-                '\\' => out.push_str("\\\\"),
-                // Control characters cannot appear raw inside a JSON string.
-                c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
-                c => out.push(c),
-            }
-        }
-        out.push('"');
-    }
-
-    out.push_str("]\n");
-    out
+/// A JSON array of `{ name, kind, label }`: the filename, `video` or `image`
+/// by [`crate::gallery::is_video`], and the name without its extension, which
+/// is what a numbered gallery captions an item with.
+fn manifest(entries: &[String]) -> Result<String> {
+    let entries: Vec<serde_json::Value> = entries
+        .iter()
+        .map(|name| {
+            let (stem, extension) = match name.rsplit_once('.') {
+                Some((stem, extension)) if !stem.is_empty() => (stem, extension),
+                _ => (name.as_str(), ""),
+            };
+            let kind = if crate::gallery::is_video(&extension.to_ascii_lowercase()) {
+                "video"
+            } else {
+                "image"
+            };
+            serde_json::json!({ "name": name, "kind": kind, "label": stem })
+        })
+        .collect();
+    let mut out = serde_json::to_string(&entries)?;
+    out.push('\n');
+    Ok(out)
 }
 
-fn extract_urls(source: &str) -> Vec<String> {
+pub(crate) fn extract_urls(source: &str) -> Vec<String> {
     let mut links = Vec::new();
     let mut offset = 0;
 
@@ -260,19 +275,34 @@ mod tests {
 
     #[test]
     fn writes_an_empty_manifest_for_an_empty_gallery() {
-        assert_eq!(manifest(&[]), "[]\n");
+        assert_eq!(manifest(&[]).unwrap(), "[]\n");
     }
 
     #[test]
-    fn quotes_filenames_into_the_manifest() {
-        let entries = vec!["00.jpg".to_string(), "63.mp4".to_string()];
-        assert_eq!(manifest(&entries), "[\"00.jpg\",\"63.mp4\"]\n");
+    fn describes_each_file_in_the_manifest() {
+        let entries = vec![
+            "00.jpg".to_string(),
+            "63.MP4".to_string(),
+            "README".to_string(),
+        ];
+        assert_eq!(
+            manifest(&entries).unwrap(),
+            concat!(
+                r#"[{"kind":"image","label":"00","name":"00.jpg"},"#,
+                r#"{"kind":"video","label":"63","name":"63.MP4"},"#,
+                r#"{"kind":"image","label":"README","name":"README"}]"#,
+                "\n"
+            )
+        );
     }
 
     #[test]
     fn escapes_filenames_that_would_break_the_json() {
         let entries = vec!["a\"b.jpg".to_string(), "c\\d.png".to_string()];
-        assert_eq!(manifest(&entries), "[\"a\\\"b.jpg\",\"c\\\\d.png\"]\n");
+        let parsed: serde_json::Value = serde_json::from_str(&manifest(&entries).unwrap()).unwrap();
+        assert_eq!(parsed[0]["name"], "a\"b.jpg");
+        assert_eq!(parsed[0]["label"], "a\"b");
+        assert_eq!(parsed[1]["name"], "c\\d.png");
     }
 
     #[test]

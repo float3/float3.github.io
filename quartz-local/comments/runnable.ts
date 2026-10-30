@@ -264,9 +264,8 @@ function withoutTypeScript(attributes: string): string | undefined {
  * The same HTML, with every TypeScript script compiled where it stands.
  *
  * A browser runs a `<script>` and ignores a `<script type="text/typescript">`
- * without a word, so a comment written that way is inert today rather than
- * broken; this is what makes it run. Position is kept, because a demo's scripts
- * can depend on running in the order they were written.
+ * without a word; this is what makes the latter run. Position is kept, because
+ * a demo's scripts can depend on running in the order they were written.
  */
 function compileScripts(html: string): { html: string; errors: string[] } {
   const errors: string[] = []

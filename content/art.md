@@ -7,13 +7,13 @@ sort_by: "title"
 
 this is some art i've made
 
-- [Shaders:](#shaders)
+- [shaders:](#shaders)
   - [Unity](#unity)
   - [Shadertoy](#shadertoy)
 - [3D Scanning and Photogrammetry:](#3d-scanning-and-photogrammetry)
-- [Renders:](#renders)
+- [renders:](#renders)
 
-# Shaders:
+# shaders:
 
 ## Unity
 
@@ -28,11 +28,11 @@ this is some art i've made
 
 <https://www.shadertoy.com/user/Three>
 
-# 3D Scanning and Photogrammetry:
+# 3D scanning and Photogrammetry:
 
 [British Museum](/blog/piracy-at-the-british-museum.md)
 
-# Renders:
+# renders:
 
 from my pathtracer:
 ![render](https://github.com/float3/pathtracer/blob/master/renders/scene.png?raw=true)

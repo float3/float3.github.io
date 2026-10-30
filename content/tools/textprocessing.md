@@ -13,6 +13,6 @@ tags:
 <script type="module" src="/js/textprocessing.js"></script>
 <link href="./textprocessing.css" rel="stylesheet" type="text/css">
 
-<div id="textprocessing-app" class="textprocessing-app">
+<div id="textprocessing-app" class="tool textprocessing-app">
   <div class="textprocessing-loading">Loading transforms...</div>
 </div>

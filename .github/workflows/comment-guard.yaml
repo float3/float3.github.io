@@ -5,9 +5,16 @@
 # pull request opened by hand never goes near that script, so the same rule is
 # applied here to the other door.
 #
-# `pull_request` rather than `pull_request_target`: this checks out and reads a
-# fork's branch, so it must run with the read-only token and no access to
-# secrets. It needs neither.
+# `pull_request` rather than `pull_request_target`: this reads a fork's branch,
+# so it must run with the read-only token and no access to secrets. It needs
+# neither.
+#
+# It reads that branch and does not run it. The checkout is the pull request's
+# *base*, and the head arrives afterwards as a fetched ref that nothing builds
+# from — because this job compiles `tools/site` and then asks it whether the
+# branch is allowed, and a checkout of the head would be asking the branch about
+# itself. A pull request that edited `check_changes` to return no refusals used
+# to pass its own guard.
 name: Comment guard
 
 on:
@@ -23,11 +30,25 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          # The base, which is code that has already been merged here. This is
+          # the tree that gets built and run.
+          ref: ${{ github.event.pull_request.base.sha }}
           # Both sides of the comparison have to be present, and the merge-base
           # can be arbitrarily far back on a long-running branch.
           fetch-depth: 0
+          # Nothing here pushes, and a build that cannot reach the token is one
+          # fewer thing to reason about.
+          persist-credentials: false
+
+      # A fork's head commit is not on `origin` under any branch, but GitHub
+      # publishes it here. Fetched as an object to diff and never checked out:
+      # the working tree stays the base throughout.
+      - name: Fetch the head of the pull request, as data
+        env:
+          PR: ${{ github.event.pull_request.number }}
+        run: git fetch --no-tags origin "+refs/pull/$PR/head:refs/remotes/pull/$PR/head"
 
       - name: Install Rust toolchain
         run: rustup toolchain install --profile minimal stable

@@ -32,11 +32,10 @@ pub fn zhuyin_to_pinyin_wasm_extended(zhuyin: String) -> String {
         .join(" ")
 }
 
-/// These four convert one syllable at a time, and returned nothing at all for
-/// anything longer — the whole phrase became the empty string, which is what the
-/// "Pinyin tone marks" card had been showing. Convert syllable by syllable and
-/// leave anything that will not convert as it was, so a phrase comes back a
-/// phrase and a typo costs only itself.
+/// Converts syllable by syllable, leaving anything that will not convert as it
+/// was, so a phrase comes back a phrase and a typo costs only itself. The
+/// converters themselves take one syllable and answer nothing for anything
+/// longer.
 fn per_syllable(text: &str, convert: impl Fn(&str) -> Option<String>) -> String {
     text.split_whitespace()
         .map(|syllable| convert(syllable).unwrap_or_else(|| syllable.to_string()))

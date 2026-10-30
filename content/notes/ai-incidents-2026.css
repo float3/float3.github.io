@@ -1,0 +1,688 @@
+/* The 2026 AI incident timeline: one column of dated entries under a sticky
+   panel of running totals. The entries are plain markup and read top to bottom
+   on their own; the panel and the dimming come from ts/src/aiincidents.ts, and
+   nothing here is required for the post to be legible. Colours are the ones
+   the interactive tools use, from custom.scss. */
+
+.ait,
+.ait-figure {
+  --ait-border: color-mix(in srgb, var(--gray) 32%, transparent);
+  --ait-muted: var(--gray);
+  --ait-accent: var(--secondary);
+  /* Two categorical hues, and nothing else on the page carries colour. These
+     are the reference blue and orange, stepped per theme and checked against
+     both of this site's surfaces with the palette validator: the site's own
+     --secondary and --tertiary fail it outright in the dark theme, where they
+     sit 9.6 apart to normal vision. */
+  --ait-agents: #2a78d6;
+  --ait-accomplices: #eb6834;
+}
+
+[saved-theme="dark"] .ait,
+[saved-theme="dark"] .ait-figure {
+  --ait-agents: #3987e5;
+  --ait-accomplices: #d95926;
+}
+
+.ait {
+  margin: 1.5rem 0 2.5rem;
+}
+
+/* The panel */
+
+.ait-dash {
+  position: sticky;
+  top: var(--sticky-top);
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "when figure"
+    "kind figure"
+    "tallies tallies"
+    "bar bar"
+    "position position";
+  align-items: center;
+  gap: 0.3rem 0.9rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--ait-border);
+  border-radius: 6px;
+  background: var(--light);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--dark) 8%, transparent);
+}
+
+.ait-dash > p,
+.ait-dash > dl {
+  margin: 0;
+}
+
+.ait-dash-when {
+  grid-area: when;
+  align-self: end;
+}
+
+.ait-dash-date {
+  font-weight: 600;
+}
+
+.ait-dash-year {
+  margin-left: 0.35rem;
+  color: var(--ait-muted);
+  font-size: 0.8rem;
+}
+
+.ait-dash-kind {
+  grid-area: kind;
+  align-self: start;
+  justify-self: start;
+}
+
+.ait-dash-figure {
+  display: grid;
+  grid-area: figure;
+  justify-items: end;
+  text-align: right;
+}
+
+.ait-dash-figure[hidden] {
+  display: none;
+}
+
+.ait-figure-value {
+  color: var(--ait-accent);
+  font-size: 1.9rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.ait-figure-label {
+  max-width: 9rem;
+  color: var(--ait-muted);
+  font-size: 0.7rem;
+  line-height: 1.25;
+}
+
+.ait-tallies {
+  grid-area: tallies;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.25rem 0.9rem;
+  margin-top: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ait-border);
+}
+
+/* The number on top of its label. A `dd` may not precede its `dt` in the
+   markup, so the column is reversed rather than the list. */
+.ait-tally {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.05rem;
+}
+
+.ait-tally dt {
+  color: var(--ait-muted);
+  font-size: 0.66rem;
+  line-height: 1.2;
+}
+
+.ait-tally dd {
+  margin: 0;
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.ait-ruler {
+  grid-area: bar;
+  position: relative;
+  margin-top: 0.3rem;
+  min-width: 0;
+}
+
+.ait-position {
+  grid-area: position;
+  align-self: center;
+  margin-top: 0.4rem;
+  color: var(--ait-muted);
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* The entries */
+
+.ait-track {
+  --ait-inset: 1.6rem;
+  --ait-rail: 0.35rem;
+  --ait-dot: 0.55rem;
+  position: relative;
+  margin: 1.6rem 0 0;
+  padding: 0 0 0 var(--ait-inset);
+  list-style: none;
+}
+
+.ait-track::before {
+  content: "";
+  position: absolute;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  left: var(--ait-rail);
+  width: 1px;
+  background: var(--ait-border);
+}
+
+.ait-entry {
+  position: relative;
+  padding-bottom: 2.25rem;
+}
+
+.ait-entry::before {
+  content: "";
+  position: absolute;
+  top: 0.4rem;
+  left: calc(var(--ait-rail) - var(--ait-inset) - var(--ait-dot) / 2);
+  width: var(--ait-dot);
+  height: var(--ait-dot);
+  border: 1px solid var(--ait-border);
+  border-radius: 50%;
+  background: var(--light);
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.ait-entry h3 {
+  margin: 0.1rem 0 0.35rem;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+.ait-entry p {
+  margin: 0 0 0.3rem;
+}
+
+.ait-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.ait-meta time {
+  color: var(--ait-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.ait-kind,
+.ait-dash-kind {
+  padding: 0.05rem 0.45rem;
+  border: 1px solid var(--ait-border);
+  border-radius: 999px;
+  color: var(--ait-muted);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* When it happened, when somebody noticed, when it was published. The gap
+   between the first and the last is appended by the page script, so it cannot
+   drift from the two dates it is the distance between. */
+.ait-entry .ait-when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.5rem;
+  margin: 0.45rem 0 0.35rem;
+  color: var(--ait-muted);
+  font-size: 0.72rem;
+}
+
+.ait-entry .ait-when > span + span::before {
+  content: "\00b7";
+  margin-right: 0.45rem;
+  opacity: 0.6;
+}
+
+.ait-entry .ait-gap {
+  color: var(--ait-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.ait-source {
+  font-size: 0.75rem;
+}
+
+.ait-source a {
+  color: var(--ait-muted);
+}
+
+.ait-source a:hover {
+  color: var(--ait-accent);
+}
+
+/* What the script drives. Before it runs, nothing is dimmed. */
+
+.ait.is-live .ait-entry {
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+
+.ait.is-live .ait-entry.is-active,
+.ait.is-live .ait-entry.is-past {
+  opacity: 1;
+}
+
+.ait.is-live .ait-entry.is-active::before {
+  border-color: var(--ait-accent);
+  background: var(--ait-accent);
+  transform: scale(1.3);
+}
+
+.ait.is-live .ait-entry.is-past::before {
+  border-color: color-mix(in srgb, var(--ait-accent) 50%, var(--ait-border));
+  background: color-mix(in srgb, var(--ait-accent) 45%, var(--light));
+}
+
+/* A phone gives the panel a third of the screen if it is let. Tighter tiles,
+   smaller type, and the track loses most of its indent. */
+@media (max-width: 800px) {
+  .ait-dash {
+    gap: 0.25rem 0.6rem;
+    padding: 0.55rem 0.7rem;
+  }
+
+  .ait-figure-value {
+    font-size: 1.5rem;
+  }
+
+  .ait-figure-label {
+    max-width: 7rem;
+  }
+
+  .ait-tallies {
+    grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+    gap: 0.2rem 0.6rem;
+    margin-top: 0.3rem;
+    padding-top: 0.4rem;
+  }
+
+  .ait-tally dd {
+    font-size: 0.9rem;
+  }
+
+  .ait-tally dt {
+    font-size: 0.62rem;
+  }
+
+  .ait-track {
+    --ait-inset: 1.1rem;
+  }
+
+  .ait-entry {
+    padding-bottom: 1.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ait-progress-fill,
+  .ait.is-live .ait-entry,
+  .ait-entry::before {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------- pictures
+
+   Three SVGs, drawn by ts/src/aiincidents/charts.ts from the entries. Colour
+   says one thing and only one thing: whether a model did it on its own, or a
+   person used one. Everything else is the page's own muted ink. */
+
+.ait-figure {
+  margin: 1.8rem 0;
+}
+
+.ait-figure[hidden] {
+  display: none;
+}
+
+.ait-figure figcaption {
+  margin-bottom: 0.5rem;
+  color: var(--ait-muted);
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.ait-plot {
+  position: relative;
+  min-width: 0;
+}
+
+.ait-chart {
+  display: block;
+  overflow: visible;
+}
+
+/* Recessive chrome: hairlines, one step off the surface, never dashed. */
+.ait-axis,
+.ait-grid {
+  stroke: var(--ait-border);
+  stroke-width: 1;
+}
+
+.ait-guide {
+  stroke: var(--ait-muted);
+  stroke-width: 1;
+}
+
+.ait-tick,
+.ait-row,
+.ait-label {
+  fill: var(--ait-muted);
+  font-family: inherit;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ait-tick-mid {
+  text-anchor: middle;
+}
+
+.ait-tick-end {
+  text-anchor: end;
+}
+
+.ait-row {
+  fill: var(--dark);
+  font-variant-numeric: normal;
+  text-anchor: end;
+}
+
+.ait-label {
+  font-weight: 600;
+}
+
+/* The two series, and the ink for everything that is neither. */
+.ait-line {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ait-dot,
+.ait-bar {
+  stroke: var(--light);
+  stroke-width: 2;
+}
+
+.ait-mark {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.is-agents {
+  fill: var(--ait-agents);
+  stroke: var(--ait-agents);
+}
+
+.is-accomplices {
+  fill: var(--ait-accomplices);
+  stroke: var(--ait-accomplices);
+}
+
+.is-other {
+  fill: var(--ait-muted);
+  stroke: var(--ait-muted);
+}
+
+.ait-line.is-agents,
+.ait-line.is-accomplices {
+  fill: none;
+}
+
+.ait-dot.is-agents,
+.ait-dot.is-accomplices,
+.ait-bar.is-agents,
+.ait-bar.is-accomplices,
+.ait-bar.is-other {
+  stroke: var(--light);
+}
+
+.ait-label.is-agents {
+  fill: var(--ait-agents);
+}
+
+.ait-label.is-accomplices {
+  fill: var(--ait-accomplices);
+}
+
+/* Ahead of the reader the ruler is faint; the entry being read is lit. */
+.ait-mark.is-ahead {
+  opacity: 0.3;
+}
+
+.ait-mark.is-here {
+  stroke-width: 3;
+}
+
+.ait-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 0.7rem;
+  margin: 0.3rem 0 0;
+  padding: 0;
+  color: var(--ait-muted);
+  font-size: 0.66rem;
+  list-style: none;
+}
+
+.ait-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.ait-swatch {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+}
+
+.ait-swatch.is-agents {
+  background: var(--ait-agents);
+}
+
+.ait-swatch.is-accomplices {
+  background: var(--ait-accomplices);
+}
+
+.ait-tip {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  gap: 0.1rem;
+  max-width: 17rem;
+  padding: 0.3rem 0.45rem;
+  transform: translateY(-120%);
+  border: 1px solid var(--ait-border);
+  border-radius: 4px;
+  background: var(--light);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--dark) 12%, transparent);
+  color: var(--ait-muted);
+  font-size: 0.68rem;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+.ait-tip[hidden] {
+  display: none;
+}
+
+.ait-tip-head {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+/* -------------------------------------------------------------- the modes
+
+   The same entries, laid out the other way. Only the track changes: the rail
+   turns, the dot moves inside the card so nothing has to clip, and the entries
+   become a row you scroll sideways. The panel, the charts and the dimming are
+   the same in both, which is the point of being able to switch. */
+
+.ait-modes {
+  display: none;
+}
+
+.ait.is-live .ait-modes {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.6rem;
+}
+
+.ait-mode {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--ait-border);
+  border-radius: 999px;
+  background: none;
+  color: var(--ait-muted);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.ait-mode:hover {
+  border-color: var(--ait-accent);
+  color: var(--ait-accent);
+}
+
+.ait-mode[aria-pressed="true"] {
+  border-color: color-mix(in srgb, var(--ait-accent) 55%, var(--ait-border));
+  background: color-mix(in srgb, var(--ait-accent) 14%, transparent);
+  color: var(--dark);
+}
+
+.ait.is-horizontal .ait-track {
+  --ait-lane: 1.6rem;
+  display: flex;
+  align-items: start;
+  gap: 1.3rem;
+  margin-top: 1rem;
+  padding: var(--ait-lane) 0 0.6rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+}
+
+/* The rail is a segment per card rather than one line down the track: a line
+   absolutely positioned in a scroll container is laid out against the visible
+   box, so it would sit still while the cards scrolled out from under it. */
+.ait.is-horizontal .ait-track::before {
+  display: none;
+}
+
+.ait.is-horizontal .ait-entry::after {
+  content: "";
+  position: absolute;
+  top: calc(0.2rem + var(--ait-dot) / 2);
+  left: 0;
+  width: calc(100% + 1.3rem);
+  height: 1px;
+  background: var(--ait-border);
+}
+
+.ait.is-horizontal .ait-entry:last-child::after {
+  width: 100%;
+}
+
+.ait.is-horizontal .ait-entry {
+  flex: 0 0 19rem;
+  max-width: 19rem;
+  padding: 1.1rem 0 0;
+  scroll-snap-align: center;
+}
+
+/* Inside the card, not above it: a dot hung outside would be clipped by the
+   track's own horizontal scrolling at either end of the row. */
+.ait.is-horizontal .ait-entry::before {
+  z-index: 1;
+  top: 0.2rem;
+  left: 0;
+}
+
+.ait.is-horizontal .ait-entry h3 {
+  font-size: 0.95rem;
+}
+
+@media (max-width: 800px) {
+  .ait.is-horizontal .ait-entry {
+    flex-basis: 15rem;
+    max-width: 15rem;
+  }
+}
+
+/* ------------------------------------------------------------ what it said
+
+   An agent's own words, wherever a source gives them. The page spends most of
+   its length describing what these things did; five times it can show what
+   they said instead, which is a different kind of evidence. */
+
+.ait-said {
+  color: var(--dark);
+  font-style: italic;
+}
+
+/* The year as a sequence of things that had not happened before. */
+.ait-first {
+  padding: 0.05rem 0.45rem;
+  border: 1px solid color-mix(in srgb, var(--ait-accent) 45%, var(--ait-border));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ait-accent) 12%, transparent);
+  color: var(--ait-accent);
+  font-size: 0.65rem;
+  letter-spacing: 0.02em;
+}
+
+.ait-meta {
+  flex-wrap: wrap;
+}
+
+/* ------------------------------------------------- periods and disclosures
+
+   A moment on the ruler is a tick. Something that ran for a while is a tick
+   with the run drawn under it. For the entry being read, and only for it, a
+   hairline reaches from the end of the thing to the day it was published,
+   where a hollow ring sits: fourteen of those at once would read as a band of
+   lines rather than a fact about one entry. */
+
+.ait-mark line {
+  fill: none;
+}
+
+.ait-mark rect {
+  stroke: none;
+}
+
+.ait-reach {
+  fill: none;
+  stroke-width: 1;
+  opacity: 0.55;
+}
+
+.ait-told {
+  fill: var(--light);
+  stroke-width: 1.5;
+}
+
+/* On the silence chart the same split is static: solid while it was still
+   going on, faint after it stopped and before anybody said. */
+.ait-bar.is-quiet {
+  opacity: 0.45;
+}
+
+.ait-swatch.is-told {
+  border: 1.5px solid var(--ait-muted);
+  background: none;
+}

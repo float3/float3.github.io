@@ -1,5 +1,24 @@
 @use "./variables.scss" as *;
 
+// How far down the viewport a page may stick something.
+//
+// Below $mobile the left sidebar stops being a column beside the page and
+// becomes a row above it, and the explorer plugin makes it `position: sticky`
+// while `custom.scss` leaves it transparent and gives it `z-index: 200`. So a
+// page element pinned at `top: 0` parks underneath the site's own header and
+// the two read through each other. Anything a page sticks to the top of the
+// viewport uses `top: var(--sticky-top)` instead of a number, and
+// `ts/src/shared/sticky.ts` replaces the guess below with the header's
+// measured height. `cargo test -p site` refuses a page stylesheet that pins
+// itself to the top any other way.
+:root {
+  --sticky-top: 0px;
+
+  @media all and ($mobile) {
+    --sticky-top: 5.5rem;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -194,6 +213,15 @@ pre.poetry {
   margin: 0 0 1rem;
 }
 
+// An inline-block, because a line-through on a watched film's list item is
+// drawn across every inline thing inside it, and a struck-out link reads as a
+// dead one.
+.movie-links {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-size: 0.9em;
+}
+
 .wave-figure {
   margin: 1.25rem 0 2rem;
 
@@ -368,6 +396,216 @@ pre.poetry {
   color: var(--dark);
 }
 
+// The interactive tools share one design: a compact bar of labelled controls,
+// quiet panels, one accent, and a status line that stays out of the way. Each
+// tool adds its own stylesheet for what is particular to it.
+.tool {
+  --tool-border: color-mix(in srgb, var(--gray) 32%, transparent);
+  --tool-surface: color-mix(in srgb, var(--light) 92%, var(--lightgray));
+  --tool-surface-strong: color-mix(in srgb, var(--light) 82%, var(--lightgray));
+  --tool-text-muted: var(--gray);
+  --tool-accent: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin: 0.5rem 0 2rem;
+  min-width: 0;
+}
+
+.tool .wasm-credit {
+  margin: 0;
+}
+
+.tool [hidden] {
+  display: none !important;
+}
+
+.tool-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: end;
+}
+
+.tool-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+.tool-field > span {
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--tool-text-muted);
+}
+.tool-field-wide {
+  flex: 1 1 16rem;
+}
+.tool-field-wide select,
+.tool-field-wide input {
+  width: 100%;
+}
+
+.tool select,
+.tool input:not([type="checkbox"]):not([type="range"]):not([type="file"]),
+.tool textarea {
+  box-sizing: border-box;
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--tool-border);
+  border-radius: 6px;
+  background: var(--tool-surface);
+  color: var(--dark);
+  min-width: 0;
+}
+.tool textarea {
+  font-family: var(--codeFont);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+.tool input[type="range"] {
+  width: 9rem;
+  accent-color: var(--tool-accent);
+}
+.tool input[type="number"] {
+  width: 5.5rem;
+}
+.tool input[type="checkbox"] {
+  accent-color: var(--tool-accent);
+}
+
+.tool-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--darkgray);
+}
+
+.tool button,
+.tool-button {
+  font: inherit;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--tool-border);
+  border-radius: 6px;
+  background: var(--tool-surface);
+  color: var(--dark);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.tool button:hover,
+.tool-button:hover {
+  border-color: var(--tool-accent);
+  color: var(--tool-accent);
+}
+.tool button:focus-visible {
+  outline: 2px solid var(--tool-accent);
+  outline-offset: 2px;
+}
+.tool button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.tool button.is-primary {
+  background: color-mix(in srgb, var(--tool-accent) 16%, var(--tool-surface));
+  border-color: color-mix(in srgb, var(--tool-accent) 55%, var(--tool-border));
+  color: var(--dark);
+}
+
+.tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tool-status {
+  font-size: 0.85rem;
+  color: var(--tool-text-muted);
+  margin: 0;
+  min-height: 1.2em;
+}
+.tool-status[data-state="ready"] {
+  display: none;
+}
+.tool-status[data-state="error"] {
+  color: #c0392b;
+}
+
+.tool-description {
+  color: var(--darkgray);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin: 0;
+}
+.tool-description a {
+  color: inherit;
+}
+
+.tool-hint {
+  font-size: 0.78rem;
+  color: var(--tool-text-muted);
+}
+
+.tool-panel {
+  border: 1px solid var(--tool-border);
+  border-radius: 8px;
+  background: var(--tool-surface);
+  padding: 0.85rem;
+  min-width: 0;
+}
+
+.tool-panes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  gap: 0.9rem;
+}
+
+.tool-more {
+  border-top: 1px solid var(--tool-border);
+  padding-top: 0.6rem;
+}
+.tool-more > summary {
+  cursor: pointer;
+  color: var(--darkgray);
+  font-size: 0.9rem;
+}
+.tool-more-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.tool-log {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 11rem;
+  overflow-y: auto;
+  font-size: 0.85rem;
+}
+.tool-log-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.tool-log-row p {
+  margin: 0;
+  color: var(--darkgray);
+}
+.tool-log button {
+  font-size: 0.75rem;
+  padding: 0.15rem 0.5rem;
+  background: transparent;
+  color: var(--tool-text-muted);
+}
+
 .engraved-notation {
   display: block;
   height: auto;
@@ -377,9 +615,23 @@ pre.poetry {
 // The tuning playground engraves the chord being held down. One bar wants a
 // bar's worth of room, not the width of the page, and it is drawn in
 // currentColor so it follows the theme the way the post's figures do.
+//
+// The box is a fixed size so the staff holds still as chords come and go and as
+// the window resizes; the engraved SVG scales to fit inside it, centred, rather
+// than stretching to whatever width is on offer.
 .chord-staff {
   color: var(--dark);
-  max-width: 20rem;
+  width: 20rem;
+  max-width: 100%;
+  height: 8rem;
+}
+.chord-staff[hidden] {
+  display: none;
+}
+
+.chord-staff .engraved-notation {
+  height: 100%;
+  width: 100%;
 }
 
 .engraved-notation text {
@@ -1414,4 +1666,18 @@ html[data-bg="gl"] {
   #bg-menu {
     display: none !important;
   }
+}
+
+// The insurance post's coin flip: three fields and the figures they give.
+.insurance {
+  max-width: 40rem;
+  margin: 1.25rem 0;
+}
+.insurance .tool-field input {
+  width: 9rem;
+}
+.insurance-results p {
+  margin: 0.6rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }

@@ -5,7 +5,7 @@ tags:
   - programming
 ---
 
-- [Real World Projects](#real-world-projects)
+- [real world projects](#real-world-projects)
   - [AudioLink](#audiolink)
   - [Poiyomi](#poiyomi)
   - [vkfetch-rs](#vkfetch-rs)
@@ -14,13 +14,13 @@ tags:
   - [GoogleTranslate](#googletranslate)
   - [VRCLauncher](#vrclauncher)
   - [other](#other)
-- [Toys](#toys)
+- [toys](#toys)
   - [wasm tools](#wasm-tools)
   - [tuning playground](#tuning-playground)
   - [pathtracer](#pathtracer)
   - [3lang](#3lang)
 
-# Real World Projects
+# real world projects
 
 some real world projects with real world users and real world usecases
 
@@ -29,15 +29,15 @@ some real world projects with real world users and real world usecases
 [github](https://github.com/llealloo/audiolink) \
 [website](https://audiolink.dev) \
 [demo](https://traeumerei.dev) \
-I'm a maintainer on the core team of AudioLink, an audio-visualization library for Unity.
+i'm a maintainer on the core team of AudioLink, an audio-visualization library for Unity.
 
 ## Poiyomi
 
 [github](https://github.com/poiyomi/PoiyomiToonShader) \
 [website](https://www.poiyomi.com) \
 [patreon](https://www.patreon.com/poiyomi) \
-I frequently did freelancing for Poiyomi to work on his shader which is used by 500000.
-I implemented multiple features and ported pbr features from
+i frequently did freelancing for Poiyomi to work on his shader which is used by 500000.
+i implemented multiple features and ported pbr features from
 the Google Filament rendering engine to Unity
 
 ## vkfetch-rs
@@ -50,14 +50,14 @@ a port of vkfetch to rust, a neofetch-esque utility to display information about
 
 [github](https://github.com/float3/music21-rs) \
 [website](https://hilll.dev/music21-rs/) \
-a rust music theory library inspired by python's music21. I use it in my wasm tools for chord, tuning, and polyrhythm logic.
+a rust music theory library inspired by python's music21. i use it in my wasm tools for chord, tuning, and polyrhythm logic.
 
 ## PSDTranslate
 
 [C#](https://github.com/float3/PSDTranslate)
 [python](https://github.com/float3/psd_translate) \
 a utility to translate layer names in photoshop project files from one language to another
-based on a google translate api library I wrote
+based on a google translate api library i wrote
 
 ## GoogleTranslate
 
@@ -73,10 +73,10 @@ plus documentation of all known launch options
 
 ## other
 
-I also frequently contribute to other peoples projects, for a (non-exhaustive) list you can check this: \
+i also frequently contribute to other peoples projects, for a (non-exhaustive) list you can check this: \
 [github-resume](https://hilll.dev/resume.github.com/?float3#contributions)
 
-# Toys
+# toys
 
 some toy programs for fun, learning and experimentation
 

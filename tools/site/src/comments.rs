@@ -11,6 +11,10 @@
 //! no arguments; the workflows in `.github/workflows/comment*.yaml` are the only
 //! callers.
 
+use crate::workflow::{
+    Rejected, Submission, issue_from_env, parse_marked_issue, publish_outputs, random_id, reject,
+    report_rejection, write_outputs,
+};
 use crate::{Result, Site, SiteError};
 use serde_json::Value;
 use std::env;
@@ -18,41 +22,14 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
-/// The marker the compose box writes into an issue body.
-///
-/// The workflow keys off this rather than off a label, because a label set
-/// through `?labels=` in a prefilled issue URL is silently dropped for anyone
-/// without triage permission on the repository — which is everyone this feature
-/// exists for.
+/// The marker the compose box writes into an issue body; see
+/// [`parse_marked_issue`].
 const ISSUE_MARKER: &str = "hilll.dev:comment";
-
-/// Long enough for any comment worth reading, short enough to bound the damage.
-const MAX_BODY: usize = 64 * 1024;
-
-/// A refusal, phrased for whoever will read it on the issue or pull request.
-///
-/// Separate from the ordinary error type so the workflow can tell "this input
-/// was not acceptable", which it reports back and closes, from "this command
-/// broke", which is mine to fix.
-#[derive(Debug)]
-pub(crate) struct Rejected(pub String);
-
-impl std::fmt::Display for Rejected {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str(&self.0)
-    }
-}
-
-impl std::error::Error for Rejected {}
-
-fn reject<T>(message: impl Into<String>) -> Result<T> {
-    Err(Box::new(Rejected(message.into())))
-}
 
 // ---------------------------------------------------------------------------
 // Shared shapes
 
-fn is_comment_file(name: &str) -> bool {
+pub(crate) fn is_comment_file(name: &str) -> bool {
     let Some((stem, rest)) = name.split_once(".comment.") else {
         return false;
     };
@@ -87,7 +64,7 @@ fn is_page_path(path: &str) -> bool {
 /// Deliberately not a YAML parse. This reads single fields out of frontmatter
 /// that may have been written by the person being checked, and the less of
 /// their input that gets interpreted, the smaller the surface.
-fn frontmatter_field(source: &str, field: &str) -> Option<String> {
+pub(crate) fn frontmatter_field(source: &str, field: &str) -> Option<String> {
     let body = source
         .strip_prefix("---\n")
         .or(source.strip_prefix("---\r\n"))?;
@@ -184,70 +161,14 @@ impl Comment {
 }
 
 /// What the compose box put in the issue: the payload, and the comment's text.
-pub(crate) struct Submission {
-    pub payload: Value,
-    pub body: String,
-}
-
-/// Splits the machine-readable half of an issue body from the comment itself.
-///
-/// The shape is fixed by line rather than by searching for the closing `-->`:
-///
-/// ```text
-/// <!--hilll.dev:comment
-/// {"parent":"blog/page.md"}
-/// -->
-///
-/// the comment
-/// ```
-///
-/// The payload is whatever sits on the line after the marker, because
-/// serialised JSON never contains a raw newline. Delimiting it by the first
-/// `-->` instead looks equivalent and is not: a comment quoting a passage that
-/// contains an arrow puts `-->` *inside the payload*, and the split lands in
-/// the middle of the JSON. The body may still contain as many as it likes.
 pub(crate) fn parse_issue(issue_body: &str) -> Result<Submission> {
-    let text = issue_body.replace("\r\n", "\n");
-    let opening = format!("<!--{ISSUE_MARKER}");
+    let submission = parse_marked_issue(issue_body, ISSUE_MARKER)?;
 
-    let Some(start) = text.find(&opening) else {
-        return reject(format!("this issue carries no {ISSUE_MARKER} marker"));
-    };
-    let after_marker = start + opening.len();
-
-    // Past the remainder of the marker's own line, onto the payload's.
-    let Some(payload_start) = text[after_marker..]
-        .find('\n')
-        .map(|at| after_marker + at + 1)
-    else {
-        return reject("the comment marker is never closed");
-    };
-    let payload_end = text[payload_start..]
-        .find('\n')
-        .map(|at| payload_start + at)
-        .unwrap_or(text.len());
-
-    let payload: Value = match serde_json::from_str(text[payload_start..payload_end].trim()) {
-        Ok(value) => value,
-        Err(_) => return reject("the comment marker does not contain valid JSON"),
-    };
-    if !payload.is_object() {
-        return reject("the comment payload is not an object");
-    }
-
-    let Some(close) = text[payload_end..].find("-->").map(|at| payload_end + at) else {
-        return reject("the comment marker is never closed");
-    };
-
-    let body = text[close + 3..].trim().to_string();
-    if body.is_empty() {
+    if submission.body.is_empty() {
         return reject("the comment has no text");
     }
-    if body.len() > MAX_BODY {
-        return reject(format!("the comment is longer than {MAX_BODY} bytes"));
-    }
 
-    Ok(Submission { payload, body })
+    Ok(submission)
 }
 
 fn payload_string(payload: &Value, field: &str) -> Option<String> {
@@ -369,44 +290,25 @@ fn new_id(parent_path: &Path) -> Result<String> {
     reject("could not find a free comment id")
 }
 
-/// Four bytes of hex from the OS.
-///
-/// Only has to be unique within one page's thread — the filename already
-/// carries the page — and nothing about a comment id is a secret.
-fn random_id() -> String {
-    let mut bytes = [0u8; 4];
-    getrandom(&mut bytes);
-    bytes.iter().map(|byte| format!("{byte:02x}")).collect()
-}
-
-fn getrandom(bytes: &mut [u8; 4]) {
-    // No `rand` dependency for four bytes: the clock and the process id are
-    // mixed only to keep two runs in the same second apart, and collisions are
-    // checked against the directory anyway.
-    let now = std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .map(|since| since.as_nanos())
-        .unwrap_or(0);
-    let seed = (now as u64) ^ ((std::process::id() as u64) << 32);
-    // SplitMix64, which is short enough to read and good enough for a filename.
-    let mut z = seed.wrapping_add(0x9E37_79B9_7F4A_7C15);
-    z = (z ^ (z >> 30)).wrapping_mul(0xBF58_476D_1CE4_E5B9);
-    z = (z ^ (z >> 27)).wrapping_mul(0x94D0_49BB_1331_11EB);
-    z ^= z >> 31;
-    bytes.copy_from_slice(&(z as u32).to_be_bytes());
-}
-
 /// Reads back a comment this module wrote, for the edit path.
 fn read_comment(file: &Path) -> Comment {
-    let source = fs::read_to_string(file).unwrap_or_default();
+    parse_comment(&fs::read_to_string(file).unwrap_or_default())
+}
+
+/// A comment file's frontmatter. The body is left empty; it follows the
+/// closing `---`.
+///
+/// A revision after the first is an edit unless it says `edited: false`, and
+/// the first never is, however the file spells it.
+pub(crate) fn parse_comment(source: &str) -> Comment {
     let mut comment = Comment {
-        parent: frontmatter_field(&source, "parent").unwrap_or_default(),
-        date: frontmatter_field(&source, "date").unwrap_or_default(),
-        author: frontmatter_field(&source, "author"),
-        author_id: frontmatter_field(&source, "authorId").and_then(|id| id.parse().ok()),
-        reply_to: frontmatter_field(&source, "replyTo"),
-        quote: frontmatter_field(&source, "quote"),
-        quote_heading: frontmatter_field(&source, "quoteHeading"),
+        parent: frontmatter_field(source, "parent").unwrap_or_default(),
+        date: frontmatter_field(source, "date").unwrap_or_default(),
+        author: frontmatter_field(source, "author"),
+        author_id: frontmatter_field(source, "authorId").and_then(|id| id.parse().ok()),
+        reply_to: frontmatter_field(source, "replyTo"),
+        quote: frontmatter_field(source, "quote"),
+        quote_heading: frontmatter_field(source, "quoteHeading"),
         history: Vec::new(),
         body: String::new(),
     };
@@ -417,10 +319,11 @@ fn read_comment(file: &Path) -> Comment {
     for line in source.lines() {
         if let Some(rest) = line.strip_prefix("  - date:") {
             if in_history && let Ok(date) = serde_json::from_str::<String>(rest.trim()) {
+                let edited = !comment.history.is_empty();
                 comment.history.push(Revision {
                     date,
                     issue: None,
-                    edited: false,
+                    edited,
                 });
             }
             continue;
@@ -431,9 +334,10 @@ fn read_comment(file: &Path) -> Comment {
             }
             continue;
         }
-        if line.starts_with("    edited:") {
+        if let Some(rest) = line.strip_prefix("    edited:") {
+            let first = comment.history.len() == 1;
             if let Some(last) = comment.history.last_mut() {
-                last.edited = true;
+                last.edited = !first && rest.trim() != "false";
             }
             continue;
         }
@@ -601,54 +505,16 @@ fn civil_from_days(days: i64) -> (i64, u32, u32) {
 }
 
 pub(crate) fn from_issue(site: &Site) -> Result<()> {
-    let issue: Value = serde_json::from_str(&env::var("ISSUE_JSON").unwrap_or_default())
-        .map_err(|error| SiteError::new(format!("ISSUE_JSON is not valid JSON: {error}")))?;
-    let content_dir = site
-        .root
-        .join(env::var("CONTENT_DIR").unwrap_or_else(|_| "content".into()));
+    let (issue, content_dir) = issue_from_env(site)?;
+    let applied = apply(&issue, &content_dir, &now_iso8601()).or_else(report_rejection)?;
 
-    // A refusal is reported back on the issue by the workflow, so it has to
-    // reach it as an output before this exits.
-    let applied = match apply(&issue, &content_dir, &now_iso8601()) {
-        Ok(applied) => applied,
-        Err(error) => {
-            if error.downcast_ref::<Rejected>().is_some() {
-                write_output(&format!("rejected={error}"))?;
-            }
-            return Err(error);
-        }
-    };
-
-    let relative = applied
-        .file
-        .strip_prefix(&site.root)
-        .unwrap_or(&applied.file)
-        .to_string_lossy()
-        .replace('\\', "/");
-
-    let outputs = [
-        format!("action={}", applied.action),
-        format!("id={}", applied.id),
-        format!("file={relative}"),
-        format!("login={}", applied.login),
-        format!("parent={}", applied.parent),
-    ]
-    .join("\n");
-
-    println!("{outputs}");
-    write_output(&outputs)
-}
-
-fn write_output(outputs: &str) -> Result<()> {
-    if let Ok(path) = env::var("GITHUB_OUTPUT") {
-        use std::io::Write;
-        let mut file = fs::OpenOptions::new()
-            .append(true)
-            .create(true)
-            .open(path)?;
-        writeln!(file, "{outputs}")?;
-    }
-    Ok(())
+    publish_outputs(&[
+        ("action", applied.action.to_string()),
+        ("id", applied.id),
+        ("file", site.relative_path(&applied.file)),
+        ("login", applied.login),
+        ("parent", applied.parent),
+    ])
 }
 
 // ---------------------------------------------------------------------------
@@ -796,7 +662,7 @@ pub(crate) fn check_changes(
     refusals
 }
 
-fn git(site: &Site, args: &[&str]) -> Option<String> {
+pub(crate) fn git(site: &Site, args: &[&str]) -> Option<String> {
     let output = Command::new("git")
         .args(args)
         .current_dir(&site.root)
@@ -844,9 +710,11 @@ pub(crate) fn check_pull_request(site: &Site) -> Result<()> {
         .collect::<Vec<_>>()
         .join("\n");
     eprintln!("{message}");
-    // Multi-line outputs need a delimiter GitHub can find. The refusals are
-    // built from paths and logins, never from free text.
-    write_output(&format!("refusals<<REFUSALS\n{message}\nREFUSALS"))?;
+    // Multi-line, and built from the `author` fields of files in the pull
+    // request being checked — which is to say from text the person being
+    // refused wrote. `write_outputs` is what keeps it from inventing a second
+    // output; there is nothing to sanitise here.
+    write_outputs(&[("refusals", message.clone())])?;
 
     Err(Box::new(Rejected(message)))
 }
@@ -854,10 +722,74 @@ pub(crate) fn check_pull_request(site: &Site) -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::collections::HashMap;
+    use std::collections::{BTreeSet, HashMap};
+
+    /// The fields between the braces of `interface <name> {` in `source`.
+    fn interface_fields(source: &str, name: &str) -> BTreeSet<String> {
+        let start = source
+            .find(&format!("interface {name} {{"))
+            .unwrap_or_else(|| panic!("no interface {name}"));
+        let body = &source[start..];
+        let body = &body[body.find('{').unwrap() + 1..body.find("\n}").unwrap()];
+        body.lines()
+            .map(str::trim)
+            .filter(|line| !line.starts_with('/') && !line.starts_with('*'))
+            .filter_map(|line| line.split_once(':'))
+            .map(|(field, _)| field.trim_end_matches('?').to_string())
+            .collect()
+    }
+
+    /// The compose box writes the issue and the pull-request file, and this
+    /// module and the workflow read them, in languages that cannot see each
+    /// other. A drift does not fail anything: the issue is quietly an ordinary
+    /// one nobody answers, or a field arrives and is never read. So what they
+    /// share is checked here rather than trusted.
+    #[test]
+    fn the_compose_box_and_the_workflow_agree() {
+        let root = crate::find_repo_root().unwrap();
+        let typescript = fs::read_to_string(root.join("ts/src/comments/file.ts")).unwrap();
+        let rust = include_str!("comments.rs");
+
+        assert!(
+            typescript.contains(&format!("ISSUE_MARKER = \"{ISSUE_MARKER}\"")),
+            "ts/src/comments/file.ts does not write the {ISSUE_MARKER} marker"
+        );
+        let workflow = fs::read_to_string(root.join(".github/workflows/submission.yaml")).unwrap();
+        assert!(
+            workflow.contains(&format!("\"{ISSUE_MARKER}\"")),
+            "submission.yaml does not route on the {ISSUE_MARKER} marker"
+        );
+
+        let sent = interface_fields(&typescript, "IssuePayload");
+        let read: BTreeSet<String> = ["parent", "replyTo", "editing", "quote", "quoteHeading"]
+            .into_iter()
+            .map(String::from)
+            .collect();
+        assert_eq!(
+            sent, read,
+            "IssuePayload and resolve() disagree on the payload"
+        );
+        for field in &read {
+            assert!(
+                rust.contains(&format!("payload_string(payload, \"{field}\")")),
+                "resolve() no longer reads `{field}`"
+            );
+        }
+
+        for field in ["parent", "date", "replyTo", "quote", "quoteHeading"] {
+            assert!(
+                typescript.contains(&format!("`{field}: ${{scalar(")),
+                "buildCommentFile no longer writes `{field}`"
+            );
+            assert!(
+                rust.contains(&format!("frontmatter_field(source, \"{field}\")")),
+                "parse_comment does not read `{field}`, which buildCommentFile writes"
+            );
+        }
+    }
 
     fn issue_body(payload: &str, body: &str) -> String {
-        format!("<!--{ISSUE_MARKER}\n{payload}\n-->\n\n{body}\n")
+        crate::workflow::marked_issue(ISSUE_MARKER, payload, body)
     }
 
     fn issue(payload: &str, body: &str, login: &str, id: u64) -> Value {

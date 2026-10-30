@@ -1,8 +1,9 @@
-use crate::{Result, Site, SiteError};
+use crate::{Result, Site, SiteError, fail};
 use std::env;
 use std::ffi::{OsStr, OsString};
 use std::path::{Path, PathBuf};
 use std::process::{Child, Command, Stdio};
+use std::sync::OnceLock;
 
 pub(crate) struct ChildGuard {
     child: Child,
@@ -36,8 +37,7 @@ impl Site {
     pub(crate) fn bun_install(&self, dir: &Path, mode: InstallMode) -> Result<()> {
         let args = match mode {
             InstallMode::Locked if self.ci => os_args(&["ci"]),
-            InstallMode::Locked => os_args(&["install"]),
-            InstallMode::Unlocked => os_args(&["install"]),
+            InstallMode::Locked | InstallMode::Unlocked => os_args(&["install"]),
         };
 
         if bun_program().is_none() && dir.join("node_modules").is_dir() {
@@ -52,30 +52,11 @@ impl Site {
     }
 
     pub(crate) fn run_bun(&self, cwd: &Path, args: &[OsString]) -> Result<()> {
-        if let Some(program) = bun_program() {
-            return self.run(cwd, program, args);
-        }
-
-        Err(Box::new(SiteError::new(
-            "could not find bun; install Bun or run bun install before building",
-        )))
+        self.run(cwd, bun()?, args)
     }
 
     pub(crate) fn spawn_bun(&self, cwd: &Path, args: &[OsString]) -> Result<ChildGuard> {
-        if let Some(program) = bun_program() {
-            return self.spawn(cwd, program, args);
-        }
-
-        Err(Box::new(SiteError::new(
-            "could not find bun; install Bun or run bun install before building",
-        )))
-    }
-
-    pub(crate) fn relative_git_path(&self, path: &Path) -> Result<String> {
-        Ok(path
-            .strip_prefix(&self.root)?
-            .to_string_lossy()
-            .replace('\\', "/"))
+        self.spawn(cwd, bun()?, args)
     }
 
     pub(crate) fn warn(&self, message: &str) {
@@ -100,16 +81,9 @@ impl Site {
         let program = program.as_ref();
         self.print_command(cwd, program, args);
 
-        let child = Command::new(program)
-            .args(args)
-            .current_dir(cwd)
+        let child = command(cwd, program, args, &[])
             .spawn()
-            .map_err(|source| {
-                SiteError(format!(
-                    "failed to run {}: {source}",
-                    format_command(program, args)
-                ))
-            })?;
+            .map_err(|source| launch_error(program, args, &source))?;
 
         Ok(ChildGuard {
             child,
@@ -130,27 +104,18 @@ impl Site {
         let program = program.as_ref();
         self.print_command(cwd, program, args);
 
-        let mut command = Command::new(program);
-        command.args(args).current_dir(cwd);
-        for (key, value) in envs {
-            command.env(key, value);
-        }
-
-        let status = command.status().map_err(|source| {
-            SiteError(format!(
-                "failed to run {}: {source}",
-                format_command(program, args)
-            ))
-        })?;
+        let status = command(cwd, program, args, envs)
+            .status()
+            .map_err(|source| launch_error(program, args, &source))?;
 
         if status.success() {
-            Ok(())
-        } else {
-            Err(Box::new(SiteError(format!(
-                "command failed with {status}: {}",
-                format_command(program, args)
-            ))))
+            return Ok(());
         }
+
+        fail(format!(
+            "command failed with {status}: {}",
+            format_command(program, args)
+        ))
     }
 
     /// Runs a command and keeps everything it says until it is done.
@@ -170,29 +135,15 @@ impl Site {
         P: AsRef<OsStr>,
     {
         let program = program.as_ref();
-        let relative = cwd.strip_prefix(&self.root).unwrap_or(cwd);
         let mut log = format!(
             "$ (cd {}) {}\n",
-            if relative.as_os_str().is_empty() {
-                ".".to_string()
-            } else {
-                relative.display().to_string()
-            },
+            self.location(cwd),
             format_command(program, args)
         );
 
-        let mut command = Command::new(program);
-        command.args(args).current_dir(cwd);
-        for (key, value) in envs {
-            command.env(key, value);
-        }
-
-        let output = command.output().map_err(|source| {
-            SiteError(format!(
-                "failed to run {}: {source}",
-                format_command(program, args)
-            ))
-        })?;
+        let output = command(cwd, program, args, envs)
+            .output()
+            .map_err(|source| launch_error(program, args, &source))?;
 
         log.push_str(&String::from_utf8_lossy(&output.stdout));
         log.push_str(&String::from_utf8_lossy(&output.stderr));
@@ -201,11 +152,11 @@ impl Site {
             return Ok(log);
         }
 
-        Err(Box::new(SiteError(format!(
+        fail(format!(
             "command failed with {}: {}\n{log}",
             output.status,
             format_command(program, args)
-        ))))
+        ))
     }
 
     pub(crate) fn output_optional<P>(
@@ -218,17 +169,10 @@ impl Site {
         P: AsRef<OsStr>,
     {
         let program = program.as_ref();
-        let output = Command::new(program)
-            .args(args)
-            .current_dir(cwd)
+        let output = command(cwd, program, args, &[])
             .stderr(Stdio::inherit())
             .output()
-            .map_err(|source| {
-                SiteError(format!(
-                    "failed to run {}: {source}",
-                    format_command(program, args)
-                ))
-            })?;
+            .map_err(|source| launch_error(program, args, &source))?;
 
         if !output.status.success() {
             return Ok(None);
@@ -248,31 +192,46 @@ impl Site {
         P: AsRef<OsStr>,
     {
         let program = program.as_ref();
-        Ok(Command::new(program)
-            .args(args)
-            .current_dir(cwd)
+        Ok(command(cwd, program, args, &[])
             .stdout(Stdio::null())
             .stderr(Stdio::null())
             .status()
-            .map_err(|source| {
-                SiteError(format!(
-                    "failed to run {}: {source}",
-                    format_command(program, args)
-                ))
-            })?
+            .map_err(|source| launch_error(program, args, &source))?
             .success())
     }
 
     fn print_command(&self, cwd: &Path, program: &OsStr, args: &[OsString]) {
+        println!(
+            "$ (cd {}) {}",
+            self.location(cwd),
+            format_command(program, args)
+        );
+    }
+
+    fn location(&self, cwd: &Path) -> String {
         let relative = cwd.strip_prefix(&self.root).unwrap_or(cwd);
-        let label = if relative.as_os_str().is_empty() {
+        if relative.as_os_str().is_empty() {
             ".".to_string()
         } else {
             relative.display().to_string()
-        };
-
-        println!("$ (cd {label}) {}", format_command(program, args));
+        }
     }
+}
+
+fn command(cwd: &Path, program: &OsStr, args: &[OsString], envs: &[(&str, &str)]) -> Command {
+    let mut command = Command::new(program);
+    command.args(args).current_dir(cwd);
+    for (key, value) in envs {
+        command.env(key, value);
+    }
+    command
+}
+
+fn launch_error(program: &OsStr, args: &[OsString], source: &std::io::Error) -> SiteError {
+    SiteError::new(format!(
+        "failed to run {}: {source}",
+        format_command(program, args)
+    ))
 }
 
 pub(crate) fn os_args(args: &[&str]) -> Vec<OsString> {
@@ -291,7 +250,20 @@ where
         .is_ok_and(|status| status.success())
 }
 
-fn bun_program() -> Option<OsString> {
+fn bun() -> Result<&'static OsStr> {
+    bun_program().ok_or_else(|| {
+        SiteError::new("could not find bun; install Bun or run bun install before building").into()
+    })
+}
+
+/// Where bun is, looked up once per process: the answer costs a `bun --version`
+/// and a build asks for it a dozen times.
+fn bun_program() -> Option<&'static OsStr> {
+    static BUN: OnceLock<Option<OsString>> = OnceLock::new();
+    BUN.get_or_init(find_bun).as_deref()
+}
+
+fn find_bun() -> Option<OsString> {
     if command_succeeds("bun", &["--version"]) {
         return Some("bun".into());
     }

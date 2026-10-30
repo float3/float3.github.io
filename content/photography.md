@@ -7,8 +7,6 @@ tags:
 <link href="./photography.css" rel="stylesheet">
 <script type="module" src="/js/photography.js"></script>
 
-<p class="wasm-credit">made with rust compiled to wasm</p>
-
 <div class="photo-page">
 <section class="photo-equipment" aria-labelledby="equipment-heading">
 <h2 id="equipment-heading">equipment</h2>

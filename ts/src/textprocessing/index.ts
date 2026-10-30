@@ -1,17 +1,10 @@
-import { workedExamples } from "./examples.js"
+import { transformCards, type Package, type TransformCard } from "./transforms.js"
 
 type Transform = (text: string) => string
 
-interface TransformDefinition {
-  id: string
-  group: string
-  leftLabel: string
-  rightLabel: string
-  leftExample: string
-  rightExample?: string
+interface TransformDefinition extends TransformCard {
   leftToRight: Transform
   rightToLeft?: Transform
-  keywords?: string[]
 }
 
 interface RenderedTransform {
@@ -69,15 +62,6 @@ interface StoredGraph {
 
 const graphStorageKey = "textprocessing-node-graph-v1"
 
-/**
- * The transforms live in three wasm packages rather than one, because the CJK
- * dictionaries dwarf everything else: Chinese is 9.3 MB and Korean 708 KB
- * against 164 KB for the rest of the table put together. Whichever a visitor
- * needs is fetched when they first ask for it, so opening the page costs the
- * 164 KB and nothing more.
- */
-type Backend = "base" | "chinese" | "korean"
-
 interface TransformModule {
   main: () => void
   transform_text: (index: number, leftToRight: boolean, text: string) => string
@@ -90,25 +74,23 @@ interface GraphMath {
 }
 
 /**
- * Which package answers for each index. This mirrors the `#[cfg(feature = ...)]`
- * arms in wasm/textprocessing/src/wasm/mod.rs, and `cargo test -p site` fails if
- * the two ever disagree — a mismatch would otherwise show up only as a transform
- * quietly handing back the text it was given.
+ * The transforms live in three wasm packages rather than one, because the CJK
+ * dictionaries dwarf everything else: Chinese is 9.3 MB and Korean 708 KB
+ * against 164 KB for the rest of the table put together. Whichever a visitor
+ * needs is fetched when they first ask for it, so opening the page costs the
+ * 164 KB and nothing more. Which package answers for each index comes from
+ * the generated card table.
  */
-const chineseIndices = new Set([0, 1, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 20, 21, 22])
-const koreanIndices = new Set([3, 6, 19, 23, 24])
+const backendOfIndex = new Map(transformCards.map((card) => [card.index, card.package]))
 
-function backendFor(index: number): Backend {
-  if (chineseIndices.has(index)) {
-    return "chinese"
-  }
-  return koreanIndices.has(index) ? "korean" : "base"
+function backendFor(index: number): Package {
+  return backendOfIndex.get(index) ?? "base"
 }
 
-const loading = new Map<Backend, Promise<TransformModule>>()
-const loaded = new Map<Backend, TransformModule>()
+const loading = new Map<Package, Promise<TransformModule>>()
+const loaded = new Map<Package, TransformModule>()
 
-function importBackend(backend: Backend): Promise<TransformModule> {
+function importBackend(backend: Package): Promise<TransformModule> {
   switch (backend) {
     case "chinese":
       return import("wasm-textprocessing_chinese")
@@ -119,7 +101,7 @@ function importBackend(backend: Backend): Promise<TransformModule> {
   }
 }
 
-function ensureBackend(backend: Backend): Promise<TransformModule> {
+function ensureBackend(backend: Package): Promise<TransformModule> {
   const already = loading.get(backend)
   if (already) {
     return already
@@ -136,7 +118,7 @@ function ensureBackend(backend: Backend): Promise<TransformModule> {
 
 /** Load whatever the given transforms need before any of them is run. */
 function ensureBackendsFor(indices: Iterable<number>): Promise<unknown> {
-  const needed = new Set<Backend>()
+  const needed = new Set<Package>()
   for (const index of indices) {
     needed.add(backendFor(index))
   }
@@ -177,284 +159,11 @@ function transformIndex(transform: Transform): number | undefined {
   return indexOfTransform.get(transform)
 }
 
-const transforms: TransformDefinition[] = [
-  {
-    id: "pinyin-tones",
-    group: "Chinese",
-    leftLabel: "Pinyin tone marks",
-    rightLabel: "Pinyin tone numbers",
-    leftExample: "wèi shén me",
-    leftToRight: wasmTransform(20, true),
-    rightToLeft: wasmTransform(20, false),
-    keywords: ["mandarin", "romanization"],
-  },
-  {
-    id: "pinyin-zhuyin",
-    group: "Chinese",
-    leftLabel: "Pinyin",
-    rightLabel: "Zhuyin",
-    leftExample: "wèi shén me",
-    leftToRight: wasmTransform(0, true),
-    rightToLeft: wasmTransform(0, false),
-    keywords: ["bopomofo", "mandarin"],
-  },
-  {
-    id: "han-trad-simp",
-    group: "Chinese",
-    leftLabel: "Traditional",
-    rightLabel: "Simplified",
-    leftExample: "為什麼",
-    leftToRight: wasmTransform(1, true),
-    rightToLeft: wasmTransform(1, false),
-    keywords: ["hanzi"],
-  },
-  {
-    id: "hanzi-pinyin",
-    group: "Chinese",
-    leftLabel: "Hanzi",
-    rightLabel: "Pinyin",
-    leftExample: "漢字",
-    leftToRight: wasmTransform(4, true),
-    keywords: ["mandarin", "romanization"],
-  },
-  {
-    id: "hanzi-zhuyin",
-    group: "Chinese",
-    leftLabel: "Hanzi",
-    rightLabel: "Zhuyin",
-    leftExample: "漢字",
-    leftToRight: wasmTransform(8, true),
-    keywords: ["bopomofo"],
-  },
-  {
-    id: "hanzi-pinyin-readings",
-    group: "Chinese",
-    leftLabel: "Hanzi",
-    rightLabel: "Pinyin readings",
-    leftExample: "行",
-    leftToRight: wasmTransform(5, true),
-    keywords: ["polyphone", "readings"],
-  },
-  {
-    id: "hanzi-zhuyin-readings",
-    group: "Chinese",
-    leftLabel: "Hanzi",
-    rightLabel: "Zhuyin readings",
-    leftExample: "行",
-    leftToRight: wasmTransform(9, true),
-    keywords: ["polyphone", "readings", "bopomofo"],
-  },
-  {
-    id: "hanzi-tokenize",
-    group: "Chinese",
-    leftLabel: "Chinese text",
-    rightLabel: "Tokens",
-    leftExample: "我愛自然語言處理",
-    leftToRight: wasmTransform(22, true),
-    keywords: ["segmentation"],
-  },
-  {
-    id: "kana",
-    group: "Japanese",
-    leftLabel: "Hiragana",
-    rightLabel: "Katakana",
-    leftExample: "ひらがな",
-    leftToRight: wasmTransform(2, true),
-    rightToLeft: wasmTransform(2, false),
-    keywords: ["kana"],
-  },
-  {
-    id: "kana-romaji",
-    group: "Japanese",
-    leftLabel: "Kana",
-    rightLabel: "Romaji",
-    leftExample: "ひらがな カタカナ きょう",
-    leftToRight: wasmTransform(33, true),
-    keywords: ["hepburn", "romanization", "hiragana", "katakana"],
-  },
-  {
-    id: "hanja-hangeul",
-    group: "Korean",
-    leftLabel: "Hanja",
-    rightLabel: "Hangeul",
-    leftExample: "在元韓國",
-    leftToRight: wasmTransform(3, true),
-    rightToLeft: wasmTransform(3, false),
-    keywords: ["hangul"],
-  },
-  {
-    id: "hangeul-rr",
-    group: "Korean",
-    leftLabel: "Hangeul",
-    rightLabel: "Revised Romanization",
-    leftExample: "재원한국",
-    leftToRight: wasmTransform(19, true),
-    rightToLeft: wasmTransform(19, false),
-    keywords: ["hangul", "romanization"],
-  },
-  {
-    id: "hangeul-mr",
-    group: "Korean",
-    leftLabel: "Hangeul",
-    rightLabel: "McCune-Reischauer",
-    leftExample: "재원한국",
-    leftToRight: wasmTransform(23, true),
-    rightToLeft: wasmTransform(23, false),
-    keywords: ["hangul", "romanization"],
-  },
-  {
-    id: "korean-rr-mr",
-    group: "Korean",
-    leftLabel: "Revised Romanization",
-    rightLabel: "McCune-Reischauer",
-    leftExample: "jaewonhanguk",
-    leftToRight: wasmTransform(24, true),
-    rightToLeft: wasmTransform(24, false),
-    keywords: ["hangul", "romanization"],
-  },
-  {
-    id: "roman-numerals",
-    group: "Numbers",
-    leftLabel: "Arabic",
-    rightLabel: "Roman",
-    leftExample: "3339",
-    leftToRight: wasmTransform(7, true),
-    rightToLeft: wasmTransform(7, false),
-  },
-  {
-    id: "japanese-number",
-    group: "Numbers",
-    leftLabel: "Arabic",
-    rightLabel: "Japanese",
-    leftExample: "1234567890",
-    leftToRight: wasmTransform(18, true),
-    keywords: ["kanji"],
-  },
-  {
-    id: "chinese-number-lower",
-    group: "Numbers",
-    leftLabel: "Arabic",
-    rightLabel: "Chinese lowercase",
-    leftExample: "1234567890",
-    leftToRight: wasmTransform(15, true),
-    keywords: ["hanzi"],
-  },
-  {
-    id: "chinese-number-financial",
-    group: "Numbers",
-    leftLabel: "Arabic",
-    rightLabel: "Chinese financial",
-    leftExample: "1234567890",
-    leftToRight: wasmTransform(11, true),
-    keywords: ["hanzi", "uppercase"],
-  },
-  {
-    id: "utf8-hex",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "UTF-8 hex bytes",
-    leftExample: "hello 世界",
-    leftToRight: wasmTransform(25, true),
-    rightToLeft: wasmTransform(25, false),
-    keywords: ["bytes"],
-  },
-  {
-    id: "utf8-binary",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "UTF-8 binary bytes",
-    leftExample: "Hi",
-    leftToRight: wasmTransform(26, true),
-    rightToLeft: wasmTransform(26, false),
-    keywords: ["bytes"],
-  },
-  {
-    id: "base64",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "Base64",
-    leftExample: "hello 世界",
-    leftToRight: wasmTransform(27, true),
-    rightToLeft: wasmTransform(27, false),
-  },
-  {
-    id: "url",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "URL encoded",
-    leftExample: "hello world? a=1&b=世界",
-    leftToRight: encodeURIComponent,
-    rightToLeft: decodeURIComponent,
-    keywords: ["percent"],
-  },
-  {
-    id: "html-entities",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "HTML entities",
-    leftExample: '<span title="hill">& text</span>',
-    leftToRight: wasmTransform(28, true),
-    rightToLeft: wasmTransform(28, false),
-  },
-  {
-    id: "unicode-codepoints",
-    group: "Encoding",
-    leftLabel: "Text",
-    rightLabel: "Unicode code points",
-    leftExample: "漢字🙂",
-    leftToRight: wasmTransform(29, true),
-    rightToLeft: wasmTransform(29, false),
-    keywords: ["unicode"],
-  },
-  {
-    id: "big-endian",
-    group: "Binary",
-    leftLabel: "Unsigned integer",
-    rightLabel: "Big endian bytes",
-    leftExample: "305419896",
-    leftToRight: wasmTransform(30, true),
-    rightToLeft: wasmTransform(30, false),
-    keywords: ["network order", "hex"],
-  },
-  {
-    id: "little-endian",
-    group: "Binary",
-    leftLabel: "Unsigned integer",
-    rightLabel: "Little endian bytes",
-    leftExample: "305419896",
-    leftToRight: wasmTransform(31, true),
-    rightToLeft: wasmTransform(31, false),
-    keywords: ["small endian", "hex"],
-  },
-  {
-    id: "byte-order",
-    group: "Binary",
-    leftLabel: "Big endian bytes",
-    rightLabel: "Little endian bytes",
-    leftExample: "12 34 56 78",
-    leftToRight: wasmTransform(32, true),
-    rightToLeft: wasmTransform(32, false),
-    keywords: ["endianness", "hex"],
-  },
-  {
-    id: "cyrillic",
-    group: "Scripts",
-    leftLabel: "Cyrillic",
-    rightLabel: "Latin",
-    leftExample: "Привет, мир",
-    leftToRight: wasmTransform(34, true),
-    keywords: ["romanization", "russian"],
-  },
-  {
-    id: "greek",
-    group: "Scripts",
-    leftLabel: "Greek",
-    rightLabel: "Latin",
-    leftExample: "Καλημέρα κόσμε",
-    leftToRight: wasmTransform(35, true),
-    keywords: ["romanization"],
-  },
-]
+const transforms: TransformDefinition[] = transformCards.map((card) => ({
+  ...card,
+  leftToRight: wasmTransform(card.index, true),
+  rightToLeft: card.reversible ? wasmTransform(card.index, false) : undefined,
+}))
 
 function start() {
   const app = document.getElementById("textprocessing-app")
@@ -1838,7 +1547,7 @@ function renderTransform(definition: TransformDefinition): RenderedTransform {
   })
 
   left.textarea.value = definition.leftExample
-  right.textarea.value = definition.rightExample ?? workedExamples[definition.id] ?? ""
+  right.textarea.value = definition.rightExample
 
   return { definition, card }
 }
@@ -1895,7 +1604,7 @@ function transformMatches(definition: TransformDefinition, query: string): boole
     definition.leftLabel,
     definition.rightLabel,
     definition.leftExample,
-    ...(definition.keywords ?? []),
+    ...definition.keywords,
   ]
     .join(" ")
     .toLowerCase()

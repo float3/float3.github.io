@@ -25,6 +25,7 @@ use std::path::Path;
 /// and large enough to keep the differences that matter: at this size the five
 /// versions of one meme template in "guess we doing" — same drawing, different
 /// caption — stay comfortably apart.
+#[cfg(feature = "photos")]
 const THUMBNAIL: u32 = 32;
 
 /// How far apart two thumbnails may be, per colour byte, and still be one
@@ -51,6 +52,7 @@ const SAME_SHAPE: f64 = 0.02;
 
 /// What one file is compared by.
 #[derive(Clone, Debug, PartialEq)]
+#[cfg_attr(not(feature = "photos"), allow(dead_code))]
 pub(crate) enum Fingerprint {
     /// A still: its size, and a thumbnail of it as RGB.
     Picture {

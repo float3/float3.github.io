@@ -1,8 +1,18 @@
-use crate::{InstallMode, Result, Site, SiteError, os_args};
-use std::collections::HashMap;
-use std::path::{Path, PathBuf};
+use crate::{InstallMode, Result, Site, SiteError, fail, os_args};
+use std::collections::BTreeMap;
+use std::path::Path;
+use std::process::Command;
 use std::{env, fs};
-use toml::Table;
+use toml::{Table, Value};
+
+/// Advisories the root `bun audit` is told to pass over, each with no fixed
+/// release to move to. Anything else it reports still stops `site update`.
+///
+/// GHSA-vfj7-8cjw-p6xm: `braces` up to 3.0.3, its latest release, can exhaust
+/// the stack on deeply nested patterns. It reaches us through globby, fast-glob
+/// and micromatch in Quartz's build, which only expands patterns from this
+/// repository's own config. Drop it once braces publishes a fix.
+const IGNORED_ADVISORIES: &[&str] = &["GHSA-vfj7-8cjw-p6xm"];
 
 impl Site {
     pub(crate) fn update(&self) -> Result<()> {
@@ -19,18 +29,23 @@ impl Site {
         )?;
 
         self.run_bun(&self.root, &os_args(&["update"]))?;
-        self.run_bun(&self.root, &os_args(&["audit"]))?;
+        let mut audit = vec!["audit".to_string()];
+        audit.extend(
+            IGNORED_ADVISORIES
+                .iter()
+                .map(|advisory| format!("--ignore={advisory}")),
+        );
+        self.run_bun(
+            &self.root,
+            &audit.iter().map(Into::into).collect::<Vec<_>>(),
+        )?;
         self.bun_install(&self.root, InstallMode::Unlocked)?;
 
         self.node_update(&self.root.join("ts"), "src")?;
 
         // Every Rust crate here is a member of the one root workspace, and each
-        // command below carries --workspace, so running this from the root covers
-        // all of them once. It used to run a directory at a time over a list that
-        // named `wasm/tuningplayground/tuning_systems` -- a crate renamed to
-        // chord_generator -- so the first thing `update` did was fail on a
-        // directory that does not exist, and the six passes after it would have
-        // been six repeats of the same workspace-wide work anyway.
+        // command below carries --workspace, so running this once from the root
+        // covers all of them.
         self.cargo_update(&self.root)
     }
 
@@ -42,6 +57,15 @@ impl Site {
         self.run_bun(dir, &os_args(&["run", "eslint", lint_target, "--fix"]))
     }
 
+    /// Upgrades the crates, then lints, fixes, checks and tests the workspace
+    /// once per feature (`--each-feature`: no features, the defaults, and each
+    /// feature on its own) and lints it once more with every feature on.
+    ///
+    /// Not `--feature-powerset`: that builds every combination of features, and
+    /// `wasm/wasm` has fifteen, which is 61,458 builds of one crate. It filled a
+    /// terabyte disk with 142 GB of target directory long before finishing.
+    /// What it alone would catch is a lint that needs two particular features
+    /// together, and the all-features run catches nearly all of those.
     fn cargo_update(&self, dir: &Path) -> Result<()> {
         self.run(dir, "cargo", &os_args(&["upgrade"]))?;
         self.run(dir, "cargo", &os_args(&["update", "--workspace"]))?;
@@ -49,9 +73,25 @@ impl Site {
             dir,
             "cargo",
             &os_args(&[
+                "clippy",
+                "--fix",
+                "--allow-dirty",
+                "--allow-staged",
+                "--all-targets",
+                "--workspace",
+                "--all-features",
+                "--",
+                "-D",
+                "warnings",
+            ]),
+        )?;
+        self.run(
+            dir,
+            "cargo",
+            &os_args(&[
                 "hack",
                 "clippy",
-                "--feature-powerset",
+                "--each-feature",
                 "--fix",
                 "--allow-dirty",
                 "--allow-staged",
@@ -68,7 +108,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "fix",
-                "--feature-powerset",
+                "--each-feature",
                 "--allow-dirty",
                 "--allow-staged",
                 "--all-targets",
@@ -81,7 +121,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "check",
-                "--feature-powerset",
+                "--each-feature",
                 "--all-targets",
                 "--workspace",
             ]),
@@ -92,7 +132,7 @@ impl Site {
             &os_args(&[
                 "hack",
                 "test",
-                "--feature-powerset",
+                "--each-feature",
                 "--release",
                 "--verbose",
                 "--all-targets",
@@ -110,9 +150,7 @@ impl Site {
 
     pub(crate) fn commit(&self, message: Option<String>) -> Result<()> {
         if !self.ci {
-            return Err(Box::new(SiteError::new(
-                "commit is CI-only; review and commit local changes with git".to_string(),
-            )));
+            return fail("commit is CI-only; review and commit local changes with git");
         }
 
         let message = message
@@ -146,6 +184,8 @@ impl Site {
             return Ok(());
         }
 
+        self.refuse_staged_workflow_changes()?;
+
         self.run(
             &self.root,
             "git",
@@ -153,71 +193,86 @@ impl Site {
         )?;
         self.run(&self.root, "git", &os_args(&["push"]))
     }
+
+    /// Refuses to commit a change to a workflow.
+    ///
+    /// `git add -A` is right for these two callers — `generate` and `update`
+    /// between them touch content, lockfiles, formatting and generated
+    /// TypeScript, and enumerating that is a list that would go stale — but it
+    /// means whatever ran just before this decides what gets pushed to the
+    /// default branch. A generator or a dependency that wrote into
+    /// `.github/workflows` would be writing the next run's own instructions,
+    /// with `contents: write` in hand.
+    ///
+    /// GitHub already refuses such a push, because the token it mints for a run
+    /// has no `workflow` scope. That is a fact about GitHub's side rather than
+    /// about this repository, and it fails as a rejected push at the very end
+    /// rather than as a sentence saying what happened. Nothing generated here
+    /// has ever been a workflow.
+    fn refuse_staged_workflow_changes(&self) -> Result<()> {
+        let staged = Command::new("git")
+            .args(["diff", "--cached", "--name-only"])
+            .current_dir(&self.root)
+            .output()?;
+
+        let offending: Vec<String> = String::from_utf8_lossy(&staged.stdout)
+            .lines()
+            .map(str::trim)
+            .filter(|path| {
+                path.starts_with(".github/workflows/") || path.starts_with(".github/actions/")
+            })
+            .map(str::to_string)
+            .collect();
+
+        if offending.is_empty() {
+            return Ok(());
+        }
+
+        fail(format!(
+            "refusing to commit workflow changes from CI: {}. \
+             Nothing this command generates is a workflow, so something has \
+             written one; push it by hand after reading it",
+            offending.join(", ")
+        ))
+    }
 }
 
+/// Lists every path dependency that more than one workspace member declares
+/// for itself, which is the shape of a dependency that belongs in
+/// `[workspace.dependencies]`.
 pub(crate) fn parse_cargo_toml(site: &Site) -> Result<()> {
-    // find all cargo.tomls
-    let mut cargo_tomls = Vec::new();
-    collect_files_with_name(&site.root, "Cargo.toml", &mut cargo_tomls)?;
+    let root = fs::read_to_string(site.root.join("Cargo.toml"))?.parse::<Table>()?;
+    let members = root
+        .get("workspace")
+        .and_then(Value::as_table)
+        .and_then(|workspace| workspace.get("members"))
+        .and_then(Value::as_array)
+        .ok_or_else(|| SiteError::new("Cargo.toml declares no workspace members"))?;
 
-    // find all duplicate dependencies that are not using the workspace version
-    let mut dependencies: HashMap<String, Vec<PathBuf>> = HashMap::new();
-    for cargo_toml in cargo_tomls {
-        let content = fs::read_to_string(&cargo_toml)?;
-        let parsed = content.parse::<Table>()?;
-        let empty_table = Table::new();
-        let deps = parsed
-            .get("dependencies")
-            .and_then(|d| d.as_table())
-            .unwrap_or(&empty_table);
-        for (name, value) in deps {
-            if value.get("path").and_then(|v| v.as_str()).is_some() {
-                dependencies
-                    .entry(name.clone())
-                    .or_default()
-                    .push(cargo_toml.clone());
+    let mut declared: BTreeMap<String, Vec<&str>> = BTreeMap::new();
+    for member in members.iter().filter_map(Value::as_str) {
+        let manifest =
+            fs::read_to_string(site.root.join(member).join("Cargo.toml"))?.parse::<Table>()?;
+        let Some(dependencies) = manifest.get("dependencies").and_then(Value::as_table) else {
+            continue;
+        };
+
+        for (name, value) in dependencies {
+            if value.get("path").and_then(Value::as_str).is_some() {
+                declared.entry(name.clone()).or_default().push(member);
             }
         }
     }
 
-    for (name, cargo_tomls) in dependencies {
-        if cargo_tomls.len() <= 1 {
+    for (name, members) in declared {
+        if members.len() <= 1 {
             continue;
         }
-        println!(
-            "Dependency {name} is duplicated {} times in crates:",
-            cargo_tomls.len()
-        );
-        for cargo_toml in &cargo_tomls {
-            println!("  {}", display_path(site, cargo_toml.parent().unwrap()));
+        println!("{name} is a path dependency of {} crates:", members.len());
+        for member in members {
+            println!("  {member}");
         }
     }
 
     Ok(())
-}
-
-fn collect_files_with_name(
-    root: &std::path::PathBuf,
-    name: &str,
-    files: &mut Vec<PathBuf>,
-) -> Result<()> {
-    for entry in fs::read_dir(root)? {
-        let entry = entry?;
-        let path = entry.path();
-        if path.is_dir() {
-            collect_files_with_name(&path, name, files)?;
-        } else if path.file_name().and_then(|n| n.to_str()) == Some(name) {
-            files.push(path);
-        }
-    }
-    Ok(())
-}
-
-fn display_path(site: &Site, path: &Path) -> String {
-    let p = match site.relative_git_path(path) {
-        Ok(p) => p,
-        Err(_) => path.display().to_string(),
-    };
-
-    p.to_string().replace(r"\\?\", "")
 }

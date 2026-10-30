@@ -294,8 +294,8 @@ class CommentUi {
     this.listen(this.require(".comment-copy"), "click", () => {
       if (!this.written()) return
       // Whatever the preview is showing, which is whatever the button would
-      // send. Copying the file while the screen shows an issue would be the
-      // same mismatch the old label had.
+      // send: copying the file while the screen shows an issue would be a
+      // mismatch.
       const { preview } = this.compose()
       navigator.clipboard
         .writeText(preview)

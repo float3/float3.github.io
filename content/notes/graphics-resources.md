@@ -8,7 +8,7 @@ tags:
   - shaders
 ---
 
-you can also find all these links [here](/plaintext/graphics-resources.txt)
+you can also find all these links [here](/misc/plaintext/graphics-resources.txt)
 
 - [Siggraph](#siggraph)
   - [Siggraph 2009](#siggraph-2009)
@@ -282,7 +282,7 @@ you can also find all these links [here](/plaintext/graphics-resources.txt)
 
 ==============================================================================================================
 
-# Other
+# other
 
 - <https://docs.unity3d.com/Packages/com.unity.render-pipelines.high-definition@10.0/manual/Lit-Shader.html>
 - <https://www.fxguide.com/fxfeatured/pixar-deep-dive-on-sss-siggraph-preview/>
@@ -324,3 +324,4 @@ you can also find all these links [here](/plaintext/graphics-resources.txt)
 - <https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.104.2569&rep=rep1&type=pdf>
 - <https://sci-hub.se/10.1145/3197517.3201351>
 - <https://www.scratchapixel.com/>
+- <https://blog.selfshadow.com/publications/turquin/ms_comp_final.pdf>

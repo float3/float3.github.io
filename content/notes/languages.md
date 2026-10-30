@@ -4,6 +4,6 @@ tags:
   - language
 ---
 
-## Learning Languages
+## learning languages
 
 ### Anki
