@@ -648,7 +648,10 @@ mod tests {
             .iter()
             .map(|path| path.file_stem().unwrap().to_string_lossy().into_owned())
             .collect();
-        let loaded = scripts_pages_load(&root);
+        let mut loaded = scripts_pages_load(&root);
+        // The Elm graph is compiled by `site elm`, not bundled from ts/src.
+        let elm = Path::new(crate::elm::OUTPUT).file_stem().unwrap();
+        loaded.remove(&*elm.to_string_lossy());
 
         let unused: Vec<&String> = bundled.difference(&loaded).collect();
         assert!(

@@ -18,7 +18,7 @@ use std::fs;
 use std::path::Path;
 
 /// Where the compiled program lands, under the directory `site wasm` owns.
-const OUTPUT: &str = "content/js/elm.js";
+pub(crate) const OUTPUT: &str = "content/js/elm.js";
 
 /// The compiler's own output, before esbuild. It sits beside the finished file
 /// rather than in a temporary directory so that a failed build leaves it where
