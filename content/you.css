@@ -1,3 +1,60 @@
+.browser-report .who {
+  margin: 0 0 2rem;
+}
+
+.browser-report .who h2 {
+  margin: 0.4rem 0 0.8rem;
+}
+
+.browser-report .who p {
+  line-height: 1.9;
+}
+
+.browser-report .who-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: var(--highlight);
+  color: var(--secondary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.browser-report .who-badge::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.browser-report .chip {
+  padding: 0.05rem 0.3rem;
+  border-radius: 4px;
+  background: var(--highlight);
+  border-bottom: 2px solid var(--lightgray);
+  color: var(--dark);
+  font-weight: 600;
+  cursor: help;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.browser-report .chip.warn {
+  border-bottom-color: var(--tertiary);
+}
+
+.browser-report .chip.muted {
+  background: none;
+  border-bottom: 1px dotted var(--gray);
+  color: var(--gray);
+  font-weight: 400;
+}
+
 .browser-report .sub {
   margin: 0 0 1rem;
   color: var(--gray);

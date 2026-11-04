@@ -1,5 +1,9 @@
 "use strict"
 
+import { simpleHash } from "./you/hash.js"
+import { lookupNetwork } from "./you/network.js"
+import { renderProfile } from "./you/profile.js"
+
 /** As much of the Web MIDI API as this page actually looks at. */
 interface MidiPort {
   name?: string
@@ -94,6 +98,8 @@ const refreshBtn = requiredElement<HTMLButtonElement>("#refreshBtn")
 const expandBtn = requiredElement<HTMLButtonElement>("#expandBtn")
 const collapseBtn = requiredElement<HTMLButtonElement>("#collapseBtn")
 const copyBtn = requiredElement<HTMLButtonElement>("#copyBtn")
+const whoBadge = requiredElement<HTMLElement>("#whoBadge")
+const whoBody = requiredElement<HTMLElement>("#who")
 
 const toPlain = (value: unknown): unknown => {
   if (value instanceof Error) {
@@ -127,16 +133,6 @@ const toPlain = (value: unknown): unknown => {
   }
 
   return value
-}
-
-const simpleHash = (str: string): string => {
-  let hash = 0
-
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash * 31 + str.charCodeAt(i)) >>> 0
-  }
-
-  return `0x${hash.toString(16).padStart(8, "0")}`
 }
 
 function addSummary(label: string, value: unknown): void {
@@ -541,32 +537,6 @@ async function audioFingerprint(): Promise<unknown> {
   }
 }
 
-async function getPublicIP(): Promise<unknown> {
-  const services = [
-    "https://api.ipify.org?format=json",
-    "https://api64.ipify.org?format=json",
-    "https://api.ip.sb/jsonip",
-  ]
-
-  for (const url of services) {
-    try {
-      const response = await fetch(url, {
-        cache: "no-store",
-      })
-
-      if (!response.ok) continue
-
-      return await response.json()
-    } catch (error) {
-      console.log(url, error)
-    }
-  }
-
-  return {
-    error: "Unable to determine public IP",
-  }
-}
-
 async function getBatteryInfo(): Promise<unknown> {
   if (!nav.getBattery) return "Unavailable"
 
@@ -863,7 +833,7 @@ async function buildReport(): Promise<void> {
 
   const [
     clientHints,
-    publicIP,
+    network,
     battery,
     storage,
     permissions,
@@ -874,7 +844,7 @@ async function buildReport(): Promise<void> {
     voices,
   ] = await Promise.all([
     getClientHints(),
-    getPublicIP(),
+    lookupNetwork(),
     getBatteryInfo(),
     getStorageInfo(),
     getPermissionsInfo(),
@@ -898,7 +868,7 @@ async function buildReport(): Promise<void> {
     cssFeatures: getCSSFeatureInfo(),
     capabilities: getInstalledCapabilities(),
     performance: getPerformanceInfo(),
-    publicIP,
+    network,
     battery,
     storage,
     permissions,
@@ -921,13 +891,7 @@ async function buildReport(): Promise<void> {
   addSummary("screen", `${screenInfo.screenWidth} × ${screenInfo.screenHeight}`)
   addSummary("touch", nav.maxTouchPoints > 0 ? `Yes (${nav.maxTouchPoints})` : "No")
 
-  const publicIPRecord =
-    publicIP && typeof publicIP === "object" ? (publicIP as Record<string, unknown>) : {}
-
-  addSummary(
-    "Public IP",
-    publicIPRecord.ip ?? publicIPRecord.responseText ?? publicIPRecord.error ?? "Unknown",
-  )
+  addSummary("public IP", network.preferred ?? network.ipv4 ?? network.geo?.ip ?? "unknown")
 
   addSection("navigator", state.data.navigator)
   addSection("client hints", state.data.clientHints)
@@ -937,7 +901,7 @@ async function buildReport(): Promise<void> {
   addSection("CSS and feature detection", state.data.cssFeatures)
   addSection("capabilities", state.data.capabilities)
   addSection("performance", state.data.performance)
-  addSection("public IP", state.data.publicIP)
+  addSection("network", state.data.network)
   addSection("battery", state.data.battery)
   addSection("storage", state.data.storage)
   addSection("permissions", state.data.permissions)
@@ -952,6 +916,18 @@ async function buildReport(): Promise<void> {
   addSection("plugins", state.data.plugins)
   addSection("MIME types", state.data.mimeTypes)
   addSection("loaded fonts", state.data.fonts)
+
+  state.data.profile = await renderProfile(
+    { badge: whoBadge, body: whoBody },
+    {
+      network,
+      highEntropy: clientHints.highEntropyHints,
+      webgl: state.data.webgl,
+      battery,
+      canvas: state.data.canvasFingerprint,
+      audio: state.data.audioFingerprint,
+    },
+  )
 }
 
 function expandAll(): void {

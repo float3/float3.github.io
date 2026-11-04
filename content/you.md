@@ -6,8 +6,13 @@ tags:
 
 <div class="browser-report">
   <div class="wrap">
+    <section class="who" aria-live="polite">
+      <p class="who-badge" id="whoBadge">reading</p>
+      <h2>who sites think you are</h2>
+      <div id="who"></div>
+    </section>
     <p class="sub">
-      what your browser exposes to javascript. your public ip comes from ipify, or ip.sb if that fails; nothing else leaves the page.
+      what your browser exposes to javascript. your public ip, and who owns it, come from ipify and ip.sb; nothing else leaves the page. hover a highlighted word to see where it came from.
     </p>
     <div class="toolbar">
       <button id="refreshBtn">refresh</button>
