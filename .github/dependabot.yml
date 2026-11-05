@@ -15,6 +15,10 @@ updates:
     ignore:
       - dependency-name: "shiki"
         versions: ["*"]
+      # The quartz-community plugins render with Preact 10, and Preact 11.1
+      # drops their vnodes, leaving every page without its title and body.
+      - dependency-name: "preact"
+        versions: [">=11.1.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

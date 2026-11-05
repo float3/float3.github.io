@@ -21,7 +21,7 @@
         "lightningcss": "^1.33.0",
         "micromorph": "^0.4.5",
         "minimatch": "^11.0.3",
-        "preact": "^11.1.1",
+        "preact": "11.0.2",
         "preact-render-to-string": "^6.8.2",
         "pretty-bytes": "^7.2.0",
         "pretty-time": "^1.1.0",
@@ -687,7 +687,7 @@
 
     "possible-typed-array-names": ["possible-typed-array-names@1.1.0", "", {}, "sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg=="],
 
-    "preact": ["preact@11.1.1", "", { "peerDependencies": { "preact-render-to-string": ">=6.7.0" }, "optionalPeers": ["preact-render-to-string"] }, "sha512-vpFVfai437pbuLri7XVeslCPfrEZX6Z1S2gV+MOFrA/kji+NKUXvH7y01EnVjA1guLigfkVp77Sqipd4SIllCg=="],
+    "preact": ["preact@11.0.2", "", { "peerDependencies": { "preact-render-to-string": ">=6.7.0" }, "optionalPeers": ["preact-render-to-string"] }, "sha512-ofG+Lqznbt13JKDjdWPLTo5ONBqcNgidqnLRzJBG6PZjzGXOLRd5y9r448+HUofTyDbgKWVrPhHP0IgcxEZslQ=="],
 
     "preact-render-to-string": ["preact-render-to-string@6.8.2", "", { "peerDependencies": { "preact": ">=10 || >= 11.0.0-0" } }, "sha512-Hdx7cKD3AMYgt795TdddBpUbuGEFoL/VeA6s7VrBt9Gjt0r6rCy5wMp5xkDjQ9cbKj62frHsEx1x8yV6EjoOpg=="],
 
