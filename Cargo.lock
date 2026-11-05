@@ -2540,9 +2540,9 @@ dependencies = [
 
 [[package]]
 name = "roman"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9f88af150ddaeec4dc9b1a80061ecb0f5459e1c720ebe15ebb2b93f4e6b6272"
+checksum = "b4c7fe559c309120383a8eda75b4ec30dc476431dc2b6603f24217ea96a626ba"
 
 [[package]]
 name = "rust-embed"
