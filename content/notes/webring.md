@@ -6,9 +6,7 @@ tags:
 
 <link href="./webring.css" rel="stylesheet" type="text/css">
 
-buttons cut out of [cody's video](https://x.com/codycollier/status/2118696130691445130)
-
-<div class="webring-buttons">
+<div class="webring-buttons" data-source="88x31 buttons cut out of codycollier's video, https://x.com/codycollier/status/2118696130691445130">
 <img src="/misc/webring/00.gif" width="88" height="31" alt="HOT GPUs IN YOUR AREA, TRAIN TONIGHT?" title="HOT GPUs IN YOUR AREA, TRAIN TONIGHT?" loading="lazy">
 <img src="/misc/webring/01.gif" width="88" height="31" alt="WE BUY GOLD, SILVER, DDR5" title="WE BUY GOLD, SILVER, DDR5" loading="lazy">
 <img src="/misc/webring/02.gif" width="88" height="31" alt="SKILL.MD ISSUE" title="SKILL.MD ISSUE" loading="lazy">
