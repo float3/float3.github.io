@@ -1,0 +1,18 @@
+/* 88x31 buttons, shown at their own size, packed edge to edge the way they
+   sit in a web 1.0 footer. */
+
+.webring-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 1rem 0;
+}
+
+.webring-buttons img {
+  display: block;
+  width: 88px;
+  height: 31px;
+  margin: 0;
+  border-radius: 0;
+  image-rendering: pixelated;
+}
