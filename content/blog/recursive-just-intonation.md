@@ -410,8 +410,6 @@ blog posts:
 
 - [recursive tuning](/blog/recursive-tuning.md): the generalization of this post,
   pair any two tuning systems and listen to the matrix
-- [a Breadboard for your Fretboard](/blog/a-breadboard-for-your-breadboard.md):
-  learning electronics by building a guitar pedal
 
 tools:
 
