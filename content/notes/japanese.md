@@ -1,4 +1,3 @@
-```
 ---
 title: Japanese
 tags:
@@ -13,9 +12,9 @@ tags:
   - [Katakana ligature](#katakana-ligature)
   - [Polysyllabic katakana](#polysyllabic-katakana)
   - [Origin of Hiragana and Katakana](#origin-of-hiragana-and-katakana)
-  - [diacritics](#diacritics)
-  - [digraphs](#digraphs)
-  - [uncommon kana](#uncommon-kana)
+  - [Diacritics](#diacritics)
+  - [Digraphs](#digraphs)
+  - [Uncommon Kana](#uncommon-kana)
     - [あ゙ (ア゙) ゔ ん゙](#あ゙-ア゙-ゔ-ん゙)
     - [wu](#wu)
     - [va vi vu ve vo](#va-vi-vu-ve-vo)
@@ -24,13 +23,13 @@ tags:
     - [l](#l)
     - [鼻濁音 (ng)](#鼻濁音-ng)
   - [ん](#ん)
-  - [おう/えい](#おうえい)
+  - [おう / えい](#おう--えい)
   - [一ヶ](#一ヶ)
-  - [は](#は)
-  - [haku（拍）or mōra（モーラ）](#haku拍or-mōraモーラ)
-  - [w kana](#w-kana)
+  - [は / へ / を](#は--へ--を)
+  - [Haku（拍）or Mōra（モーラ）](#haku拍or-mōraモーラ)
+  - [W kana](#w-kana)
 - [Rendaku](#rendaku)
-- [Pitch accent](#pitch-accent)
+- [Pitch Accent](#pitch-accent)
 - [Functional Marks](#functional-marks)
   - [Iteration marks](#iteration-marks)
 - [Kanji](#kanji)
@@ -38,7 +37,7 @@ tags:
   - [Weird Kanji](#weird-kanji)
     - [Kanji that are unique in JP (different from both traditional and simplified chinese)](#kanji-that-are-unique-in-jp-different-from-both-traditional-and-simplified-chinese)
 
-## Kana
+## kana
 
 |         | **∅**                                                       | **k**                                                         | **s**                                                           | **t**                                                           | **n**                                                         | **h**                                                         | **m**                                                         | **y**                                                         | **r**                                                         | **w**                                                         |
 | ------- | ----------------------------------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------- | --------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- | ------------------------------------------------------------- |
@@ -51,7 +50,7 @@ tags:
 
 kana marked with \* are obsolete
 
-### Archaic Kana
+### archaic kana
 
 |       |                       **y**                       |                              **w**                              |
 | :---: | :-----------------------------------------------: | :-------------------------------------------------------------: |
@@ -69,7 +68,7 @@ kana marked with \* are obsolete
 - _si_, _ti_, _tu_, _hu_, _wi_, _we_ and _wo_ are usually romanized respectively as _shi_, _chi_, _tsu_, _fu_, _i_, _e_ and _o_ instead, according to contemporary pronunciation.
 - the [sokuon](https://en.wikipedia.org/wiki/Sokuon "Sokuon") or small _tsu_ (っ/ッ) indicates [gemination](https://en.wikipedia.org/wiki/Gemination "Gemination") of the following consonant. In Hepburn-style romanization, for example, って is _tte_ and ショック is _shokku_. Exact romanization conventions vary by system.
 
-### Hiragana Ligature
+### hiragana ligature
 
 | historical/Hepburn           | image                                                                                                                                                                                            | character                                            | origin     |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------- | ---------- |
@@ -82,13 +81,13 @@ kana marked with \* are obsolete
 |                              | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Hiragana_mairasesoro_2.svg/20px-Hiragana_mairasesoro_2.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_mairasesoro_2.svg) | -                                                    |            |
 | より/yori                    | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Hiragana_digraph_Yori.svg/20px-Hiragana_digraph_Yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_digraph_Yori.svg)    | [ゟ](https://en.m.wikipedia.org/wiki/%E3%82%9F "ゟ") | より       |
 
-### Polysyllabic hiragana
+### polysyllabic hiragana
 
 | historical/Hepburn | image                                                                                                                                                                 | character | origin |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------ |
 | なり/nari          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hiragana_nari.svg/20px-Hiragana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_nari.svg) | 𬼂         | 也     |
 
-### Katakana ligature
+### katakana ligature
 
 | historical/Hepburn | image                                                                                                                                                                       | character                                                                                                               | origin |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------ |
@@ -99,7 +98,7 @@ kana marked with \* are obsolete
 | ドモ/domo          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Katakana_domo.svg/25px-Katakana_domo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_domo.svg)       | -                                                                                                                       | ドモ   |
 | ヨリ/yori          | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Katakana-yori.svg/20px-Katakana-yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana-yori.svg)       | -                                                                                                                       | ヨリ   |
 
-### Polysyllabic katakana
+### polysyllabic katakana
 
 | historical/Hepburn | image                                                                                                                                                                                         | character                                            | origin |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | ------ |
@@ -112,7 +111,7 @@ kana marked with \* are obsolete
 | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Hiragana_digraph_Yori.svg/24px-Hiragana_digraph_Yori.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_digraph_Yori.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Katakana_digraph_Koto.svg/24px-Katakana_digraph_Koto.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_digraph_Koto.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Katakana_tomo.svg/24px-Katakana_tomo.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_tomo.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Katakana_nari.svg/24px-Katakana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_nari.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Katakana_shite.svg/24px-Katakana_shite.svg.png)](https://en.m.wikipedia.org/wiki/File:Katakana_shite.svg) | [![](https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Hiragana_nari.svg/24px-Hiragana_nari.svg.png)](https://en.m.wikipedia.org/wiki/File:Hiragana_nari.svg) |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
-### Origin of Hiragana and Katakana
+### origin of hiragana and katakana
 
 ![](/misc/media/kana_development_chart.png)
 
@@ -154,7 +153,7 @@ kana marked with \* are obsolete
 | **w** | ワ    | ヰ    | 𛄢     | ヱ    | ヲ    |         |
 -->
 
-### Diacritics
+### diacritics
 
 |       |                              **g**                              |                               **z**                               |                               **d**                               |                              **b**                              |                              **p**                              |                              **ng**                               |                               **l**                               |
 | :---: | :-------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :---------------------------------------------------------------: | :---------------------------------------------------------------: |
@@ -164,9 +163,9 @@ kana marked with \* are obsolete
 | **e** | [げゲ](<https://en.m.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") |  [ぜゼ](<https://en.m.wikipedia.org/wiki/Se_(kana)> "Se (kana)")  |  [でデ](<https://en.m.wikipedia.org/wiki/Te_(kana)> "Te (kana)")  | [べベ](<https://en.m.wikipedia.org/wiki/He_(kana)> "He (kana)") | [ぺペ](<https://en.m.wikipedia.org/wiki/He_(kana)> "He (kana)") | [け゚ケ゚](<https://en.m.wikipedia.org/wiki/Ke_(kana)> "Ke (kana)") | [れ゚レ゚](<https://en.m.wikipedia.org/wiki/Re_(kana)> "Re (kana)") |
 | **o** | [ごゴ](<https://en.m.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") |  [ぞゾ](<https://en.m.wikipedia.org/wiki/So_(kana)> "So (kana)")  |  [どド](<https://en.m.wikipedia.org/wiki/To_(kana)> "To (kana)")  | [ぼボ](<https://en.m.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [ぽポ](<https://en.m.wikipedia.org/wiki/Ho_(kana)> "Ho (kana)") | [こ゚コ゚](<https://en.m.wikipedia.org/wiki/Ko_(kana)> "Ko (kana)") | [ろ゚ロ゚](<https://en.m.wikipedia.org/wiki/Ro_(kana)> "Ro (kana)") |
 
-In modern standard Japanese, **じ and ぢ** are generally pronounced alike, as are **ず and づ**. Their spellings remain distinct because of historical and orthographic conventions, including particular lexical and rendaku patterns.
+in modern standard Japanese, **じ and ぢ** are generally pronounced alike, as are **ず and づ**. their spellings remain distinct because of historical and orthographic conventions, including particular lexical and rendaku patterns.
 
-### Digraphs
+### digraphs
 
 |        |                              **k**                              |                              **s**                              |                              **t**                              |                              **n**                              |                              **h**                              |                              **m**                              |                              **r**                              |
 | :----: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: | :-------------------------------------------------------------: |
@@ -189,14 +188,14 @@ In modern standard Japanese, **じ and ぢ** are generally pronounced alike, as 
 - Note that the き゚ゃ, き゚ゅ and き゚ょ, though they exist, [are not used in standard Japanese orthography](https://en.wikipedia.org/wiki/Dakuten_and_handakuten#Phonetic_shifts "Dakuten and handakuten").
 - _zi_+_y_\* and _di_+_y_\* are often transcribed _j_\* instead of _zy_\* and _dy_\*, according to contemporary pronunciation. The form [_jy_\*](https://en.wikipedia.org/wiki/W%C4%81puro_r%C5%8Dmaji#Spelling_conventions "Wāpuro rōmaji") is also used in some cases.
 
-### Uncommon Kana
+### uncommon kana
 
 https://dl.ndl.go.jp/pid/854017/1/22
 
 #### あ゙ (ア゙) ゔ ん゙
 
-In informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound.
-In one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, “あ゙” is used to represent the relaxed sound one might make when soaking in a hot bath.
+in informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound.
+in one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, “あ゙” is used to represent the relaxed sound one might make when soaking in a hot bath.
 
 #### wu
 
@@ -204,7 +203,7 @@ In one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefec
 
 #### va vi vu ve vo
 
-Usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], ビ[bi], ブ[bu], ベ[be], and ボ[bo], for example, in loanwords such as バイオリン (baiorin "violin"), but (less usually) the distinction can be preserved by using [w-] with voicing marks or by using [wu] and a vowel kana, as in
+usually, [va], [vi], [vu], [ve], [vo] are represented respectively by バ[ba], ビ[bi], ブ[bu], ベ[be], and ボ[bo], for example, in loanwords such as バイオリン (baiorin "violin"), but (less usually) the distinction can be preserved by using [w-] with voicing marks or by using [wu] and a vowel kana, as in
 
 - ヴァ (ヷ) (va)
 - ヴィ (ヸ) (vi)
@@ -222,11 +221,11 @@ hiragana:
 
 #### small e
 
-In loanwords, digraphs with a small e-kana can be formed. For example, キェ (or きぇ in hiragana), which is transcribed as kye.
+in loanwords, digraphs with a small e-kana can be formed. for example, キェ (or きぇ in hiragana), which is transcribed as kye.
 
 #### kwa kwi kwe
 
-In earlier Japanese, digraphs could also be formed with w-kana. Although obsolete in modern Japanese, the digraphs くゎ (/kʷa/) and くゐ/くうぃ(/kʷi/), are preserved in certain Okinawan orthographies. In addition, the kana え can be used in Okinawan to form the digraph くぇ, which represents the /kʷe/ sound.
+in earlier Japanese, digraphs could also be formed with w-kana. although obsolete in modern Japanese, the digraphs くゎ (/kʷa/) and くゐ/くうぃ(/kʷi/), are preserved in certain Okinawan orthographies. in addition, the kana え can be used in Okinawan to form the digraph くぇ, which represents the /kʷe/ sound.
 
 - くゎ (kwa)
 - くゐ / くうぃ (kwi)
@@ -262,13 +261,13 @@ and therefore also:
 - き゚ゅ
 - き゚ょ
 
-These are phonetic/extended forms rather than part of standard written Japanese; they may appear in dialectal or phonetic notation, including descriptions of older speech in Yamagata Prefecture (山形弁).
+these are phonetic/extended forms rather than part of standard written Japanese; they may appear in dialectal or phonetic notation, including descriptions of older speech in Yamagata Prefecture (山形弁).
 
 ### ん
 
-The kana **ん** represents a moraic nasal. Its exact phonetic realization changes according to the following sound and its position in the phrase.
+the kana **ん** represents a moraic nasal. its exact phonetic realization changes according to the following sound and its position in the phrase.
 
-Common realizations include:
+common realizations include:
 
 - **[n]** before alveolar consonants such as /n, t, d, r, ts, z/
 - **[m]** before /m, p, b/
@@ -277,21 +276,21 @@ Common realizations include:
 - **[ɴ]** at the end of an utterance or in other contexts where a uvular realization occurs
 - **Nasalization of the preceding vowel** or related nasal realizations can occur in other environments
 
-The exact phonetic realization is context-dependent; the important orthographic point is that **ん counts as one mora**.
+the exact phonetic realization is context-dependent; the important orthographic point is that **ん counts as one mora**.
 
 ### おう / えい
 
-In modern Japanese pronunciation, sequences such as **おう** and **えい** often correspond approximately to long vowels, [oː] and [eː], respectively. The spelling normally remains **おう** or **えい**.
+in modern Japanese pronunciation, sequences such as **おう** and **えい** often correspond approximately to long vowels, [oː] and [eː], respectively. the spelling normally remains **おう** or **えい**.
 
-Examples:
+examples:
 
 - 昨日（きのう） is commonly pronounced approximately *kinō*.
 - 行こう（いこう） is commonly pronounced approximately *ikō*.
 - 先生（せんせい） is commonly pronounced approximately *senseː*.
 
-This is a pronunciation pattern, not a rule that changes the written kana. Individual words and dialects can differ, so **おう → おー** and **えい → えー** should not be treated as universal spelling rules.
+this is a pronunciation pattern, not a rule that changes the written kana. individual words and dialects can differ, so **おう → おー** and **えい → えー** should not be treated as universal spelling rules.
 
-A sequence such as におう（匂う） remains written **におう**; pronunciation does not change the orthography.
+a sequence such as におう（匂う） remains written **におう**; pronunciation does not change the orthography.
 
 ### 一ヶ
 
@@ -301,7 +300,7 @@ note that ヶ is not ケ \
 
 ### は / へ / を
 
-Some grammatical particles have pronunciations that differ from their ordinary kana readings:
+some grammatical particles have pronunciations that differ from their ordinary kana readings:
 
 - **は** is pronounced **/wa/** when it is the topic particle.
   - これは本です。(*Kore wa hon desu.*)
@@ -312,7 +311,7 @@ Some grammatical particles have pronunciations that differ from their ordinary k
 
 ### Haku（拍）or Mōra（モーラ）
 
-A **mora** is a unit of timing used in Japanese phonology. It is not identical to a written kana character: some kana combinations contain two characters but count as a single mora.
+a **mora** is a unit of timing used in Japanese phonology. it is not identical to a written kana character: some kana combinations contain two characters but count as a single mora.
 
 - **Ordinary kana** generally represent one mora.
   - かき (*ka-ki*) has **two morae**.
@@ -325,7 +324,7 @@ A **mora** is a unit of timing used in Japanese phonology. It is not identical t
 - **Yōon combinations** such as きゃ, しゅ, and ちょ count as **one mora**, even though they use two kana characters.
   - きゃく (*kya-ku*) has **two morae**.
 
-Examples:
+examples:
 
 1. **おと（oto）** vs. **おっと（otto）**
    - **音（おと）**: sound
@@ -337,43 +336,43 @@ Examples:
    - **きて**: forms such as “come and ...” or “wear and ...”, depending on context
    - **切手（きって）**: postage stamp
 
-Morae are relevant to **haiku, tanka, pitch accent, rhythm, and aspects of Japanese music**. In traditional poetry, what is counted is morae rather than English-style syllables.
+morae are relevant to **haiku, tanka, pitch accent, rhythm, and aspects of Japanese music**. in traditional poetry, what is counted is morae rather than English-style syllables.
 
 ### W kana
 
-The historical **w-kana** ゐ, ゑ, and を are obsolete in modern standard orthography. Their modern pronunciations have merged with vowels in ordinary speech:
+the historical **w-kana** ゐ, ゑ, and を are obsolete in modern standard orthography. their modern pronunciations have merged with vowels in ordinary speech:
 
 - ゐ → **い / i**
 - ゑ → **え / e**
 - を → **お / o**
 - わ → **わ / wa**
 
-The modern kana **を** is still actively used as the object particle, even though it is pronounced /o/.
+the modern kana **を** is still actively used as the object particle, even though it is pronounced /o/.
 
-## Rendaku
+## rendaku
 
-**Rendaku (連濁)** is a phenomenon in which the initial consonant of the second element of a compound becomes voiced.
+**rendaku (連濁)** is a phenomenon in which the initial consonant of the second element of a compound becomes voiced.
 
-Examples:
+examples:
 
 - 手 + 紙 → 手紙（てがみ, *tegami*）
 - 山 + 火 → 山火事（やまかじ, *yamakaji*）
 - 折り + 紙 → 折り紙（おりがみ, *origami*）
 
-Rendaku is not completely predictable. Some compounds do not undergo rendaku, and there are important restrictions such as **Lyman's law**, which generally blocks rendaku when the second element already contains a voiced obstruent.
+rendaku is not completely predictable. some compounds do not undergo rendaku, and there are important restrictions such as **Lyman's law**, which generally blocks rendaku when the second element already contains a voiced obstruent.
 
-## Pitch Accent
+## pitch accent
 
-Japanese is generally described as having a **pitch-accent** system rather than the stress-accent system familiar from English. Morae can be realized with different relative pitch levels, and the location of a pitch drop can distinguish words or grammatical forms.
+Japanese is generally described as having a **pitch-accent** system rather than the stress-accent system familiar from English. morae can be realized with different relative pitch levels, and the location of a pitch drop can distinguish words or grammatical forms.
 
-For example, in Tokyo Japanese, **はし** can have different pitch patterns for:
+for example, in Tokyo Japanese, **はし** can have different pitch patterns for:
 
 - 箸（はし）: chopsticks
 - 橋（はし）: bridge
 
-The exact pitch pattern depends on the word and can also vary by dialect. Pitch accent is therefore a property of pronunciation, not a change in spelling.
+the exact pitch pattern depends on the word and can also vary by dialect. pitch accent is therefore a property of pronunciation, not a change in spelling.
 
-## Functional Marks
+## functional marks
 
 | mark                                   | name                                                                                                                                                                                           | effect                                                                                                                                                                                                            |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -400,11 +399,11 @@ The exact pitch pattern depends on the word and can also vary by dialect. Pitch 
 | 〳 <br>〵<br>                                   | _kunojiten_ (くの字点)                                                                   | Repetition mark used in [vertical writing](https://en.wikipedia.org/wiki/Horizontal_and_vertical_writing_in_East_Asian_scripts "Horizontal and vertical writing in East Asian scripts"). It means repeat the previous two or more kana. |                                                                                                                                                  |                                                                 |
 | 〴 <br>〵<br>                                   | _kunojiten_ (くの字点)                                                                   | Kunojiten with a dakuten                                                                                                                                                                                                                |                                                                                                                                                  |                                                                 |
 
-## Kanji
+## kanji
 
-### Readings
+### readings
 
-Kanji readings are commonly classified into **on'yomi (音読み)**, **kun'yomi (訓読み)**, and **nanori (名乗り)**. These are categories rather than a three-reading limit: a kanji can have multiple readings within one category, and not every kanji has all three types.
+kanji readings are commonly classified into **on'yomi (音読み)**, **kun'yomi (訓読み)**, and **nanori (名乗り)**. these are categories rather than a three-reading limit: a kanji can have multiple readings within one category, and not every kanji has all three types.
 
 |                 | **on'yomi (音読み)**                                                                                                                                             | **kun'yomi (訓読み)**                                                                                                      | **nanori (名乗り)**                                                                                                                                      |
 | --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -416,11 +415,9 @@ Kanji readings are commonly classified into **on'yomi (音読み)**, **kun'yomi 
 | **大**          | だい                                                                                                                                                             | おおきい                                                                                                                   | まさ、おお                                                                                                                                               |
 | **石**          | せき                                                                                                                                                             | いし                                                                                                                       | あら                                                                                                                                                     |
 
-### Weird Kanji
+### weird kanji
 
 々
 〆
 
-#### Kanji that are unique in JP (different from both traditional and simplified chinese)
-
-```
+#### kanji that are unique in JP (different from both traditional and simplified chinese)

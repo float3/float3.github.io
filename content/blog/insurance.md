@@ -5,6 +5,7 @@ tags:
   - finances
 ---
 
+
 edit: if you want to see the proper math of when an insurance is worth it, check out [this post](https://www.lesswrong.com/posts/wf4jkt4vRH7kC2jCy/when-is-insurance-worth-it) on lesswrong. \
 if you want to just calculate if an insurance is worth it, use the [calculator](https://xkqr.org/insurance/).
 

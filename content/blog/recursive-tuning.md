@@ -136,3 +136,33 @@ how to play it:
   every note that sounds different from the global scale alone, and by how many
   cents. in a scale that is not 12-tone, each root and chord note is the degree
   nearest the 12-TET one.
+
+## my other music related work
+
+blog posts:
+
+- [why you should buy 12 Pianos | Recursive Just Intonation](/blog/recursive-just-intonation.md):
+  the special case this post generalizes, just intonation inside just intonation
+- [a Breadboard for your Fretboard](/blog/a-breadboard-for-your-breadboard.md):
+  learning electronics by building a guitar pedal
+
+tools:
+
+- [play around with different tuning systems and your computer keyboard](/tools/tuningplayground.md)
+- [visualize and listen to polyrhythms](/tools/polyrhythm.md)
+- [AudioLink](/audiolink): an audio reactive example shader running in the browser
+
+projects:
+
+- [music21-rs](https://hilll.dev/music21-rs/): a rust music theory library
+  inspired by python's music21, which the tuning playground and this post are
+  built on ([github](https://github.com/float3/music21-rs),
+  [crates.io](https://crates.io/crates/music21-rs))
+- [AudioLink](https://audiolink.dev): i'm a maintainer on the core team of
+  AudioLink, an audio-visualization library for Unity
+  ([github](https://github.com/llealloo/audiolink),
+  [demo](https://traeumerei.dev))
+
+### visualize and listen to polyrhythms in a shader
+
+<iframe width="640" height="360" frameborder="0" allowfullscreen="allowfullscreen" src="https://www.shadertoy.com/embed/7tV3WV?gui=true&t=10&paused=false&muted=false"></iframe>
