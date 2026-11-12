@@ -10,9 +10,11 @@ vegan, no alcohol or drugs \
 
 - [Supplements](#supplements)
 - [Nutrition staples](#nutrition-staples)
+- [Exercise](#exercise)
 - [Teeth](#teeth)
 - [Sleep](#sleep)
 - [Hearing](#hearing)
+- [Air](#air)
 
 ## Supplements
 
@@ -38,7 +40,18 @@ Not taken:
 - **Ground flaxseed** for omega-3 (ALA) and fibre.
 - **Peanut butter**.
 - **Walnuts** for more omega-3 (ALA).
+- **Kiwi** every day, for vitamin C and fibre.
+- **Coffee,** 1–2 cups a day, before 14:00. Linked to lower heart disease and death risk (observational studies).
 - **Target ~130–160** g protein a day.
+
+## Exercise
+
+- **10,000 steps** a day.
+- **Stairs:** I always take the stairs when I can, never escalators or lifts.
+- **Pull-ups.**
+- **Bouldering.** About 2–4 injuries per 1,000 hours of climbing (studies range from 0.02 to 13), mostly minor, and much lower than football or rugby. Bouldering and crimp grips raise the risk of finger overuse injuries.
+- **Calisthenics park:** I sometimes jog to a local outdoor bodyweight fitness park and train there.
+- **Smartwatch reminders:** it tells me to get up and move, and to do short 30-second exercises during the day.
 
 ## Teeth
 
@@ -60,3 +73,8 @@ Not taken:
 
 - **Concert earplugs:** custom-made, with filters, from Hörluchs. They lower the volume evenly, so music still sounds clear.
   - _Evidence:_ a randomised trial at a music festival found less temporary hearing loss with earplugs than without (Ramakers et al., JAMA Otolaryngology, 2016).
+
+## Air
+
+- **AirGradient ONE** air monitor. It measures CO₂, fine dust (PM2.5), VOCs, temperature and humidity.
+- I take it with me when I travel.
