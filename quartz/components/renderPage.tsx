@@ -318,6 +318,9 @@ export function renderPage(
       {/* Comment threads. Loaded everywhere and inert on pages without one,
           which is cheaper than teaching the emitter which pages have comments. */}
       <script src={`${basePath}/js/comments.js`} defer></script>
+      {/* Starts the Elm graph on the containers the sidebar leaves for it, and
+          fetches the compiled Elm only on a page that has one. */}
+      <script src={`${basePath}/js/graph.js`} defer></script>
     </html>
   )
 

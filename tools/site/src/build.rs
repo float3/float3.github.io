@@ -180,6 +180,10 @@ impl Site {
             ]),
         )?;
 
+        // The Elm graph is the third thing that lands in content/js, and it
+        // has to be built after the emptying above rather than before it.
+        self.elm(mode)?;
+
         remove_license_files(&content_js)
     }
 
@@ -404,6 +408,7 @@ impl Site {
         self.run(&self.root, "cargo", &check_args)?;
         self.run(&self.root, "cargo", &test_args)?;
         self.wasm(Mode::Dev)?;
+        self.elm_test()?;
         self.check_typescript()
     }
 
@@ -643,7 +648,10 @@ mod tests {
             .iter()
             .map(|path| path.file_stem().unwrap().to_string_lossy().into_owned())
             .collect();
-        let loaded = scripts_pages_load(&root);
+        let mut loaded = scripts_pages_load(&root);
+        // The Elm graph is compiled by `site elm`, not bundled from ts/src.
+        let elm = Path::new(crate::elm::OUTPUT).file_stem().unwrap();
+        loaded.remove(&*elm.to_string_lossy());
 
         let unused: Vec<&String> = bundled.difference(&loaded).collect();
         assert!(
