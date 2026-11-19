@@ -22,6 +22,8 @@
           nix develop . --command cargo run --locked --no-default-features --manifest-path tools/site/Cargo.toml -- update
         '';
       in {
+        formatter = pkgs.alejandra;
+
         devShells.default = pkgs.mkShell rec {
           nativeBuildInputs = [pkgs.pkg-config];
           buildInputs = with pkgs; [
