@@ -4,6 +4,7 @@ mod comment_index;
 mod comments;
 mod content;
 mod duplicates;
+mod elm;
 mod fsutil;
 mod gallery;
 mod git_history;
@@ -116,6 +117,8 @@ fn run_main() -> Result<()> {
     match args[0].as_str() {
         "build" => site.build(parse_mode(&args[1..], Mode::default_for(site.ci))?),
         "wasm" => site.wasm(parse_mode(&args[1..], Mode::default_for(site.ci))?),
+        "elm" => site.elm(parse_mode(&args[1..], Mode::default_for(site.ci))?),
+        "elm-test" => site.elm_test(),
         "generate" => site.generate(),
         "links" | "collect-links" => site.links(),
         "indices" => site.indices(),
@@ -190,6 +193,8 @@ Commands:
   build [--dev|--prod]       build wasm assets and the Quartz site
                              --dev also watches TypeScript bundles
   wasm [--dev|--prod]        build only the wasm and TypeScript bundle
+  elm [--dev|--prod]         build only the Elm graph
+  elm-test                   run the Elm graph's tests
   generate                   regenerate link lists, indices, and chords
   links                      regenerate plaintext link lists
   indices                    regenerate misc indices
