@@ -14,21 +14,21 @@ life without you is strange, some of you are still out there, some of you aren't
 
 > Grief:
 
-> i’m writing this before it has even happened. i cry often now, sometimes in the car, sometimes alone at home, sometimes in the arms of loved ones. i cried when i first read [Yehuda Yudkowsky, 1985–2004](https://www.yudkowsky.net/other/yehuda); i think about it often now, and i cry even more. i cry when i hear Sufjan Stevens. i did before, but now it happens every time. i cry when i think about the 597,000 deaths from malaria in 2023. i imagine holding their hands, the way i hold hers.
+> i'm writing this before it has even happened. i cry often now, sometimes in the car, sometimes alone at home, sometimes in the arms of loved ones. i cried when i first read [Yehuda Yudkowsky, 1985-2004](https://www.yudkowsky.net/other/yehuda); i think about it often now, and i cry even more. i cry when i hear Sufjan Stevens. i did before, but now it happens every time. i cry when i think about the 597,000 deaths from malaria in 2023. i imagine holding their hands, the way i hold hers.
 
 > i do not want to be here. i would like distance, but it has not arrived. the person i loved, and who loved me, was gone. now they are returning, slowly. or perhaps only what remains of them is more visible now, and that too is fleeting. the shadow fills the room. it follows me out the door, rides home with me, sits beside me as i write, and will lie down with me when i stop.
 
 > Again i am torn. choose myself, or choose them, because they are not leaving quickly but slowly.
 
-> i do not believe children owe their parents infinite debt. i think i should grieve a stranger’s death as much as hers. i should save both the [drowning child in front of me and the drowning child far away](https://www.astralcodexten.com/p/more-drowning-children). yet i do not. i have not cried for your loved one. i cried in self-pity and shame.
+> i do not believe children owe their parents infinite debt. i think i should grieve a stranger's death as much as hers. i should save both the [drowning child in front of me and the drowning child far away](https://www.astralcodexten.com/p/more-drowning-children). yet i do not. i have not cried for your loved one. i cried in self-pity and shame.
 
 > i did things i did not want to do for her, because they were expected, because i feared permanent damage to my family if i did not, and what would follow from that. but i also did things for her simply because they were for her. so have i already acted well?
 
 > i am ashamed that i cried selfishly, about why this happened to me, about what my life has become, and what it may be, when there were better reasons to cry. oh, you fool of fools, how could you say these words, think these thoughts, and shed these tears?
 
-> - “the person you want to be, what would they do in this situation?”
+> - "the person you want to be, what would they do in this situation?"
 
-> - “can you, honestly and with your limited life experience, tell yourself that you will not regret this decision later?”
+> - "can you, honestly and with your limited life experience, tell yourself that you will not regret this decision later?"
 
 > People are allowed to be selfish sometimes. it would be unreasonable to expect me to sell everything and optimize my life purely for donations to effective causes. i have never met anyone who argues otherwise. so why is this decision still so hard, the choice to care for my own desires now instead of first caring for a dying person?
 
