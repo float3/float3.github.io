@@ -15,13 +15,9 @@ in this blog post, i talk about bestiality, not because i've practised it or hav
 
 ## what the hell is shrimp welfare, why should i care and why the hell do people donate money for shrimp?
 
-shrimp welfare refers to the consideration of farmed shrimp's physical and psychological well-being; recognizing that decapod crustaceans possess nociceptors and can experience distress. each year, roughly 440 billion shrimp are raised for food, a number nearly four times the ~117 billion humans estimated to have ever lived ([Wikipedia][1], [PRB][2]). in recent years, scientific studies and legal rulings (e.g., the UK's 2022 recognition of decapods as sentient beings) have strengthened the case that shrimp can suffer during common practices like ice-slurry slaughter, leading to campaigns for more humane methods such as electrical stunning ([Wikipedia][1]). organizations like the Shrimp Welfare Project focus on producer outreach, standard-setting, and awareness-raising, arguing from an effective-altruism perspective that donations are extremely cost-effective: a single dollar can improve the lives of thousands of shrimp each year ([LessWrong][3]).
+shrimp welfare is about how farmed shrimp are treated, on the assumption that decapod crustaceans have nociceptors and can feel distress. roughly 440 billion shrimp are [farmed](https://en.wikipedia.org/wiki/Shrimp_farming) every year, nearly four times the ~117 billion humans who have [ever lived](https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth). the UK recognised decapods as sentient in 2022, and there's a growing case that shrimp suffer during things like ice-slurry slaughter, which is why people campaign for electrical stunning instead. the Shrimp Welfare Project works with producers on exactly that, and the effective altruism argument for them is that one dollar improves the lives of [thousands of shrimp a year](https://www.lesswrong.com/posts/5JB4dn7hEvZCYDvCe/a-very-simple-case-for-giving-to-shrimp).
 
 to quantify the scale of suffering: if we conservatively assume each shrimp experiences 1/100,000th the suffering of a human, then 440 billion shrimp × 0.00001 human-suffering units per shrimp yields 4.4 million human-equivalent suffering units every year. (the 1/100,000th is a number i made up).
-
-[1]: https://en.wikipedia.org/wiki/Shrimp_farming "Shrimp farming"
-[2]: https://www.prb.org/articles/how-many-people-have-ever-lived-on-earth "How Many People Have Ever Lived on Earth? - PRB"
-[3]: https://www.lesswrong.com/posts/5JB4dn7hEvZCYDvCe/a-very-simple-case-for-giving-to-shrimp "A Very Simple Case For Giving To Shrimp - LessWrong"
 
 ## let's talk about facts vs belief
 
@@ -162,7 +158,7 @@ let's address each claim:
   - https://pubmed.ncbi.nlm.nih.gov/9464910
   - many animals cannot cope with the rapid growth that their diet causes, resulting in heart failures, leg deformities and other issues https://awionline.org/content/inhumane-practices-factory-farms
 - they get good treatment:
-  - workers do not attempt to treat ill chickens – they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
+  - workers do not attempt to treat ill chickens, they are left to suffer or die because a single bird has little economic value https://www.vox.com/future-perfect/389639/chicken-poultry-industry-mortality-death
   - hundreds of thousands of animals (pigs, cows, sheep, &c.) on U.S. farms each year collapse from illness or injury and are left for hours or days without food, water, or vet care https://www.farmsanctuary.org/news-stories/advocacy-action-farm-animals-stop-slaughter-sick-animals
 - they are free of diseases:
   - factory farms are "breeding grounds" for diseases, including novel viruses https://www.farmsanctuary.org/issue/public-health

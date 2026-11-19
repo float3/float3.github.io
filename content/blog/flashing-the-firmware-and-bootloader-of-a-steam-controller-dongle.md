@@ -15,12 +15,12 @@ and Instructions on how to flash the bootloader provided by [Ben Jackson](https:
 
 - a SteamVR controller dongle. although the original dongles are no longer available directly from Steam,
   alternative options are available. these include dongles from [Virtual Builds](https://www.virtualbuilds.com/product-page/usb-wireless-receiver-dongle)
-  and [Tundra Labs](https://tundra-labs.com/shop/vive-dongle), which should serve the purpose well.
+  and [Tundra Labs](https://tundra-labs.com/shop/vive-dongle), those should work too.
 - SteamVR installed on your computer.
 
 ## warning
 
-it's important to approach this process with caution:
+be careful:
 
 - assume that this change is permanent, at least if you decide to flash the bootloader as well.
 - this procedure will flash ALL connected dongles. be sure to remove any dongles that you do not wish to flash.
@@ -61,8 +61,7 @@ then just follow the windows instructions but with wine
 
 this procedure changes the runtime firmware but not the bootloader.
 if you enter the bootloader mode (e.g., through a firmware update),
-the device will revert to a Steam controller dongle state,
-necessitating a repeat of the process.
+the device will revert to a Steam controller dongle state, and you will have to do this again.
 
 for a permanent change, we need to flash the bootloader as well.
 

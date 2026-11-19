@@ -12,7 +12,7 @@ tags:
 <div id="tuningPlayground" class="tool tp">
 <p class="wasm-credit">made with rust compiled to wasm</p>
 <noscript>hey this page needs javascript</noscript>
-<div id="tuningPlaygroundStatus" class="tool-status" role="status" data-state="loading">Loading tuning playground…</div>
+<div id="tuningPlaygroundStatus" class="tool-status" role="status" data-state="loading">Loading tuning playground...</div>
 <div class="tp-library">
 <div class="tool-bar">
 <label class="tool-field tool-field-wide"><span>Tuning</span><input id="tuningSearch" type="search" placeholder="Search tuning systems, temperaments, equal divisions and the Scala archive" autocomplete="off" spellcheck="false" /></label>

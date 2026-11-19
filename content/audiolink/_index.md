@@ -12,7 +12,7 @@ this is a example shader, built for WebGL.
 
 <div class="unity-player">
   <canvas id="unity-canvas" width="960" height="600" tabindex="-1"></canvas>
-  <p id="unity-status" role="status" aria-live="polite">loading…</p>
+  <p id="unity-status" role="status" aria-live="polite">loading...</p>
 </div>
 
 <style>

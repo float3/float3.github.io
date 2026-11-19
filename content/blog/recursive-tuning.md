@@ -69,7 +69,7 @@ and the colours show the nearest 12-TET note.
 <div id="recursiveTuning" class="tool rt">
 <p class="wasm-credit">made with rust compiled to wasm</p>
 <noscript>hey this page needs javascript</noscript>
-<div id="recursiveTuningStatus" class="tool-status" role="status" data-state="loading">Loading the recursive tuning explorer…</div>
+<div id="recursiveTuningStatus" class="tool-status" role="status" data-state="loading">Loading the recursive tuning explorer...</div>
 <div class="rt-pickers">
 <div id="rtGlobal" class="rt-picker">
 <div class="rt-search">

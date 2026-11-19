@@ -1,5 +1,5 @@
 ---
-title: von Neumann–Morgenstern axioms
+title: von Neumann-Morgenstern axioms
 tags:
   - math
   - economics
@@ -117,5 +117,5 @@ a rational agent acts as if it maximizes expected utility. $\textcolor{#0466e7}{
 
 <span style="color:#4d8dc3">
 1. <a href="https://en.wikipedia.org/wiki/Allais_paradox">Allais paradox</a> <br>
-2. <a href="https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Morgenstern_utility_theorem">Von Neumann–Morgenstern utility theorem</a>
+2. <a href="https://en.wikipedia.org/wiki/Von_Neumann%E2%80%93Morgenstern_utility_theorem">Von Neumann-Morgenstern utility theorem</a>
 </span>

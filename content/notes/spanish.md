@@ -227,12 +227,12 @@ Not all of these are exclusive to the Río de la Plata, and several have spread 
 
 Examples commonly encountered include:
 
-- `mina` — woman
-- `morfar` — eat
-- `fiaca` — laziness / lack of energy
-- `cana` — police / police officer, depending on context
-- `bacán` — wealthy or socially comfortable person; several senses exist
-- `quilombo` — mess / disorder; in other contexts it has more literal or historical meanings
+- `mina`: woman
+- `morfar`: eat
+- `fiaca`: laziness / lack of energy
+- `cana`: police / police officer, depending on context
+- `bacán`: wealthy or socially comfortable person; several senses exist
+- `quilombo`: mess / disorder; in other contexts it has more literal or historical meanings
 
 Lunfardo should **not** be treated as a separate language or as the normal name for Argentine Spanish. Many originally lunfardo words entered broader Argentine usage. The Instituto Cervantes explicitly describes lunfardo as an urban argot whose vocabulary has spread into general speech in Argentina and Uruguay. [^6]
 
@@ -244,10 +244,10 @@ Italian influence is especially visible in parts of the Argentine lexicon and in
 
 Examples of historically associated Italian-derived words include:
 
-- `laburo` — work
-- `feta` — slice
-- `valija` — suitcase
-- `nono` / `nonino` — grandfather
+- `laburo`: work
+- `feta`: slice
+- `valija`: suitcase
+- `nono` / `nonino`: grandfather
 
 ### Argentina is not one dialect
 
@@ -383,18 +383,18 @@ Accents are written according to standard orthographic rules, so forms such as `
 
 ### Neutral-ish
 
-- `¿Vos venís mañana?` — Are you coming tomorrow?
-- `¿Tenés tiempo?` — Do you have time?
-- `¿Qué querés hacer?` — What do you want to do?
-- `Vení un segundo.` — Come here for a second.
-- `Decime qué pasó.` — Tell me what happened.
+- `¿Vos venís mañana?`: Are you coming tomorrow?
+- `¿Tenés tiempo?`: Do you have time?
+- `¿Qué querés hacer?`: What do you want to do?
+- `Vení un segundo.`: Come here for a second.
+- `Decime qué pasó.`: Tell me what happened.
 
 ### More colloquial
 
-- `Che, ¿qué hacés?` — Hey, what are you doing?
-- `No te hagas problema.` — Don't worry about it.
-- `Está rebueno.` — It's really good.
-- `Vamos en colectivo.` — We're going by bus.
+- `Che, ¿qué hacés?`: Hey, what are you doing?
+- `No te hagas problema.`: Don't worry about it.
+- `Está rebueno.`: It's really good.
+- `Vamos en colectivo.`: We're going by bus.
 
 ### Very informal / socially marked
 

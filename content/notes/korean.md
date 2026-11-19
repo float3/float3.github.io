@@ -161,7 +161,7 @@ a complex final is written left to right:
 
 </div>
 
-Hangul syllable blocks represent the sequence initial–medial–final, although the visual arrangement depends on the medial vowel and any final consonants. therefore:
+Hangul syllable blocks represent the sequence initial-medial-final, although the visual arrangement depends on the medial vowel and any final consonants. therefore:
 
 - Syllables with a horizontal medial are arranged vertically: 읍 (eup)
 - Syllables with a vertical medial are arranged with the medial to the right of the initial: 쌍 (ssang)

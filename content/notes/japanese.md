@@ -195,7 +195,7 @@ https://dl.ndl.go.jp/pid/854017/1/22
 #### あ゙ (ア゙) ゔ ん゙
 
 in informal writing, dakuten is occasionally used on vowels to indicate a shocked or strangled articulation; for example, on あ゙ or ゔ. Dakuten can also be occasionally used with ん (ん゙) to indicate a guttural hum, growl, or similar sound.
-in one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, “あ゙” is used to represent the relaxed sound one might make when soaking in a hot bath.
+in one example from an outdoor sign at the Kinugawa Onsen area in Tochigi Prefecture, "あ゙" is used to represent the relaxed sound one might make when soaking in a hot bath.
 
 #### wu
 
@@ -333,7 +333,7 @@ examples:
    - **柿（かき）**: persimmon
    - **牡蠣（かき）**: oyster
 3. **きて（kite）** vs. **きって（kitte）**
-   - **きて**: forms such as “come and ...” or “wear and ...”, depending on context
+   - **きて**: forms such as "come and ..." or "wear and ...", depending on context
    - **切手（きって）**: postage stamp
 
 morae are relevant to **haiku, tanka, pitch accent, rhythm, and aspects of Japanese music**. in traditional poetry, what is counted is morae rather than English-style syllables.

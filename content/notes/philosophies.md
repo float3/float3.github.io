@@ -19,7 +19,7 @@ for instance, if i choose to spend time with person A rather than person B becau
 
 the complex web of factors that guides our decisions essentially acts as a form of reward or punishment for the current person, brand, or object we're deciding about.
 
-it's important to note that the impact of these rewards and punishments, whether they lead to reinforcement or discouragement, and thus any subsequent change in behavior or preference, is a completely separate consideration.
+whether those rewards and punishments actually change anyone's behaviour is a separate question.
 
 now because humans do not have free-will, through genetics, brain chemicals, environment and billions of tiny processes that started millions of years ago
 the concept of rewarding or punishing assumes agency, that we simply do not have, and is fundamentally paradoxical.

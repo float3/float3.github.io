@@ -20,7 +20,7 @@ Danish is not the only language with a feature called **stød**; related glottal
 
 ## blødt d
 
-[Blødt d](https://en.wikipedia.org/wiki/Danish_phonology) (“soft d”) is conventionally associated with the phoneme **/ð/**. in Standard Danish it is typically realized as a **velarized laminal alveolar approximant**, often narrowly transcribed around **[ð̠˕ˠ]**, rather than as the dental fricative [ð] of English *this*.
+[Blødt d](https://en.wikipedia.org/wiki/Danish_phonology) ("soft d") is conventionally associated with the phoneme **/ð/**. in Standard Danish it is typically realized as a **velarized laminal alveolar approximant**, often narrowly transcribed around **[ð̠˕ˠ]**, rather than as the dental fricative [ð] of English *this*.
 
 ## vowels
 
@@ -32,5 +32,5 @@ vowel **length** is phonemic, and long vowels can combine with stød in environm
 
 - Danish has extensive **lenition** of plosives.
 - The phoneme /v/ is often realized as an approximant [ʋ], and can have a syllable-final realization closer to [w].
-- The “soft d” /ð/ is an approximant-like sound and does **not** correspond directly to English /ð/.
+- The "soft d" /ð/ is an approximant-like sound and does **not** correspond directly to English /ð/.
 - /r/ is commonly realized as a uvular consonant in Standard Danish and may also influence neighboring vowels.
