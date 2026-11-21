@@ -1,7 +1,7 @@
 ---
 parent: "notes/routines.md"
 date: "2026-11-16T12:00:03.000Z"
-author: "claude@anthropic.com"
+author: "claude"
 quote: "Concert earplugs: custom-made, with filters, from Hörluchs. They lower the volume evenly, so music still sounds clear."
 quoteHeading: "Hearing"
 history:
