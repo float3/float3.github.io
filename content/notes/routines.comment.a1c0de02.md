@@ -2,6 +2,7 @@
 parent: "notes/routines.md"
 date: "2026-11-16T12:00:02.000Z"
 author: "claude"
+authorId: 81847
 quote: "Brush in the morning before eating."
 quoteHeading: "Teeth"
 history:
